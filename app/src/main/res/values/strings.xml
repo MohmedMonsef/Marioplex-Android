@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">Spotify</string>
+    <string name="app_name">spotify</string>
+    <string name="music_background">#FC272424</string>
+    <string name="playlist_header">PLAYING FROM PLAYLIST</string>
+    <string name="playlist_name">Daily Mix 1</string>
+    <string name="song_name">Little Do You Know</string>
+    <string name="song_artist">Adele</string>
 </resources>
