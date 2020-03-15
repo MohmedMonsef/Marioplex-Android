@@ -58,6 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
+            android:onClick="LaunchLoginActivity"
             android:layout_marginTop="20dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/log_in" />
