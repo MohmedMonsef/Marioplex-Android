@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.text.Layout;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView bottom_play_pause;
     private ImageView next;
     private ImageView previous;
+    private ImageView arrow;
 
     private int currentTrackId = 0;
     private int duration;
@@ -82,8 +84,10 @@ public class MainActivity extends AppCompatActivity {
         //find some Views by id
         getViews();
 
-        //Expand and Collapse states updated
-        updateBottomSheet();
+        //the bottom and top sheet listeners
+        //controls the up and down action of the bottom sheet
+        bottomTopSheetListeners();
+
         toast = Toast.makeText(getApplicationContext(),"welcome",Toast.LENGTH_SHORT);
         toast.show();
 
@@ -97,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         endPointAPI = retrofit.create(EndPointAPI.class);
 
         //REQUEST A TRACK FROM THE API
-   //     getATrack();
+        //getATrack();
 
         //REQUEST TRACKS FROM THE API
         getTracks();
@@ -110,30 +114,41 @@ public class MainActivity extends AppCompatActivity {
         play_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mediaPlayer.isPlaying()){
-                    mediaPlayer.pause();
-                    play_pause.setImageResource(R.drawable.play);
-                    bottom_play_pause.setImageResource(R.drawable.play_down);
+                if(mediaPlayer!=null){
+                    if(mediaPlayer.isPlaying()){
+                        mediaPlayer.pause();
+                        play_pause.setImageResource(R.drawable.play);
+                        bottom_play_pause.setImageResource(R.drawable.play_down);
+                    }
+                    else {
+                        mediaPlayer.start();
+                        play_pause.setImageResource(R.drawable.pause);
+                        bottom_play_pause.setImageResource(R.drawable.pause_down);
+                    }
                 }
-                else {
-                    mediaPlayer.start();
-                    play_pause.setImageResource(R.drawable.pause);
-                    bottom_play_pause.setImageResource(R.drawable.pause_down);
+                else{
+                    toast = Toast.makeText(getApplicationContext(),"media player is null",Toast.LENGTH_SHORT);
+                    toast.show();
                 }
             }
         });
          bottom_play_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mediaPlayer.isPlaying()){
-                    mediaPlayer.pause();
-                    bottom_play_pause.setImageResource(R.drawable.play_down);
-                    play_pause.setImageResource(R.drawable.play);
+                if(mediaPlayer!=null) {
+                    if (mediaPlayer.isPlaying()) {
+                        mediaPlayer.pause();
+                        bottom_play_pause.setImageResource(R.drawable.play_down);
+                        play_pause.setImageResource(R.drawable.play);
+                    } else {
+                        mediaPlayer.start();
+                        bottom_play_pause.setImageResource(R.drawable.pause_down);
+                        play_pause.setImageResource(R.drawable.pause);
+                    }
                 }
-                else {
-                    mediaPlayer.start();
-                    bottom_play_pause.setImageResource(R.drawable.pause_down);
-                    play_pause.setImageResource(R.drawable.pause);
+                else{
+                    toast = Toast.makeText(getApplicationContext(),"media player is null",Toast.LENGTH_SHORT);
+                    toast.show();
                 }
             }
         });
@@ -230,6 +245,26 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void bottomTopSheetListeners(){
+        bottom_layout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                slidingUpPanelLayout.setDragView(top_layout);
+                bottom_layout.setVisibility(View.GONE);
+                return false;
+            }
+        });
+        top_layout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                bottom_layout.setVisibility(View.VISIBLE);
+                slidingUpPanelLayout.setDragView(bottom_layout);
+                return false;
+            }
+        });
+    }
     private void playandpuse(String trackURL){
         mediaPlayer=new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -361,6 +396,7 @@ public class MainActivity extends AppCompatActivity {
         bottom_play_pause = (ImageView)findViewById(R.id.bottom_play_pause);
         next = (ImageView)findViewById(R.id.next);
         previous = (ImageView)findViewById(R.id.previous);
+        arrow = (ImageView) findViewById(R.id.arrow);
     }
 
     //UPDATE THE NFO OF THE UI WITH THE TRACK INFO
@@ -418,19 +454,17 @@ public class MainActivity extends AppCompatActivity {
         slidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
-
             }
 
             @Override
             public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState,
                                             SlidingUpPanelLayout.PanelState newState) {
-
                 if(previousState.equals(SlidingUpPanelLayout.PanelState.COLLAPSED )&&
                         !newState.equals(SlidingUpPanelLayout.PanelState.COLLAPSED))
                 {   slidingUpPanelLayout.setDragView(top_layout);
                     bottom_layout.setVisibility(View.GONE);
                 }
-                if(previousState.equals(SlidingUpPanelLayout.PanelState.EXPANDED )&&
+                else if(previousState.equals(SlidingUpPanelLayout.PanelState.EXPANDED )&&
                         !newState.equals(SlidingUpPanelLayout.PanelState.EXPANDED))
                 {
                     bottom_layout.setVisibility(View.VISIBLE);

@@ -3,7 +3,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#212121">
+    android:background="@drawable/media_player_background_color">
+    <!--android:background="#212121"-->
 
 
     <RelativeLayout

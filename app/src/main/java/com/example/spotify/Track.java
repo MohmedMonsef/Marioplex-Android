@@ -13,9 +13,9 @@ public class Track {
     @SerializedName("artists")
     @Expose
     private List<Artist_> artists = null;
-    @SerializedName("available_markets")
-    @Expose
-    private List<String> availableMarkets = null;
+//    @SerializedName("available_markets")
+//    @Expose
+//    private List<String> availableMarkets = null;
     @SerializedName("disc_number")
     @Expose
     private Integer discNumber;
@@ -85,18 +85,18 @@ public class Track {
         return this;
     }
 
-    public List<String> getAvailableMarkets() {
-        return availableMarkets;
-    }
-
-    public void setAvailableMarkets(List<String> availableMarkets) {
-        this.availableMarkets = availableMarkets;
-    }
-
-    public Track withAvailableMarkets(List<String> availableMarkets) {
-        this.availableMarkets = availableMarkets;
-        return this;
-    }
+//    public List<String> getAvailableMarkets() {
+//        return availableMarkets;
+//    }
+//
+//    public void setAvailableMarkets(List<String> availableMarkets) {
+//        this.availableMarkets = availableMarkets;
+//    }
+//
+//    public Track withAvailableMarkets(List<String> availableMarkets) {
+//        this.availableMarkets = availableMarkets;
+//        return this;
+//    }
 
     public Integer getDiscNumber() {
         return discNumber;
