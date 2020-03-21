@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:id="@+id/bottom_layout"
+    android:layout_width="match_parent"
+    android:background="#191414"
+    android:layout_height="68dp">
+    <ImageView
+        android:id="@+id/bottom_image_id"
+        android:scaleType="centerCrop"
+        android:layout_width="0dp"
+        android:layout_weight="0.3"
+        android:layout_height="match_parent"
+        android:background="@android:color/darker_gray"/>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginLeft="8dp"
+        android:layout_gravity="center">
+        <TextView
+            android:id="@+id/song_artist_name"
+            android:text="Single-line text view that scrolls automatically if the text is too long to fit in the widget"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit ="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:scrollHorizontally="true"
+            android:layout_gravity="center_vertical"
+            android:textStyle="bold"
+            android:textColor="@android:color/background_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/bottom_favorite"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/favorite_border"
+            android:layout_gravity="center"/>
+        <ImageView
+            android:id="@+id/bottom_play_pause"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:src="@drawable/play_down"
+            android:layout_marginRight="8dp"/>
+    </LinearLayout>
+
+</LinearLayout>

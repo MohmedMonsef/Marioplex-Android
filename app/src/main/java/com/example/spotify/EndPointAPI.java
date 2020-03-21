@@ -8,7 +8,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.Query;
 
 public interface EndPointAPI {
-    String token = "BQDdLJXbjuLtey2J6jnXw4DoDAV0uiq36Wre_c5b2nFAeL4B9Mspbd7W2U-8bOFlAWamQLSiUiq0yZp9AFGxKXfnk08_CQp-xO-MMZ5Po9BamZVNI3Qb65OAdJpiTrLjRG94ARwSTnefrI60rFYONK9bSPZRPJhWWxaO3Hbl3w0oEDetXRKJOfEK67iyP9pi";
+    String token ="BQADVTyluSOWDdqiu1BsdUFRk5EJajJryaBHeUvOBaWOWAxQrck2XpbE2ZWsreRu7_GK19C0pNcRDmrJRZuMg1T_qlyDQxpUzXkePqanG_nJ4sdNSd5i9ctQualA3570PqvZKb2dWdPjgKthvtKbkyoXm0m68X0HKtt4stY0u5uBEenXCA4uQKD50P368j-S";
     @GET("v1/tracks/3n3Ppam7vgaVa1iaRUc9Lp")
     @Headers("Authorization: Bearer "+token)
     Call<Track> getATrack();
