@@ -8,8 +8,11 @@ public class TrackInfo {
     private static TrackInfo instance;
     private MutableLiveData<Track> track = new MutableLiveData<Track>();
     private String name;
+    private MutableLiveData<Boolean> isPlaying = new MutableLiveData<>();
+    private MutableLiveData<Integer> duration = new MutableLiveData<>();
+   // private MutableLiveData<Integer> currentPosition = new MutableLiveData<>();
 
-    //private MutableLiveData<int> currentPosition;
+
 
     public static TrackInfo getInstance() {
         if(instance == null)
@@ -18,9 +21,7 @@ public class TrackInfo {
     }
 
     public void setTrack(Track trackv) {
-        MutableLiveData<Track> t = new MutableLiveData<>();
-        t.setValue(trackv);
-        track = t;
+        track.setValue(trackv);
     }
 
     public MutableLiveData<Track> getTrack(){
@@ -33,6 +34,19 @@ public class TrackInfo {
 
     public String getName(){
         return name;
+    }
+
+    public void setIsPlaying(Boolean b){
+        isPlaying.setValue(b);
+    }
+    public MutableLiveData<Boolean> getIsPlaying(){
+        return isPlaying;
+    }
+    public MutableLiveData<Integer> getDuration(){
+        return duration;
+    }
+    public void setDuration(int d){
+        duration.setValue(d);
     }
 
 }

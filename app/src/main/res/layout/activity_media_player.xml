@@ -103,7 +103,6 @@
                 android:id="@+id/seek_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:progress="50"
                 android:layout_marginTop="24dp"
                 android:max="100"
                 android:thumb="@drawable/thumb"
@@ -112,7 +111,6 @@
                 android:id="@+id/start_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2.02"
                 android:layout_marginLeft="16dp"
                 android:layout_below="@id/seek_bar"
                 android:textColor="@android:color/darker_gray"/>
@@ -121,7 +119,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="4.02"
                 android:layout_marginRight="16dp"
                 android:layout_below="@id/seek_bar"
                 android:textColor="@android:color/darker_gray"/>

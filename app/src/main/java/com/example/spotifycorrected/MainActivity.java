@@ -1,10 +1,17 @@
 package com.example.spotifycorrected;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.widget.Toast;
 
+import media.MediaPlayerService;
 import media.TrackInfo;
 import pojo.EndPointAPI;
 import pojo.Track;
@@ -16,58 +23,50 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EndPointAPI endPointAPI;
-    private Retrofit retrofit;
-    private Toast toast;
     private TrackInfo track;
-    private Track t;
+
+    private MediaPlayerService player;
+    boolean serviceBound = false;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        //get instance from the sigleton class
         track = TrackInfo.getInstance();
-        retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.spotify.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
-        //CREATE AN OBJECT FROM THE INTERFACE THAT HAS THE REQUESTS FUNCTIONS
-        endPointAPI = retrofit.create(EndPointAPI.class);
-        getATrack();
+        if(!serviceBound) {
+            startService();
+        }
 
     }
 
-    void getATrack(){
-        Call<Track> call = endPointAPI.getATrack();
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putBoolean("ServiceState", serviceBound);
+        super.onSaveInstanceState(outState);
+    }
 
-        call.enqueue(new Callback<Track>() {
-            @Override
-            public void onResponse(Call<Track> call, Response<Track> response) {
-                if (!response.isSuccessful()) {
-                    toast = Toast.makeText(getApplicationContext(),"Code: "+response.code(),Toast.LENGTH_SHORT);
-                    toast.show();
-                    return;
-                }
-                else if(response.body()==null){
-                    toast = Toast.makeText(getApplicationContext(),"response body = null",Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-                else {
-                    track.setTrack(response.body());
-                    t = track.getTrack().getValue();
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        serviceBound = savedInstanceState.getBoolean("ServiceState");
+    }
 
-                }
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-            }
+    }
 
-            @Override
-            public void onFailure(Call<Track> call, Throwable t) {
-                toast = Toast.makeText(getApplicationContext(),t.getMessage()+" 'failed '",Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        });
-    };
+    private void startService(){
+        Intent serviceIntent = new Intent(this , MediaPlayerService.class);
+       // serviceIntent.putExtra("media" , media);
+        startService(serviceIntent);
+    }
+
+
 }

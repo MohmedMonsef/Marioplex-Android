@@ -1,10 +1,15 @@
 package media;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,6 +27,7 @@ import androidx.lifecycle.Observer;
 import com.example.spotifycorrected.MainActivity;
 import com.example.spotifycorrected.R;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -61,43 +67,50 @@ public class MediaPlayerActivity extends AppCompatActivity {
     private String nametest;
     private EndPointAPI endPointAPI;
     private Retrofit retrofit;
+    private MediaPlayerService player;
+    private Handler mHandler = new Handler();
+    boolean serviceBound = false;
     Toast toast;
 
 
+    //Binding this Client to the AudioPlayer Service
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            MediaPlayerService.LocalBinder binder = (MediaPlayerService.LocalBinder) service;
+            player = binder.getservice();
+            serviceBound = true;
+
+            //Toast.makeText(MediaPlayerActivity.this, "Service Bound", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            serviceBound = false;
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media_player);
 
+        //Bind the service
+        bindService();
+
+        //get Views
         getViews();
 
         sheetBehavior = BottomSheetBehavior.from(song_settings);
         setSheetBehavior();
 
-        arrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext() , MainActivity.class);
-                startActivity(intent);
-            }
-        });
-
         track = TrackInfo.getInstance();
 
         header.setText(track.getName());
 
-        ///////////////////////////////////////////////////////////////////
-        //RETROFIT OBJECT TO SEND QUERIES AND PARSE RESPONSES
-//        retrofit = new Retrofit.Builder()
-//                .baseUrl("https://api.spotify.com/")
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        //CREATE AN OBJECT FROM THE INTERFACE THAT HAS THE REQUESTS FUNCTIONS
-//        endPointAPI = retrofit.create(EndPointAPI.class);
-//        getATrack();
 
+        //Observers
         if(track.getTrack()!=null) {
             track.getTrack().observe(this, new Observer<Track>() {
                 @Override
@@ -106,6 +119,119 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 }
             });
         }
+
+        track.getIsPlaying().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    play_pause.setImageResource(R.drawable.pause);
+                }
+                else {
+                    play_pause.setImageResource(R.drawable.play);
+                }
+            }
+        });
+
+        track.getDuration().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                seek_bar.setMax(integer/1000);
+            }
+        });
+
+        //Click Listeners
+        arrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        play_pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(player.getIsPlaying()){
+                    track.setIsPlaying(false);
+                    player.pauseMedia();
+                    play_pause.setImageResource(R.drawable.play);
+                }
+                else{
+                    track.setIsPlaying(true);
+                    player.resumeMedia();
+                    play_pause.setImageResource(R.drawable.pause);
+                }
+            }
+        });
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                track.setIsPlaying(false);
+                player.next();
+            }
+        });
+
+        previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                track.setIsPlaying(false);
+                player.previous();
+            }
+        });
+
+        //UPDATE THE SEEK BAR AND THE START AND END TIME EVERY SECOND
+        MediaPlayerActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(player != null){
+                    int mCurrentPosition = player.getCurrentPosition();
+                    int duration = player.getDuration();
+                    seek_bar.setProgress((mCurrentPosition/1000));
+                    start_time.setText(getTimeString(mCurrentPosition));
+                    end_time.setText(getTimeString(duration-mCurrentPosition));
+                }
+                mHandler.postDelayed(this, 1000);
+            }
+        });
+
+        //SEEK BAR LISTENER TO NAVIGATE THROW THE SONG
+        seek_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(player!=null && fromUser) {
+                    player.seekTo(progress);
+                }
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+
+    }
+
+    //CONVERTS THE TIME FORMAT FROM MILLISECONDS TO MM:SS
+    private String getTimeString(long millis) {
+        StringBuffer buf = new StringBuffer();
+
+        int minutes = (int) ((millis % (1000 * 60 * 60)) / (1000 * 60));
+        int seconds = (int) (((millis % (1000 * 60 * 60)) % (1000 * 60)) / 1000);
+
+        buf.append(String.format("%02d", minutes))
+                .append(":")
+                .append(String.format("%02d", seconds));
+
+        return buf.toString();
+    }
+
+    private void bindService(){
+        Intent serviceIntent1 = new Intent(this , MediaPlayerService.class);
+        // serviceIntent1.putExtra("media" , media);
+        bindService(serviceIntent1 , serviceConnection , Context.BIND_AUTO_CREATE);
 
     }
 
@@ -127,7 +253,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
         List<Image> images= track.getTrack().getValue().getAlbum().getImages();
         String Imageurl = images.get(0).getUrl();
-        new DownLoadImageTask(song_image).execute(Imageurl);
+        Picasso.with(getBaseContext()).load(Imageurl).into(song_image);
+
+
     }
 
     void setSheetBehavior(){
@@ -220,43 +348,13 @@ public class MediaPlayerActivity extends AppCompatActivity {
         });
     };
 
-    //LOADS AN IMAGE FROM A URL IN THE BACKGROUND
-    private class DownLoadImageTask extends AsyncTask<String,Void,Bitmap> {
-        ImageView imageView;
-
-        public DownLoadImageTask(ImageView imageView){
-            this.imageView = imageView;
-        }
-
-        /*
-            doInBackground(Params... params)
-                Override this method to perform a computation on a background thread.
-         */
-        protected Bitmap doInBackground(String...urls){
-            String urlOfImage = urls[0];
-            Bitmap logo = null;
-            try{
-                InputStream is = new URL(urlOfImage).openStream();
-                /*
-                    decodeStream(InputStream is)
-                        Decode an input stream into a bitmap.
-                 */
-                logo = BitmapFactory.decodeStream(is);
-            }catch(Exception e){ // Catch the download exception
-                e.printStackTrace();
-            }
-            return logo;
-        }
-
-        /*
-            onPostExecute(Result result)
-                Runs on the UI thread after doInBackground(Params...).
-         */
-        protected void onPostExecute(Bitmap result){
-            imageView.setImageBitmap(result);
-        }
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
-
-
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 }
