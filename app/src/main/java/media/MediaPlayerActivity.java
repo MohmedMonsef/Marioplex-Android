@@ -191,9 +191,13 @@ public class MediaPlayerActivity extends AppCompatActivity {
                     start_time.setText(getTimeString(mCurrentPosition));
                     end_time.setText(getTimeString(duration-mCurrentPosition));
                 }
-                mHandler.postDelayed(this, 1000);
+                //mHandler.postDelayed(this, 100);
+                mHandler.post(this);
             }
         });
+
+
+
 
         //SEEK BAR LISTENER TO NAVIGATE THROW THE SONG
         seek_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
