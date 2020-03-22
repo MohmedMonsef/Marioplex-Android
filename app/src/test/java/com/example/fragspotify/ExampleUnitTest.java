@@ -1,4 +1,4 @@
-package com.example.spotify;
+package com.example.fragspotify;
 
 import org.junit.Test;
 
