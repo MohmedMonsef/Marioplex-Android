@@ -4,6 +4,7 @@ package com.example.fragspotify.Activities;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -17,12 +18,19 @@ import com.example.fragspotify.Fragments.LIBRARY_FRAGMENT.libraryFragment;
 import com.example.fragspotify.Fragments.PREMIUM_FRAGMENT.premiumFragment;
 import com.example.fragspotify.Fragments.SEARCH_FRAGMENT.searchFragment;
 import com.example.fragspotify.R;
+import com.example.fragspotify.media.MediaPlayerService;
+import com.example.fragspotify.media.TrackInfo;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import static android.content.ContentValues.TAG;
 import static android.widget.Toast.makeText;
 
 public class MainActivity extends AppCompatActivity {
+
+    private TrackInfo track;
+    private MediaPlayerService player;
+    boolean serviceBound = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +39,13 @@ public class MainActivity extends AppCompatActivity {
                 ////*******************************BottomNavigation***********************////
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+
+        //get instance from the singleton class and start the service
+        track = TrackInfo.getInstance();
+        if(!serviceBound) {
+            startService();
+        }
 
     }
     public void loadFragment(Fragment fragment) {
@@ -68,4 +83,22 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putBoolean("ServiceState", serviceBound);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        serviceBound = savedInstanceState.getBoolean("ServiceState");
+    }
+
+    private void startService(){
+        Intent serviceIntent = new Intent(this , MediaPlayerService.class);
+        // serviceIntent.putExtra("media" , media);
+        startService(serviceIntent);
+    }
 }

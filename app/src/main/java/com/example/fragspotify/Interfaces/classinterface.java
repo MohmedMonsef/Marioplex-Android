@@ -9,7 +9,7 @@ import retrofit2.http.Headers;
 public interface classinterface
 {
 @GET("v1/browse/new-releases?country=SE&limit=10&offset=0")
-@Headers("Authorization: Bearer BQDyRz6H-POb1vzoKKsJ0FqxUkECR8CMrSgDQ9Mc0JdrFQXizQISwYOMZj2lH5aU1kMU34u4tAwjNVu25Bxiv-7yILjqmxDk0B4CCAdoofX4wi938KvzdvdQzQDZhSzosqMKSrorcsZi-En9bUfKxlVORTnLsRuEdFF4LpIA6i86_4cdRQnivqOJUzHEkWd4-NoSCyGAa0djEUxrkr_jz4mnjnWJc5N11nv7BUprywy5kjTBoNbd9hfJ3Py31Voc4ieXJF13KT2Ds3rL6lxUu1VZ7F-yJCqQMA")
+@Headers("Authorization: Bearer BQCuLAJp8vgez0xzrQwqBbbXSqSeZqdff9bJPSPOqEL7OK52W1lN_Ny3dSC38HxAnGr_X7_o5Fw435vJvXCTcNIBEkCanW7Yp-ylFrQWTsUUfw5n4Gz4VIbUFfoyXrmP836lmoXnv4mXB-8WRX5l-E11HXSjOAPP-QFjLXgvNbZ3sPvgiHu8ElQMU7TQfiqF")
 public Call<NewRelease> getNewRelease();
 
 }
