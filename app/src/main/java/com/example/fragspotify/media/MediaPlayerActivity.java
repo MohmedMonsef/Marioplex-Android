@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -63,6 +64,22 @@ public class MediaPlayerActivity extends AppCompatActivity {
     private ImageView arrow;
     private ImageView song_settings_button;
     private ConstraintLayout song_settings;
+    private LinearLayout sleep;
+    private LinearLayout settings_like;
+    private LinearLayout settings_add_to_playlist;
+    private LinearLayout view_artist;
+    private RelativeLayout sleep_sheet_hider;
+    private ConstraintLayout sleep_timer;
+    private Button five;
+    private LinearLayout ten;
+    private LinearLayout fifteen;
+    private LinearLayout thirty;
+    private LinearLayout fortyfive;
+    private LinearLayout hour;
+    private LinearLayout end_of_track;
+    private LinearLayout turn_of_timer;
+    private ImageView timer_image;
+    BottomSheetBehavior sleepTimer;
     BottomSheetBehavior sheetBehavior;
 
     private TrackInfo track;
@@ -106,7 +123,72 @@ public class MediaPlayerActivity extends AppCompatActivity {
         getViews();
 
         sheetBehavior = BottomSheetBehavior.from(song_settings);
+        sleepTimer = BottomSheetBehavior.from(sleep_timer);
         setSheetBehavior();
+        setSleepTimerBehaviour();
+
+        //////////////////////////////////////////////////////////////////
+        ////////////////////settings listeners////////////////////////////
+        //////////////////////////////////////////////////////////////////
+        five.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startTimer(5000);
+            }
+        });
+        ten.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startTimer(600000);
+            }
+        });
+        fifteen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startTimer(900000);
+            }
+        });
+        thirty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startTimer(1800000);
+            }
+        });
+        fortyfive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startTimer(2700000);
+            }
+        });
+        hour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startTimer(3600000);
+            }
+        });
+
+        //till yoy fix the next and previous problems
+//        end_of_track.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                player.setStopInTrackEnd(true);
+//                track.setTimerSet(true);
+//                sleepTimer.setState(BottomSheetBehavior.STATE_HIDDEN);
+//                toast = Toast.makeText(getApplicationContext(),"Your sleep timer is set",Toast.LENGTH_SHORT);
+//                toast.show();
+//            }
+//        });
+        turn_of_timer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               player.cancelTimer();
+               sleepTimer.setState(BottomSheetBehavior.STATE_HIDDEN);
+               toast = Toast.makeText(getApplicationContext(),"Sleep timer is turned off",Toast.LENGTH_SHORT);
+               toast.show();
+            }
+        });
+
+        //////////////////////////////////////////////////////////////////
 
         track = TrackInfo.getInstance();
 
@@ -139,6 +221,20 @@ public class MediaPlayerActivity extends AppCompatActivity {
             @Override
             public void onChanged(Integer integer) {
                 seek_bar.setMax(integer/1000);
+            }
+        });
+
+        track.getTimerSet().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    timer_image.setImageResource(R.drawable.sleep_timer_activiated);
+                    turn_of_timer.setVisibility(View.VISIBLE);
+                }
+                else{
+                    timer_image.setImageResource(R.drawable.sleep_timer);
+                    turn_of_timer.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -294,10 +390,47 @@ public class MediaPlayerActivity extends AppCompatActivity {
             }
         });
     }
+    void setSleepTimerBehaviour(){
+        sleepTimer.setHideable(true);
+        sleepTimer.setPeekHeight(0);
+        sleepTimer.setState(BottomSheetBehavior.STATE_HIDDEN);
+        sleep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sleepTimer.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    sleepTimer.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+                } else {
+                    sleepTimer.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+            }
+        });
+
+        sleep_sheet_hider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                sleepTimer.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
+
+        sleepTimer.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+            }
+        });
+    }
 
     //FINDS ALL VIEWS BY ID
     private void getViews(){
-
         top_layout = (RelativeLayout)findViewById(R.id.top_layout);
         song_name = (TextView)findViewById(R.id.song_name);
         song_artist = (TextView)findViewById(R.id.song_artist);
@@ -312,7 +445,31 @@ public class MediaPlayerActivity extends AppCompatActivity {
         previous = (ImageView)findViewById(R.id.previous);
         arrow = (ImageView) findViewById(R.id.arrow);
         song_settings = (ConstraintLayout)findViewById(R.id.song_settings);
+        sleep_timer = (ConstraintLayout)findViewById(R.id.sleep_timer);
         song_settings_button = (ImageView)findViewById(R.id.song_settings_button);
+        sleep = (LinearLayout)findViewById(R.id.sleep);
+        settings_like = (LinearLayout)findViewById(R.id.settings_like);
+        settings_add_to_playlist = (LinearLayout)findViewById(R.id.settings_add_to_playlist);
+        view_artist = (LinearLayout)findViewById(R.id.view_artist);
+        sleep_sheet_hider = (RelativeLayout)findViewById(R.id.sleep_sheet_hider);
+        timer_image = (ImageView)findViewById(R.id.timer_image);
+        five = (Button)findViewById(R.id.five);
+        ten = (LinearLayout)findViewById(R.id.ten_minutes);
+        fifteen = (LinearLayout)findViewById(R.id.fifteen_minutes);
+        thirty = (LinearLayout)findViewById(R.id.thirty_minutes);
+        fortyfive = (LinearLayout)findViewById(R.id.fortyfive_inutes);
+        hour = (LinearLayout)findViewById(R.id.hour);
+        end_of_track = (LinearLayout)findViewById(R.id.end_of_track);
+        turn_of_timer = (LinearLayout)findViewById(R.id.turn_of_timer);
+
+    }
+
+
+    void startTimer(long milliSeconds){
+        player.startTimer(milliSeconds);   //3 seconds
+        sleepTimer.setState(BottomSheetBehavior.STATE_HIDDEN);
+        toast = Toast.makeText(getApplicationContext(),"Your sleep timer is set",Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     //SENDS A REQUEST TO THE ENDPOINT API AND GETS A TRACK AND UPDATED THE UI

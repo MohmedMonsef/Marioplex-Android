@@ -10,6 +10,7 @@ public class TrackInfo {
     private MutableLiveData<Track> track = new MutableLiveData<Track>();
     private String name;
     private MutableLiveData<Boolean> isPlaying = new MutableLiveData<>();
+    private MutableLiveData<Boolean> timerSet = new MutableLiveData<>();
     private MutableLiveData<Integer> duration = new MutableLiveData<>();
    // private MutableLiveData<Integer> currentPosition = new MutableLiveData<>();
 
@@ -49,5 +50,7 @@ public class TrackInfo {
     public void setDuration(int d){
         duration.setValue(d);
     }
+    public void setTimerSet(boolean s){timerSet.setValue(s);}
+    public MutableLiveData<Boolean> getTimerSet(){return timerSet;}
 
 }

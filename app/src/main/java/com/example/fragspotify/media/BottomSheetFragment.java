@@ -96,11 +96,13 @@ public class BottomSheetFragment extends Fragment {
                     track.setIsPlaying(false);
                     player.pauseMedia();
                     bottom_play_pause.setImageResource(R.drawable.play_down);
+                    //player.cancelTimer();
                 }
                 else{
                     track.setIsPlaying(true);
                     player.resumeMedia();
                     bottom_play_pause.setImageResource(R.drawable.pause_down);
+                    //player.cancelTimer();
                 }
             }
         });

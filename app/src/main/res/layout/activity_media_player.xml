@@ -174,6 +174,7 @@
     </LinearLayout>
 
     <include layout="@layout/song_settings"/>
+    <include layout="@layout/sleep_timer"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

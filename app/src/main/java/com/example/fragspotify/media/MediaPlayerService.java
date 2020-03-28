@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -18,6 +19,7 @@ import com.example.fragspotify.SpotifyClasses.Tracks;
 import com.example.fragspotify.media.TrackInfo;
 
 import java.io.IOException;
+import java.util.Timer;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,6 +41,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     private String TrackID2 ="4VqPOruhp5EdPBeR92t6lQ";
     private String TrackID3 ="2takcwOaAZWiXQijPHIx7B";
     private Tracks tracks;
+    private boolean stopInTrackEnd;
+
+    private boolean prepared;
 
     private Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://api.spotify.com/")
@@ -47,6 +52,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     private EndPointAPI endPointAPI = retrofit.create(EndPointAPI.class);
     private Toast toast;
     private TrackInfo track = TrackInfo.getInstance();
+    private CountDownTimer sleepTimer = null;
 
 
     @Override
@@ -68,6 +74,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     public void onCreate() {
         super.onCreate();
         initMediaPlayer();
+        track.setTimerSet(false);
+        stopInTrackEnd = false;
 
     }
 
@@ -87,6 +95,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             // Set the data source to the mediaFile location
             audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
             mediaPlayer.setDataSource(audioFile);
+            prepared = false;
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -115,7 +124,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                     //audioFile = track.getTrack().getValue().getUri();
 //                    try {
 //                        mediaPlayer.setDataSource(audioFile);
-//
+//                         prepared = false
 //                    } catch (IOException e) {
 //                        e.printStackTrace();
 //                        stopSelf();
@@ -170,6 +179,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             // Set the data source to the mediaFile location
             audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3";
             mediaPlayer.setDataSource(audioFile);
+            prepared = false;
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -187,7 +197,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             // Set the data source to the mediaFile location
             audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3";
             mediaPlayer.setDataSource(audioFile);
-
+            prepared = false;
         } catch (IOException e) {
             e.printStackTrace();
             stopSelf();
@@ -197,6 +207,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     public Boolean getIsPlaying(){
         return isPlaying;
     }
+    public Boolean getStopInTrackEnd(){return stopInTrackEnd;}
+    public void setStopInTrackEnd(boolean b){stopInTrackEnd = b;}
 
     public void playMedia() {
         if (!mediaPlayer.isPlaying()) {
@@ -213,6 +225,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             isPlaying = false;
             TrackInfo.getInstance().setIsPlaying(false);
         }
+        //cancelTimer();
     }
 
     public void pauseMedia() {
@@ -222,10 +235,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             TrackInfo.getInstance().setIsPlaying(false);
             resumePosition = mediaPlayer.getCurrentPosition();
         }
+        //cancelTimer();
     }
 
     public int getCurrentPosition(){
-        if(mediaPlayer!=null) {
+        if(mediaPlayer!=null&&prepared) {
             return mediaPlayer.getCurrentPosition();
         }
         else{
@@ -234,7 +248,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     }
 
     public int getDuration(){
-        if(mediaPlayer !=null) {
+        if(mediaPlayer !=null&&prepared) {
             return mediaPlayer.getDuration();
         }
         else {
@@ -269,6 +283,15 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     @Override
     public void onCompletion(MediaPlayer mp) {
         stopMedia();
+//        if(stopInTrackEnd) {
+//            setStopInTrackEnd(false);
+//            track.setTimerSet(false);
+//            stopMedia();
+//        }
+//        else {
+//            track.setIsPlaying(false);
+//            next();
+//        }
     }
 
     @Override
@@ -280,6 +303,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     public void onPrepared(MediaPlayer mp) {
         playMedia();
         TrackInfo.getInstance().setDuration(mediaPlayer.getDuration());
+        prepared = true;
+        toast = Toast.makeText(getApplicationContext() , "audio is prepared " , Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     @Override
@@ -322,14 +348,49 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         if(mediaPlayer !=null){
             stopMedia();
             mediaPlayer.release();
-
         }
+        cancelTimer();
     }
 
     public class LocalBinder extends Binder {
         public MediaPlayerService getservice(){
             return MediaPlayerService.this;
         }
+    }
+
+    public void startTimer(long milliSeconds){
+        if(mediaPlayer != null) {
+            sleepTimer = new CountDownTimer(milliSeconds, 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    toast = Toast.makeText(getApplicationContext(),"one sec passed",Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+
+                @Override
+                public void onFinish() {
+                    if (mediaPlayer != null) {
+                        pauseMedia();
+                        track.setTimerSet(false);
+                        toast = Toast.makeText(getApplicationContext(),"sleep timer ended",Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                }
+            }.start();
+        }
+        track.setTimerSet(true);
+    }
+
+    public void cancelTimer(){
+        if(sleepTimer!=null){
+            sleepTimer.cancel();
+            track.setTimerSet(false);
+        }
+        if(stopInTrackEnd){
+            setStopInTrackEnd(false);
+        }
+//        toast = Toast.makeText(getApplicationContext() , "cancel timer called" , Toast.LENGTH_SHORT);
+//        toast.show();
     }
 
 }
