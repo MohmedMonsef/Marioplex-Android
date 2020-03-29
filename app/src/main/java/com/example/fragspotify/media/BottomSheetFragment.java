@@ -75,7 +75,7 @@ public class BottomSheetFragment extends Fragment {
         bottom_play_pause = root.findViewById(R.id.bottom_play_pause);
 
         track = TrackInfo.getInstance();
-        track.setName("Hager");
+        track.setName("song name");
         song_artist_name.setText(track.getName());
 
 

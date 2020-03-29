@@ -304,8 +304,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         playMedia();
         TrackInfo.getInstance().setDuration(mediaPlayer.getDuration());
         prepared = true;
-        toast = Toast.makeText(getApplicationContext() , "audio is prepared " , Toast.LENGTH_SHORT);
-        toast.show();
+//        toast = Toast.makeText(getApplicationContext() , "audio is prepared " , Toast.LENGTH_SHORT);
+//        toast.show();
     }
 
     @Override
@@ -360,10 +360,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     public void startTimer(long milliSeconds){
         if(mediaPlayer != null) {
-            sleepTimer = new CountDownTimer(milliSeconds, 1000) {
+            sleepTimer = new CountDownTimer(milliSeconds, 60000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
-                    toast = Toast.makeText(getApplicationContext(),"one sec passed",Toast.LENGTH_SHORT);
+                    toast = Toast.makeText(getApplicationContext(),"one minute passed",Toast.LENGTH_SHORT);
                     toast.show();
                 }
 

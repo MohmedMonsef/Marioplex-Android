@@ -24,6 +24,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".media.MediaPlayerActivity" />
+        <activity android:name=".media.AddToPlaylistActivity" />
+        <activity android:name=".media.CreatePlaylistActivity" />
 
         <service android:name=".media.MediaPlayerService" />
     </application>

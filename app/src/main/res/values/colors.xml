@@ -7,5 +7,6 @@
     <color name="layoutcolor">#1b1313</color>
     <color name="TextColor">#FFFFFF</color>
     <color name="TopBar">#1C1312</color>
+    <color name="btnColor">#1DB954</color>
 
 </resources>

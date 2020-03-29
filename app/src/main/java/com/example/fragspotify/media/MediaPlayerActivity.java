@@ -133,7 +133,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
         five.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startTimer(5000);
+                startTimer(300000);
             }
         });
         ten.setOnClickListener(new View.OnClickListener() {
@@ -188,6 +188,13 @@ public class MediaPlayerActivity extends AppCompatActivity {
             }
         });
 
+        settings_add_to_playlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MediaPlayerActivity.this, AddToPlaylistActivity.class);
+                startActivity(intent);
+            }
+        });
         //////////////////////////////////////////////////////////////////
 
         track = TrackInfo.getInstance();
