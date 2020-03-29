@@ -48,7 +48,7 @@
         android:selectAllOnFocus="true" />
 
     <Button
-        android:id="@+id/login"
+        android:id="@+id/loginCredentials"
         android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

@@ -1,7 +1,13 @@
 package com.example.spotify;
 
-public class Credentials {
+import com.google.gson.annotations.SerializedName;
+
+public class LoginCredentials {
+
+    @SerializedName("email")
     private String email;
+
+    @SerializedName("password")
     private String password;
 
     public String getEmail() {

@@ -41,6 +41,7 @@
             android:adjustViewBounds="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
+            android:onClick="LaunchSignUpActivity"
             android:src="@drawable/sign_up_free" />
 
         <ImageView
