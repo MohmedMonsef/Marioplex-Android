@@ -39,14 +39,21 @@
             android:textSize="18dp"
             android:textColor="@android:color/background_light"/>
     </RelativeLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
+
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.7">
+
         <ListView
             android:id="@+id/playlists_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-    </LinearLayout>
+        <ProgressBar
+            android:id="@+id/playlists_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
 
 </LinearLayout>

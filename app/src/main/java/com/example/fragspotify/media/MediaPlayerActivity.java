@@ -192,6 +192,12 @@ public class MediaPlayerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MediaPlayerActivity.this, AddToPlaylistActivity.class);
+                if(TrackInfo.getInstance().getTrack()!=null && TrackInfo.getInstance().getTrack().getValue()!=null){
+                    intent.putExtra("track_id", TrackInfo.getInstance().getTrack().getValue().getId());
+                }
+                else{
+                    intent.putExtra("track_id", "");
+                }
                 startActivity(intent);
             }
         });
