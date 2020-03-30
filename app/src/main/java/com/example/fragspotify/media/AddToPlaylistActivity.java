@@ -80,6 +80,7 @@ public class AddToPlaylistActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AddToPlaylistActivity.this , CreatePlaylistActivity.class);
+                intent.putExtra("track_id", trackID);
                 startActivity(intent);
             }
         });
@@ -88,7 +89,8 @@ public class AddToPlaylistActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //take the playlist id and add the song to it
-                //TODO uncmment the below block in integeration
+                //TODO uncomment the below block in integeration
+
 //                if(userPlaylists !=null && userPlaylists.getItems() !=null){
 //                    String playlist_id = userPlaylists.getItems().get(position).getId();
 //                    if(trackID ==""){

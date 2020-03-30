@@ -79,6 +79,10 @@ public class MediaPlayerActivity extends AppCompatActivity {
     private LinearLayout end_of_track;
     private LinearLayout turn_of_timer;
     private ImageView timer_image;
+    private ImageView setting_image;
+    private TextView setting_song_name;
+    private TextView setting_artist_id;
+    private RelativeLayout settings_upper_relative_layout;
     BottomSheetBehavior sleepTimer;
     BottomSheetBehavior sheetBehavior;
 
@@ -354,6 +358,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
     void UpdateUI(){
 
         song_name.setText(track.getTrack().getValue().getName());
+        setting_song_name.setText(track.getTrack().getValue().getName());
 
         List<Artist_> artists = track.getTrack().getValue().getArtists();
         String artistsNames = "";
@@ -362,6 +367,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
             artistsNames+=artist_.getName() +" ";
         }
         song_artist.setText(artistsNames);
+        setting_artist_id.setText(artistsNames);
 
 
         playlist_name.setText(track.getTrack().getValue().getAlbum().getName());
@@ -370,6 +376,8 @@ public class MediaPlayerActivity extends AppCompatActivity {
         List<Image> images= track.getTrack().getValue().getAlbum().getImages();
         String Imageurl = images.get(0).getUrl();
         Picasso.get().load(Imageurl).into(song_image);
+        Picasso.get().load(Imageurl).into(setting_image);
+
 
 
     }
@@ -379,6 +387,17 @@ public class MediaPlayerActivity extends AppCompatActivity {
         sheetBehavior.setPeekHeight(0);
         sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         song_settings_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+                } else {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+            }
+        });
+        settings_upper_relative_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
@@ -474,6 +493,10 @@ public class MediaPlayerActivity extends AppCompatActivity {
         hour = (LinearLayout)findViewById(R.id.hour);
         end_of_track = (LinearLayout)findViewById(R.id.end_of_track);
         turn_of_timer = (LinearLayout)findViewById(R.id.turn_of_timer);
+        setting_image = (ImageView)findViewById(R.id.setting_image);
+        setting_song_name = (TextView)findViewById(R.id.setting_song_name);
+        setting_artist_id = (TextView)findViewById(R.id.setting_artist_id);
+        settings_upper_relative_layout = (RelativeLayout)findViewById(R.id.settings_upper_relative_layout);
 
     }
 

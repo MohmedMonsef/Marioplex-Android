@@ -17,8 +17,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface EndPointAPI {
-    String token = "BQAoFTN3bIfLC0YWowrIsQC1A-WXQwBtwtvzzUfCUYDhbuUURVo0o6aGaCyZ5BMrLjnzhubbEh3UVE0P4hi3YsKcCevYjLn1A3M8uZRgrFcMEgQxKuSjzVQMt__gKVMC8GF2PX7tPGnuQl_kkMSm9dKGa7VY_lMFeZMHPvskv4dicJjmicFAgwwTB9SW55EZhm-Ofn6tjdFEF2l5-jAjDYbzQwfoVR8SSnT8TxgAVDOUhcLQmU3j1kK1nrU5esIt-nh7yx8wMiM_wS7_tZVfbVIFRyl5yeHOYQ";
-
+    String token = "BQDi1YBom6loLJPordXPoL0Kxx2-2Hkq0fOyvrriA62NCcKs19l6IRXecP33Kw8BAQMYtr910dR0CYxJ_6KsVsCNBGlueXj7yyrAQueIpVXY-mLZFIZ46xTIFG5dB0f_PsAbc0BeYhpAmna1zmvYFANgi2-Yqydm-fSgALGEY_eOWpM3pASPgi1lMiab2s3tlODnquMwfff26o0R9pqhBt2yBBqJppBdmYxwNkQcllpkOXxAC8_jhD3j5fL85L8d6et9EJDjLHs1N284_OSXG6kf6Owcp0rFnw";
     @GET("v1/tracks/3n3Ppam7vgaVa1iaRUc9Lp")
     @Headers("Authorization: Bearer "+token)
     Call<Track> getATrack();
@@ -43,6 +42,10 @@ public interface EndPointAPI {
     @POST("playlists/{playlist_id}/tracks")
     @Headers("Authorization: Bearer "+token)
     Call<playlist> AddTrackToAPlaylist(@Path("playlist_id") String playlistID , @Field("tracks") String track_id); //check if fiels of Query
+
+    @POST("users/playlists")
+    @Headers("Authorization: Bearer "+token)
+    Call<playlist> CreatePlaylist(@Field("name") String playlist_name); //check if fiels of Query
 
 
 

@@ -24,6 +24,7 @@
             android:layout_marginTop="80dp"
             android:layout_width="match_parent"
             android:layout_height="85dp"
+            android:id="@+id/playlist_name_edit_text"
             android:gravity="center"
             android:inputType="text" />
 
