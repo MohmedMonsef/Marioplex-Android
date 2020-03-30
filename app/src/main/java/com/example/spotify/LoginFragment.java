@@ -83,7 +83,7 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Token> call, Throwable t) {
-                Log.e("Login Activity",t.getMessage());
+                Log.e("Intro Activity",t.getMessage());
                 Toast.makeText(getContext(),"Failed to connect",Toast.LENGTH_SHORT).show();
             }
         });

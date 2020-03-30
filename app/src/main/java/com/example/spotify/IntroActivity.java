@@ -16,6 +16,7 @@ public class IntroActivity extends AppCompatActivity {
     private static Retrofit retrofit;
     private static ApiSpotify apiSpotify;
     private static LoginFragment loginFragment = null;
+    private static SignUpFragment signUpFragment= null;
     //private static String token = null;
 
     @Override
@@ -35,9 +36,11 @@ public class IntroActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.intro_fragment,loginFragment).commit();
     }
 
-    public void LaunchSignUpActivity(View view) {
-        Intent intent = new Intent(this,SignUpActivity.class);
-        startActivity(intent);
+
+    public void showSignUpFragment(View view){
+        signUpFragment = new SignUpFragment(retrofit,apiSpotify);
+        hideIntroLayout();
+        getSupportFragmentManager().beginTransaction().replace(R.id.intro_fragment,signUpFragment).commit();
     }
 
     @Override
@@ -45,6 +48,11 @@ public class IntroActivity extends AppCompatActivity {
         if(loginFragment != null){
             getSupportFragmentManager().beginTransaction().remove(loginFragment).commit();
             loginFragment = null;
+            showIntroLayout();
+        }
+        else if(signUpFragment != null){
+            getSupportFragmentManager().beginTransaction().remove(signUpFragment).commit();
+            signUpFragment = null;
             showIntroLayout();
         }
         else{

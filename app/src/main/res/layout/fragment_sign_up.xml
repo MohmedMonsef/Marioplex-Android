@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:windowActionBar="true"
     android:background="#121212"
-    tools:context=".SignUpActivity">
+    tools:context=".IntroActivity">
 
 
     <TextView
@@ -102,14 +102,13 @@
         android:selectAllOnFocus="true" />
 
     <Button
-        android:id="@+id/signUp"
+        android:id="@+id/signUpButton"
         android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="22dp"
         android:enabled="true"
         android:text="Sign up"
-        android:onClick="signUp"
         android:textSize="24sp" />
 
 
