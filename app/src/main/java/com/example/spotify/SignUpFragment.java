@@ -81,6 +81,7 @@ public class SignUpFragment extends Fragment {
                 if(response.isSuccessful()){
                     Log.v("Intro Activity",response.body().toString());
                     Toast.makeText(getContext(),"Sucess " + response.code(),Toast.LENGTH_SHORT).show();
+
                 }
                 else {
                     Log.i("Intro Activity",response.errorBody().toString());

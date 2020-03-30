@@ -1,5 +1,6 @@
 package com.example.spotify;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -75,6 +76,10 @@ public class LoginFragment extends Fragment {
                 if(response.isSuccessful()){
                     token = response.body().getToken();
                     Toast.makeText(getContext(),"Sucess " + response.code(),Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getActivity(),MainActivity.class);
+                    intent.putExtra("token",token);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
                 else {
                     Toast.makeText(getContext(),"Failed to login",Toast.LENGTH_SHORT).show();

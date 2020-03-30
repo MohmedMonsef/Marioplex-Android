@@ -64,7 +64,6 @@ public class IntroActivity extends AppCompatActivity {
     }
 
 
-
     public void showFragment(Fragment fragment){
         getSupportFragmentManager().beginTransaction().replace(R.id.intro_fragment,fragment).commit();
         findViewById(R.id.intro).animate().translationX(-displayWidth);
