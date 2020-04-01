@@ -17,7 +17,8 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface EndPointAPI {
-    String token = "BQDi1YBom6loLJPordXPoL0Kxx2-2Hkq0fOyvrriA62NCcKs19l6IRXecP33Kw8BAQMYtr910dR0CYxJ_6KsVsCNBGlueXj7yyrAQueIpVXY-mLZFIZ46xTIFG5dB0f_PsAbc0BeYhpAmna1zmvYFANgi2-Yqydm-fSgALGEY_eOWpM3pASPgi1lMiab2s3tlODnquMwfff26o0R9pqhBt2yBBqJppBdmYxwNkQcllpkOXxAC8_jhD3j5fL85L8d6et9EJDjLHs1N284_OSXG6kf6Owcp0rFnw";
+    String token = "BQDbws7mVPJV0YSZRUNJz1XtQUZTGExfM9qptNtHuQuUti7qx0Lci75BZ6hP2cK0QFpBRoRcFNgU6LZwl6l2cxzSyLk3V7ZumuoSLxVzav1abEDJQYEh6Qkc0t1S02C2hezOWhMITWGUkPxnIiIcfm9RXtMverQZJM2bPWk-FDzwv12vLae0BpB9xc6YDS21iH3SGQf6TxTAkxiGk51vdFBHIezKklCVCimV7B3xQaOeM2-ocTB1pWSA_LtBXsV2LGsI5NOc5ZehD9BoD3lv9jBBeJVwuGbUUA";
+
     @GET("v1/tracks/3n3Ppam7vgaVa1iaRUc9Lp")
     @Headers("Authorization: Bearer "+token)
     Call<Track> getATrack();

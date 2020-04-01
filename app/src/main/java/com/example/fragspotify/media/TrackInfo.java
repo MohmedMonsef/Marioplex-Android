@@ -7,7 +7,7 @@ import com.example.fragspotify.SpotifyClasses.Track;
 
 public class TrackInfo {
     private static TrackInfo instance;
-    private MutableLiveData<Track> track = new MutableLiveData<Track>();
+    private MutableLiveData<Track> track = new MutableLiveData<Track>();//TODO here
     private String name;
     private MutableLiveData<Boolean> isPlaying = new MutableLiveData<>();
     private MutableLiveData<Boolean> timerSet = new MutableLiveData<>();
@@ -21,11 +21,11 @@ public class TrackInfo {
             instance = new TrackInfo();
         return instance;
     }
-
+    //TODO here
     public void setTrack(Track trackv) {
         track.setValue(trackv);
     }
-
+    //TODO here
     public MutableLiveData<Track> getTrack(){
         return track;
     }

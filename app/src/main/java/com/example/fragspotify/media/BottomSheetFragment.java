@@ -116,7 +116,7 @@ public class BottomSheetFragment extends Fragment {
         });
 
         //Observers
-
+//TODO here
         track.getTrack().observe(this, new Observer<Track>() {
             @Override
             public void onChanged(Track track) {
@@ -139,7 +139,7 @@ public class BottomSheetFragment extends Fragment {
 
         return root;
     }
-
+    //TODO here
     void UpdateUI(){
 
         List<Artist_> artists = track.getTrack().getValue().getArtists();

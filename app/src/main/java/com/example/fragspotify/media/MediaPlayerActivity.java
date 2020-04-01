@@ -87,7 +87,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
     BottomSheetBehavior sheetBehavior;
 
     private TrackInfo track;
-    private Track t;
+    private Track t; //TODO here
     private String nametest;
     private EndPointAPI endPointAPI;
     private Retrofit retrofit;
@@ -197,7 +197,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MediaPlayerActivity.this, AddToPlaylistActivity.class);
                 if(TrackInfo.getInstance().getTrack()!=null && TrackInfo.getInstance().getTrack().getValue()!=null){
-                    intent.putExtra("track_id", TrackInfo.getInstance().getTrack().getValue().getId());
+                    intent.putExtra("track_id", TrackInfo.getInstance().getTrack().getValue().getId());//TODO here
                 }
                 else{
                     intent.putExtra("track_id", "");
@@ -211,7 +211,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
         header.setText(track.getName());
 
-
+//TODO here
         //Observers
         if(track.getTrack()!=null) {
             track.getTrack().observe(this, new Observer<Track>() {
@@ -295,7 +295,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 player.previous();
             }
         });
-
+//TODO here
         //UPDATE THE SEEK BAR AND THE START AND END TIME EVERY SECOND
         MediaPlayerActivity.this.runOnUiThread(new Runnable() {
             @Override
@@ -354,7 +354,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
         bindService(serviceIntent1 , serviceConnection , Context.BIND_AUTO_CREATE);
 
     }
-
+    //TODO here
     void UpdateUI(){
 
         song_name.setText(track.getTrack().getValue().getName());
@@ -507,7 +507,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
         toast = Toast.makeText(getApplicationContext(),"Your sleep timer is set",Toast.LENGTH_SHORT);
         toast.show();
     }
-
+    //TODO here i think it should be removed and the retrofit variable from above
     //SENDS A REQUEST TO THE ENDPOINT API AND GETS A TRACK AND UPDATED THE UI
     void getATrack(){
         Call<Track> call = endPointAPI.getATrack();
