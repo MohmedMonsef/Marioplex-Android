@@ -3,11 +3,12 @@ package com.example.fragspotify.media;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.fragspotify.SpotifyClasses.Track;
+import com.example.fragspotify.pojo.currentTrack;
 
 
 public class TrackInfo {
     private static TrackInfo instance;
-    private MutableLiveData<Track> track = new MutableLiveData<Track>();//TODO here
+    private MutableLiveData<currentTrack> track = new MutableLiveData<>();//TODO here
     private String name;
     private MutableLiveData<Boolean> isPlaying = new MutableLiveData<>();
     private MutableLiveData<Boolean> timerSet = new MutableLiveData<>();
@@ -22,11 +23,11 @@ public class TrackInfo {
         return instance;
     }
     //TODO here
-    public void setTrack(Track trackv) {
+    public void setTrack(currentTrack trackv) {
         track.setValue(trackv);
     }
     //TODO here
-    public MutableLiveData<Track> getTrack(){
+    public MutableLiveData<currentTrack> getTrack(){
         return track;
     }
 

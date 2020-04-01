@@ -14,12 +14,9 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.example.fragspotify.Interfaces.EndPointAPI;
-import com.example.fragspotify.SpotifyClasses.Track;
-import com.example.fragspotify.SpotifyClasses.Tracks;
-import com.example.fragspotify.media.TrackInfo;
+import com.example.fragspotify.pojo.currentTrack;
 
 import java.io.IOException;
-import java.util.Timer;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,10 +34,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     private String audioFile ="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
     private Boolean isPlaying = false;
     private int resumePosition;
-    private String TrackID1 ="7ouMYWpwJ422jRcDASZB7P";
-    private String TrackID2 ="4VqPOruhp5EdPBeR92t6lQ";
-    private String TrackID3 ="2takcwOaAZWiXQijPHIx7B";
-    private Tracks tracks;
+//    private String TrackID1 ="7ouMYWpwJ422jRcDASZB7P";
+//    private String TrackID2 ="4VqPOruhp5EdPBeR92t6lQ";
+//    private String TrackID3 ="2takcwOaAZWiXQijPHIx7B";
+//    private Tracks tracks;
     private boolean stopInTrackEnd;
 
     private boolean prepared;
@@ -89,7 +86,12 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         mediaPlayer.setOnSeekCompleteListener(this);
         //Reset so that the MediaPlayer is not pointing to another data source
         mediaPlayer.reset();
-        getTracks(TrackID2);
+
+        ///////////////////request the current track//////////////////////////
+        Call<currentTrack> call = endPointAPI.getCurrentlyPlaying();
+        getCurrentlyPlaying(call);
+        //////////////////////////////////////////////////////////////////////
+
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             // Set the data source to the mediaFile location
@@ -104,12 +106,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         mediaPlayer.prepareAsync();
     }
 
-    void getATrack(){
-        Call<Track> call = endPointAPI.getATrack();
-
-        call.enqueue(new Callback<Track>() {
+    void getCurrentlyPlaying(Call<currentTrack> call){
+        call.enqueue(new Callback<currentTrack>() {
             @Override
-            public void onResponse(Call<Track> call, Response<Track> response) {
+            public void onResponse(Call<currentTrack> call, Response<currentTrack> response) {
                 if (!response.isSuccessful()) {
                     toast = Toast.makeText(getApplicationContext(),"Code: "+response.code(),Toast.LENGTH_SHORT);
                     toast.show();
@@ -130,48 +130,48 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 //                        stopSelf();
 //                    }
                    // mediaPlayer.prepareAsync();
-
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<Track> call, Throwable t) {
-                toast = Toast.makeText(getApplicationContext(),t.getMessage()+" 'failed '",Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        });
-    };
-
-    void getTracks(String trackID){
-        Call<Tracks> call = endPointAPI.getTracks(trackID);
-
-        call.enqueue(new Callback<Tracks>() {
-            @Override
-            public void onResponse(Call<Tracks> call, Response<Tracks> response) {
-                if(!response.isSuccessful()){
-                    toast = Toast.makeText(getApplicationContext(),"Code: "+response.code(),Toast.LENGTH_SHORT);
-                    toast.show();
-                    return;
-                }
-                else if(response.body()==null){
-                    toast = Toast.makeText(getApplicationContext(),"response body = null",Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-                else {
-                    tracks = response.body();
-                    track.setTrack(tracks.getTracks().get(0));
                 }
             }
             @Override
-            public void onFailure(Call<Tracks> call, Throwable t) {
+            public void onFailure(Call<currentTrack> call, Throwable t) {
                 toast = Toast.makeText(getApplicationContext(),t.getMessage()+" 'failed '",Toast.LENGTH_SHORT);
                 toast.show();
             }
         });
     }
+
+//    void getTracks(String trackID){
+//        Call<Tracks> call = endPointAPI.getTracks(trackID);
+//
+//        call.enqueue(new Callback<Tracks>() {
+//            @Override
+//            public void onResponse(Call<Tracks> call, Response<Tracks> response) {
+//                if(!response.isSuccessful()){
+//                    toast = Toast.makeText(getApplicationContext(),"Code: "+response.code(),Toast.LENGTH_SHORT);
+//                    toast.show();
+//                    return;
+//                }
+//                else if(response.body()==null){
+//                    toast = Toast.makeText(getApplicationContext(),"response body = null",Toast.LENGTH_SHORT);
+//                    toast.show();
+//                }
+//                else {
+//                    tracks = response.body();
+//                    track.setTrack(tracks.getTracks().get(0));
+//                }
+//            }
+//            @Override
+//            public void onFailure(Call<Tracks> call, Throwable t) {
+//                toast = Toast.makeText(getApplicationContext(),t.getMessage()+" 'failed '",Toast.LENGTH_SHORT);
+//                toast.show();
+//            }
+//        });
+//    }
     public void next(){
-        getTracks(TrackID3);
+        ///////////////////request the current track//////////////////////////
+        Call<currentTrack> call = endPointAPI.getNext();
+        getCurrentlyPlaying(call);
+        //////////////////////////////////////////////////////////////////////
         pauseMedia();
         mediaPlayer.reset();
 
@@ -190,7 +190,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     }
 
     public void previous(){
-        getTracks(TrackID1);
+        ///////////////////request the current track//////////////////////////
+        Call<currentTrack> call = endPointAPI.getPrevious();
+        getCurrentlyPlaying(call);
+        //////////////////////////////////////////////////////////////////////
         pauseMedia();
         mediaPlayer.reset();
         try {

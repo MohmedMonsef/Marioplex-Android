@@ -33,6 +33,7 @@ import com.example.fragspotify.SpotifyClasses.Image;
 import com.example.fragspotify.SpotifyClasses.Track;
 import com.example.fragspotify.media.MediaPlayerService;
 import com.example.fragspotify.media.TrackInfo;
+import com.example.fragspotify.pojo.currentTrack;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.squareup.picasso.Picasso;
 
@@ -89,8 +90,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
     private TrackInfo track;
     private Track t; //TODO here
     private String nametest;
-    private EndPointAPI endPointAPI;
-    private Retrofit retrofit;
     private MediaPlayerService player;
     private Handler mHandler = new Handler();
     boolean serviceBound = false;
@@ -196,8 +195,8 @@ public class MediaPlayerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MediaPlayerActivity.this, AddToPlaylistActivity.class);
-                if(TrackInfo.getInstance().getTrack()!=null && TrackInfo.getInstance().getTrack().getValue()!=null){
-                    intent.putExtra("track_id", TrackInfo.getInstance().getTrack().getValue().getId());//TODO here
+                if(TrackInfo.getInstance().getTrack()!=null && TrackInfo.getInstance().getTrack().getValue()!=null &&TrackInfo.getInstance().getTrack().getValue().getTrack()!=null){
+                    intent.putExtra("track_id", TrackInfo.getInstance().getTrack().getValue().getTrack().getId());//TODO here
                 }
                 else{
                     intent.putExtra("track_id", "");
@@ -214,9 +213,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
 //TODO here
         //Observers
         if(track.getTrack()!=null) {
-            track.getTrack().observe(this, new Observer<Track>() {
+            track.getTrack().observe(this, new Observer<currentTrack>() {
                 @Override
-                public void onChanged(Track track) {
+                public void onChanged(currentTrack track) {
                     UpdateUI();
                 }
             });
@@ -356,30 +355,31 @@ public class MediaPlayerActivity extends AppCompatActivity {
     }
     //TODO here
     void UpdateUI(){
-
-        song_name.setText(track.getTrack().getValue().getName());
-        setting_song_name.setText(track.getTrack().getValue().getName());
-
-        List<Artist_> artists = track.getTrack().getValue().getArtists();
-        String artistsNames = "";
-        for(Artist_ artist_ : artists)
-        {
-            artistsNames+=artist_.getName() +" ";
+        String trackName = "";
+        if(track.getTrack().getValue().getTrack()!=null) {
+            trackName = track.getTrack().getValue().getTrack().getName();
         }
-        song_artist.setText(artistsNames);
-        setting_artist_id.setText(artistsNames);
+        song_name.setText(trackName);
+        setting_song_name.setText(trackName);
+
+        String artistName = "";
+        if(track.getTrack().getValue().getAlbum()!=null && track.getTrack().getValue().getAlbum().getArtist()!=null && track.getTrack().getValue().getTrack()!=null){
+            artistName = track.getTrack().getValue().getAlbum().getArtist().getName();
+        }
+        song_artist.setText(artistName);
+        setting_artist_id.setText(artistName);
 
 
         playlist_name.setText(track.getTrack().getValue().getAlbum().getName());
         header.setText("PLAYING SONG");
 
-        List<Image> images= track.getTrack().getValue().getAlbum().getImages();
-        String Imageurl = images.get(0).getUrl();
-        Picasso.get().load(Imageurl).into(song_image);
-        Picasso.get().load(Imageurl).into(setting_image);
 
-
-
+        List<Image> images= track.getTrack().getValue().getTrack().getImages();
+        if(images !=null){
+            String Imageurl = images.get(0).getUrl();
+            Picasso.get().load(Imageurl).into(song_image);
+            Picasso.get().load(Imageurl).into(setting_image);
+        }
     }
 
     void setSheetBehavior(){
@@ -507,46 +507,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
         toast = Toast.makeText(getApplicationContext(),"Your sleep timer is set",Toast.LENGTH_SHORT);
         toast.show();
     }
-    //TODO here i think it should be removed and the retrofit variable from above
-    //SENDS A REQUEST TO THE ENDPOINT API AND GETS A TRACK AND UPDATED THE UI
-    void getATrack(){
-        Call<Track> call = endPointAPI.getATrack();
 
-        call.enqueue(new Callback<Track>() {
-            @Override
-            public void onResponse(Call<Track> call, Response<Track> response) {
-                if (!response.isSuccessful()) {
-                    toast = Toast.makeText(getApplicationContext(),"Code: "+response.code(),Toast.LENGTH_SHORT);
-                    toast.show();
-                    return;
-                }
-                else if(response.body()==null){
-                    toast = Toast.makeText(getApplicationContext(),"response body = null",Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-                else {
-                    track.setTrack(response.body());
-                    t = track.getTrack().getValue();
-                    if(t!=null){
-                        header.setText(t.getName()+" . "+"Artist _ name");
-                    }
-//                    track.getTrack().observe(MediaPlayerActivity.this, new Observer<Track>() {
-//                        @Override
-//                        public void onChanged(Track track) {
-//                            song_name.setText(track.getName());
-//                        }
-//                    });
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<Track> call, Throwable t) {
-                toast = Toast.makeText(getApplicationContext(),t.getMessage()+" 'failed '",Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        });
-    };
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
