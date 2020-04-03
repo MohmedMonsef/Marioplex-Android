@@ -2,7 +2,7 @@ package com.example.spotify.login;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Token {
+public class LoginResponse {
 
     @SerializedName("token")
     private String token;

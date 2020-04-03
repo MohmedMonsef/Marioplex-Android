@@ -26,7 +26,7 @@ public class LoginFragment extends Fragment {
 
     private static Retrofit mRetrofit;
     private static ApiSpotify mApiSpotify;
-    private static String token;
+    private static String token = null;
 
 
     /*public LoginFragment() {
@@ -70,17 +70,16 @@ public class LoginFragment extends Fragment {
         loginCredentials.setEmail(email);
         loginCredentials.setPassword(password);
 
-        Call<Token> call = mApiSpotify.login(loginCredentials);
+        Call<LoginResponse> call = mApiSpotify.login(loginCredentials);
 
-        call.enqueue(new Callback<Token>() {
+        call.enqueue(new Callback<LoginResponse>() {
             @Override
-            public void onResponse(Call<Token> call, Response<Token> response) {
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if(response.isSuccessful()){
                     token = response.body().getToken();
-                    Toast.makeText(getContext(),"Sucess " + response.code(),Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getActivity(), MainActivity.class);
-                    intent.putExtra("token",token);
-                    startActivity(intent);
+                    Toast.makeText(getContext(),"Sucess " +response.code(),Toast.LENGTH_SHORT).show();
+                    fetchUserData();
+                    startActivity(new Intent(getActivity(), MainActivity.class));
                     getActivity().finish();
                 }
                 else {
@@ -89,10 +88,41 @@ public class LoginFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<Token> call, Throwable t) {
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
                 Log.e("Intro Activity",t.getMessage());
                 Toast.makeText(getContext(),"Failed to connect",Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+    public void fetchUserData(){
+
+        user.setToken(token);
+
+        /*
+        if(token == null)
+            return;
+
+        mApiSpotify.profile(token).enqueue(new Callback<user>() {
+            @Override
+            public void onResponse(Call<user> call, Response<user> response) {
+                if(response.isSuccessful()){
+                    Toast.makeText(getContext(),user.getName() + user.getGender(),Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(getContext(),"Failed to get profile",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<user> call, Throwable t) {
+                Toast.makeText(getContext(),"Failed to connect",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+         */
+    }
+
+
 }
