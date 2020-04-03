@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.login.user;
 import com.example.spotify.pojo.currentTrack;
 
 import java.io.IOException;
@@ -40,9 +41,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     private boolean stopInTrackEnd;
 
     private boolean prepared;
-
+//TODO change the base url here
     private Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://api.spotify.com/")
+            .baseUrl("http://192.168.1.7:3000/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
     private EndPointAPI endPointAPI = retrofit.create(EndPointAPI.class);
@@ -87,7 +88,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         mediaPlayer.reset();
 
         ///////////////////request the current track//////////////////////////
-        Call<currentTrack> call = endPointAPI.getCurrentlyPlaying();
+        Call<currentTrack> call = endPointAPI.getCurrentlyPlaying(" Bearer "+user.getToken());
         getCurrentlyPlaying(call);
         //////////////////////////////////////////////////////////////////////
 
@@ -168,7 +169,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 //    }
     public void next(){
         ///////////////////request the current track//////////////////////////
-        Call<currentTrack> call = endPointAPI.getNext();
+        Call<currentTrack> call = endPointAPI.getNext(" Bearer "+user.getToken());
         getCurrentlyPlaying(call);
         //////////////////////////////////////////////////////////////////////
         pauseMedia();
@@ -190,7 +191,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     public void previous(){
         ///////////////////request the current track//////////////////////////
-        Call<currentTrack> call = endPointAPI.getPrevious();
+        Call<currentTrack> call = endPointAPI.getPrevious(" Bearer "+user.getToken());
         getCurrentlyPlaying(call);
         //////////////////////////////////////////////////////////////////////
         pauseMedia();

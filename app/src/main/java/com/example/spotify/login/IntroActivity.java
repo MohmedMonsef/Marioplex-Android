@@ -28,7 +28,7 @@ public class IntroActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
 
-        retrofit = new Retrofit.Builder().baseUrl("http://192.168.1.39:3000").addConverterFactory(GsonConverterFactory.create()).build();
+        retrofit = new Retrofit.Builder().baseUrl("http://192.168.1.7:3000").addConverterFactory(GsonConverterFactory.create()).build();
 
         apiSpotify = retrofit.create(ApiSpotify.class);
 

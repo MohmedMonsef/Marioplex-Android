@@ -10,6 +10,7 @@ import retrofit2.Call;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -29,43 +30,43 @@ public interface EndPointAPI {
 //    Call<Tracks> getTracks(@Query("ids") String tracksid);
 
     @GET("v1/me/playlists")
-    @Headers("Authorization: Bearer "+token)
+    //@Headers("Authorization: Bearer "+token)
     Call<UserPlaylists> getUserPlaylists();
 
     @PUT("me/like")
-    @Headers("Authorization: Bearer "+token)
+    //@Headers("Authorization: Bearer "+token)
     Call<ResponseBody> LikeATrack(@Query("id") String id);
 
     @DELETE("me/unlike")
-    @Headers("Authorization: Bearer "+token)
+    //@Headers("Authorization: Bearer "+token)
     Call<ResponseBody> unLikeATrack(@Query("id") String id);
 
     //////////////////////////////////our api requests//////////////////////////////////////////
     /////////you need to change the Base URL//////////////////
     @GET("player/next")
-    @Headers("Authorization: Bearer "+token)
-    Call<currentTrack> getNext();
+    //@Headers("Authorization: Bearer "+token)
+    Call<currentTrack> getNext(@Header("Authorization")String token1);
     //Call<currentTrack> getNext(@Header("Authorization")String token1);
 
     @GET("player/previous")
-    @Headers("Authorization: Bearer "+token)
-    Call<currentTrack> getPrevious();
+    //@Headers("Authorization: Bearer "+token)
+    Call<currentTrack> getPrevious(@Header("Authorization")String token1);
 
     @GET("player/currently-playing")
-    @Headers("Authorization: Bearer "+token)
-    Call<currentTrack> getCurrentlyPlaying();
+    //@Headers("Authorization: Bearer "+token)
+    Call<currentTrack> getCurrentlyPlaying(@Header("Authorization")String token1);
 
     @GET("me/playlists")
-    @Headers("Authorization: Bearer "+token)
+    //@Headers("Authorization: Bearer "+token)
     Call<Track> getCurrentUserPlaylists();
 
 
     @POST("playlists/{playlist_id}/tracks")
-    @Headers("Authorization: Bearer "+token)
+    //@Headers("Authorization: Bearer "+token)
     Call<playlist> AddTrackToAPlaylist(@Path("playlist_id") String playlistID , @Field("tracks") String track_id); //check if fiels or Query
 
     @POST("users/playlists")
-    @Headers("Authorization: Bearer "+token)
+    //@Headers("Authorization: Bearer "+token)
     Call<playlist> CreatePlaylist(@Field("name") String playlist_name); //check if fiels of Query
 
 
