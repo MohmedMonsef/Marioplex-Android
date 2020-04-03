@@ -7,5 +7,7 @@
     <color name="layoutcolor">#1b1313</color>
     <color name="TextColor">#FFFFFF</color>
     <color name="TopBar">#1C1312</color>
+    <color name="search">#282828</color>
+    <color name="searchitem">#883030</color>
 
 </resources>

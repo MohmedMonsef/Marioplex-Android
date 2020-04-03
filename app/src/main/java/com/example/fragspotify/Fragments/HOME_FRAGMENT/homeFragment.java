@@ -2,7 +2,6 @@ package com.example.fragspotify.Fragments.HOME_FRAGMENT;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,8 +9,6 @@ import androidx.annotation.NonNull;
 import android.app.Fragment;
 
 //import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
@@ -21,16 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.fragspotify.Activities.MainActivity;
-import com.example.fragspotify.Adapters.Adapter;
+import com.example.fragspotify.Adapters.AdapterNewRelease;
 import com.example.fragspotify.Fragments.SETTING_FRAGMENT.settingFragment;
 import com.example.fragspotify.Interfaces.classinterface;
 import com.example.fragspotify.R;
@@ -42,7 +36,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static android.content.ContentValues.TAG;
 import static android.widget.Toast.makeText;
 
 /**
@@ -54,7 +47,7 @@ import static android.widget.Toast.makeText;
 public class homeFragment extends Fragment implements LifecycleOwner {
     NewRelease NewReleaseList;
     RecyclerView recyclerView;
-    Adapter recyclerAdapter;
+    AdapterNewRelease recyclerAdapter;
     private TextView textViewResult;
     Toolbar toolbar;
     private viewmodelHome homeViewModel;
@@ -122,7 +115,7 @@ private void SetRetrofit()
                 textViewResult.setText(response.body().toString() + " track = null");
             else {
                 Log.d("TAG", "Response = " + NewReleaseList);
-                recyclerAdapter = new Adapter(getActivity(), NewReleaseList.getAlbums().getItems());
+                recyclerAdapter = new AdapterNewRelease(getActivity(), NewReleaseList.getAlbums().getItems());
                 recyclerView.setAdapter(recyclerAdapter);
                 recyclerView.setHasFixedSize(true);
             }
