@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.spotify.MainActivity;
+import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.R;
 
 import retrofit2.Call;

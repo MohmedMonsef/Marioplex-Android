@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.Spotify">
+    package="com.example.spotify">
 
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
@@ -25,12 +25,12 @@
         </activity>
         <activity android:name=".Activities.ActivitySetting"></activity>
         <activity android:name=".Activities.SettingActivity" />
-        <activity android:name="com.example.Spotify.Activities.MainActivity"/>
-        <activity android:name="com.example.Spotify.media.MediaPlayerActivity" />
-        <activity android:name="com.example.Spotify.media.AddToPlaylistActivity" />
-        <activity android:name="com.example.Spotify.media.CreatePlaylistActivity" />
+        <activity android:name="com.example.spotify.Activities.MainActivity"/>
+        <activity android:name="com.example.spotify.media.MediaPlayerActivity" />
+        <activity android:name="com.example.spotify.media.AddToPlaylistActivity" />
+        <activity android:name="com.example.spotify.media.CreatePlaylistActivity" />
 
-        <service android:name="com.example.Spotify.media.MediaPlayerService" />
+        <service android:name="com.example.spotify.media.MediaPlayerService" />
 
         <meta-data
             android:name="preloaded_fonts"
