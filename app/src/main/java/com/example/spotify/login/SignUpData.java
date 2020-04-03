@@ -1,4 +1,4 @@
-package com.example.spotify;
+package com.example.spotify.login;
 
 import com.google.gson.annotations.SerializedName;
 

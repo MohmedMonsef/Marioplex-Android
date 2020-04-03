@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:windowActionBar="true"
     android:background="#121212"
-    tools:context=".IntroActivity">
+    tools:context=".login.IntroActivity">
 
 
     <TextView

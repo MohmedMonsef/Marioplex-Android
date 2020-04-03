@@ -1,4 +1,4 @@
-package com.example.spotify;
+package com.example.spotify.login;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.spotify.MainActivity;
+import com.example.spotify.R;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -76,7 +78,7 @@ public class LoginFragment extends Fragment {
                 if(response.isSuccessful()){
                     token = response.body().getToken();
                     Toast.makeText(getContext(),"Sucess " + response.code(),Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getActivity(),MainActivity.class);
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
                     intent.putExtra("token",token);
                     startActivity(intent);
                     getActivity().finish();

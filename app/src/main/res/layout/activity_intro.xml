@@ -7,7 +7,7 @@
     android:background="#121212"
     android:gravity="center"
     android:id="@+id/root_view"
-    tools:context=".IntroActivity">
+    tools:context=".login.IntroActivity">
 
 
     <LinearLayout

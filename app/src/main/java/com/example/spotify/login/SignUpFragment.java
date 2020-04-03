@@ -1,4 +1,4 @@
-package com.example.spotify;
+package com.example.spotify.login;
 
 import android.os.Bundle;
 
@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.spotify.R;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
