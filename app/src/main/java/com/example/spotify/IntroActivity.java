@@ -69,6 +69,7 @@ public class IntroActivity extends AppCompatActivity {
         findViewById(R.id.intro).animate().translationX(-displayWidth);
         findViewById(R.id.intro_fragment).animate().translationX(0);
     }
+
     public void hideFragment(Fragment fragment){
         findViewById(R.id.intro).animate().translationX(0);
         findViewById(R.id.intro_fragment).animate().translationX(displayWidth).withEndAction(new Runnable() {

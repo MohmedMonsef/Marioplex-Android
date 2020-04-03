@@ -63,7 +63,7 @@
         android:layout_height="42dp"
         android:background="#424242"
         android:imeOptions="actionDone"
-        android:inputType="date"
+        android:inputType="text"
         android:selectAllOnFocus="true" />
 
     <TextView
