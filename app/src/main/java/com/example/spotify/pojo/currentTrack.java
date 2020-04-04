@@ -19,7 +19,7 @@ public class currentTrack {
     @SerializedName("playlistId")
     @Expose
     private String playlistId;
-    @SerializedName("isplayable")
+    @SerializedName("isPlayable")
     @Expose
     private Boolean isplayable;
 

@@ -43,12 +43,12 @@ public interface EndPointAPI {
 
     //////////////////////////////////our api requests//////////////////////////////////////////
     /////////you need to change the Base URL//////////////////
-    @GET("me/player/next")
+    @POST("me/player/next-playing")
     //@Headers("Authorization: Bearer "+token)
     Call<currentTrack> getNext(@Header("x-auth-token")String token1);
     //Call<currentTrack> getNext(@Header("Authorization")String token1);
 
-    @GET("me/player/previous")
+    @POST("me/player/prev-playing")
     //@Headers("Authorization: Bearer "+token)
     Call<currentTrack> getPrevious(@Header("x-auth-token")String token1);
 
