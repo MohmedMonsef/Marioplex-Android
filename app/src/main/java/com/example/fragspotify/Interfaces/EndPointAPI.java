@@ -12,7 +12,7 @@ import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 public interface EndPointAPI {
-    String token = "BQCuLAJp8vgez0xzrQwqBbbXSqSeZqdff9bJPSPOqEL7OK52W1lN_Ny3dSC38HxAnGr_X7_o5Fw435vJvXCTcNIBEkCanW7Yp-ylFrQWTsUUfw5n4Gz4VIbUFfoyXrmP836lmoXnv4mXB-8WRX5l-E11HXSjOAPP-QFjLXgvNbZ3sPvgiHu8ElQMU7TQfiqF";
+    String token = "BQA22sJho0gzPYltgT9oSOcPjA27CKuEeEXiPgbLLs-EEHKu8_KDlDQskf_b4Y8VfRjR1yJpIWQBM-er9LtrxJgL7nxzisYayYT5u2R5zogk5MUoZ3KytxqAaleY2n8DHp96QX6oFrRqjNZvAt-rUTdL5cEEeR57ueFcqsebpmPGieHmIlknN1ptj019wWX24E6fmdpjE6wfB7MinodH2Owy6L2owZokQlv5YgxZmYe2SAmlyfDjtSzOdiXBZZVr8LLYgRhqTcMzJdQrZj16Nim8hciApPEERQ";
 
     @GET("v1/tracks/3n3Ppam7vgaVa1iaRUc9Lp")
     @Headers("Authorization: Bearer "+token)

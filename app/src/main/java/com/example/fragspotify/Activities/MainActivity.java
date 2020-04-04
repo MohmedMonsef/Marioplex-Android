@@ -13,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fragspotify.BackClasses.BackFragment.backhome;
+import com.example.fragspotify.BackClasses.BackFragment.searchfragment;
 import com.example.fragspotify.Fragments.HOME_FRAGMENT.homeFragment;
 import com.example.fragspotify.Fragments.LIBRARY_FRAGMENT.libraryFragment;
 import com.example.fragspotify.Fragments.PREMIUM_FRAGMENT.premiumFragment;
@@ -68,10 +70,10 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    loadFragment(new homeFragment());
+                    loadFragment(new backhome());
                     return true;
                 case R.id.navigation_search:
-                    loadFragment(new searchFragment());
+                    loadFragment(new searchfragment());
                     return true;
                 case R.id.navigation_library:
                     loadFragment(new libraryFragment());

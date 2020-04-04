@@ -11,7 +11,7 @@ import retrofit2.http.Query;
 
 public interface classinterface
 {
-    String token="BQDI2DH2neciO1rfbmdM6gKOp8jHi8oS2W_DJHjl2sZpFaGLUDfFVMz6gBwroTPJlbOlG0eW9vXEqKmlGIZiik0ktvMWMB38sGthL5DYu5V_BTMauwxGQdBiq_ryLgj5kkn2hoR74IL5BvJyf8trLrAlSjx8BveNxe5B8quZzvNO0B85vbRn7B26bpa9YU6egNJIl31aCmrWOT96gKwGsV_vVaeFnp4X6a74_e75pdKqZ0jcy4z32F5M5EKT6qpjDJMrwHaT-D5GCfFy_08jalu8uPQvIg_PnQ";
+    String token="BQA22sJho0gzPYltgT9oSOcPjA27CKuEeEXiPgbLLs-EEHKu8_KDlDQskf_b4Y8VfRjR1yJpIWQBM-er9LtrxJgL7nxzisYayYT5u2R5zogk5MUoZ3KytxqAaleY2n8DHp96QX6oFrRqjNZvAt-rUTdL5cEEeR57ueFcqsebpmPGieHmIlknN1ptj019wWX24E6fmdpjE6wfB7MinodH2Owy6L2owZokQlv5YgxZmYe2SAmlyfDjtSzOdiXBZZVr8LLYgRhqTcMzJdQrZj16Nim8hciApPEERQ";
 
     //get list of new releases
     @GET("v1/browse/new-releases?country=SE&limit=10&offset=0")
