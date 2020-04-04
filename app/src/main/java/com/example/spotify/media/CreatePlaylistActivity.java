@@ -12,24 +12,24 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.example.spotify.pojo.playlist;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CreatePlaylistActivity extends AppCompatActivity {
 
     private Button cancel_create_playlist;
     private EditText playlist_name_edit_text;
-    private Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://192.168.1.7:3000/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-    private EndPointAPI endPointAPI = retrofit.create(EndPointAPI.class);
+//    private Retrofit retrofit = new Retrofit.Builder()
+//            .baseUrl("http://192.168.1.7:3000/")
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build();
+    private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();
     private String trackID;
     private playlist createdPlaylist;
 
