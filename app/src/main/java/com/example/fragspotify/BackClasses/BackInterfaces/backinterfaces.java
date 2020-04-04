@@ -14,8 +14,8 @@ public interface backinterfaces
     String token="BQB-bDExnvUTX8218R5eEBIXI8eKv91gY6znWEyLOLfyY-JLkRUcg20y4IlGwktPdJ3dmmPKvjjqRwYba1KVnQpnpXYkt6AhSBBcU_1UrG2cqNY1KcCfzjcCB1EFGfr-emKBX4e54t15HOLpjQ6TMufJS5zsu_XacgjBZ_QFsjD8RUlE8YW5FZNA7QKqgP9tXYbhnyPEw8eALO7RZViVJKrOphGIc9ysNvwWv4yzYNvhWuRtF1SfMpicUqa28g7auDv52KfD0GGwBA1O8w7ydclFI3Ok8KA7lw";
 
     //get list of new backhome
-    @GET("v1/browse/new-backhome?country=SE&limit=10&offset=0")
-    @Headers("Authorization: Bearer "+token)
+    @GET("browse/new-releases?country=SE&limit=10&offset=0")
+    //@Headers("Authorization: Bearer "+token)
     public Call<Newreleases> getNewRelease();
 
 

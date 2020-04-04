@@ -15,7 +15,7 @@ public interface classinterface
 
     //get list of new releases
     @GET("v1/browse/new-releases?country=SE&limit=10&offset=0")
-    @Headers("Authorization: Bearer "+token)
+    //@Headers("Authorization: Bearer "+token)
     public Call<NewRelease> getNewRelease();
 
 

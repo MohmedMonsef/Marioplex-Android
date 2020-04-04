@@ -81,7 +81,7 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
                 if(s.length()!=0) {
                     Log.i("onQueryTextChange", s.toString());
                     Retrofit retrofit = new Retrofit.Builder()
-                            .baseUrl("https://192.168.1.2:300")
+                            .baseUrl("http://192.168.1.7:3000")
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
                     backinterfaces apiService = retrofit.create(backinterfaces.class);

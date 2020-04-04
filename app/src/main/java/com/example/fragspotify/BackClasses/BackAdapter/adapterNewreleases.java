@@ -48,8 +48,9 @@ public class adapterNewreleases extends RecyclerView.Adapter<adapterNewreleases.
         Album item=NewReleaseList.get(position);
         holder.ImageName.setText(item.getName());
         Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
-        Picasso.get().load(item.getImages().get(0).toString()).into(holder.image);
-
+        if(item.getImages()!= null & item.getImages().size()!=0) {
+            Picasso.get().load(item.getImages().get(0).toString()).into(holder.image);
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
