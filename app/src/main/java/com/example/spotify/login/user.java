@@ -8,16 +8,14 @@ import com.google.gson.annotations.SerializedName;
 
 
 public class user {
-    @SerializedName("displayName")
     static String name = null;
-    @SerializedName("_id")
     static String id = null;
-    @SerializedName("email")
     static String email = null;
-    @SerializedName("birthDate")
     static String dateOfBirth = null;
-    @SerializedName("gender")
     static String gender = null;
+    static String country = null;
+    static String product = null;
+    static String [] images = null;
 
     static String token = null;
 
@@ -71,5 +69,29 @@ public class user {
 
     public static void setToken(String token) {
         user.token = token;
+    }
+
+    public static String getCountry() {
+        return country;
+    }
+
+    public static void setCountry(String country) {
+        user.country = country;
+    }
+
+    public static String getProduct() {
+        return product;
+    }
+
+    public static void setProduct(String product) {
+        user.product = product;
+    }
+
+    public static String[] getImages() {
+        return images;
+    }
+
+    public static void setImages(String[] images) {
+        user.images = images;
     }
 }

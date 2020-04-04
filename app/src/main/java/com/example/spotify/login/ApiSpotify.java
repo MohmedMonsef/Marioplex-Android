@@ -1,5 +1,7 @@
 package com.example.spotify.login;
 
+import java.util.ArrayList;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -15,5 +17,5 @@ public interface ApiSpotify {
     Call<ResponseBody> signUp(@Body SignUpData signUpData);
 
     @GET("me")
-    Call<user> profile(@Header("authorization") String token);
+    Call<ArrayList<userProfile>> profile(@Header("x-auth-token") String token);
 }

@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import android.app.Fragment;
 
 //import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
@@ -15,10 +16,13 @@ import androidx.lifecycle.ViewModelProviders;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Fragments.ProfileFragment;
 import com.example.spotify.R;
+import com.example.spotify.login.user;
 
 import static android.widget.Toast.makeText;
 
@@ -41,8 +45,18 @@ public class settingFragment extends Fragment implements LifecycleOwner {
         settingViewmodel =ViewModelProviders.of((MainActivity) getActivity()).get(viewmodelSetting.class);
         final TextView textView = view.findViewById(R.id.text_search);
         ////*******************************RecyclerView***********************////
-        return view;
 
+        //user related
+        ((ImageView)view.findViewById(R.id.profile_picture)).setImageResource(R.drawable.logo);
+        ((TextView)view.findViewById(R.id.user_name)).setText(user.getName());
+        view.findViewById(R.id.view_profile).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new ProfileFragment();
+                getFragmentManager().beginTransaction().replace(R.id.frame_fragment,fragment).commit();
+            }
+        });
+        return view;
     }
 
 

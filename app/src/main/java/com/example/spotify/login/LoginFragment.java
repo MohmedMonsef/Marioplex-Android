@@ -15,6 +15,9 @@ import android.widget.Toast;
 import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.R;
 
+import java.util.ArrayList;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -63,12 +66,12 @@ public class LoginFragment extends Fragment {
     }
 
     public void login(){
-        String email = ((EditText) getView().findViewById(R.id.email)).getText().toString();
-        String password = ((EditText) getView().findViewById(R.id.password)).getText().toString();
+        //String email = ((EditText) getView().findViewById(R.id.email)).getText().toString();
+        //String password = ((EditText) getView().findViewById(R.id.password)).getText().toString();
 
         LoginCredentials loginCredentials = new LoginCredentials();
-        loginCredentials.setEmail(email);
-        loginCredentials.setPassword(password);
+        loginCredentials.setEmail("batman@gmail.com");
+        loginCredentials.setPassword("123");
 
         Call<LoginResponse> call = mApiSpotify.login(loginCredentials);
 
@@ -96,18 +99,21 @@ public class LoginFragment extends Fragment {
     }
 
     public void fetchUserData(){
-
-        user.setToken(token);
-
-        /*
         if(token == null)
             return;
 
-        mApiSpotify.profile(token).enqueue(new Callback<user>() {
+        mApiSpotify.profile(token).enqueue(new Callback<ArrayList<userProfile>>() {
             @Override
-            public void onResponse(Call<user> call, Response<user> response) {
+            public void onResponse(Call<ArrayList<userProfile>> call, Response<ArrayList<userProfile>> response) {
                 if(response.isSuccessful()){
-                    Toast.makeText(getContext(),user.getName() + user.getGender(),Toast.LENGTH_LONG).show();
+                    user.setToken(token);
+                    user.setName(response.body().get(0).getDisplayName());
+                    user.setEmail(response.body().get(0).getEmail());
+                    user.setDateOfBirth(response.body().get(0).getBirthDate());
+                    user.setGender(response.body().get(0).getGender());
+                    user.setCountry(response.body().get(0).getCountry());
+                    user.setProduct(response.body().get(0).getProduct());
+                    user.setImages(response.body().get(0).getImages());
                 }
                 else {
                     Toast.makeText(getContext(),"Failed to get profile",Toast.LENGTH_SHORT).show();
@@ -115,13 +121,13 @@ public class LoginFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<user> call, Throwable t) {
+            public void onFailure(Call<ArrayList<userProfile>> call, Throwable t) {
                 Toast.makeText(getContext(),"Failed to connect",Toast.LENGTH_SHORT).show();
             }
         });
 
 
-         */
+
     }
 
 
