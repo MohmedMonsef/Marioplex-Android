@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.spotify.R;
+import com.example.spotify.login.apiClasses.SignUpData;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

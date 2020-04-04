@@ -16,9 +16,13 @@ import com.example.spotify.Fragments.LIBRARY_FRAGMENT.libraryFragment;
 import com.example.spotify.Fragments.PREMIUM_FRAGMENT.premiumFragment;
 import com.example.spotify.Fragments.SEARCH_FRAGMENT.searchFragment;
 import com.example.spotify.R;
+import com.example.spotify.login.ApiSpotify;
 import com.example.spotify.media.MediaPlayerService;
 import com.example.spotify.media.TrackInfo;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.widget.Toast.makeText;
 
@@ -27,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
     private TrackInfo track;
     private MediaPlayerService player;
     boolean serviceBound = false;
+
+    static Retrofit retrofit;
+    static ApiSpotify apiSpotify;
 
 
     @Override
@@ -44,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
             startService();
         }
 
+        retrofit = new Retrofit.Builder().baseUrl("http://192.168.1.35:3000").addConverterFactory(GsonConverterFactory.create()).build();
+        apiSpotify = retrofit.create(ApiSpotify.class);
     }
     public void loadFragment(Fragment fragment) {
         // create a FragmentManager
@@ -97,5 +106,19 @@ public class MainActivity extends AppCompatActivity {
         Intent serviceIntent = new Intent(this , MediaPlayerService.class);
         // serviceIntent.putExtra("media" , media);
         startService(serviceIntent);
+    }
+
+    public static Retrofit getRetrofit() {
+        if(retrofit == null){
+            retrofit = new Retrofit.Builder().baseUrl("http://192.168.1.35:3000").addConverterFactory(GsonConverterFactory.create()).build();
+        }
+        return retrofit;
+    }
+
+    public static ApiSpotify getApiSpotify() {
+        if(apiSpotify == null){
+            apiSpotify = getRetrofit().create(ApiSpotify.class);
+        }
+        return apiSpotify;
     }
 }

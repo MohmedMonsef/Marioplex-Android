@@ -9,15 +9,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.R;
+import com.example.spotify.login.apiClasses.LoginCredentials;
+import com.example.spotify.login.apiClasses.LoginResponse;
+import com.example.spotify.login.apiClasses.userProfile;
 
 import java.util.ArrayList;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -80,8 +81,9 @@ public class LoginFragment extends Fragment {
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if(response.isSuccessful()){
                     token = response.body().getToken();
+                    user.setToken(token);
                     Toast.makeText(getContext(),"Sucess " +response.code(),Toast.LENGTH_SHORT).show();
-                    fetchUserData();
+                    user.fetchUserData();
                     startActivity(new Intent(getActivity(), MainActivity.class));
                     getActivity().finish();
                 }
@@ -98,6 +100,7 @@ public class LoginFragment extends Fragment {
         });
     }
 
+    /*
     public void fetchUserData(){
         if(token == null)
             return;
@@ -128,7 +131,7 @@ public class LoginFragment extends Fragment {
 
 
 
-    }
+    }*/
 
 
 }

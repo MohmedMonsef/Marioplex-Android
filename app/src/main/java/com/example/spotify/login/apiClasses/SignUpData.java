@@ -1,4 +1,4 @@
-package com.example.spotify.login;
+package com.example.spotify.login.apiClasses;
 
 import com.google.gson.annotations.SerializedName;
 
