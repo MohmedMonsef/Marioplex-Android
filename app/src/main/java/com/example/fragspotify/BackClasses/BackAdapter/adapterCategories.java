@@ -42,8 +42,9 @@ public class adapterCategories extends RecyclerView.Adapter<adapterCategories.My
         Category_ item=Categorylist.get(position);
         holder.ImageName.setText(item.getName());
         Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
-        Picasso.get().load(item.getImages().get(0).toString()).into(holder.image);
-
+        if(item.getImages()!= null & item.getImages().size()!=0) {
+            Picasso.get().load(item.getImages().get(0).toString()).into(holder.image);
+        }
     }
 
     @Override

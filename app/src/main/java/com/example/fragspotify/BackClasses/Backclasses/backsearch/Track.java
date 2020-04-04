@@ -4,141 +4,40 @@ package com.example.fragspotify.BackClasses.Backclasses.backsearch;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 public class Track {
 
-    @SerializedName("artistId")
+    @SerializedName("track")
     @Expose
-    private String artistId;
-    @SerializedName("artistName")
+    private Track_ track;
+    @SerializedName("artist")
     @Expose
-    private String artistName;
-    @SerializedName("artistimages")
+    private Artist__ artist;
+    @SerializedName("album")
     @Expose
-    private List<Object> artistimages = null;
-    @SerializedName("artistType")
-    @Expose
-    private String artistType;
-    @SerializedName("albumId")
-    @Expose
-    private String albumId;
-    @SerializedName("albumName")
-    @Expose
-    private String albumName;
-    @SerializedName("albumImages")
-    @Expose
-    private List<Object> albumImages = null;
-    @SerializedName("albumType")
-    @Expose
-    private String albumType;
-    @SerializedName("_id")
-    @Expose
-    private String id;
-    @SerializedName("name")
-    @Expose
-    private String name;
-    @SerializedName("type")
-    @Expose
-    private String type;
-    @SerializedName("images")
-    @Expose
-    private List<Object> images = null;
+    private Album__ album;
 
-    public String getArtistId() {
-        return artistId;
+    public Track_ getTrack() {
+        return track;
     }
 
-    public void setArtistId(String artistId) {
-        this.artistId = artistId;
+    public void setTrack(Track_ track) {
+        this.track = track;
     }
 
-    public String getArtistName() {
-        return artistName;
+    public Artist__ getArtist() {
+        return artist;
     }
 
-    public void setArtistName(String artistName) {
-        this.artistName = artistName;
+    public void setArtist(Artist__ artist) {
+        this.artist = artist;
     }
 
-    public List<Object> getArtistimages() {
-        return artistimages;
+    public Album__ getAlbum() {
+        return album;
     }
 
-    public void setArtistimages(List<Object> artistimages) {
-        this.artistimages = artistimages;
-    }
-
-    public String getArtistType() {
-        return artistType;
-    }
-
-    public void setArtistType(String artistType) {
-        this.artistType = artistType;
-    }
-
-    public String getAlbumId() {
-        return albumId;
-    }
-
-    public void setAlbumId(String albumId) {
-        this.albumId = albumId;
-    }
-
-    public String getAlbumName() {
-        return albumName;
-    }
-
-    public void setAlbumName(String albumName) {
-        this.albumName = albumName;
-    }
-
-    public List<Object> getAlbumImages() {
-        return albumImages;
-    }
-
-    public void setAlbumImages(List<Object> albumImages) {
-        this.albumImages = albumImages;
-    }
-
-    public String getAlbumType() {
-        return albumType;
-    }
-
-    public void setAlbumType(String albumType) {
-        this.albumType = albumType;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public List<Object> getImages() {
-        return images;
-    }
-
-    public void setImages(List<Object> images) {
-        this.images = images;
+    public void setAlbum(Album__ album) {
+        this.album = album;
     }
 
 }

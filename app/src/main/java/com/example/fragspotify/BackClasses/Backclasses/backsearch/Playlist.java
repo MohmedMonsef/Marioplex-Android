@@ -4,86 +4,29 @@ package com.example.fragspotify.BackClasses.Backclasses.backsearch;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 public class Playlist {
 
-    @SerializedName("ownerId")
+    @SerializedName("playlist")
     @Expose
-    private String ownerId;
-    @SerializedName("ownerName")
+    private Playlist_ playlist;
+    @SerializedName("owner")
     @Expose
-    private String ownerName;
-    @SerializedName("ownerImages")
-    @Expose
-    private List<Object> ownerImages = null;
-    @SerializedName("_id")
-    @Expose
-    private String id;
-    @SerializedName("name")
-    @Expose
-    private String name;
-    @SerializedName("type")
-    @Expose
-    private String type;
-    @SerializedName("images")
-    @Expose
-    private List<Object> images = null;
+    private Owner owner;
 
-    public String getOwnerId() {
-        return ownerId;
+    public Playlist_ getPlaylist() {
+        return playlist;
     }
 
-    public void setOwnerId(String ownerId) {
-        this.ownerId = ownerId;
+    public void setPlaylist(Playlist_ playlist) {
+        this.playlist = playlist;
     }
 
-    public String getOwnerName() {
-        return ownerName;
+    public Owner getOwner() {
+        return owner;
     }
 
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
-    }
-
-    public List<Object> getOwnerImages() {
-        return ownerImages;
-    }
-
-    public void setOwnerImages(List<Object> ownerImages) {
-        this.ownerImages = ownerImages;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public List<Object> getImages() {
-        return images;
-    }
-
-    public void setImages(List<Object> images) {
-        this.images = images;
+    public void setOwner(Owner owner) {
+        this.owner = owner;
     }
 
 }

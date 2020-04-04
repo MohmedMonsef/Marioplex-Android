@@ -4,86 +4,29 @@ package com.example.fragspotify.BackClasses.Backclasses.backsearch;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 public class Album {
 
-    @SerializedName("_id")
+    @SerializedName("album")
     @Expose
-    private String id;
-    @SerializedName("name")
+    private Album_ album;
+    @SerializedName("artist")
     @Expose
-    private String name;
-    @SerializedName("images")
-    @Expose
-    private List<Object> images = null;
-    @SerializedName("type")
-    @Expose
-    private String type;
-    @SerializedName("artistId")
-    @Expose
-    private String artistId;
-    @SerializedName("artistName")
-    @Expose
-    private String artistName;
-    @SerializedName("artistType")
-    @Expose
-    private String artistType;
+    private Artist_ artist;
 
-    public String getId() {
-        return id;
+    public Album_ getAlbum() {
+        return album;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setAlbum(Album_ album) {
+        this.album = album;
     }
 
-    public String getName() {
-        return name;
+    public Artist_ getArtist() {
+        return artist;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Object> getImages() {
-        return images;
-    }
-
-    public void setImages(List<Object> images) {
-        this.images = images;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getArtistId() {
-        return artistId;
-    }
-
-    public void setArtistId(String artistId) {
-        this.artistId = artistId;
-    }
-
-    public String getArtistName() {
-        return artistName;
-    }
-
-    public void setArtistName(String artistName) {
-        this.artistName = artistName;
-    }
-
-    public String getArtistType() {
-        return artistType;
-    }
-
-    public void setArtistType(String artistType) {
-        this.artistType = artistType;
+    public void setArtist(Artist_ artist) {
+        this.artist = artist;
     }
 
 }
