@@ -39,20 +39,21 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
         list1=new ArrayList<aclass>();
         for (int i=0;i<LIST.getArtist().size();i++)
         {
+            if(LIST.getArtist().get(i).getImages()!=null && LIST.getArtist().get(i).getImages().size() !=0) {
 
-            list1.add(new aclass(LIST.getArtist().get(i).getType(),
-                    LIST.getArtist().get(i).getName(),
-                    LIST.getArtist().get(i).getImages().get(0).toString()));
-
+                list1.add(new aclass(LIST.getArtist().get(i).getType(),
+                        LIST.getArtist().get(i).getName(),
+                        LIST.getArtist().get(i).getImages().get(0).toString()));
+            }
         }
 
         for (int i=0;i<LIST.getTrack().size();i++)
         {
-
-            list1.add(new aclass(LIST.getTrack().get(i).getType(),
-                    LIST.getTrack().get(i).getName(),
-                    LIST.getTrack().get(i).getImages().get(0).toString()));
-
+            if(LIST.getTrack().get(i).getImages()!= null && LIST.getTrack().get(i).getImages().size()!= 0) {
+                list1.add(new aclass(LIST.getTrack().get(i).getType(),
+                        LIST.getTrack().get(i).getName(),
+                        LIST.getTrack().get(i).getImages().get(0).toString()));
+            }
         }
 
     }

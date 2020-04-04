@@ -85,7 +85,7 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
                     backinterfaces apiService = retrofit.create(backinterfaces.class);
-                    Call<Search> call = apiService.getSearch(s.toString(), "artist,track", "US", 5, 0);
+                    Call<Search> call = apiService.getSearch(s.toString(), "artist,album,playlist,track", "US", 5, 0 , "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTgwYzZhZjE0Yzg1NjZkNmNkOWI0MDAiLCJwcm9kdWN0IjoiZnJlZSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg2MDI2NjAyLCJleHAiOjQ3MzI1MTMwMDJ9.ztEjNCgbkyJ2-9WB6ojwLgDfhWsZ-ZGJVFUB8dYMz8s");
                     call.enqueue(new Callback<Search>() {
                         @Override
                         public void onResponse(Call<Search> call, Response<Search> response) {
@@ -114,7 +114,7 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
 
                         @Override
                         public void onFailure(Call<Search> call, Throwable t) {
-                            textViewResult.setText(t.getMessage() + "failed");
+                            textViewResult.setText(t.getMessage() + "hey there failed");
                         }
                     });
                 }
