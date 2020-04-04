@@ -88,7 +88,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         mediaPlayer.reset();
 
         ///////////////////request the current track//////////////////////////
-        Call<currentTrack> call = endPointAPI.getCurrentlyPlaying(" Bearer "+user.getToken());
+        Call<currentTrack> call = endPointAPI.getCurrentlyPlaying(user.getToken());
         getCurrentlyPlaying(call);
         //////////////////////////////////////////////////////////////////////
 
@@ -169,7 +169,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 //    }
     public void next(){
         ///////////////////request the current track//////////////////////////
-        Call<currentTrack> call = endPointAPI.getNext(" Bearer "+user.getToken());
+        Call<currentTrack> call = endPointAPI.getNext(user.getToken());
         getCurrentlyPlaying(call);
         //////////////////////////////////////////////////////////////////////
         pauseMedia();
@@ -191,7 +191,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     public void previous(){
         ///////////////////request the current track//////////////////////////
-        Call<currentTrack> call = endPointAPI.getPrevious(" Bearer "+user.getToken());
+        Call<currentTrack> call = endPointAPI.getPrevious(user.getToken());
         getCurrentlyPlaying(call);
         //////////////////////////////////////////////////////////////////////
         pauseMedia();

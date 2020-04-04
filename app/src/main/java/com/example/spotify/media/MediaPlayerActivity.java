@@ -359,7 +359,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
 
         List<Image> images= track.getTrack().getValue().getTrack().getImages();
-        if(images !=null){
+        if(images !=null&& images.size() !=0){
             String Imageurl = images.get(0).getUrl();
             Picasso.get().load(Imageurl).into(song_image);
             Picasso.get().load(Imageurl).into(setting_image);

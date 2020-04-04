@@ -43,22 +43,22 @@ public interface EndPointAPI {
 
     //////////////////////////////////our api requests//////////////////////////////////////////
     /////////you need to change the Base URL//////////////////
-    @GET("player/next")
+    @GET("me/player/next")
     //@Headers("Authorization: Bearer "+token)
-    Call<currentTrack> getNext(@Header("Authorization")String token1);
+    Call<currentTrack> getNext(@Header("x-auth-token")String token1);
     //Call<currentTrack> getNext(@Header("Authorization")String token1);
 
-    @GET("player/previous")
+    @GET("me/player/previous")
     //@Headers("Authorization: Bearer "+token)
-    Call<currentTrack> getPrevious(@Header("Authorization")String token1);
+    Call<currentTrack> getPrevious(@Header("x-auth-token")String token1);
 
-    @GET("player/currently-playing")
+    @GET("me/player/currently-playing")
     //@Headers("Authorization: Bearer "+token)
-    Call<currentTrack> getCurrentlyPlaying(@Header("Authorization")String token1);
+    Call<currentTrack> getCurrentlyPlaying(@Header("x-auth-token")String token1);
 
     @GET("me/playlists")
     //@Headers("Authorization: Bearer "+token)
-    Call<Track> getCurrentUserPlaylists();
+    Call<Track> getCurrentUserPlaylists(@Header("x-auth-token")String token1);
 
 
     @POST("playlists/{playlist_id}/tracks")
