@@ -29,6 +29,7 @@
         <activity android:name="com.example.spotify.media.MediaPlayerActivity" />
         <activity android:name="com.example.spotify.media.AddToPlaylistActivity" />
         <activity android:name="com.example.spotify.media.CreatePlaylistActivity" />
+        <activity android:name=".Activities.PlaylistPreviewActivity" />
 
         <service android:name="com.example.spotify.media.MediaPlayerService" />
 

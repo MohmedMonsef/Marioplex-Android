@@ -8,5 +8,7 @@
     <color name="TextColor">#FFFFFF</color>
     <color name="TopBar">#1C1312</color>
     <color name="btnColor">#1DB954</color>
+    <color name="backGroundColor">#1b1b1b</color>
+    <color name="previewBackground">#212121</color>
 
 </resources>

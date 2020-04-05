@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.Adapters.Adapter;
+import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
 import com.example.spotify.Fragments.SETTING_FRAGMENT.settingFragment;
 import com.example.spotify.Interfaces.classinterface;
 import com.example.spotify.R;
@@ -75,6 +76,15 @@ public class homeFragment extends Fragment implements LifecycleOwner {
             }
         });
 
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) getActivity()).getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame_fragment,new PlaylistFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
 
         ////*******************************RecyclerView***********************////
         NewReleaseList = new NewRelease();

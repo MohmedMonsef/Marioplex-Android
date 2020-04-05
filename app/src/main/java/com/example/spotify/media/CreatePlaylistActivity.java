@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
+import com.example.spotify.login.user;
 import com.example.spotify.pojo.playlist;
 
 import retrofit2.Call;
@@ -75,7 +76,7 @@ public class CreatePlaylistActivity extends AppCompatActivity {
     }
 
     void creatPlaylist(String playlistName){
-        Call<playlist> call = endPointAPI.CreatePlaylist(playlistName);
+        Call<playlist> call = endPointAPI.CreatePlaylist(playlistName , user.getToken());
 
         call.enqueue(new Callback<playlist>() {
             @Override
@@ -114,7 +115,7 @@ public class CreatePlaylistActivity extends AppCompatActivity {
     }
 
     void addTrackToPlaylist(String pid , String tid){
-        Call<playlist> call = endPointAPI.AddTrackToAPlaylist(pid , tid);
+        Call<playlist> call = endPointAPI.AddTrackToAPlaylist(pid , tid, user.getToken());
 
         call.enqueue(new Callback<playlist>() {
             @Override

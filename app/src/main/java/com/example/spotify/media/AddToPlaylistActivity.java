@@ -21,6 +21,7 @@ import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.example.spotify.SpotifyClasses.Image;
 import com.example.spotify.SpotifyClasses.UserPlaylists;
+import com.example.spotify.login.user;
 import com.example.spotify.pojo.playlist;
 import com.squareup.picasso.Picasso;
 
@@ -113,7 +114,7 @@ public class AddToPlaylistActivity extends AppCompatActivity {
     }
 
     void addTrackToPlaylist(String pid , String tid){
-        Call<playlist> call = endPointAPI.AddTrackToAPlaylist(pid , tid);
+        Call<playlist> call = endPointAPI.AddTrackToAPlaylist(pid , tid , user.getToken());
 
         call.enqueue(new Callback<playlist>() {
             @Override

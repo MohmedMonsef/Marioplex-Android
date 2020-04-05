@@ -31,6 +31,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="click me"
         android:id="@+id/text_home"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle"

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/preview_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/curved_layout"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="8dp">
+        <ImageView
+            android:id="@+id/preview_song_image"
+            android:background="@drawable/curved_image_layout"
+            android:src="@drawable/not_found1"
+            android:layout_width="80dp"
+            android:layout_height="80dp"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/preview_song_image"
+            android:layout_marginLeft="16dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/preview_song_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="song name"
+                android:textColor="@android:color/background_light"/>
+            <TextView
+                android:id="@+id/preview_song_artist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp"
+                android:text="artist name"
+                android:textColor="@android:color/darker_gray"/>
+
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/preview_settings_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/more_options"
+            android:layout_centerVertical="true"/>
+        <ImageView
+            android:id="@+id/preview_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:src="@drawable/favorite_border"
+            android:layout_toLeftOf="@id/preview_settings_image"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

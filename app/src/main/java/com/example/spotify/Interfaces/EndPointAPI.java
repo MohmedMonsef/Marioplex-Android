@@ -88,11 +88,14 @@ public interface EndPointAPI {
 
     @POST("playlists/{playlist_id}/tracks")
     //@Headers("Authorization: Bearer "+token)
-    Call<playlist> AddTrackToAPlaylist(@Path("playlist_id") String playlistID , @Field("tracks") String track_id); //check if fiels or Query
+    Call<playlist> AddTrackToAPlaylist(@Path("playlist_id") String playlistID
+                                      ,@Field("tracks") String track_id
+                                      ,@Header("x-auth-token")String token1);                    //check if fiels or Query
 
     @POST("users/playlists")
     //@Headers("Authorization: Bearer "+token)
-    Call<playlist> CreatePlaylist(@Field("name") String playlist_name); //check if fiels of Query
+    Call<playlist> CreatePlaylist(@Field("name") String playlist_name
+                                 ,@Header("x-auth-token")String token1); //check if fiels of Query
 
 
 
