@@ -13,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.Interfaces.Retrofit;
+import com.example.spotify.login.user;
 import com.example.spotify.pojo.currentTrack;
 
 import java.io.IOException;
@@ -20,7 +22,6 @@ import java.io.IOException;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MediaPlayerService extends Service implements MediaPlayer.OnCompletionListener , MediaPlayer.OnPreparedListener ,
@@ -40,12 +41,13 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     private boolean stopInTrackEnd;
 
     private boolean prepared;
+//TODO change the base url here
 
-    private Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://api.spotify.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-    private EndPointAPI endPointAPI = retrofit.create(EndPointAPI.class);
+//    private Retrofit retrofit = new Retrofit.Builder()
+//            .baseUrl("http://192.168.1.7:3000/")
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build();
+//    private EndPointAPI endPointAPI = retrofit.create(EndPointAPI.class);
     private Toast toast;
     private TrackInfo track = TrackInfo.getInstance();
     private CountDownTimer sleepTimer = null;
@@ -87,7 +89,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         mediaPlayer.reset();
 
         ///////////////////request the current track//////////////////////////
-        Call<currentTrack> call = endPointAPI.getCurrentlyPlaying();
+        //Call<currentTrack> call = endPointAPI.getCurrentlyPlaying(user.getToken());
+        Call<currentTrack> call = Retrofit.getInstance().getEndPointAPI().getCurrentlyPlaying(user.getToken());
         getCurrentlyPlaying(call);
         //////////////////////////////////////////////////////////////////////
 
@@ -168,7 +171,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 //    }
     public void next(){
         ///////////////////request the current track//////////////////////////
-        Call<currentTrack> call = endPointAPI.getNext();
+        //Call<currentTrack> call = endPointAPI.getNext(user.getToken());
+        Call<currentTrack> call = Retrofit.getInstance().getEndPointAPI().getNext(user.getToken());
+
         getCurrentlyPlaying(call);
         //////////////////////////////////////////////////////////////////////
         pauseMedia();
@@ -190,7 +195,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     public void previous(){
         ///////////////////request the current track//////////////////////////
-        Call<currentTrack> call = endPointAPI.getPrevious();
+        //Call<currentTrack> call = endPointAPI.getPrevious(user.getToken());
+        Call<currentTrack> call = Retrofit.getInstance().getEndPointAPI().getPrevious(user.getToken());
         getCurrentlyPlaying(call);
         //////////////////////////////////////////////////////////////////////
         pauseMedia();

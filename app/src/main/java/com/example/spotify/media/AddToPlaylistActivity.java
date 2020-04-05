@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.example.spotify.SpotifyClasses.Image;
 import com.example.spotify.SpotifyClasses.UserPlaylists;
@@ -28,7 +29,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AddToPlaylistActivity extends AppCompatActivity {
@@ -41,11 +41,11 @@ public class AddToPlaylistActivity extends AppCompatActivity {
     private ProgressBar playlists_progress_bar;
     private String trackID;
 
-    private Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://api.spotify.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-    private EndPointAPI endPointAPI = retrofit.create(EndPointAPI.class);
+//    private Retrofit retrofit = new Retrofit.Builder()
+//            .baseUrl("http://192.168.1.7:3000/")
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build();
+    private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

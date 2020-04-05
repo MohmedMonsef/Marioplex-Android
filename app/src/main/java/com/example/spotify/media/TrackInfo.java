@@ -24,6 +24,7 @@ public class TrackInfo {
     //TODO here
     public void setTrack(currentTrack trackv) {
         track.setValue(trackv);
+        String s ="";
     }
     //TODO here
     public MutableLiveData<currentTrack> getTrack(){

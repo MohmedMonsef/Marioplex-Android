@@ -52,9 +52,9 @@ public class IntroActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
 
-        retrofit = new Retrofit.Builder().baseUrl("http://192.168.1.35:3000").addConverterFactory(GsonConverterFactory.create()).build();
+        retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
 
-        apiSpotify = retrofit.create(ApiSpotify.class);
+        apiSpotify = com.example.spotify.Interfaces.Retrofit.getInstance().getApiSpotify();
 
         calculateDisplayWidth();
 
@@ -190,7 +190,7 @@ public class IntroActivity extends AppCompatActivity {
             @Override
             public void run() {
                 getSupportFragmentManager().beginTransaction().remove(fragment);
-             }
+            }
         });
     }
 

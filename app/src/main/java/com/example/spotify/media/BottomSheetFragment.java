@@ -144,7 +144,7 @@ public class BottomSheetFragment extends Fragment {
 
 
         List<Image> images= track.getTrack().getValue().getTrack().getImages();
-        if(images !=null){
+        if(images !=null&& images.size()!=0){
         String Imageurl = images.get(0).getUrl();
         Picasso.get().load(Imageurl).into(bottom_image_id);
         }
