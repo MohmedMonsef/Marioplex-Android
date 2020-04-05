@@ -24,11 +24,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.fragspotify.Activities.MainActivity;
-import com.example.fragspotify.Adapters.AdapterNewRelease;
+import com.example.fragspotify.Adapters.adapterNewreleases;
 import com.example.fragspotify.Fragments.SETTING_FRAGMENT.settingFragment;
 import com.example.fragspotify.Interfaces.classinterface;
 import com.example.fragspotify.R;
-import com.example.fragspotify.SpotifyClasses.NewRelease;
+import com.example.fragspotify.SpotifyClasses.backnewrelease.Newreleases;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,9 +45,9 @@ import static android.widget.Toast.makeText;
  * create an instance of this fragment.
  */
 public class homeFragment extends Fragment implements LifecycleOwner {
-    NewRelease NewReleaseList;
+    Newreleases NewReleaseList;
     RecyclerView recyclerView;
-    AdapterNewRelease recyclerAdapter;
+    adapterNewreleases recyclerAdapter;
     private TextView textViewResult;
     Toolbar toolbar;
     private viewmodelHome homeViewModel;
@@ -77,59 +77,59 @@ public class homeFragment extends Fragment implements LifecycleOwner {
 
 
         ////*******************************RecyclerView***********************////
-        NewReleaseList = new NewRelease();
+        NewReleaseList = new Newreleases();
         recyclerView = (RecyclerView) view.findViewById(R.id.recycle);
         LinearLayoutManager layoutManager;
         layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
         SetRetrofit();
-            ////*******************************To check the state***********************////
-        textViewResult = view.findViewById(R.id.Popular_new_releases);
+        ////*******************************To check the state***********************////
+        textViewResult = view.findViewById(R.id.Popular_new_releases_back);
 
         return view;
 
     }
 
     ////*******************************Retrofit****************************////
-private void SetRetrofit()
-{
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://api.spotify.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-    classinterface apiService = retrofit.create(classinterface.class);
-    Call<NewRelease> call = apiService.getNewRelease();
-    call.enqueue(new Callback<NewRelease>() {
-        @Override
-        public void onResponse(Call<NewRelease> call, Response<NewRelease> response) {
-            if (response.code() == 401)
-                textViewResult.setText(response.errorBody().toString() + "401");
-            else if (!response.isSuccessful()) {
-                textViewResult.setText("Code: " + response.code());
-                return;
+    private void SetRetrofit()
+    {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.1.7:3000/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        classinterface apiService = retrofit.create(classinterface.class);
+        Call<Newreleases> call = apiService.getNewRelease();
+        call.enqueue(new Callback<Newreleases>() {
+            @Override
+            public void onResponse(Call<Newreleases> call, Response<Newreleases> response) {
+                if (response.code() == 401)
+                    textViewResult.setText(response.errorBody().toString() + "401");
+                else if (!response.isSuccessful()) {
+                    textViewResult.setText("Code: " + response.code());
+                    return;
+                }
+                NewReleaseList = response.body();
+                if (response.body() == null)
+                    textViewResult.setText("responce body = null");
+                else if (NewReleaseList == null)
+                    textViewResult.setText(response.body().toString() + " track = null");
+                else {
+                    Log.d("TAG", "Response = " + NewReleaseList);
+                    recyclerAdapter = new adapterNewreleases(getActivity(), NewReleaseList.getAlbums());
+                    recyclerView.setAdapter(recyclerAdapter);
+                    recyclerView.setHasFixedSize(true);
+                }
+
             }
-            NewReleaseList = response.body();
-            if (response.body() == null)
-                textViewResult.setText("responce body = null");
-            else if (NewReleaseList == null)
-                textViewResult.setText(response.body().toString() + " track = null");
-            else {
-                Log.d("TAG", "Response = " + NewReleaseList);
-                recyclerAdapter = new AdapterNewRelease(getActivity(), NewReleaseList.getAlbums().getItems());
-                recyclerView.setAdapter(recyclerAdapter);
-                recyclerView.setHasFixedSize(true);
+
+            @Override
+            public void onFailure(Call<Newreleases> call, Throwable t) {
+                textViewResult.setText(t.getMessage() + "failed");
             }
-
-        }
-
-        @Override
-        public void onFailure(Call<NewRelease> call, Throwable t) {
-            textViewResult.setText(t.getMessage() + "failed");
-        }
-    });
+        });
 
 
-}
+    }
     @NonNull
     @Override
     public Lifecycle getLifecycle() {

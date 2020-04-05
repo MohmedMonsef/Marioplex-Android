@@ -4,68 +4,28 @@ package com.example.fragspotify.SpotifyClasses.SearchClasses;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class Artist {
 
-    @SerializedName("external_urls")
-    @Expose
-    private ExternalUrls_ externalUrls;
-    @SerializedName("href")
-    @Expose
-    private String href;
-    @SerializedName("id")
+    @SerializedName("_id")
     @Expose
     private String id;
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("images1")
+    @Expose
+    private List<Object> images = null;
+    @SerializedName("info")
+    @Expose
+    private String info;
     @SerializedName("type")
     @Expose
     private String type;
-    @SerializedName("uri")
+    @SerializedName("genre")
     @Expose
-    private String uri;
-
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public Artist() {
-    }
-
-    /**
-     * 
-     * @param name
-     * @param externalUrls
-     * @param href
-     * @param id
-     * @param type
-     * @param uri
-     */
-    public Artist(ExternalUrls_ externalUrls, String href, String id, String name, String type, String uri) {
-        super();
-        this.externalUrls = externalUrls;
-        this.href = href;
-        this.id = id;
-        this.name = name;
-        this.type = type;
-        this.uri = uri;
-    }
-
-    public ExternalUrls_ getExternalUrls() {
-        return externalUrls;
-    }
-
-    public void setExternalUrls(ExternalUrls_ externalUrls) {
-        this.externalUrls = externalUrls;
-    }
-
-    public String getHref() {
-        return href;
-    }
-
-    public void setHref(String href) {
-        this.href = href;
-    }
+    private List<String> genre = null;
 
     public String getId() {
         return id;
@@ -83,6 +43,22 @@ public class Artist {
         this.name = name;
     }
 
+    public List<Object> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Object> images) {
+        this.images = images;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
     public String getType() {
         return type;
     }
@@ -91,12 +67,12 @@ public class Artist {
         this.type = type;
     }
 
-    public String getUri() {
-        return uri;
+    public List<String> getGenre() {
+        return genre;
     }
 
-    public void setUri(String uri) {
-        this.uri = uri;
+    public void setGenre(List<String> genre) {
+        this.genre = genre;
     }
 
 }

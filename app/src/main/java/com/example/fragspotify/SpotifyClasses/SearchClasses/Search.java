@@ -1,5 +1,5 @@
 
-package com.example.fragspotify.BackClasses.Backclasses.backsearch;
+package com.example.fragspotify.SpotifyClasses.SearchClasses;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

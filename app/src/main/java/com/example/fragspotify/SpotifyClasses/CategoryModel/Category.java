@@ -4,17 +4,19 @@ package com.example.fragspotify.SpotifyClasses.CategoryModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class Category {
 
-    @SerializedName("categories")
+    @SerializedName("category")
     @Expose
-    private Categories categories;
+    private List<Category_> categories = null;
 
-    public Categories getCategories() {
+    public List<Category_> getCategories() {
         return categories;
     }
 
-    public void setCategories(Categories categories) {
+    public void setCategories(List<Category_> categories) {
         this.categories = categories;
     }
 

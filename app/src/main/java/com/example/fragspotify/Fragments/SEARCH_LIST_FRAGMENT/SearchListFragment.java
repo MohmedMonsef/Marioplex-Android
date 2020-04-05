@@ -25,10 +25,11 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.example.fragspotify.Activities.MainActivity;
-import com.example.fragspotify.Adapters.AdaptersearcHes;
+import com.example.fragspotify.Adapters.adapterSearch;
+
 import com.example.fragspotify.Interfaces.classinterface;
 import com.example.fragspotify.R;
-import com.example.fragspotify.SpotifyClasses.SearchClasses.search;
+import com.example.fragspotify.SpotifyClasses.SearchClasses.Search;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,10 +49,12 @@ import static android.widget.Toast.makeText;
 public class SearchListFragment extends Fragment implements LifecycleOwner {
 
 
-    search searchList;
+    Search searchList;
     RecyclerView recyclerView;
-    AdaptersearcHes recyclerAdapter;
+    adapterSearch recyclerAdapter;
     private TextView textViewResult;
+    private Retrofit retrofit;
+    private classinterface apiService;
     SearchView searchView;
     private SearchView.OnQueryTextListener queryTextListener;
     MenuItem item;
@@ -69,80 +72,86 @@ public class SearchListFragment extends Fragment implements LifecycleOwner {
 
         editText=(EditText) view.findViewById(R.id.yamoshal);
 
-editText.addTextChangedListener(new TextWatcher() {
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after)
-    {
-        if(s.length()==0)
-            searchList=null;
-    }
+/////##########$$$$$$$$$$$$$$$$$$
+        retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.1.7:3000")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        apiService = retrofit.create(classinterface.class);
 
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if(s.length()!=0) {
-            Log.i("onQueryTextChange", s.toString());
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://api.spotify.com/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-            classinterface apiService = retrofit.create(classinterface.class);
-            Call<search> call = apiService.getSearch(s.toString(), "artist,track", "US", 5, 0);
-            call.enqueue(new Callback<search>() {
-                @Override
-                public void onResponse(Call<search> call, Response<search> response) {
-                    if (response.code() == 401)
-                        textViewResult.setText(response.errorBody().toString() + "401");
-                    else if (!response.isSuccessful()) {
-                        textViewResult.setText("Code: " + response.code());
-                        return;
-                    }
-                    searchList = response.body();
-                    //        Tracklist = response.body();
-                    if (response.body() == null)
-                        textViewResult.setText("responce body = null");
-                    else if (searchList == null)
-                        textViewResult.setText(response.body().toString() + " track = null");
-                    else {
-                        Log.d("TAG", "Response = " + searchList);
-                        recyclerAdapter = new AdaptersearcHes(getActivity(), searchList);
-                        recyclerView.setAdapter(recyclerAdapter);
-                        recyclerView.setHasFixedSize(true);
-                    }
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+                if(s.length()==0)
+                    searchList=null;
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length()!=0) {
+                    Log.i("onQueryTextChange", s.toString());
+
+                    Call<Search> call = apiService.getSearch(s.toString(), "artist,album,playlist,track", "US", 5, 0 , "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTgwYzZhZjE0Yzg1NjZkNmNkOWI0MDAiLCJwcm9kdWN0IjoiZnJlZSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg2MDI2NjAyLCJleHAiOjQ3MzI1MTMwMDJ9.ztEjNCgbkyJ2-9WB6ojwLgDfhWsZ-ZGJVFUB8dYMz8s");
+                    call.enqueue(new Callback<Search>() {
+                        @Override
+                        public void onResponse(Call<Search> call, Response<Search> response) {
+                            if (response.code() == 401)
+                                textViewResult.setText(response.errorBody().toString() + "401");
+                            else if (!response.isSuccessful()) {
+                                textViewResult.setText("Code: " + response.code());
+                                return;
+                            }
+                            searchList = response.body();
+                            //        Tracklist = response.body();
+                            if (response.body() == null)
+                                textViewResult.setText("responce body = null");
+                            else if (searchList == null)
+                                textViewResult.setText(response.body().toString() + " track = null");
+                            else {
+                                Log.d("TAG", "Response = " + searchList);
+                                recyclerAdapter = new adapterSearch(getActivity(), searchList);
+
+                                recyclerView.setAdapter(recyclerAdapter);
+                                //     recyclerAdapterArtist = new AdapterArtist(getActivity(), Atristlist.getArtists().getItems());
+                                //   recyclerView.setAdapter(recyclerAdapterArtist);
+                                recyclerView.setHasFixedSize(true);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Search> call, Throwable t) {
+                            textViewResult.setText(t.getMessage() + "hey there failed");
+                        }
+                    });
                 }
+                searchList=null;
 
-                @Override
-                public void onFailure(Call<search> call, Throwable t) {
-                    textViewResult.setText(t.getMessage() + "failed");
-                }
-            });
-        }
-        searchList=null;
+            }
 
-    }
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.length()==0)
+                    searchList=null;
 
-    @Override
-    public void afterTextChanged(Editable s) {
-        if(s.length()==0)
-        searchList=null;
+            }
+        });
 
-    }
-});
+
 
         ////*******************************RecyclerView***********************////
-        searchList = new search();
+        searchList = new Search();
         recyclerView = (RecyclerView) view.findViewById(R.id.recycleSearch);
         LinearLayoutManager layoutManager;
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
+        //SetRetrofit();
         ////*******************************To check the state***********************////
         textViewResult = view.findViewById(R.id.texta);
 
         return view;
 
     }
-
-
-
     @NonNull
     @Override
     public Lifecycle getLifecycle() {
@@ -150,6 +159,4 @@ editText.addTextChangedListener(new TextWatcher() {
 
 
     }
-    }
-
-
+}

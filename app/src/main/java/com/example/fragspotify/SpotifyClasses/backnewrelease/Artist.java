@@ -1,5 +1,5 @@
 
-package com.example.fragspotify.BackClasses.Backclasses.backnewrelease;
+package com.example.fragspotify.SpotifyClasses.backnewrelease;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

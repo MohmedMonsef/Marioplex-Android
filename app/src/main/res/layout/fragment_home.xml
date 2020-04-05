@@ -18,20 +18,19 @@
         app:itemIconTint="@color/TextColor"
         app:itemTextColor="@color/TextColor"
         app:menu="@menu/settingnav" />
-
-    <TextView
-        android:id="@+id/Popular_new_releases"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.15"
-        android:text="Popular new releases"
-        android:textColor="@color/TextColor"
-        android:textSize="24dp"
-        tools:ignore="MissingConstraints" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/text_home"/>
+    <TextView
+        android:id="@+id/Popular_new_releases_back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.05"
+        android:text="Popular new releases back"
+        android:textColor="@color/TextColor"
+        android:textSize="24dp"
+        tools:ignore="MissingConstraints" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle"
         android:layout_width="match_parent"

@@ -15,47 +15,47 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fragspotify.Fragments.NEW_RELEASE_FRAHMENT.newReleaseFragment;
 import com.example.fragspotify.R;
-import com.example.fragspotify.SpotifyClasses.Item;
+import com.example.fragspotify.SpotifyClasses.backnewrelease.Album;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
+public class adapterNewreleases extends RecyclerView.Adapter<adapterNewreleases.MyviewHolder> {
+    private Context context;
+    private List<Album> NewReleaseList;
 
-public class AdapterNewRelease extends RecyclerView.Adapter<AdapterNewRelease.MyviewHolder> {
-    private  Context context;
-    private List<Item> NewReleaseList;
-
-    public AdapterNewRelease(Context context, List<Item> NewReleaseList) {
+    public adapterNewreleases(Context context, List<Album> NewReleaseList) {
         this.context = context;
         this.NewReleaseList = NewReleaseList;
     }
 
-    public void setMovieList(List<Item> newreleasesList) {
-        this.NewReleaseList = newreleasesList;
+    public void setMovieList(List<Album> movieList) {
+        this.NewReleaseList = movieList;
         notifyDataSetChanged();
     }
 
     @Override
-    public AdapterNewRelease.MyviewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public adapterNewreleases.MyviewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_recycler,parent,false);
         return new MyviewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(AdapterNewRelease.MyviewHolder holder, int position) {
+    public void onBindViewHolder(adapterNewreleases.MyviewHolder holder, int position) {
 
-        Item item=NewReleaseList.get(position);
+        Album item=NewReleaseList.get(position);
         holder.ImageName.setText(item.getName());
         Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
-        Picasso.get().load(item.getImages().get(0).getUrl()).into(holder.image);
-
+        if(item.getImages()!= null & item.getImages().size()!=0) {
+            Picasso.get().load(item.getImages().get(0).toString()).into(holder.image);
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
-                Log.i(TAG, "onClick: on item");
+                Log.i(TAG, "onClick: jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
 
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 Fragment myFragment = new newReleaseFragment();

@@ -1,4 +1,4 @@
-package com.example.fragspotify.BackClasses.BackAdapter;
+package com.example.fragspotify.Adapters;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -14,9 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.fragspotify.BackClasses.Backclasses.backsearch.Search;
 import com.example.fragspotify.Fragments.NEW_RELEASE_FRAHMENT.newReleaseFragment;
 import com.example.fragspotify.R;
+import com.example.fragspotify.SpotifyClasses.SearchClasses.Search;
 import com.example.fragspotify.SpotifyClasses.SearchClasses.aclass;
 import com.squareup.picasso.Picasso;
 

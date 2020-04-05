@@ -23,11 +23,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.fragspotify.Activities.MainActivity;
-import com.example.fragspotify.Adapters.AdapterCategory;
+import com.example.fragspotify.Adapters.adapterCategories;
+
 import com.example.fragspotify.Fragments.SEARCH_LIST_FRAGMENT.SearchListFragment;
 import com.example.fragspotify.Interfaces.classinterface;
 import com.example.fragspotify.R;
-import com.example.fragspotify.SpotifyClasses.CategoryModel.Categories;
 import com.example.fragspotify.SpotifyClasses.CategoryModel.Category;
 
 import retrofit2.Call;
@@ -45,11 +45,11 @@ import static android.widget.Toast.makeText;
  * create an instance of this fragment.
  */
 public class searchFragment extends Fragment implements LifecycleOwner {
-    Category CategoriesList;
     RecyclerView recyclerView;
-    AdapterCategory recyclerAdapter;
+    adapterCategories recyclerAdapter;
     private TextView textViewResult;
     ImageView searchimg;
+    Category CategoriesList;
     private viewmodelSearch searchViewmodel;
 
     @Override
@@ -100,11 +100,11 @@ public class searchFragment extends Fragment implements LifecycleOwner {
     ////*******************************Retrofit****************************////
     private void SetRetrofit() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.spotify.com/")
+                .baseUrl("http://192.168.1.7:3000")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         classinterface apiService = retrofit.create(classinterface.class);
-        Call<Category> call = apiService.getCategories();
+        Call<Category> call = apiService.getCategories("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTgwYzZhZjE0Yzg1NjZkNmNkOWI0MDAiLCJwcm9kdWN0IjoiZnJlZSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg2MDI2NjAyLCJleHAiOjQ3MzI1MTMwMDJ9.ztEjNCgbkyJ2-9WB6ojwLgDfhWsZ-ZGJVFUB8dYMz8s");
         call.enqueue(new Callback<Category>() {
             @Override
             public void onResponse(Call<Category> call, Response<Category> response) {
@@ -121,7 +121,7 @@ public class searchFragment extends Fragment implements LifecycleOwner {
                     textViewResult.setText(response.body().toString() + " track = null");
                 else {
                     Log.d("TAG", "Response = " + CategoriesList);
-                    recyclerAdapter = new AdapterCategory(getActivity(), CategoriesList.getCategories().getItems());
+                    recyclerAdapter = new adapterCategories(getActivity(), CategoriesList.getCategories());
                     recyclerView.setAdapter(recyclerAdapter);
                     recyclerView.setHasFixedSize(true);
                 }
@@ -145,8 +145,3 @@ public class searchFragment extends Fragment implements LifecycleOwner {
 
 
 }
-
-
-
-
-

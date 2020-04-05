@@ -11,6 +11,8 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+    <!-- TODO: Update blank fragment layout -->
+
     <TextView
         android:id="@+id/text_search"
         android:layout_width="match_parent"
@@ -33,7 +35,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Browse all"
+        android:text="Browse all/backend"
         android:textColor="@color/TextColor"
         android:textSize="24dp"
         android:textStyle="bold"
