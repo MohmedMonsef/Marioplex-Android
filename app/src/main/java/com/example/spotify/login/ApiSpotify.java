@@ -3,6 +3,7 @@ package com.example.spotify.login;
 import com.example.spotify.login.apiClasses.LoginCredentials;
 import com.example.spotify.login.apiClasses.LoginResponse;
 import com.example.spotify.login.apiClasses.SignUpData;
+import com.example.spotify.login.apiClasses.FacebookLoginData;
 import com.example.spotify.login.apiClasses.updateProfile;
 import com.example.spotify.login.apiClasses.userProfile;
 import com.example.spotify.pojo.playlist;
@@ -33,4 +34,7 @@ public interface ApiSpotify {
     @GET("me/playlists")
     Call<playlist[]> myPlaylists(@Header("x-auth-token") String token);
 
-}
+    @POST("auth/facebookAndroid")
+    Call<LoginResponse> facebookLogin(@Body FacebookLoginData facebookLoginData);
+
+}              
