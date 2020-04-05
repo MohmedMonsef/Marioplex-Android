@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Retrofit {
     private static Retrofit instance;
     private retrofit2.Retrofit retrofit = new retrofit2.Retrofit.Builder()
-            .baseUrl("http://192.168.1.7:3000/")
+            .baseUrl("http://192.168.1.35:3000/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
     private EndPointAPI endPointAPI = retrofit.create(EndPointAPI.class);
