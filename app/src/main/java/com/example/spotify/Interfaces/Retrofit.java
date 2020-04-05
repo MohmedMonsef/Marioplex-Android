@@ -1,6 +1,5 @@
 package com.example.spotify.Interfaces;
 
-import com.example.spotify.login.ApiSpotify;
 import com.example.spotify.media.TrackInfo;
 
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -12,7 +11,7 @@ public class Retrofit {
             .addConverterFactory(GsonConverterFactory.create())
             .build();
     private EndPointAPI endPointAPI = retrofit.create(EndPointAPI.class);
-    private ApiSpotify apiSpotify = retrofit.create(ApiSpotify .class);
+    //private ApiSpotify apiSpotify = retrofit.create(ApiSpotify .class);
     private classinterface apiService = retrofit.create(classinterface.class);
 
 
@@ -28,9 +27,9 @@ public class Retrofit {
     public EndPointAPI getEndPointAPI(){
         return endPointAPI;
     }
-    public  ApiSpotify getApiSpotify(){
+    /*public  ApiSpotify getApiSpotify(){
         return apiSpotify;
-    }
+    }*/
     public classinterface getclassinterface(){
         return apiService;
     }

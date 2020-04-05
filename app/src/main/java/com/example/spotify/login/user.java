@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.login.apiClasses.userProfile;
 import com.example.spotify.pojo.playlist;
 import com.google.gson.annotations.SerializedName;
@@ -21,15 +22,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class user {
-    static String name = null;
-    static String id = null;
-    static String email = null;
-    static String dateOfBirth = null;
-    static String gender = null;
-    static String country = null;
-    static String product = null;
-    static String password = null;
-    static String [] images = null;
+    private static String name = null;
+    private static String id = null;
+    private static String email = null;
+    private static String dateOfBirth = null;
+    private static String gender = null;
+    private static String country = null;
+    private static String product = null;
+    private static String password = null;
+    private static String [] images = null;
     static playlist[] playlists = null;
 
     static String token = null;
@@ -126,19 +127,13 @@ public class user {
         user.password = password;
     }
 
-    static public void fetchUserData(){
+    static void fetchUserData(){
         if(token == null)
             return;
 
-        ApiSpotify apiSpotify = MainActivity.getApiSpotify();
-        Retrofit retrofit;
+        EndPointAPI endPointAPI = com.example.spotify.Interfaces.Retrofit.getInstance().getEndPointAPI();
 
-        if(apiSpotify == null){
-            retrofit = new Retrofit.Builder().baseUrl("http://192.168.1.35:3000").addConverterFactory(GsonConverterFactory.create()).build();
-            apiSpotify = retrofit.create(ApiSpotify.class);
-        }
-
-        apiSpotify.profile(token).enqueue(new Callback<ArrayList<userProfile>>() {
+        endPointAPI.profile(token).enqueue(new Callback<ArrayList<userProfile>>() {
             @Override
             public void onResponse(Call<ArrayList<userProfile>> call, Response<ArrayList<userProfile>> response) {
                 if(response.isSuccessful()){
@@ -152,7 +147,7 @@ public class user {
                     user.setImages(response.body().get(0).getImages());
                 }
                 else {
-                    Log.v("usrftch",response.message().toString());
+                    Log.v("usrftch",response.message());
                     int x = 4;
                 }
             }
@@ -163,7 +158,7 @@ public class user {
             }
         });
 
-        apiSpotify.myPlaylists(token).enqueue(new Callback<playlist[]>() {
+        endPointAPI.myPlaylists(token).enqueue(new Callback<playlist[]>() {
             @Override
             public void onResponse(Call<playlist[]> call, Response<playlist[]> response) {
                 user.setPlaylists(response.body());

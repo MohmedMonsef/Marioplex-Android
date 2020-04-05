@@ -12,6 +12,7 @@ import android.view.ViewDebug;
 import android.widget.Toast;
 
 import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.R;
 import com.example.spotify.login.apiClasses.FacebookLoginData;
 import com.example.spotify.login.apiClasses.LoginResponse;
@@ -39,7 +40,7 @@ public class IntroActivity extends AppCompatActivity {
     //final private static int ANIMATION_DURATION = 200;
 
     private static Retrofit retrofit = null;
-    private static ApiSpotify apiSpotify = null;
+    private static EndPointAPI endPointAPI = null;
     private static LoginFragment loginFragment = null;
     private static SignUpFragment signUpFragment= null;
     //private static String token = null;
@@ -54,9 +55,10 @@ public class IntroActivity extends AppCompatActivity {
 
         retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
 
-        apiSpotify = com.example.spotify.Interfaces.Retrofit.getInstance().getApiSpotify();
+        endPointAPI = com.example.spotify.Interfaces.Retrofit.getInstance().getEndPointAPI();
 
         calculateDisplayWidth();
+
 
         findViewById(R.id.intro_fragment).setTranslationX(displayWidth);
 
@@ -71,7 +73,7 @@ public class IntroActivity extends AppCompatActivity {
     private void loginByFacebook(){
         LoginManager loginManager = LoginManager.getInstance();
         loginManager.logOut();
-        loginManager.logIn(IntroActivity.this, Arrays.asList("email,user_gender,user_birthday"));
+        loginManager.logIn(IntroActivity.this, Arrays.asList("email","user_gender","user_birthday"));
         callbackManager = CallbackManager.Factory.create();
         loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -123,7 +125,7 @@ public class IntroActivity extends AppCompatActivity {
     }
 
     public void saveAndLaunchMainActivity(FacebookLoginData data){
-        apiSpotify.facebookLogin(data).enqueue(new Callback<LoginResponse>() {
+        endPointAPI.facebookLogin(data).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if(response.isSuccessful()) {
@@ -152,13 +154,13 @@ public class IntroActivity extends AppCompatActivity {
     }
 
     public void showLoginFragment(View view) {
-        loginFragment = new LoginFragment(retrofit,apiSpotify);
+        loginFragment = new LoginFragment(retrofit,endPointAPI);
         showFragment(loginFragment);
     }
 
 
     public void showSignUpFragment(View view){
-        signUpFragment = new SignUpFragment(retrofit,apiSpotify);
+        signUpFragment = new SignUpFragment(retrofit,endPointAPI);
         showFragment(signUpFragment);
     }
 

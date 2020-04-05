@@ -9,9 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.R;
 import com.example.spotify.login.apiClasses.LoginCredentials;
 import com.example.spotify.login.apiClasses.LoginResponse;
@@ -29,7 +31,7 @@ import retrofit2.Retrofit;
 public class LoginFragment extends Fragment {
 
     private static Retrofit mRetrofit;
-    private static ApiSpotify mApiSpotify;
+    private static EndPointAPI mEndPointAPI;
     private static String token = null;
 
 
@@ -37,9 +39,9 @@ public class LoginFragment extends Fragment {
         // Required empty public constructor
     }*/
 
-    public LoginFragment(Retrofit retrofit,ApiSpotify apiSpotify){
+    LoginFragment(Retrofit retrofit, EndPointAPI endPointAPI){
         mRetrofit = retrofit;
-        mApiSpotify = apiSpotify;
+        mEndPointAPI = endPointAPI;
     }
 
 
@@ -67,14 +69,14 @@ public class LoginFragment extends Fragment {
     }
 
     public void login(){
-        //String email = ((EditText) getView().findViewById(R.id.email)).getText().toString();
-        //String password = ((EditText) getView().findViewById(R.id.password)).getText().toString();
+        String email = ((EditText) getView().findViewById(R.id.email)).getText().toString();
+        String password = ((EditText) getView().findViewById(R.id.password)).getText().toString();
 
         LoginCredentials loginCredentials = new LoginCredentials();
-        loginCredentials.setEmail("batman@gmail.com");
-        loginCredentials.setPassword("123");
+        loginCredentials.setEmail(email);
+        loginCredentials.setPassword(password);
 
-        Call<LoginResponse> call = mApiSpotify.login(loginCredentials);
+        Call<LoginResponse> call = mEndPointAPI.login(loginCredentials);
 
         call.enqueue(new Callback<LoginResponse>() {
             @Override

@@ -3,12 +3,17 @@ package com.example.spotify.Interfaces;
 import com.example.spotify.SpotifyClasses.NewRelease;
 import com.example.spotify.SpotifyClasses.Track;
 import com.example.spotify.SpotifyClasses.UserPlaylists;
+import com.example.spotify.login.apiClasses.FacebookLoginData;
 import com.example.spotify.login.apiClasses.LoginCredentials;
 import com.example.spotify.login.apiClasses.LoginResponse;
 import com.example.spotify.login.apiClasses.SignUpData;
+import com.example.spotify.login.apiClasses.updateProfile;
+import com.example.spotify.login.apiClasses.userProfile;
 import com.example.spotify.login.user;
 import com.example.spotify.pojo.currentTrack;
 import com.example.spotify.pojo.playlist;
+
+import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -34,7 +39,16 @@ public interface EndPointAPI {
     Call<ResponseBody> signUp(@Body SignUpData signUpData);
 
     @GET("me")
-    Call<user> profile(@Header("authorization") String token);
+    Call<ArrayList<userProfile>> profile(@Header("x-auth-token") String token);
+
+    @PUT("me/update")
+    Call<ResponseBody> updateProfile(@Header("x-auth-token") String token,@Body updateProfile data);
+
+    @GET("me/playlists")
+    Call<playlist[]> myPlaylists(@Header("x-auth-token") String token);
+
+    @POST("auth/facebookAndroid")
+    Call<LoginResponse> facebookLogin(@Body FacebookLoginData facebookLoginData);
  ////////////////////////////////////////////////////////////////////////////////////
 
      //////////////////////////////home requests//////////////////////////////////////////

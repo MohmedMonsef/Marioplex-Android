@@ -16,8 +16,9 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 
 import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
-import com.example.spotify.login.ApiSpotify;
 import com.example.spotify.login.apiClasses.updateProfile;
 import com.example.spotify.login.user;
 
@@ -33,6 +34,7 @@ public class ProfileFragment extends Fragment {
     /*public ProfileFragment() {
         // Required empty public constructor
     }*/
+
 
     public ProfileFragment(){
 
@@ -86,9 +88,9 @@ public class ProfileFragment extends Fragment {
     }
 
     private void updateProfile(updateProfile data){
-        ApiSpotify api = MainActivity.getApiSpotify();
+        EndPointAPI api = Retrofit.getInstance().getEndPointAPI();
 
-        MainActivity.getApiSpotify().updateProfile(user.getToken(),data).enqueue(new Callback<ResponseBody>() {
+        api.updateProfile(user.getToken(),data).enqueue(new Callback<ResponseBody>() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
