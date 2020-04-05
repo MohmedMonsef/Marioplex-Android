@@ -24,7 +24,7 @@ public interface backinterfaces
     //@Headers("x-auth-token"+token)
     public Call<Search> getSearch(@Query("name") String name, @Query("type") String type, @Query("market") String market, @Query("limit") int limit, @Query("offset") int offset , @Header("x-auth-token") String token);
 
-    @GET("browse/categories?country=SE&locale=sv_SE&limit=10&offset=5")
+    @GET("category?country=SE&locale=sv_SE&limit=10&offset=5")
     //@Headers("Authorization: Bearer BQCy8FwJKOCxKsmpvloyQWr2n3Wik9ZQckF4jJLC2z47jA5uycHOn0caqv0MaGaVWdb7S-eaIYD3opU812dFvnS_DlwB5sG2-PbEANHN5FAbO7fEZhq7yvxI8ZYoYi83BX5BMDmAboftrl2VzMWXKv40APnKRoexFVSDkfDBQKQUeSadyBc8UPn408pQvJ23rnmvFPJPIXzcsUN-3gcjF5HhiygOL0YthZDC9spwqo83RRfPQV4Omj8EJF7vvgPLwH-rnWblMhw88kBS9lzsGdW2jjNUfdpfmw")
     public Call<Category> getCategories(@Header("x-auth-token") String token);
 

@@ -14,7 +14,7 @@ public class Artist {
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("images")
+    @SerializedName("images1")
     @Expose
     private List<Object> images = null;
     @SerializedName("info")

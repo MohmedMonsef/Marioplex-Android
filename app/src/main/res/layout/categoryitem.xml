@@ -14,12 +14,13 @@
 
         <ImageView
             android:id="@+id/categroy_imageview"
+            android:background="@android:color/background_dark"
             android:layout_width="220dp"
             android:layout_height="130dp" />
 
         <TextView
             android:id="@+id/categroy_textview"
-            android:layout_width="120dp"
+            android:layout_width="wrap_content"
             android:layout_height="110dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"

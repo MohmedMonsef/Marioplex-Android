@@ -49,6 +49,8 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
     RecyclerView recyclerView;
     adapterSearch recyclerAdapter;
     private TextView textViewResult;
+    private Retrofit retrofit;
+    private backinterfaces apiService;
     SearchView searchView;
     private SearchView.OnQueryTextListener queryTextListener;
     MenuItem item;
@@ -67,6 +69,11 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
         editText=(EditText) view.findViewById(R.id.yamoshal);
 
 /////##########$$$$$$$$$$$$$$$$$$
+        retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.1.7:3000")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        apiService = retrofit.create(backinterfaces.class);
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -80,11 +87,7 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(s.length()!=0) {
                     Log.i("onQueryTextChange", s.toString());
-                    Retrofit retrofit = new Retrofit.Builder()
-                            .baseUrl("http://192.168.1.7:3000")
-                            .addConverterFactory(GsonConverterFactory.create())
-                            .build();
-                    backinterfaces apiService = retrofit.create(backinterfaces.class);
+
                     Call<Search> call = apiService.getSearch(s.toString(), "artist,album,playlist,track", "US", 5, 0 , "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTgwYzZhZjE0Yzg1NjZkNmNkOWI0MDAiLCJwcm9kdWN0IjoiZnJlZSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg2MDI2NjAyLCJleHAiOjQ3MzI1MTMwMDJ9.ztEjNCgbkyJ2-9WB6ojwLgDfhWsZ-ZGJVFUB8dYMz8s");
                     call.enqueue(new Callback<Search>() {
                         @Override

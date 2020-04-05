@@ -38,22 +38,24 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
         // this.ArtistList = ArtistList;
         list1=new ArrayList<aclass>();
         for (int i=0;i<LIST.getArtist().size();i++)
-        {
+        {   String image = "";
             if(LIST.getArtist().get(i).getImages()!=null && LIST.getArtist().get(i).getImages().size() !=0) {
-
-                list1.add(new aclass(LIST.getArtist().get(i).getType(),
-                        LIST.getArtist().get(i).getName(),
-                        LIST.getArtist().get(i).getImages().get(0).toString()));
+                image = LIST.getArtist().get(i).getImages().get(0).toString();
             }
+            list1.add(new aclass(LIST.getArtist().get(i).getType(),
+                    LIST.getArtist().get(i).getName(),
+                    image));
         }
 
         for (int i=0;i<LIST.getTrack().size();i++)
         {
+            String image = "";
             if(LIST.getTrack().get(i).getImages()!= null && LIST.getTrack().get(i).getImages().size()!= 0) {
-                list1.add(new aclass(LIST.getTrack().get(i).getType(),
-                        LIST.getTrack().get(i).getName(),
-                        LIST.getTrack().get(i).getImages().get(0).toString()));
+                image = LIST.getTrack().get(i).getImages().get(0).toString();
             }
+            list1.add(new aclass(LIST.getTrack().get(i).getType(),
+                    LIST.getTrack().get(i).getName(),
+                    image));
         }
 
     }
@@ -70,7 +72,9 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
         holder.ArtistName.setText(list1.get(position).getName());
         holder.ArtistType.setText(list1.get(position).getType());
         Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
-        Picasso.get().load(list1.get(position).getImage()).into(holder.ArtistImage);
+        if(list1.get(position).getImage() !="") {
+            Picasso.get().load(list1.get(position).getImage()).into(holder.ArtistImage);
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

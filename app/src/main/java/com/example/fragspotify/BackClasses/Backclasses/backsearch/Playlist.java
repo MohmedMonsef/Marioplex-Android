@@ -17,6 +17,9 @@ public class Playlist {
     @SerializedName("ownerImages")
     @Expose
     private List<Object> ownerImages = null;
+    @SerializedName("ownerType")
+    @Expose
+    private String ownerType;
     @SerializedName("_id")
     @Expose
     private String id;
@@ -52,6 +55,14 @@ public class Playlist {
 
     public void setOwnerImages(List<Object> ownerImages) {
         this.ownerImages = ownerImages;
+    }
+
+    public String getOwnerType() {
+        return ownerType;
+    }
+
+    public void setOwnerType(String ownerType) {
+        this.ownerType = ownerType;
     }
 
     public String getId() {
