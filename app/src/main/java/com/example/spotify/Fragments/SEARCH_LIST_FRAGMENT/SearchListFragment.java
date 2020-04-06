@@ -26,7 +26,7 @@ import android.widget.TextView;
 
 import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.Adapters.AdaptersearcHes;
-import com.example.spotify.Interfaces.classinterface;
+import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.R;
 import com.example.spotify.SpotifyClasses.SearchClasses.search;
 
@@ -81,11 +81,8 @@ editText.addTextChangedListener(new TextWatcher() {
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if(s.length()!=0) {
             Log.i("onQueryTextChange", s.toString());
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://api.spotify.com/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-            classinterface apiService = retrofit.create(classinterface.class);
+            Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
+            EndPointAPI apiService = retrofit.create(EndPointAPI.class);
             Call<search> call = apiService.getSearch(s.toString(), "artist,track", "US", 5, 0);
             call.enqueue(new Callback<search>() {
                 @Override

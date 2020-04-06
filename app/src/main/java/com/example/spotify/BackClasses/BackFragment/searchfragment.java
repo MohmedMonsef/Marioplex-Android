@@ -94,7 +94,7 @@ public class searchfragment extends Fragment implements LifecycleOwner {
     ////*******************************Retrofit****************************////
     private void SetRetrofit() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.7:3000")
+                .baseUrl("http://192.168.1.35:3000")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         backinterfaces apiService = retrofit.create(backinterfaces.class);

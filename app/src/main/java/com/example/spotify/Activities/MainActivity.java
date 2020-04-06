@@ -15,10 +15,13 @@ import com.example.spotify.BackClasses.BackFragment.backhome;
 import com.example.spotify.BackClasses.BackFragment.searchfragment;
 import com.example.spotify.Fragments.LIBRARY_FRAGMENT.libraryFragment;
 import com.example.spotify.Fragments.PREMIUM_FRAGMENT.premiumFragment;
+import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.R;
 import com.example.spotify.media.MediaPlayerService;
 import com.example.spotify.media.TrackInfo;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import retrofit2.Retrofit;
 
 import static android.widget.Toast.makeText;
 

@@ -23,8 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.ActivitySetting"></activity>
-        <activity android:name=".Activities.SettingActivity" />
         <activity android:name="com.example.spotify.Activities.MainActivity"/>
         <activity android:name="com.example.spotify.media.MediaPlayerActivity" />
         <activity android:name="com.example.spotify.media.AddToPlaylistActivity" />

@@ -70,7 +70,7 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
 
 /////##########$$$$$$$$$$$$$$$$$$
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.7:3000")
+                .baseUrl("http://192.168.1.35:3000")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         apiService = retrofit.create(backinterfaces.class);
@@ -162,7 +162,7 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
                  .baseUrl("https://api.spotify.com/")
                  .addConverterFactory(GsonConverterFactory.create())
                  .build();
-         classinterface apiService = retrofit.create(classinterface.class);
+         EndPointAPI apiService = retrofit.create(EndPointAPI.class);
          Call<search> call = apiService.getSearch("Muse", "artist", "US", 5, 0);
          call.enqueue(new Callback<search>() {
              @Override
@@ -220,7 +220,7 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
                          .baseUrl("https://api.spotify.com/")
                          .addConverterFactory(GsonConverterFactory.create())
                          .build();
-                 classinterface apiService = retrofit.create(classinterface.class);
+                 EndPointAPI apiService = retrofit.create(EndPointAPI.class);
                  Call<search> call = apiService.getSearch(query,"artist","US",5,0);
                  call.enqueue(new Callback<search>() {
                      @Override
@@ -295,7 +295,7 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
                             .baseUrl("https://api.spotify.com/")
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
-                    classinterface apiService = retrofit.create(classinterface.class);
+                    EndPointAPI apiService = retrofit.create(EndPointAPI.class);
                     Call<search> call = apiService.getSearch(newText,"artist","US",5,0);
                     call.enqueue(new Callback<search>() {
                         @Override
@@ -337,7 +337,7 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
                             .baseUrl("https://api.spotify.com/")
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
-                    classinterface apiService = retrofit.create(classinterface.class);
+                    EndPointAPI apiService = retrofit.create(EndPointAPI.class);
                     Call<search> call = apiService.getSearch(query,"artist","US",5,0);
                     call.enqueue(new Callback<search>() {
                         @Override
@@ -407,7 +407,7 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
                 .baseUrl("https://api.spotify.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        classinterface apiService = retrofit.create(classinterface.class);
+        EndPointAPI apiService = retrofit.create(EndPointAPI.class);
         Call<search>= apiService.getSearch(query,) ;
         call.enqueue(new Callback<search>() {
             @Override
@@ -479,7 +479,7 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
         recyclerView.setAdapter(movieAdapter);
 
         movieList = new search();
-        ApiInterface apiService = ApiClient.getClient().create(classinterface.class);
+        ApiInterface apiService = ApiClient.getClient().create(EndPointAPI.class);
         Call<List<search>> call = apiService.getMovies();
 
         call.enqueue(new Callback<List<search>>() {
@@ -598,7 +598,7 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
                         .baseUrl("https://api.spotify.com/")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
-                classinterface apiService = retrofit.create(classinterface.class);
+                EndPointAPI apiService = retrofit.create(EndPointAPI.class);
                 Call<search> call = apiService.getSearch(query,"artist","US",10,5);
                 call.enqueue(new Callback<search>() {
                     @Override
@@ -649,7 +649,7 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
                 .baseUrl("https://api.spotify.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        classinterface apiService = retrofit.create(classinterface.class);
+        EndPointAPI apiService = retrofit.create(EndPointAPI.class);
         Call<search> call = apiService.getSearch();
         call.enqueue(new Callback<search>() {
             @Override
