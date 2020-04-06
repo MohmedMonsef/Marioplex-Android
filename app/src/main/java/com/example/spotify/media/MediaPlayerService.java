@@ -93,7 +93,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         Call<currentTrack> call = Retrofit.getInstance().getEndPointAPI().getCurrentlyPlaying(user.getToken());
         getCurrentlyPlaying(call);
         //////////////////////////////////////////////////////////////////////
-
+        //TODO must be in on response when the back finishes the url
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             // Set the data source to the mediaFile location
@@ -108,6 +108,23 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         mediaPlayer.prepareAsync();
     }
 
+    public void playCurrentTrack(Call<currentTrack> call){
+        getCurrentlyPlaying(call);
+        mediaPlayer.reset();
+        try {
+            // Set the data source to the mediaFile location
+            audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+            mediaPlayer.setDataSource(audioFile);
+            prepared = false;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            stopSelf();
+        }
+        mediaPlayer.prepareAsync();
+
+    }
+
     void getCurrentlyPlaying(Call<currentTrack> call){
         call.enqueue(new Callback<currentTrack>() {
             @Override
@@ -115,6 +132,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 if (!response.isSuccessful()) {
                     toast = Toast.makeText(getApplicationContext(),"Code: "+response.code(),Toast.LENGTH_SHORT);
                     toast.show();
+                    //TODO that means queue wasn't created so you need to hide the bottom sheet
                     return;
                 }
                 else if(response.body()==null){

@@ -7,8 +7,11 @@ import com.example.spotify.login.LoginCredentials;
 import com.example.spotify.login.LoginResponse;
 import com.example.spotify.login.SignUpData;
 import com.example.spotify.login.user;
+import com.example.spotify.pojo.PlaylistTracks;
 import com.example.spotify.pojo.currentTrack;
 import com.example.spotify.pojo.playlist;
+
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -58,13 +61,13 @@ public interface EndPointAPI {
     //@Headers("Authorization: Bearer "+token)
     Call<UserPlaylists> getUserPlaylists();
 
-    @PUT("me/like")
-    //@Headers("Authorization: Bearer "+token)
-    Call<ResponseBody> LikeATrack(@Query("id") String id);
+//    @PUT("me/like")
+//    //@Headers("Authorization: Bearer "+token)
+//    Call<ResponseBody> LikeATrack(@Query("id") String id);
 
-    @DELETE("me/unlike")
-    //@Headers("Authorization: Bearer "+token)
-    Call<ResponseBody> unLikeATrack(@Query("id") String id);
+//    @DELETE("me/unlike")
+//    //@Headers("Authorization: Bearer "+token)
+//    Call<ResponseBody> unLikeATrack(@Query("id") String id);
 
     //////////////////////////////////our api requests//////////////////////////////////////////
     /////////you need to change the Base URL//////////////////
@@ -98,5 +101,35 @@ public interface EndPointAPI {
                                  ,@Header("x-auth-token")String token1); //check if fiels of Query
 
 
+    @PUT("me/player/shuffle")
+    Call<Void> toggleShuffle(@Query("state") Boolean state , @Header("x-auth-token")String token1);
+
+    @POST("createQueue/{playlist_id}/{trackid}")
+    Call<Void> CreateQueue(@Path("playlist_id") String playlist_id ,
+                             @Path("trackid") String track_id ,
+                             @Query("isPlaylist") Boolean isPlaylist ,
+                             @Header("x-auth-token")String token1);
+
+
+    @GET("playlists/{playlist_id}/tracks")
+    Call<List<PlaylistTracks>> getPlaylistTracks(@Path("playlist_id") String playlist_id,
+                                                @Header("x-auth-token")String token1);
+
+    @PUT("me/like/{track_id}")
+    Call<Void> LikeTrack(@Path("track_id") String track_id ,
+                         @Header("x-auth-token")String token1);
+
+    @DELETE("me/unlike/{track_id}")
+    Call<Void> UNLikeTrack(@Path("track_id") String track_id ,
+                           @Header("x-auth-token")String token1);
+
+
+    @DELETE("playlists/{playlist_id}/followers")
+    Call<Void> UNLikePlaylist(@Path("playlist_id") String playlistID ,
+                              @Header("x-auth-token")String token1);
+
+    @PUT("playlists/{playlist_id}/followers")
+    Call<Void> LikePlaylist(@Path("playlist_id") String playlistID ,
+                            @Header("x-auth-token")String token1);
 
 }
