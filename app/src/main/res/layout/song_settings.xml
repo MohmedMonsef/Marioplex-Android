@@ -14,6 +14,7 @@
         android:layout_margin="16dp"
         android:orientation="vertical">
         <RelativeLayout
+            android:id="@+id/settings_upper_relative_layout"
             android:layout_width="match_parent"
             android:layout_height="250dp">
             <ImageView
@@ -26,6 +27,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/background_light"
                 android:layout_below="@id/setting_image"
                 android:id="@+id/setting_song_name"
                 android:text="song name"
@@ -35,6 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="artist name"
+                android:textColor="@android:color/darker_gray"
                 android:id="@+id/setting_artist_id"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/setting_song_name"
@@ -107,12 +110,13 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/sleep"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:orientation="horizontal"
-            android:id="@+id/sleep_timer">
+            android:orientation="horizontal">
             <ImageView
+                android:id="@+id/timer_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
@@ -127,30 +131,6 @@
                 android:layout_marginLeft="16dp"
                 android:textSize="16dp"/>
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:orientation="horizontal"
-            android:id="@+id/show_credits">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:src="@drawable/show_credits"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:textColor="@android:color/background_light"
-                android:text="Show Credits"
-                android:textStyle="bold"
-                android:layout_marginLeft="16dp"
-                android:textSize="16dp"/>
-        </LinearLayout>
-
-
 
     </LinearLayout>
 

@@ -1,19 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layoutSearchFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/layoutcolor"
+    android:orientation="vertical"
     tools:context=".Fragments.SEARCH_FRAGMENT.searchFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
+    <TextView
+        android:id="@+id/text_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed-light"
+        android:gravity="center_horizontal"
+        android:paddingTop="100dp"
+        android:text="Search"
+        android:textColor="@color/TextColor"
+        android:textSize="64dp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:layout_width="341dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center|center_horizontal"
+        android:src="@drawable/searchbar"
+        android:id="@+id/searchImg"
+        />
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="hello_search_fragment"
-        android:id="@+id/text_search"
+        android:layout_height="wrap_content"
+        android:text="Browse all"
         android:textColor="@color/TextColor"
         android:textSize="24dp"
-
+        android:textStyle="bold"
+        android:id="@+id/textcategor"
         />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        tools:ignore="MissingConstraints">
 
-</FrameLayout>
+    </androidx.recyclerview.widget.RecyclerView>
+</LinearLayout>

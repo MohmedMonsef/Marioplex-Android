@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FragSpotify</string>
+    <string name="app_name">Spotify</string>
     <string name="title_home">Home</string>
     <string name="title_search">Search</string>
     <string name="title_library">Library</string>
@@ -11,8 +11,12 @@
     <string name="song_name">Little Do You Know</string>
     <string name="song_artist">Adele</string>
 
+    <string name="facebook_app_id">873604526436563</string>
+    <string name="fb_login_protocol_scheme">fb873604526436563</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="todo">TODO</string>
+    <string name="todo1">TODO</string>
 
 </resources>
