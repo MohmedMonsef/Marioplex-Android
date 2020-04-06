@@ -18,9 +18,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 
 import com.example.spotify.R;
-import com.example.spotify.SpotifyClasses.Artist_;
 import com.example.spotify.SpotifyClasses.Image;
-import com.example.spotify.SpotifyClasses.Track;
+import com.example.spotify.pojo.currentTrack;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -68,7 +67,7 @@ public class BottomSheetFragment extends Fragment {
         bottom_play_pause = root.findViewById(R.id.bottom_play_pause);
 
         track = TrackInfo.getInstance();
-        track.setName("Hager");
+        track.setName("song name");
         song_artist_name.setText(track.getName());
 
 
@@ -89,11 +88,13 @@ public class BottomSheetFragment extends Fragment {
                     track.setIsPlaying(false);
                     player.pauseMedia();
                     bottom_play_pause.setImageResource(R.drawable.play_down);
+                    //player.cancelTimer();
                 }
                 else{
                     track.setIsPlaying(true);
                     player.resumeMedia();
                     bottom_play_pause.setImageResource(R.drawable.pause_down);
+                    //player.cancelTimer();
                 }
             }
         });
@@ -107,10 +108,10 @@ public class BottomSheetFragment extends Fragment {
         });
 
         //Observers
-
-        track.getTrack().observe(this, new Observer<Track>() {
+//TODO here
+        track.getTrack().observe(this, new Observer<currentTrack>() {
             @Override
-            public void onChanged(Track track) {
+            public void onChanged(currentTrack track) {
                 UpdateUI();
             }
         });
@@ -130,22 +131,24 @@ public class BottomSheetFragment extends Fragment {
 
         return root;
     }
-
+    //TODO here
     void UpdateUI(){
 
-        List<Artist_> artists = track.getTrack().getValue().getArtists();
-        String artistsNames = "";
-        for(Artist_ artist_ : artists)
-        {
-            artistsNames+=artist_.getName() +" ";
+        String artistName = "";
+        String songName = "";
+        if(track.getTrack().getValue().getAlbum()!=null && track.getTrack().getValue().getAlbum().getArtist()!=null && track.getTrack().getValue().getTrack()!=null){
+            artistName = track.getTrack().getValue().getAlbum().getArtist().getName();
+            songName = track.getTrack().getValue().getTrack().getName();
         }
-        song_artist_name.setText(track.getTrack().getValue().getName()+" . "+artistsNames);
+        song_artist_name.setText(songName+" . "+artistName);
 
 
-        List<Image> images= track.getTrack().getValue().getAlbum().getImages();
+        List<Image> images= track.getTrack().getValue().getTrack().getImages();
+        if(images !=null&& images.size()!=0){
         String Imageurl = images.get(0).getUrl();
         Picasso.get().load(Imageurl).into(bottom_image_id);
-
+        }
+//here any chang
     }
     private void bindService(){
         Intent serviceIntent1 = new Intent(getContext() , MediaPlayerService.class);

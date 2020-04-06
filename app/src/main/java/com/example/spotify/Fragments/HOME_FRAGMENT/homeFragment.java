@@ -24,7 +24,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.spotify.Activities.MainActivity;
-import com.example.spotify.Adapters.AdapterNewRelease;
+import com.example.spotify.Adapters.Adapter;
 import com.example.spotify.Fragments.SETTING_FRAGMENT.settingFragment;
 import com.example.spotify.Interfaces.classinterface;
 import com.example.spotify.R;
@@ -47,7 +47,7 @@ import static android.widget.Toast.makeText;
 public class homeFragment extends Fragment implements LifecycleOwner {
     NewRelease NewReleaseList;
     RecyclerView recyclerView;
-    AdapterNewRelease recyclerAdapter;
+    Adapter recyclerAdapter;
     private TextView textViewResult;
     Toolbar toolbar;
     private viewmodelHome homeViewModel;
@@ -94,7 +94,7 @@ public class homeFragment extends Fragment implements LifecycleOwner {
 private void SetRetrofit()
 {
     Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://api.spotify.com/")
+            .baseUrl("http://192.168.1.7:3000")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
     classinterface apiService = retrofit.create(classinterface.class);
@@ -115,7 +115,7 @@ private void SetRetrofit()
                 textViewResult.setText(response.body().toString() + " track = null");
             else {
                 Log.d("TAG", "Response = " + NewReleaseList);
-                recyclerAdapter = new AdapterNewRelease(getActivity(), NewReleaseList.getAlbums().getItems());
+                recyclerAdapter = new Adapter(getActivity(), NewReleaseList.getAlbums().getItems());
                 recyclerView.setAdapter(recyclerAdapter);
                 recyclerView.setHasFixedSize(true);
             }

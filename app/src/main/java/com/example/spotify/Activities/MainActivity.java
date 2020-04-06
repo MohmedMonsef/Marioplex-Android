@@ -28,12 +28,15 @@ public class MainActivity extends AppCompatActivity {
     private MediaPlayerService player;
     boolean serviceBound = false;
 
+    static Retrofit retrofit;
+    static EndPointAPI endPointAPI;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-                ////*******************************BottomNavigation***********************////
+        ////*******************************BottomNavigation***********************////
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -44,16 +47,18 @@ public class MainActivity extends AppCompatActivity {
             startService();
         }
 
+        endPointAPI = com.example.spotify.Interfaces.Retrofit.getInstance().getEndPointAPI();
+
     }
     public void loadFragment(Fragment fragment) {
         // create a FragmentManager
         FragmentManager fm = getFragmentManager();
         // create a FragmentTransaction to begin the transaction and replace the Fragment
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-         // replace the FrameLayout with new Fragment
-         //fragmentTransaction.add(R.id.frame_fragment,fragment);
-         fragmentTransaction.replace(R.id.frame_fragment,fragment);
-         fragmentTransaction.commit(); // save the changes
+        // replace the FrameLayout with new Fragment
+        //fragmentTransaction.add(R.id.frame_fragment,fragment);
+        fragmentTransaction.replace(R.id.frame_fragment,fragment);
+        fragmentTransaction.commit(); // save the changes
 
     }
 
