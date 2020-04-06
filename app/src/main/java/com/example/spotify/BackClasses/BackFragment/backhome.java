@@ -91,10 +91,7 @@ public class backhome extends Fragment implements LifecycleOwner {
     ////*******************************Retrofit****************************////
     private void SetRetrofit()
     {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.35:3000/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
         backinterfaces apiService = retrofit.create(backinterfaces.class);
         Call<Newreleases> call = apiService.getNewRelease();
         call.enqueue(new Callback<Newreleases>() {

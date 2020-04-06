@@ -69,10 +69,7 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
         editText=(EditText) view.findViewById(R.id.yamoshal);
 
 /////##########$$$$$$$$$$$$$$$$$$
-        retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.35:3000")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
         apiService = retrofit.create(backinterfaces.class);
 
         editText.addTextChangedListener(new TextWatcher() {

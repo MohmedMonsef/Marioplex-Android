@@ -89,7 +89,7 @@ public class SignUpFragment extends Fragment {
                 }
                 else {
                     Log.i("Intro Activity",response.errorBody().toString());
-                    Toast.makeText(getContext(),"Failed " + response.code(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"Failed " + response.code() + response.message(),Toast.LENGTH_SHORT).show();
                 }
             }
 

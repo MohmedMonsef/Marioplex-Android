@@ -93,10 +93,7 @@ public class homeFragment extends Fragment implements LifecycleOwner {
     ////*******************************Retrofit****************************////
 private void SetRetrofit()
 {
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://192.168.1.35:3000")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
+    Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
     EndPointAPI apiService = retrofit.create(EndPointAPI.class);
     Call<NewRelease> call = apiService.getNewRelease();
     call.enqueue(new Callback<NewRelease>() {

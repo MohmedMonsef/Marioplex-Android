@@ -42,7 +42,7 @@ public class AddToPlaylistActivity extends AppCompatActivity {
     private String trackID;
 
 //    private Retrofit retrofit = new Retrofit.Builder()
-//            .baseUrl("http://192.168.1.35:3000/")
+//            .baseUrl("http://52.205.254.29/")
 //            .addConverterFactory(GsonConverterFactory.create())
 //            .build();
     private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();

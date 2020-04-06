@@ -90,14 +90,14 @@ public class LoginFragment extends Fragment {
                     getActivity().finish();
                 }
                 else {
-                    Toast.makeText(getContext(),"Failed to login",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"Failed to login " + response.message(),Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 Log.e("Intro Activity",t.getMessage());
-                Toast.makeText(getContext(),"Failed to connect",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"Failed to connect " + t.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
     }

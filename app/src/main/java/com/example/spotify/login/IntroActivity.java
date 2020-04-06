@@ -136,7 +136,7 @@ public class IntroActivity extends AppCompatActivity {
                     finish();
                 }
                 else {
-                    Toast.makeText(IntroActivity.this,"Failed to login",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(IntroActivity.this,"Failed to login " + response.message(),Toast.LENGTH_SHORT).show();
                 }
             }
 
