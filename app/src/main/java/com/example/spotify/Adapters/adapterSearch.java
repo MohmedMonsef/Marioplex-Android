@@ -1,6 +1,5 @@
-package com.example.spotify.BackClasses.BackAdapter;
+package com.example.spotify.Adapters;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,28 +7,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
-import com.example.spotify.Fragments.NEW_RELEASE_FRAHMENT.newReleaseFragment;
 import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
 import com.example.spotify.R;
-import com.example.spotify.SpotifyClasses.SearchClasses.aclass;
+import com.example.spotify.BackClasses.Backclasses.aclass;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
-
 import static android.content.ContentValues.TAG;
-
 public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHolder> {
-    //private  int TYPE_ARTIST = 2;
-//private  int TYPE_TRACKS = 1;
+
     private Context context;
     //private search LIST;
 //    private List<Item> ArtistList;

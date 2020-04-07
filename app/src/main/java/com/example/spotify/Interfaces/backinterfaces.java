@@ -1,4 +1,4 @@
-package com.example.spotify.BackClasses.BackInterfaces;
+package com.example.spotify.Interfaces;
 
 import com.example.spotify.BackClasses.Backclasses.backcategory.Category;
 import com.example.spotify.BackClasses.Backclasses.backnewrelease.Newreleases;

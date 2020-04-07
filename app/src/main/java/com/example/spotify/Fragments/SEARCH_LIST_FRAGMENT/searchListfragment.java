@@ -1,8 +1,7 @@
-package com.example.spotify.BackClasses.BackFragment;
+package com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,17 +23,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify.Activities.MainActivity;
-import com.example.spotify.BackClasses.BackAdapter.adapterSearch;
-import com.example.spotify.BackClasses.BackInterfaces.backinterfaces;
+import com.example.spotify.Adapters.adapterSearch;
+import com.example.spotify.Interfaces.backinterfaces;
 import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
-import com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT.viewmodelSearchList;
 import com.example.spotify.R;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 //import androidx.fragment.app.Fragment;
 
@@ -56,28 +53,19 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
      int dochange;
     private Retrofit retrofit;
     private backinterfaces apiService;
-    SearchView searchView;
-    private SearchView.OnQueryTextListener queryTextListener;
-    MenuItem item;
     private viewmodelSearchList searchViewModel;
     EditText editText;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search_listfragment, container, false);
         searchViewModel = ViewModelProviders.of((MainActivity) getActivity()).get(viewmodelSearchList.class);
-        //searchView.setOnSearchClickListener(View.OnClickListener on);
         final TextView textView = view.findViewById(R.id.text_home);
-        ////*****************************toolbar************************************////
-         l1=(LinearLayout) view.findViewById(R.id.searchlistlayout);
+        l1=(LinearLayout) view.findViewById(R.id.searchlistlayout);
         l1.setBackground(getResources().getDrawable(R.drawable.item));
         editText=(EditText) view.findViewById(R.id.searchbarlist);
-
-/////##########$$$$$$$$$$$$$$$$$$
         retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
         apiService = retrofit.create(backinterfaces.class);
-
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after)
@@ -92,7 +80,6 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
             dochange=s.length();
                 if(s.length()!=0) {
                     Log.i("onQueryTextChange", s.toString());
-
                     Call<Search> call = apiService.getSearch(s.toString(), "artist,album,playlist,track" , "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTgwYzZhZjE0Yzg1NjZkNmNkOWI0MDAiLCJwcm9kdWN0IjoiZnJlZSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg2MDI2NjAyLCJleHAiOjQ3MzI1MTMwMDJ9.ztEjNCgbkyJ2-9WB6ojwLgDfhWsZ-ZGJVFUB8dYMz8s");
                     call.enqueue(new Callback<Search>() {
                         @Override

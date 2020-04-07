@@ -1,19 +1,10 @@
-package com.example.spotify.BackClasses.BackFragment;
+package com.example.spotify.Fragments.SEE_ALBUMS_FRAGMENT;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,17 +15,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify.Activities.MainActivity;
-import com.example.spotify.BackClasses.BackAdapter.adapterSearch;
-import com.example.spotify.BackClasses.BackInterfaces.backinterfaces;
+import com.example.spotify.Adapters.adapterSearch;
+import com.example.spotify.Interfaces.backinterfaces;
 import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
 import com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT.viewmodelSearchList;
 import com.example.spotify.R;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class see_all_albums_Fragment extends android.app.Fragment implements LifecycleOwner {

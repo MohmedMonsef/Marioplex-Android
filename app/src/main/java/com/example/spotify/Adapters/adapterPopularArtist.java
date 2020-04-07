@@ -1,8 +1,7 @@
-package com.example.spotify.BackClasses.BackAdapter;
+package com.example.spotify.Adapters;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +13,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.spotify.BackClasses.Backclasses.backpopularplaylist.Playlist;
+import com.example.spotify.BackClasses.Backclasses.backpopularartist.Artist;
 import com.example.spotify.Fragments.NEW_RELEASE_FRAHMENT.newReleaseFragment;
-import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
 import com.example.spotify.R;
 import com.squareup.picasso.Picasso;
 
@@ -24,30 +22,30 @@ import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
-public class adapterPopularPlaylist extends RecyclerView.Adapter<adapterPopularPlaylist.MyviewHolder> {
+public class adapterPopularArtist extends RecyclerView.Adapter<adapterPopularArtist.MyviewHolder> {
     private Context context;
-    private List<Playlist> PopularPlaylistList;
+    private List<Artist> PopularArtistList;
 
-    public adapterPopularPlaylist(Context context, List<Playlist> PopularPlaylistList) {
+    public adapterPopularArtist(Context context, List<Artist> PopularArtistList) {
         this.context = context;
-        this.PopularPlaylistList = PopularPlaylistList;
+        this.PopularArtistList = PopularArtistList;
     }
 
-    public void setMovieList(List<Playlist> movieList) {
-        this.PopularPlaylistList = movieList;
+    public void setMovieList(List<Artist> movieList) {
+        this.PopularArtistList = movieList;
         notifyDataSetChanged();
     }
 
     @Override
-    public adapterPopularPlaylist.MyviewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public adapterPopularArtist.MyviewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_recycler,parent,false);
         return new MyviewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(adapterPopularPlaylist.MyviewHolder holder, int position) {
+    public void onBindViewHolder(adapterPopularArtist.MyviewHolder holder, int position) {
 
-        final Playlist item=PopularPlaylistList.get(position);
+        Artist item=PopularArtistList.get(position);
         holder.ImageName.setText(item.getName());
         Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
         if(item.getImages()!= null & item.getImages().size()!=0) {
@@ -59,20 +57,9 @@ public class adapterPopularPlaylist extends RecyclerView.Adapter<adapterPopularP
             {
                 Log.i(TAG, "onClick: jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
 
-//                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-//                Fragment myFragment = new newReleaseFragment();
-//                activity.getFragmentManager().beginTransaction().replace(R.id.frame_fragment, myFragment).addToBackStack(null).commit();
-                Bundle bundle = new Bundle();
-                bundle.putString("playlistID" , item.getId());
-                bundle.putString("ownerName" , item.getOwner().getName());
-
-                androidx.fragment.app.Fragment f = new PlaylistFragment();
-                f.setArguments(bundle);
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                activity.getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.frame_fragment, f)
-                        .addToBackStack(null).commit();
+                Fragment myFragment = new newReleaseFragment();
+                activity.getFragmentManager().beginTransaction().replace(R.id.frame_fragment, myFragment).addToBackStack(null).commit();
 
             }
         });
@@ -83,8 +70,8 @@ public class adapterPopularPlaylist extends RecyclerView.Adapter<adapterPopularP
 
     @Override
     public int getItemCount() {
-        if(PopularPlaylistList != null){
-            return PopularPlaylistList.size();
+        if(PopularArtistList != null){
+            return PopularArtistList.size();
         }
         return 0;
 

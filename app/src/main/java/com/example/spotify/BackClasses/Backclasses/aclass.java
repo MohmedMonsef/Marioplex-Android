@@ -1,4 +1,4 @@
-package com.example.spotify.SpotifyClasses.SearchClasses;
+package com.example.spotify.BackClasses.Backclasses;
 
 public class aclass
 {

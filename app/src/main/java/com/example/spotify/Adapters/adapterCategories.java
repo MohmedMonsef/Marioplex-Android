@@ -10,39 +10,41 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.spotify.BackClasses.Backclasses.backcategory.Category_;
 import com.example.spotify.R;
-import com.example.spotify.SpotifyClasses.CategoryModel.Item;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.MyviewHolder> {
+public class adapterCategories extends RecyclerView.Adapter<adapterCategories.MyviewHolder> {
     private Context context;
-    private List<Item> Categorylist;
+    private List<Category_> Categorylist;
 
-    public AdapterCategory(Context context, List<Item> Categorylist) {
+    public adapterCategories(Context context, List<Category_> Categorylist) {
         this.context = context;
         this.Categorylist = Categorylist;
     }
 
-    public void setMovieList(List<Item> Categorylist) {
+    public void setMovieList(List<Category_> Categorylist) {
         this.Categorylist = Categorylist;
         notifyDataSetChanged();
     }
 
     @Override
-    public AdapterCategory.MyviewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public adapterCategories.MyviewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.categoryitem,parent,false);
         return new MyviewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(AdapterCategory.MyviewHolder holder, int position) {
+    public void onBindViewHolder(adapterCategories.MyviewHolder holder, int position) {
 
-        Item item=Categorylist.get(position);
+        Category_ item=Categorylist.get(position);
         holder.ImageName.setText(item.getName());
         Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
-        Picasso.get().load(item.getIcons().get(0).getUrl()).into(holder.image);
+        if(item.getImages().size()!=0) {
+            Picasso.get().load(item.getImages().get(0).toString()).into(holder.image);
+        }
 
     }
 

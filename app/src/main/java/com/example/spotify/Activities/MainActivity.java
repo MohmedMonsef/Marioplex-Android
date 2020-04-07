@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 
-import com.example.spotify.BackClasses.BackFragment.backhome;
-import com.example.spotify.BackClasses.BackFragment.searchfragment;
+import com.example.spotify.Fragments.HOME_FRAGMENT.backhome;
+import com.example.spotify.Fragments.SEARCH_FRAGMENT.searchfragment;
 import com.example.spotify.Fragments.LIBRARY_FRAGMENT.libraryFragment;
 import com.example.spotify.Fragments.PREMIUM_FRAGMENT.premiumFragment;
 import com.example.spotify.Interfaces.EndPointAPI;

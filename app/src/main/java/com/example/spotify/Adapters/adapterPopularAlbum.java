@@ -1,4 +1,4 @@
-package com.example.spotify.BackClasses.BackAdapter;
+package com.example.spotify.Adapters;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -13,7 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.spotify.BackClasses.Backclasses.backpopularartist.Artist;
+import com.example.spotify.BackClasses.Backclasses.backpopularalbum.Album;
 import com.example.spotify.Fragments.NEW_RELEASE_FRAHMENT.newReleaseFragment;
 import com.example.spotify.R;
 import com.squareup.picasso.Picasso;
@@ -22,30 +22,31 @@ import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
-public class adapterPopularArtist extends RecyclerView.Adapter<adapterPopularArtist.MyviewHolder> {
+public class adapterPopularAlbum extends RecyclerView.Adapter<adapterPopularAlbum.MyviewHolder> {
     private Context context;
-    private List<Artist> PopularArtistList;
+    private List<Album> PopularAlbumList;
 
-    public adapterPopularArtist(Context context, List<Artist> PopularArtistList) {
+    public adapterPopularAlbum(Context context, List<Album> PopularAlbumList) {
         this.context = context;
-        this.PopularArtistList = PopularArtistList;
+        this.PopularAlbumList = PopularAlbumList;
     }
 
-    public void setMovieList(List<Artist> movieList) {
-        this.PopularArtistList = movieList;
+    public void setMovieList(List<Album> movieList) {
+        this.PopularAlbumList = movieList;
         notifyDataSetChanged();
     }
 
     @Override
-    public adapterPopularArtist.MyviewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public adapterPopularAlbum.MyviewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_recycler,parent,false);
         return new MyviewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(adapterPopularArtist.MyviewHolder holder, int position) {
 
-        Artist item=PopularArtistList.get(position);
+    @Override
+    public void onBindViewHolder(adapterPopularAlbum.MyviewHolder holder, int position) {
+
+        Album item=PopularAlbumList.get(position);
         holder.ImageName.setText(item.getName());
         Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
         if(item.getImages()!= null & item.getImages().size()!=0) {
@@ -70,8 +71,8 @@ public class adapterPopularArtist extends RecyclerView.Adapter<adapterPopularArt
 
     @Override
     public int getItemCount() {
-        if(PopularArtistList != null){
-            return PopularArtistList.size();
+        if(PopularAlbumList != null){
+            return PopularAlbumList.size();
         }
         return 0;
 

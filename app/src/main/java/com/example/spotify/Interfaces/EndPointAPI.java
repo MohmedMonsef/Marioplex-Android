@@ -1,10 +1,6 @@
 package com.example.spotify.Interfaces;
 
 import com.example.spotify.BackClasses.Backclasses.backcategory.Category;
-import com.example.spotify.SpotifyClasses.NewRelease;
-import com.example.spotify.SpotifyClasses.SearchClasses.search;
-import com.example.spotify.SpotifyClasses.Track;
-import com.example.spotify.SpotifyClasses.UserPlaylists;
 import com.example.spotify.login.apiClasses.FacebookLoginData;
 import com.example.spotify.login.apiClasses.LoginCredentials;
 import com.example.spotify.login.apiClasses.LoginResponse;
@@ -60,9 +56,7 @@ public interface EndPointAPI {
     ////////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////home requests//////////////////////////////////////////
-    @GET("v1/browse/new-releases?country=SE&limit=10&offset=0")
-    @Headers("Authorization: Bearer BQCuLAJp8vgez0xzrQwqBbbXSqSeZqdff9bJPSPOqEL7OK52W1lN_Ny3dSC38HxAnGr_X7_o5Fw435vJvXCTcNIBEkCanW7Yp-ylFrQWTsUUfw5n4Gz4VIbUFfoyXrmP836lmoXnv4mXB-8WRX5l-E11HXSjOAPP-QFjLXgvNbZ3sPvgiHu8ElQMU7TQfiqF")
-    public Call<NewRelease> getNewRelease();
+
 
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -77,9 +71,7 @@ public interface EndPointAPI {
 //    @Headers("Authorization: Bearer "+token)
 //    Call<Tracks> getTracks(@Query("ids") String tracksid);
 
-    @GET("v1/me/playlists")
-    //@Headers("Authorization: Bearer "+token)
-    Call<UserPlaylists> getUserPlaylists();
+
 
 //    @PUT("me/like")
 //    //@Headers("Authorization: Bearer "+token)
@@ -157,14 +149,7 @@ public interface EndPointAPI {
     Call<Void> LikePlaylist(@Path("playlist_id") String playlistID ,
                             @Header("x-auth-token")String token1);
 
-    // requests from classinterface
-    @GET("search")
-    @Headers("Authorization: Bearer "+token)
-    public Call<search> getSearch(@Query("q") String name,
-                                  @Query("type") String type,
-                                  @Query("market") String market,
-                                  @Query("limit") int limit,
-                                  @Query("offset") int offset);
+
 
     @GET("browse/categories?country=SE&locale=sv_SE&limit=10&offset=5")
     @Headers("Authorization: Bearer "+token)

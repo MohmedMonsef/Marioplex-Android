@@ -1,4 +1,4 @@
-package com.example.spotify.BackClasses.BackFragment;
+package com.example.spotify.Fragments.HOME_FRAGMENT;
 
 
 import android.app.Fragment;
@@ -21,16 +21,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify.Activities.MainActivity;
-import com.example.spotify.BackClasses.BackAdapter.adapterNewreleases;
-import com.example.spotify.BackClasses.BackAdapter.adapterPopularAlbum;
-import com.example.spotify.BackClasses.BackAdapter.adapterPopularArtist;
-import com.example.spotify.BackClasses.BackAdapter.adapterPopularPlaylist;
-import com.example.spotify.BackClasses.BackInterfaces.backinterfaces;
+import com.example.spotify.Adapters.adapterNewreleases;
+import com.example.spotify.Adapters.adapterPopularAlbum;
+import com.example.spotify.Adapters.adapterPopularArtist;
+import com.example.spotify.Adapters.adapterPopularPlaylist;
+import com.example.spotify.Interfaces.backinterfaces;
 import com.example.spotify.BackClasses.Backclasses.backnewrelease.Newreleases;
 import com.example.spotify.BackClasses.Backclasses.backpopularalbum.PopularAlbum;
 import com.example.spotify.BackClasses.Backclasses.backpopularartist.PopularArtist;
 import com.example.spotify.BackClasses.Backclasses.backpopularplaylist.PopularPlaylist;
-import com.example.spotify.Fragments.HOME_FRAGMENT.viewmodelHome;
 import com.example.spotify.Fragments.SETTING_FRAGMENT.settingFragment;
 import com.example.spotify.R;
 
@@ -38,7 +37,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 //import androidx.fragment.app.Fragment;
 

@@ -1,4 +1,4 @@
-package com.example.spotify.BackClasses.BackFragment;
+package com.example.spotify.Fragments.SEE_PLAYLIST_FRAGMENT;
 
 import android.content.Context;
 import android.net.Uri;

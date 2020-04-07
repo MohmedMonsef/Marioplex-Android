@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/item"
-    tools:context=".BackClasses.BackFragment.see_all_albums_Fragment">
+    tools:context=".Fragments.SEE_ALBUMS_FRAGMENT.see_all_albums_Fragment">
     <TextView
         android:id="@+id/textalbumsearch"
         android:layout_width="match_parent"

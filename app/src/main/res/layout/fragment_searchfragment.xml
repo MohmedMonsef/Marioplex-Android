@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/category"
     android:orientation="vertical"
-    tools:context=".BackClasses.BackFragment.searchfragment">
+    tools:context=".Fragments.SEARCH_FRAGMENT.searchfragment">
 
     <!-- TODO: Update blank fragment layout -->
 

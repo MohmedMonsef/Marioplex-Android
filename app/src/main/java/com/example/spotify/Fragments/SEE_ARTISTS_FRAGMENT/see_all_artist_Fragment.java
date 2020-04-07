@@ -1,4 +1,4 @@
-package com.example.spotify.BackClasses.BackFragment;
+package com.example.spotify.Fragments.SEE_ARTISTS_FRAGMENT;
 
 import android.content.Context;
 import android.net.Uri;
@@ -15,12 +15,12 @@ import com.example.spotify.R;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link see_all_song_Fragment.OnFragmentInteractionListener} interface
+ * {@link see_all_artist_Fragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link see_all_song_Fragment#newInstance} factory method to
+ * Use the {@link see_all_artist_Fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class see_all_song_Fragment extends Fragment {
+public class see_all_artist_Fragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -32,7 +32,7 @@ public class see_all_song_Fragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public see_all_song_Fragment() {
+    public see_all_artist_Fragment() {
         // Required empty public constructor
     }
 
@@ -42,11 +42,11 @@ public class see_all_song_Fragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment see_all_song_Fragment.
+     * @return A new instance of fragment see_all_artist_Fragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static see_all_song_Fragment newInstance(String param1, String param2) {
-        see_all_song_Fragment fragment = new see_all_song_Fragment();
+    public static see_all_artist_Fragment newInstance(String param1, String param2) {
+        see_all_artist_Fragment fragment = new see_all_artist_Fragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -67,7 +67,7 @@ public class see_all_song_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_see_all_song_, container, false);
+        return inflater.inflate(R.layout.fragment_see_all_artist_, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

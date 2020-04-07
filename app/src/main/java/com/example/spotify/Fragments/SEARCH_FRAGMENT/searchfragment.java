@@ -1,4 +1,4 @@
-package com.example.spotify.BackClasses.BackFragment;
+package com.example.spotify.Fragments.SEARCH_FRAGMENT;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -18,17 +18,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify.Activities.MainActivity;
-import com.example.spotify.BackClasses.BackAdapter.adapterCategories;
-import com.example.spotify.BackClasses.BackInterfaces.backinterfaces;
+import com.example.spotify.Adapters.adapterCategories;
+import com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT.searchListfragment;
+import com.example.spotify.Interfaces.backinterfaces;
 import com.example.spotify.BackClasses.Backclasses.backcategory.Category;
-import com.example.spotify.Fragments.SEARCH_FRAGMENT.viewmodelSearch;
 import com.example.spotify.R;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 //import androidx.fragment.app.Fragment;
 
