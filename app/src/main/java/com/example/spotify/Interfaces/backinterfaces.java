@@ -17,25 +17,25 @@ public interface backinterfaces
     String token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTgwYzZhZjE0Yzg1NjZkNmNkOWI0MDAiLCJwcm9kdWN0IjoiZnJlZSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg2MDI2NjAyLCJleHAiOjQ3MzI1MTMwMDJ9.ztEjNCgbkyJ2-9WB6ojwLgDfhWsZ-ZGJVFUB8dYMz8s";
 
     //get list of new backhome
-    @GET("browse/new-releases?country=SE&limit=10&offset=0")
+    @GET("api/browse/new-releases?country=SE&limit=10&offset=0")
 
     public Call<Newreleases> getNewRelease();
 
-    @GET("browse/popular-albums")
+    @GET("api/browse/popular-albums")
     public Call<PopularAlbum> getPopularAlbum();
 
 
-    @GET("browse/popular-playlists")
+    @GET("api/browse/popular-playlists")
     public Call<PopularPlaylist> getPopularPlaylist();
 
-    @GET("browse/popular-artists")
+    @GET("api/browse/popular-artists")
     public Call<PopularArtist> getPopularArtist();
 
 
-    @GET("/search")
+    @GET("api/search")
     public Call<Search> getSearch(@Query("name") String name, @Query("type") String type, @Header("x-auth-token") String token);
 
-    @GET("/browse/categories")
+    @GET("api/browse/categories")
     public Call<Category> getCategories(@Header("x-auth-token") String token);
 
 }
