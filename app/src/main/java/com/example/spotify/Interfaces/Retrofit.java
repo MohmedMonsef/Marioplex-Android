@@ -21,8 +21,8 @@ public class Retrofit {
             .client(client)
             .build();
     private EndPointAPI endPointAPI = retrofit.create(EndPointAPI.class);
-    private ApiSpotify apiSpotify = retrofit.create(ApiSpotify .class);
-    private classinterface apiService = retrofit.create(classinterface.class);
+    //private ApiSpotify apiSpotify = retrofit.create(ApiSpotify .class);
+    //private classinterface apiService = retrofit.create(classinterface.class);
 
 
     public static Retrofit getInstance() {
@@ -37,11 +37,13 @@ public class Retrofit {
     public EndPointAPI getEndPointAPI(){
         return endPointAPI;
     }
-    public  ApiSpotify getApiSpotify(){
+    /*public  ApiSpotify getApiSpotify(){
         return apiSpotify;
-    }
-    public classinterface getclassinterface(){
+    }*/
+    /*public EndPointAPI getEndPointAPI(){
         return apiService;
     }
+
+     */
 
 }

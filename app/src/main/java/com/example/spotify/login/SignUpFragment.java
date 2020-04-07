@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.R;
+import com.example.spotify.login.apiClasses.SignUpData;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -23,15 +25,15 @@ import retrofit2.Retrofit;
 public class SignUpFragment extends Fragment {
 
     private static Retrofit mRetrofit;
-    private static ApiSpotify mApiSpotify;
+    private static EndPointAPI mEndPointAPI;
 
     /*public SignUpFragment() {
         // Required empty public constructor
     }*/
 
-    public SignUpFragment(Retrofit retrofit,ApiSpotify apiSpotify){
+    SignUpFragment(Retrofit retrofit, EndPointAPI EndPointAPI){
         mRetrofit = retrofit;
-        mApiSpotify = apiSpotify;
+        mEndPointAPI = EndPointAPI;
     }
 
 
@@ -58,7 +60,7 @@ public class SignUpFragment extends Fragment {
         return rootView;
     }
 
-    public void signUp(){
+    private void signUp(){
 
         String email,password,birthday,username,gender;
         try {
@@ -77,7 +79,7 @@ public class SignUpFragment extends Fragment {
 
         SignUpData signUpData = new SignUpData(username,password,country,email,gender,birthday);
 
-        mApiSpotify.signUp(signUpData).enqueue(new Callback<ResponseBody>() {
+        mEndPointAPI.signUp(signUpData).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.isSuccessful()){
@@ -87,7 +89,7 @@ public class SignUpFragment extends Fragment {
                 }
                 else {
                     Log.i("Intro Activity",response.errorBody().toString());
-                    Toast.makeText(getContext(),"Failed " + response.code(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"Failed " + response.code() + response.message(),Toast.LENGTH_SHORT).show();
                 }
             }
 

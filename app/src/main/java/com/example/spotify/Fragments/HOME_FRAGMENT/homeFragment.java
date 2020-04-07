@@ -25,9 +25,8 @@ import android.widget.TextView;
 
 import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.Adapters.Adapter;
-import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
 import com.example.spotify.Fragments.SETTING_FRAGMENT.settingFragment;
-import com.example.spotify.Interfaces.classinterface;
+import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.R;
 import com.example.spotify.SpotifyClasses.NewRelease;
 
@@ -86,6 +85,7 @@ public class homeFragment extends Fragment implements LifecycleOwner {
             }
         });
 
+
         ////*******************************RecyclerView***********************////
         NewReleaseList = new NewRelease();
         recyclerView = (RecyclerView) view.findViewById(R.id.recycle);
@@ -103,11 +103,8 @@ public class homeFragment extends Fragment implements LifecycleOwner {
     ////*******************************Retrofit****************************////
 private void SetRetrofit()
 {
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://192.168.1.7:3000")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-    classinterface apiService = retrofit.create(classinterface.class);
+    Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
+    EndPointAPI apiService = retrofit.create(EndPointAPI.class);
     Call<NewRelease> call = apiService.getNewRelease();
     call.enqueue(new Callback<NewRelease>() {
         @Override

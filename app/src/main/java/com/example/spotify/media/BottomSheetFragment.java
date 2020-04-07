@@ -54,7 +54,7 @@ public class BottomSheetFragment extends Fragment {
             player = binder.getservice();
             serviceBound = true;
 
-         //   Toast.makeText(getContext(), "Service Bound", Toast.LENGTH_SHORT).show();
+            //   Toast.makeText(getContext(), "Service Bound", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -250,8 +250,8 @@ public class BottomSheetFragment extends Fragment {
 
         List<Image> images= track.getTrack().getValue().getTrack().getImages();
         if(images !=null&& images.size()!=0){
-        String Imageurl = images.get(0).getUrl();
-        Picasso.get().load(Imageurl).into(bottom_image_id);
+            String Imageurl = images.get(0).getUrl();
+            Picasso.get().load(Imageurl).into(bottom_image_id);
         }
 
         if(track.getTrack().getValue().getIsLiked()){

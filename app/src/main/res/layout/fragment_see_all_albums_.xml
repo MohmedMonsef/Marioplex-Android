@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/item"
+    tools:context=".BackClasses.BackFragment.see_all_albums_Fragment">
+    <TextView
+        android:id="@+id/textalbumsearch"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:drawableLeft="@drawable/ic_back"
+        android:background="@color/bgBottomNavigation"
+        android:textColor="@color/TextColor"
+        />
+    <TextView
+        android:id="@+id/texta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/TextColor"
+        android:textSize="24dp"
+        tools:ignore="MissingConstraints" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleSearch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+</FrameLayout>

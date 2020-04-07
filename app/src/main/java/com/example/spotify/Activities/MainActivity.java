@@ -14,14 +14,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 
-import com.example.spotify.Fragments.HOME_FRAGMENT.homeFragment;
+import com.example.spotify.BackClasses.BackFragment.backhome;
+import com.example.spotify.BackClasses.BackFragment.searchfragment;
 import com.example.spotify.Fragments.LIBRARY_FRAGMENT.libraryFragment;
 import com.example.spotify.Fragments.PREMIUM_FRAGMENT.premiumFragment;
-import com.example.spotify.Fragments.SEARCH_FRAGMENT.searchFragment;
+import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.R;
 import com.example.spotify.media.MediaPlayerService;
 import com.example.spotify.media.TrackInfo;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import retrofit2.Retrofit;
 
 import static android.widget.Toast.makeText;
 
@@ -32,15 +35,18 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout bottom_sheet_frame_layout;
     boolean serviceBound = false;
 
+    static Retrofit retrofit;
+    static EndPointAPI endPointAPI;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-                ////*******************************BottomNavigation***********************////
+        ////*******************************BottomNavigation***********************////
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
+        loadFragment(new backhome());
 
         //get instance from the singleton class and start the service
         track = TrackInfo.getInstance();
@@ -51,16 +57,18 @@ public class MainActivity extends AppCompatActivity {
         HideBottomSheet();
 
 
+        endPointAPI = com.example.spotify.Interfaces.Retrofit.getInstance().getEndPointAPI();
+
     }
     public void loadFragment(Fragment fragment) {
         // create a FragmentManager
         FragmentManager fm = getFragmentManager();
         // create a FragmentTransaction to begin the transaction and replace the Fragment
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-         // replace the FrameLayout with new Fragment
-         //fragmentTransaction.add(R.id.frame_fragment,fragment);
-         fragmentTransaction.replace(R.id.frame_fragment,fragment);
-         fragmentTransaction.commit(); // save the changes
+        // replace the FrameLayout with new Fragment
+        //fragmentTransaction.add(R.id.frame_fragment,fragment);
+        fragmentTransaction.replace(R.id.frame_fragment,fragment);
+        fragmentTransaction.commit(); // save the changes
 
     }
 
@@ -72,10 +80,10 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    loadFragment(new homeFragment());
+                    loadFragment(new backhome());
                     return true;
                 case R.id.navigation_search:
-                    loadFragment(new searchFragment());
+                    loadFragment(new searchfragment());
                     return true;
                 case R.id.navigation_library:
                     loadFragment(new libraryFragment());

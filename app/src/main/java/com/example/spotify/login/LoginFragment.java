@@ -13,7 +13,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.R;
+import com.example.spotify.login.apiClasses.LoginCredentials;
+import com.example.spotify.login.apiClasses.LoginResponse;
+import com.example.spotify.login.apiClasses.userProfile;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,7 +31,7 @@ import retrofit2.Retrofit;
 public class LoginFragment extends Fragment {
 
     private static Retrofit mRetrofit;
-    private static ApiSpotify mApiSpotify;
+    private static EndPointAPI mEndPointAPI;
     private static String token = null;
 
 
@@ -33,9 +39,9 @@ public class LoginFragment extends Fragment {
         // Required empty public constructor
     }*/
 
-    public LoginFragment(Retrofit retrofit,ApiSpotify apiSpotify){
+    LoginFragment(Retrofit retrofit, EndPointAPI endPointAPI){
         mRetrofit = retrofit;
-        mApiSpotify = apiSpotify;
+        mEndPointAPI = endPointAPI;
     }
 
 
@@ -70,44 +76,49 @@ public class LoginFragment extends Fragment {
         loginCredentials.setEmail(email);
         loginCredentials.setPassword(password);
 
-        Call<LoginResponse> call = mApiSpotify.login(loginCredentials);
+        Call<LoginResponse> call = mEndPointAPI.login(loginCredentials);
 
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if(response.isSuccessful()){
                     token = response.body().getToken();
+                    user.setToken(token);
                     Toast.makeText(getContext(),"Sucess " +response.code(),Toast.LENGTH_SHORT).show();
-                    fetchUserData();
+                    user.fetchUserData();
                     startActivity(new Intent(getActivity(), MainActivity.class));
                     getActivity().finish();
                 }
                 else {
-                    Toast.makeText(getContext(),"Failed to login",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"Failed to login " + response.message(),Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                Log.e("Intro Activity","" + t.getMessage());
-                Toast.makeText(getContext(),"Failed to connect",Toast.LENGTH_SHORT).show();
+                Log.e("Intro Activity",t.getMessage());
+                Toast.makeText(getContext(),"Failed to connect " + t.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    /*
     public void fetchUserData(){
-
-        user.setToken(token);
-
-        /*
         if(token == null)
             return;
 
-        mApiSpotify.profile(token).enqueue(new Callback<user>() {
+        mApiSpotify.profile(token).enqueue(new Callback<ArrayList<userProfile>>() {
             @Override
-            public void onResponse(Call<user> call, Response<user> response) {
+            public void onResponse(Call<ArrayList<userProfile>> call, Response<ArrayList<userProfile>> response) {
                 if(response.isSuccessful()){
-                    Toast.makeText(getContext(),user.getName() + user.getGender(),Toast.LENGTH_LONG).show();
+                    user.setToken(token);
+                    user.setName(response.body().get(0).getDisplayName());
+                    user.setEmail(response.body().get(0).getEmail());
+                    user.setDateOfBirth(response.body().get(0).getBirthDate());
+                    user.setGender(response.body().get(0).getGender());
+                    user.setCountry(response.body().get(0).getCountry());
+                    user.setProduct(response.body().get(0).getProduct());
+                    user.setImages(response.body().get(0).getImages());
                 }
                 else {
                     Toast.makeText(getContext(),"Failed to get profile",Toast.LENGTH_SHORT).show();
@@ -115,14 +126,14 @@ public class LoginFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<user> call, Throwable t) {
+            public void onFailure(Call<ArrayList<userProfile>> call, Throwable t) {
                 Toast.makeText(getContext(),"Failed to connect",Toast.LENGTH_SHORT).show();
             }
         });
 
 
-         */
-    }
+
+    }*/
 
 
 }

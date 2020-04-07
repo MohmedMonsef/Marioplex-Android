@@ -15,7 +15,7 @@ public class TrackInfo {
     private MutableLiveData<Boolean> isQueue = new MutableLiveData<>();
     private MutableLiveData<Boolean> isLiked = new MutableLiveData<>();
     private MutableLiveData<Boolean> tryAgain = new MutableLiveData<>();
-   // private MutableLiveData<Integer> currentPosition = new MutableLiveData<>();
+    // private MutableLiveData<Integer> currentPosition = new MutableLiveData<>();
 
 
 

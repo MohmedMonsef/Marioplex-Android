@@ -179,10 +179,10 @@ public class MediaPlayerActivity extends AppCompatActivity {
         turn_of_timer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               player.cancelTimer();
-               sleepTimer.setState(BottomSheetBehavior.STATE_HIDDEN);
-               toast = Toast.makeText(getApplicationContext(),"Sleep timer is turned off",Toast.LENGTH_SHORT);
-               toast.show();
+                player.cancelTimer();
+                sleepTimer.setState(BottomSheetBehavior.STATE_HIDDEN);
+                toast = Toast.makeText(getApplicationContext(),"Sleep timer is turned off",Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
 

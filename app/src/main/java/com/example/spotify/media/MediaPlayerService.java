@@ -35,7 +35,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     private Boolean isPlaying = false;
     private int playFlag;
     private int resumePosition;
-//    private String TrackID1 ="7ouMYWpwJ422jRcDASZB7P";
+    //    private String TrackID1 ="7ouMYWpwJ422jRcDASZB7P";
 //    private String TrackID2 ="4VqPOruhp5EdPBeR92t6lQ";
 //    private String TrackID3 ="2takcwOaAZWiXQijPHIx7B";
 //    private Tracks tracks;
@@ -44,7 +44,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     private boolean prepared;
 //TODO change the base url here
 
-//    private Retrofit retrofit = new Retrofit.Builder()
+    //    private Retrofit retrofit = new Retrofit.Builder()
 //            .baseUrl("http://192.168.1.7:3000/")
 //            .addConverterFactory(GsonConverterFactory.create())
 //            .build();
@@ -171,7 +171,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 //                        e.printStackTrace();
 //                        stopSelf();
 //                    }
-                   // mediaPlayer.prepareAsync();
+                    // mediaPlayer.prepareAsync();
                 }
             }
             @Override
@@ -184,7 +184,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     }
 
 
-//    void getTracks(String trackID){
+    //    void getTracks(String trackID){
 //        Call<Tracks> call = endPointAPI.getTracks(trackID);
 //
 //        call.enqueue(new Callback<Tracks>() {

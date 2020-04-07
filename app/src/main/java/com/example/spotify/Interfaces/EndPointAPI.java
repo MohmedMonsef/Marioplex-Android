@@ -1,12 +1,19 @@
 package com.example.spotify.Interfaces;
 
+import com.example.spotify.BackClasses.Backclasses.backcategory.Category;
 import com.example.spotify.SpotifyClasses.NewRelease;
+import com.example.spotify.SpotifyClasses.SearchClasses.search;
 import com.example.spotify.SpotifyClasses.Track;
 import com.example.spotify.SpotifyClasses.UserPlaylists;
-import com.example.spotify.login.LoginCredentials;
-import com.example.spotify.login.LoginResponse;
-import com.example.spotify.login.SignUpData;
+import com.example.spotify.login.apiClasses.FacebookLoginData;
+import com.example.spotify.login.apiClasses.LoginCredentials;
+import com.example.spotify.login.apiClasses.LoginResponse;
+import com.example.spotify.login.apiClasses.SignUpData;
+import com.example.spotify.login.apiClasses.updateProfile;
+import com.example.spotify.login.apiClasses.userProfile;
 import com.example.spotify.login.user;
+
+import java.util.ArrayList;
 import com.example.spotify.pojo.BasicPlaylist;
 import com.example.spotify.pojo.PlaylistTracks;
 import com.example.spotify.pojo.addTrackToPlaylistBody;
@@ -32,7 +39,7 @@ import retrofit2.http.Query;
 public interface EndPointAPI {
     String token = "BQDbws7mVPJV0YSZRUNJz1XtQUZTGExfM9qptNtHuQuUti7qx0Lci75BZ6hP2cK0QFpBRoRcFNgU6LZwl6l2cxzSyLk3V7ZumuoSLxVzav1abEDJQYEh6Qkc0t1S02C2hezOWhMITWGUkPxnIiIcfm9RXtMverQZJM2bPWk-FDzwv12vLae0BpB9xc6YDS21iH3SGQf6TxTAkxiGk51vdFBHIezKklCVCimV7B3xQaOeM2-ocTB1pWSA_LtBXsV2LGsI5NOc5ZehD9BoD3lv9jBBeJVwuGbUUA";
 
-//////////////////////////////login requests//////////////////////////////////////////
+    //////////////////////////////login requests//////////////////////////////////////////
     @POST("Login")
     Call<LoginResponse> login(@Body LoginCredentials loginCredentials);
 
@@ -40,15 +47,25 @@ public interface EndPointAPI {
     Call<ResponseBody> signUp(@Body SignUpData signUpData);
 
     @GET("me")
-    Call<user> profile(@Header("authorization") String token);
- ////////////////////////////////////////////////////////////////////////////////////
+    Call<ArrayList<userProfile>> profile(@Header("x-auth-token") String token);
 
-     //////////////////////////////home requests//////////////////////////////////////////
-     @GET("v1/browse/new-releases?country=SE&limit=10&offset=0")
-     @Headers("Authorization: Bearer BQCuLAJp8vgez0xzrQwqBbbXSqSeZqdff9bJPSPOqEL7OK52W1lN_Ny3dSC38HxAnGr_X7_o5Fw435vJvXCTcNIBEkCanW7Yp-ylFrQWTsUUfw5n4Gz4VIbUFfoyXrmP836lmoXnv4mXB-8WRX5l-E11HXSjOAPP-QFjLXgvNbZ3sPvgiHu8ElQMU7TQfiqF")
-     public Call<NewRelease> getNewRelease();
+    @PUT("me/update")
+    Call<ResponseBody> updateProfile(@Header("x-auth-token") String token,@Body updateProfile data);
 
-     ////////////////////////////////////////////////////////////////////////////////////
+    @GET("me/playlists")
+    Call<playlist[]> myPlaylists(@Header("x-auth-token") String token);
+
+    @POST("auth/facebookAndroid")
+    Call<LoginResponse> facebookLogin(@Body FacebookLoginData facebookLoginData);
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////home requests//////////////////////////////////////////
+    @GET("v1/browse/new-releases?country=SE&limit=10&offset=0")
+    @Headers("Authorization: Bearer BQCuLAJp8vgez0xzrQwqBbbXSqSeZqdff9bJPSPOqEL7OK52W1lN_Ny3dSC38HxAnGr_X7_o5Fw435vJvXCTcNIBEkCanW7Yp-ylFrQWTsUUfw5n4Gz4VIbUFfoyXrmP836lmoXnv4mXB-8WRX5l-E11HXSjOAPP-QFjLXgvNbZ3sPvgiHu8ElQMU7TQfiqF")
+    public Call<NewRelease> getNewRelease();
+
+
+    ////////////////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////media player requests//////////////////////////////////////
 
@@ -139,5 +156,19 @@ public interface EndPointAPI {
     @PUT("playlists/{playlist_id}/followers")
     Call<Void> LikePlaylist(@Path("playlist_id") String playlistID ,
                             @Header("x-auth-token")String token1);
+
+    // requests from classinterface
+    @GET("search")
+    @Headers("Authorization: Bearer "+token)
+    public Call<search> getSearch(@Query("q") String name,
+                                  @Query("type") String type,
+                                  @Query("market") String market,
+                                  @Query("limit") int limit,
+                                  @Query("offset") int offset);
+
+    @GET("browse/categories?country=SE&locale=sv_SE&limit=10&offset=5")
+    @Headers("Authorization: Bearer "+token)
+    public Call<Category> getCategories();
+
 
 }
