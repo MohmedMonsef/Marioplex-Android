@@ -50,6 +50,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        user.fetchUserData();
         // Inflate the layout for this fragment
         final View rootView =  inflater.inflate(R.layout.fragment_profile, container, false);
 

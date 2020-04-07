@@ -127,7 +127,7 @@ public class user {
         user.password = password;
     }
 
-    static void fetchUserData(){
+    public static void fetchUserData(){
         if(token == null)
             return;
 
