@@ -36,22 +36,22 @@ public interface EndPointAPI {
     String token = "BQDbws7mVPJV0YSZRUNJz1XtQUZTGExfM9qptNtHuQuUti7qx0Lci75BZ6hP2cK0QFpBRoRcFNgU6LZwl6l2cxzSyLk3V7ZumuoSLxVzav1abEDJQYEh6Qkc0t1S02C2hezOWhMITWGUkPxnIiIcfm9RXtMverQZJM2bPWk-FDzwv12vLae0BpB9xc6YDS21iH3SGQf6TxTAkxiGk51vdFBHIezKklCVCimV7B3xQaOeM2-ocTB1pWSA_LtBXsV2LGsI5NOc5ZehD9BoD3lv9jBBeJVwuGbUUA";
 
     //////////////////////////////login requests//////////////////////////////////////////
-    @POST("Login")
+    @POST("api/Login")
     Call<LoginResponse> login(@Body LoginCredentials loginCredentials);
 
-    @POST("sign_up")
+    @POST("api/sign_up")
     Call<ResponseBody> signUp(@Body SignUpData signUpData);
 
-    @GET("me")
+    @GET("api/me")
     Call<ArrayList<userProfile>> profile(@Header("x-auth-token") String token);
 
-    @PUT("me/update")
+    @PUT("api/me/update")
     Call<ResponseBody> updateProfile(@Header("x-auth-token") String token,@Body updateProfile data);
 
-    @GET("me/playlists")
+    @GET("api/me/playlists")
     Call<playlist[]> myPlaylists(@Header("x-auth-token") String token);
 
-    @POST("auth/facebookAndroid")
+    @POST("api/auth/facebookAndroid")
     Call<LoginResponse> facebookLogin(@Body FacebookLoginData facebookLoginData);
     ////////////////////////////////////////////////////////////////////////////////////
 
@@ -83,16 +83,16 @@ public interface EndPointAPI {
 
     //////////////////////////////////our api requests//////////////////////////////////////////
     /////////you need to change the Base URL//////////////////
-    @POST("me/player/next-playing")
+    @POST("api/me/player/next-playing")
     //@Headers("Authorization: Bearer "+token)
     Call<currentTrack> getNext(@Header("x-auth-token")String token1);
     //Call<currentTrack> getNext(@Header("Authorization")String token1);
 
-    @POST("me/player/prev-playing")
+    @POST("api/me/player/prev-playing")
     //@Headers("Authorization: Bearer "+token)
     Call<currentTrack> getPrevious(@Header("x-auth-token")String token1);
 
-    @GET("me/player/currently-playing")
+    @GET("api/me/player/currently-playing")
     //@Headers("Authorization: Bearer "+token)
     Call<currentTrack> getCurrentlyPlaying(@Header("x-auth-token")String token1);
 
@@ -101,57 +101,57 @@ public interface EndPointAPI {
 //    Call<List<BasicPlaylist>> getCurrentUserPlaylists(@Path("user_id") String userID ,
 //                                                      @Header("x-auth-token")String token1);
 
-@GET("me/playlists")
+@GET("api/me/playlists")
     //@Headers("Authorization: Bearer "+token)
     Call<List<BasicPlaylist>> getCurrentUserPlaylists(@Header("x-auth-token")String token1);
 
 
-    @POST("playlists/{playlist_id}/tracks")
+    @POST("api/playlists/{playlist_id}/tracks")
     //@Headers("Authorization: Bearer "+token)
     Call<Object> AddTrackToAPlaylist(@Path("playlist_id") String playlistID
                                       ,@Body addTrackToPlaylistBody t
                                       ,@Header("x-auth-token")String token1);
 
-    @POST("users/playlists")
+    @POST("api/users/playlists")
     //@Headers("Authorization: Bearer "+token)
     Call<playlist> CreatePlaylist(@Body createPlaylistBody c
                                  ,@Header("x-auth-token")String token1); //check if fiels of Query
 
 
-    @PUT("me/player/shuffle")
+    @PUT("api/me/player/shuffle")
     Call<Void> toggleShuffle(@Query("state") Boolean state , @Header("x-auth-token")String token1);
 
-    @POST("createQueue/{playlist_id}/{trackid}")
+    @POST("api/createQueue/{playlist_id}/{trackid}")
     Call<Void> CreateQueue(@Path("playlist_id") String playlist_id ,
                              @Path("trackid") String track_id ,
                              @Query("isPlaylist") Boolean isPlaylist ,
                              @Header("x-auth-token")String token1);
 
 
-    @GET("playlists/{playlist_id}/tracks")
+    @GET("api/playlists/{playlist_id}/tracks")
     Call<List<PlaylistTracks>> getPlaylistTracks(@Path("playlist_id") String playlist_id,
                                                 @Header("x-auth-token")String token1);
 
-    @PUT("me/like/{track_id}")
+    @PUT("api/me/like/{track_id}")
     Call<Void> LikeTrack(@Path("track_id") String track_id ,
                          @Header("x-auth-token")String token1);
 
-    @DELETE("me/unlike/{track_id}")
+    @DELETE("api/me/unlike/{track_id}")
     Call<Void> UNLikeTrack(@Path("track_id") String track_id ,
                            @Header("x-auth-token")String token1);
 
 
-    @DELETE("playlists/{playlist_id}/followers")
+    @DELETE("api/playlists/{playlist_id}/followers")
     Call<Void> UNLikePlaylist(@Path("playlist_id") String playlistID ,
                               @Header("x-auth-token")String token1);
 
-    @PUT("playlists/{playlist_id}/followers")
+    @PUT("api/playlists/{playlist_id}/followers")
     Call<Void> LikePlaylist(@Path("playlist_id") String playlistID ,
                             @Header("x-auth-token")String token1);
 
 
 
-    @GET("browse/categories?country=SE&locale=sv_SE&limit=10&offset=5")
+    @GET("api/browse/categories?country=SE&locale=sv_SE&limit=10&offset=5")
     @Headers("Authorization: Bearer "+token)
     public Call<Category> getCategories();
 
