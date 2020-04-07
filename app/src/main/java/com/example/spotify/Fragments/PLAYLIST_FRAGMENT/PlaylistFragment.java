@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 
 import com.example.spotify.Activities.PlaylistPreviewActivity;
+import com.example.spotify.BackClasses.BackFragment.backhome;
 import com.example.spotify.Fragments.HOME_FRAGMENT.homeFragment;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
@@ -114,7 +115,7 @@ public class PlaylistFragment extends Fragment {
             public void onClick(View v) {
                 ////////////////return to my home fragment\\\\\\\\\\\\\\\\\\\\\
                 getActivity().getFragmentManager().beginTransaction()
-                        .replace(R.id.frame_fragment,new homeFragment())
+                        .replace(R.id.frame_fragment,new backhome())
                         .addToBackStack(null)
                         .commit();
             }
