@@ -31,4 +31,8 @@ public class PlaylistInfo {
     public void setInfoReady(Boolean r) {
         InfoReady.setValue(r);
     }
+    public void clearinstance(){
+        playlistTracks = null;
+        instance = null;
+    }
 }

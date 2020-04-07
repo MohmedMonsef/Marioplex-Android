@@ -63,18 +63,18 @@ public class homeFragment extends Fragment implements LifecycleOwner {
         ////*****************************toolbar************************************////
         toolbar = (Toolbar)view.findViewById(R.id.toolbar); // get the reference of Toolbar
         toolbar.setTitle(""); // set Title for Toolbar
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int id = item.getItemId();
-                if (id == R.id.action_settings)
-                {
-                    loadFragmentSetting(new settingFragment());
-                }
-                return true;
-
-            }
-        });
+//        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                int id = item.getItemId();
+//                if (id == R.id.action_settings)
+//                {
+//                    loadFragmentSetting(new settingFragment());
+//                }
+//                return true;
+//
+//            }
+//        });
 
         textView.setOnClickListener(new View.OnClickListener() {
             @Override

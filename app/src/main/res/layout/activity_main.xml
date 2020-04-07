@@ -17,6 +17,7 @@
            />
     <FrameLayout
         android:layout_width="match_parent"
+        android:id="@+id/bottom_sheet_frame_layout"
         android:layout_height="68dp">
         <fragment
             android:layout_width="match_parent"

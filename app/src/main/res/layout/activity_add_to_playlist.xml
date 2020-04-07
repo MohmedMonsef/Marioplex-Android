@@ -54,6 +54,37 @@
             android:layout_width="wrap_content"
             android:layout_centerInParent="true"
             android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:id="@+id/something_wrong_layout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            android:visibility="gone">
+            <TextView
+                android:id="@+id/something_wrong_text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/background_light"
+                android:text="something went wrong"
+                android:gravity="center"/>
+            <Button
+                android:id="@+id/try_again"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/transparent_rounded_button"
+                android:text="Try Again"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                android:textSize="14dp"
+                android:layout_marginTop="32dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@android:color/background_light"/>
+        </LinearLayout>
+
     </RelativeLayout>
 
 </LinearLayout>

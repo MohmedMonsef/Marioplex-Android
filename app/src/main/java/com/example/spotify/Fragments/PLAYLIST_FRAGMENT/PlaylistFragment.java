@@ -23,7 +23,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 
 import com.example.spotify.Activities.PlaylistPreviewActivity;
 import com.example.spotify.Fragments.HOME_FRAGMENT.homeFragment;
@@ -35,9 +37,11 @@ import com.example.spotify.login.user;
 import com.example.spotify.media.AddToPlaylistActivity;
 import com.example.spotify.media.MediaPlayerActivity;
 import com.example.spotify.media.MediaPlayerService;
+import com.example.spotify.media.TrackInfo;
 import com.example.spotify.pojo.BasicTrack;
 import com.example.spotify.pojo.PlaylistTracks;
 import com.example.spotify.pojo.currentTrack;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -59,11 +63,17 @@ public class PlaylistFragment extends Fragment {
     private TextView artist_name_song_name_playlist;
     private LinearLayout playlist_contents_layout;
     private ProgressBar progress_bar_playlist;
+    private LinearLayout something_wrong_layout;
+    private TextView something_wrong_text;
+    private Button something_wrong_button;
+
     private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();
     private PlaylistTracks playlistTracks;
     private String playlistID = "5e8a5a444fbd0152f8bd23d3";
     private String playlistOwner = "spotify";
     private MediaPlayerService player;
+    private String CurrentTrackID = "";
+    private int CurrentTrackPosInPlaylist;
     private Boolean serviceBound = false;
 
 
@@ -126,26 +136,73 @@ public class PlaylistFragment extends Fragment {
         shuffle_play_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(playlistTracks !=null && playlistTracks.getTracks()!=null && playlistTracks.getTracks().size()!=0){
-                    CreateQueue(playlistTracks.getTracks().get(0).getTrackid());
+                if(CheckTrackInPlaylist()){
+                    if(player.getIsPlaying()){
+                        TrackInfo.getInstance().setIsPlaying(false);
+                        player.pauseMedia();
+                        shuffle_play_button.setText("shuffle play");
+                    }
+                    else{
+                        TrackInfo.getInstance().setIsPlaying(true);
+                        player.resumeMedia();
+                        shuffle_play_button.setText("pause");
+                    }
+                }
+                else if(playlistTracks !=null && playlistTracks.getTracks()!=null && playlistTracks.getTracks().size()!=0){
+                    if(TrackInfo.getInstance().getIsQueue()!=null&& TrackInfo.getInstance().getIsQueue().getValue()){
+                        shuffleTracks();
+                    }
+                    else{
+                        CreateQueue(playlistTracks.getTracks().get(0).getTrackid());
+                    }
                 }
             }
         });
 
-        like_playlist.setOnClickListener(new View.OnClickListener() {
+        //TODO till the make makes it
+
+//        like_playlist.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(playlistTracks.getIsLiked()) {
+//                    unLikePlaylist();
+//                }
+//                else{
+//                    LikePlaylist();
+//                }
+//            }
+//        });
+
+        something_wrong_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(playlistTracks.getIsLiked()) {
-                    unLikePlaylist();
-                }
-                else{
-                    LikePlaylist();
+                //////////////////////////show progress bar\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+                playlist_contents_layout.setVisibility(View.GONE);
+                something_wrong_layout.setVisibility(View.GONE);
+                progress_bar_playlist.setVisibility(View.VISIBLE);
+                /////////////////////////get Plsylist's tracks information\\\\\\\\\\\\\\\\\\\\\\\
+                GetPlaylistTracksInfo(playlistID);
+            }
+        });
+
+        ///////////////////////////observers\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        TrackInfo.getInstance().getIsPlaying().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(playlistTracks!=null && CheckTrackInPlaylist()){
+                    if(aBoolean){
+                        shuffle_play_button.setText("pause");
+                    }
+                    else{
+                        shuffle_play_button.setText("shuffle play");
+                    }
                 }
             }
         });
 
         //////////////////////////show progress bar\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         playlist_contents_layout.setVisibility(View.GONE);
+        something_wrong_layout.setVisibility(View.GONE);
         progress_bar_playlist.setVisibility(View.VISIBLE);
         /////////////////////////get Plsylist's tracks information\\\\\\\\\\\\\\\\\\\\\\\
         GetPlaylistTracksInfo(playlistID);
@@ -210,17 +267,22 @@ public class PlaylistFragment extends Fragment {
         call.enqueue(new Callback<List<PlaylistTracks>>() {
             @Override
             public void onResponse(Call<List<PlaylistTracks>> call, Response<List<PlaylistTracks>> response) {
-                if(!response.isSuccessful()){
-                    Toast.makeText(getContext(),"Code: "+response.code(),Toast.LENGTH_SHORT).show();
+                if(!response.isSuccessful() ||response.body() == null){
+                    //Toast.makeText(getContext(),"Code: "+response.code(),Toast.LENGTH_SHORT).show();
+                    progress_bar_playlist.setVisibility(View.GONE);
+                    playlist_contents_layout.setVisibility(View.GONE);
+                    something_wrong_text.setText("something went wrong .try again");
+                    something_wrong_layout.setVisibility(View.VISIBLE);
                     return;
                 }
-                else if(response.body()==null){
-                    Toast.makeText(getContext(),"response body = null",Toast.LENGTH_SHORT).show();
-                }
+//                else if(response.body()==null){
+//                    Toast.makeText(getContext(),"response body = null",Toast.LENGTH_SHORT).show();
+//                }
                 else {
                     playlistTracks = response.body().get(0);
                     PlaylistInfo.getinstance().setPlaylistTracks(playlistTracks);
                     playlist_contents_layout.setVisibility(View.VISIBLE);
+                    something_wrong_layout.setVisibility(View.GONE);
                     progress_bar_playlist.setVisibility(View.GONE);
                     playlistTracks.setIsLiked(true);
                     updateUI();
@@ -229,7 +291,12 @@ public class PlaylistFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<PlaylistTracks>> call, Throwable t) {
-                Toast.makeText(getContext(),t.getMessage()+" ' failed '",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(),t.getMessage()+" ' failed '",Toast.LENGTH_SHORT).show();
+                progress_bar_playlist.setVisibility(View.GONE);
+                playlist_contents_layout.setVisibility(View.GONE);
+                something_wrong_text.setText("something went wrong .check your internet connection");
+                something_wrong_layout.setVisibility(View.VISIBLE);
+
             }
         });
     }
@@ -309,14 +376,46 @@ public class PlaylistFragment extends Fragment {
         }
         artist_name_song_name_playlist.setText(songsNames);
 
-        if(playlistTracks.getIsLiked()){
-            like_playlist.setImageResource(R.drawable.like);
+        if(CheckTrackInPlaylist()){
+            if(player.getIsPlaying()){
+                shuffle_play_button.setText("pause");
+            }
+            else{
+                shuffle_play_button.setText("shuffle play");
+            }
         }
-        else{
-            like_playlist.setImageResource(R.drawable.favorite_border);
-        }
+
+//TODO till the back makes it
+
+//        if(playlistTracks.getIsLiked()){
+//            like_playlist.setImageResource(R.drawable.like);
+//        }
+//        else{
+//            like_playlist.setImageResource(R.drawable.favorite_border);
+//        }
     }
 
+
+    ///////checks if the currently playing track is from the current playlist
+    Boolean CheckTrackInPlaylist(){
+        if(TrackInfo.getInstance().getIsQueue()!=null &&
+           TrackInfo.getInstance().getIsQueue().getValue() &&
+           TrackInfo.getInstance().getTrack()!=null &&
+           TrackInfo.getInstance().getTrack().getValue().getTrack()!=null){
+            CurrentTrackID = TrackInfo.getInstance().getTrack().getValue().getTrack().getId();
+
+            List<BasicTrack> tracks = playlistTracks.getTracks();
+
+            for(int i =0 ; i<tracks.size(); i++){
+                if(tracks.get(i).getTrackid().equals(CurrentTrackID)){
+                    CurrentTrackPosInPlaylist = i;
+                    return true;
+                }
+            }
+
+        }
+        return false;
+    }
 
     void getViews(View root){
         back_arrow_playlist = root.findViewById(R.id.back_arrow_playlist);
@@ -330,10 +429,24 @@ public class PlaylistFragment extends Fragment {
         artist_name_song_name_playlist = root.findViewById(R.id.artist_name_song_name_playlist);
         progress_bar_playlist = root.findViewById(R.id.progress_bar_playlist);
         playlist_contents_layout = root.findViewById(R.id.playlist_contents_layout);
+        something_wrong_layout = root.findViewById(R.id.something_wrong_layout);
+        something_wrong_text = root.findViewById(R.id.something_wrong_text);
+        something_wrong_button = root.findViewById(R.id.something_wrong_button);
     }
     private void bindService(){
         Intent serviceIntent1 = new Intent(getContext() , MediaPlayerService.class);
         getActivity().bindService(serviceIntent1 , serviceConnection , Context.BIND_AUTO_CREATE);
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        PlaylistInfo.getinstance().clearinstance();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

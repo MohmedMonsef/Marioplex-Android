@@ -22,7 +22,7 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="8dp"
-                android:background="@android:color/darker_gray"
+                android:src="@drawable/not_found1"
                 android:layout_centerHorizontal="true"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -50,6 +50,7 @@
             android:padding="16dp"
             android:id="@+id/settings_like">
             <ImageView
+                android:id="@+id/favorite2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
@@ -91,6 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
+            android:visibility="gone"
             android:orientation="horizontal"
             android:id="@+id/view_artist">
             <ImageView

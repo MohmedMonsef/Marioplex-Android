@@ -3,7 +3,6 @@ package com.example.spotify.Activities;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -15,14 +14,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 
-import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
 import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistInfo;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
-import com.example.spotify.SpotifyClasses.Image;
 import com.example.spotify.login.user;
-import com.example.spotify.media.AddToPlaylistActivity;
+import com.example.spotify.media.TrackInfo;
+import com.example.spotify.pojo.BasicTrack;
 import com.example.spotify.pojo.PlaylistTracks;
 import com.squareup.picasso.Picasso;
 
@@ -41,9 +39,6 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
     private ProgressBar progress_bar_playlist_preview;
     private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();
 
-    //private String[] song_names = {"Salam" , "when we meet" , "peace" , "because of you" , "hjkshks" , "kshdkhjflkdhls" , "kshlfjdhlskf" , "kdhjkfhld"};
-    //private String[] artist_names = {"ali" ,"kaleo" , "coldplay" , "sam smith" , "kshdfjf" ,"kdhlfjhs"  , "ksdhfjkdsh"};
-    //private String[] images = {};
     private PlaylistTracks mplaylistTracks;
 
     @Override
@@ -72,10 +67,6 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
 //            }
 //        });
 
-        /////////////////test the list view///////////////////////////
-        //CustomAdapter customAdapter = new CustomAdapter();
-        //playlist_list_view_preview.setAdapter(customAdapter);
-
         ///////////////////////observers\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         if(PlaylistInfo.getinstance().getplaylistTracks()!=null) {
             PlaylistInfo.getinstance().getplaylistTracks().observe(this, new Observer<PlaylistTracks>() {
@@ -97,50 +88,78 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
     }
 
     private void LikeTrack(String trackID ,final ImageView view1 ,final int pos){
+        view1.setEnabled(false);
         Call<Void> call = endPointAPI.LikeTrack(trackID , user.getToken());
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-
+                view1.setEnabled(true);
                 if(!response.isSuccessful()){
                     Toast.makeText(getApplicationContext(),"something went wrong .try again",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 else {
                     view1.setImageResource(R.drawable.like);
+                    Toast.makeText(getApplicationContext(),"Added to Liked Songs",Toast.LENGTH_SHORT).show();
                     mplaylistTracks.getTracks().get(pos).setIsLiked(true);
+                    if(CheckTrack(pos)){
+                        TrackInfo.getInstance().getTrack().getValue().setIsLiked(true);
+                        TrackInfo.getInstance().setIsLiked(true);
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Toast.makeText(getApplicationContext(),"something went wrong .check your internet connection",Toast.LENGTH_SHORT).show();
+                view1.setEnabled(true);
             }
         });
     }
 
     private void UnLikeTrack(String trackID ,final ImageView view1 , final int pos){
+        view1.setEnabled(false);
         Call<Void> call = endPointAPI.UNLikeTrack(trackID , user.getToken());
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-
+                view1.setEnabled(true);
                 if(!response.isSuccessful()){
                     Toast.makeText(getApplicationContext(),"something went wrong .try again",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 else {
                     view1.setImageResource(R.drawable.favorite_border);
+                    Toast.makeText(getApplicationContext(),"Removed from Liked Songs",Toast.LENGTH_SHORT).show();
                     mplaylistTracks.getTracks().get(pos).setIsLiked(false);
+                    if(CheckTrack(pos)){
+                        TrackInfo.getInstance().getTrack().getValue().setIsLiked(false);
+                        TrackInfo.getInstance().setIsLiked(false);
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Toast.makeText(getApplicationContext(),"something went wrong .check your internet connection",Toast.LENGTH_SHORT).show();
+                view1.setEnabled(true);
             }
         });
     }
+
+    Boolean CheckTrack(int position){
+        TrackInfo trackInfo = TrackInfo.getInstance();
+        if(trackInfo.getIsQueue() != null &&
+                trackInfo.getIsQueue().getValue() &&
+                trackInfo.getTrack()!=null &&
+                trackInfo.getTrack().getValue()!=null &&
+                trackInfo.getTrack().getValue().getTrack().getId().equals(mplaylistTracks.getTracks().get(position).getTrackid())) {
+            return true;
+        }
+        return false;
+
+    }
+
 
 
     private class CustomAdapter extends BaseAdapter {
@@ -154,13 +173,6 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
             ImageView preview_like = (ImageView)convertView.findViewById(R.id.preview_like);
 
 
-//           // if(userPlaylists.getItems()!=null) {
-//            if(images!=null & images.length !=0) {
-//                //List<Image> images = userPlaylists.getItems().get(position).getImages();
-//                //String Imageurl = images.get(0).getUrl();
-//                Picasso.get().load(images[position]).into(preview_playlist_image);
-//            }
-
             List<Object> images= mplaylistTracks.getImages();
             if(images != null && images.size()!=0) {
                 String Imageurl = images.get(0).toString();
@@ -169,12 +181,6 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
 
             String song = "";
             String artist = "";
-//            if(song_names.length > position) {
-//                song = song_names[position];
-//            }
-//            if(artist_names.length >position) {
-//                artist = artist_names[position];
-//            }
 
             song = mplaylistTracks.getTracks().get(position).getName();
             artist = mplaylistTracks.getTracks().get(position).getArtistName();
@@ -191,6 +197,7 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
             preview_like.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     if(mplaylistTracks.getTracks().get(position).getIsLiked()){
                         UnLikeTrack(mplaylistTracks.getTracks().get(position).getTrackid() ,(ImageView)v , position);
                     }
@@ -199,6 +206,20 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
                     }
                 }
             });
+
+            TrackInfo trackInfo = TrackInfo.getInstance();
+            if(CheckTrack(position))
+            {
+                if(trackInfo.getTrack().getValue().getIsLiked()){
+                    preview_like.setImageResource(R.drawable.like);
+                    mplaylistTracks.getTracks().get(position).setIsLiked(true);
+                }
+                else{
+                    preview_like.setImageResource(R.drawable.favorite_border);
+                    mplaylistTracks.getTracks().get(position).setIsLiked(false);
+                }
+            }
+
 
 
            // }
@@ -212,7 +233,6 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
             else{
                 return 0;
             }
-            //return song_names.length;
         }
 
         @Override

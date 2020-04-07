@@ -15,7 +15,9 @@ import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.example.spotify.login.user;
+import com.example.spotify.pojo.addTrackToPlaylistBody;
 import com.example.spotify.pojo.playlist;
+import com.example.spotify.pojo.createPlaylistBody;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,7 +63,7 @@ public class CreatePlaylistActivity extends AppCompatActivity {
                     else{
                         //TODO uncomment the block to create and add the playlist
 
-                        //creatPlaylist(playlist_name_edit_text.getText().toString());
+                        creatPlaylist(playlist_name_edit_text.getText().toString());
 
                         Intent intent = new Intent(CreatePlaylistActivity.this , MediaPlayerActivity.class);
                         startActivity(intent);
@@ -76,7 +78,10 @@ public class CreatePlaylistActivity extends AppCompatActivity {
     }
 
     void creatPlaylist(String playlistName){
-        Call<playlist> call = endPointAPI.CreatePlaylist(playlistName , user.getToken());
+        createPlaylistBody mcreatePlaylistBody = new createPlaylistBody();
+        mcreatePlaylistBody.setDescibtion("");
+        mcreatePlaylistBody.setName(playlistName);
+        Call<playlist> call = endPointAPI.CreatePlaylist(mcreatePlaylistBody , user.getToken());
 
         call.enqueue(new Callback<playlist>() {
             @Override
@@ -115,25 +120,24 @@ public class CreatePlaylistActivity extends AppCompatActivity {
     }
 
     void addTrackToPlaylist(String pid , String tid){
-        Call<playlist> call = endPointAPI.AddTrackToAPlaylist(pid , tid, user.getToken());
+        addTrackToPlaylistBody t = new addTrackToPlaylistBody();
+        t.setTrackID(tid);
+        Call<Object> call = endPointAPI.AddTrackToAPlaylist(pid , t, user.getToken());
 
-        call.enqueue(new Callback<playlist>() {
+        call.enqueue(new Callback<Object>() {
             @Override
-            public void onResponse(Call<playlist> call, Response<playlist> response) {
+            public void onResponse(Call<Object> call, Response<Object> response) {
                 if(!response.isSuccessful()){
-                    Toast.makeText(getApplicationContext(),"Code: "+response.code(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"something wrong happened try again",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                else if(response.body()==null){
-                    Toast.makeText(getApplicationContext(),"response body = null",Toast.LENGTH_SHORT).show();
-                }
                 else {
-                    Toast.makeText(getApplicationContext(),"track is added succesfully",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"track is added to playlist",Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
-            public void onFailure(Call<playlist> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),t.getMessage()+" ' failed '",Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<Object> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),"something wrong happened check internet connection",Toast.LENGTH_SHORT).show();
             }
         });
     }

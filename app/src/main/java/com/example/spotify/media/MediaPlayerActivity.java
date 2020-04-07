@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -23,14 +24,21 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.Observer;
 
 import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.example.spotify.SpotifyClasses.Image;
 import com.example.spotify.SpotifyClasses.Track;
+import com.example.spotify.login.user;
 import com.example.spotify.pojo.currentTrack;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MediaPlayerActivity extends AppCompatActivity {
 
@@ -67,6 +75,8 @@ public class MediaPlayerActivity extends AppCompatActivity {
     private ImageView setting_image;
     private TextView setting_song_name;
     private TextView setting_artist_id;
+    private ImageView favorite;
+    private ImageView favorite2;
     private RelativeLayout settings_upper_relative_layout;
     BottomSheetBehavior sleepTimer;
     BottomSheetBehavior sheetBehavior;
@@ -77,6 +87,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
     private MediaPlayerService player;
     private Handler mHandler = new Handler();
     boolean serviceBound = false;
+    private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();
     Toast toast;
 
 
@@ -109,7 +120,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
         //get Views
         getViews();
 
-        sheetBehavior = BottomSheetBehavior.from(song_settings);
+        sheetBehavior  = BottomSheetBehavior.from(song_settings);
         sleepTimer = BottomSheetBehavior.from(sleep_timer);
         setSheetBehavior();
         setSleepTimerBehaviour();
@@ -244,6 +255,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                 startActivity(intent);
+                //finish();
             }
         });
 
@@ -278,6 +290,32 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 player.previous();
             }
         });
+
+        favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(track.getTrack().getValue().getIsLiked()){
+                    UnLikeTrack(track.getTrack().getValue().getTrack().getId());
+                }
+                else {
+                    LikeTrack(track.getTrack().getValue().getTrack().getId());
+                }
+            }
+        });
+
+        favorite2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(track.getTrack().getValue().getIsLiked()){
+                    UnLikeTrack(track.getTrack().getValue().getTrack().getId());
+                }
+                else {
+                    LikeTrack(track.getTrack().getValue().getTrack().getId());
+                }
+            }
+        });
+
+
 //TODO here
         //UPDATE THE SEEK BAR AND THE START AND END TIME EVERY SECOND
         MediaPlayerActivity.this.runOnUiThread(new Runnable() {
@@ -290,7 +328,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
                     start_time.setText(getTimeString(mCurrentPosition));
                     end_time.setText(getTimeString(duration-mCurrentPosition));
                 }
-                //mHandler.postDelayed(this, 100);
+                //mHandler.postDelayed(this, 500);
                 mHandler.post(this);
             }
         });
@@ -315,6 +353,68 @@ public class MediaPlayerActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void LikeTrack(String trackID){
+        favorite.setEnabled(false);
+        favorite2.setEnabled(false);
+        Call<Void> call = endPointAPI.LikeTrack(trackID , user.getToken());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                favorite.setEnabled(true);
+                favorite2.setEnabled(true);
+                if(!response.isSuccessful()){
+                    Toast.makeText(getApplicationContext(),"something went wrong .try again",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else {
+                    favorite.setImageResource(R.drawable.like);
+                    favorite2.setImageResource(R.drawable.like);
+                    TrackInfo.getInstance().setIsLiked(true);
+                    Toast.makeText(getApplicationContext(),"Added to Liked Songs",Toast.LENGTH_SHORT).show();
+                    track.getTrack().getValue().setIsLiked(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),"something went wrong .check your internet connection",Toast.LENGTH_SHORT).show();
+                favorite.setEnabled(true);
+                favorite2.setEnabled(true);
+            }
+        });
+    }
+
+    private void UnLikeTrack(String trackID){
+        favorite.setEnabled(false);
+        favorite2.setEnabled(false);
+        Call<Void> call = endPointAPI.UNLikeTrack(trackID , user.getToken());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                favorite.setEnabled(true);
+                favorite2.setEnabled(true);
+                if(!response.isSuccessful()){
+                    Toast.makeText(getApplicationContext(),"something went wrong .try again",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else {
+                    favorite.setImageResource(R.drawable.favorite_border);
+                    favorite2.setImageResource(R.drawable.favorite_border);
+                    TrackInfo.getInstance().setIsLiked(false);
+                    Toast.makeText(getApplicationContext(),"Removed from Liked Songs",Toast.LENGTH_SHORT).show();
+                    track.getTrack().getValue().setIsLiked(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),"something went wrong .check your internet connection",Toast.LENGTH_SHORT).show();
+                favorite.setEnabled(true);
+                favorite2.setEnabled(true);
+            }
+        });
     }
 
     //CONVERTS THE TIME FORMAT FROM MILLISECONDS TO MM:SS
@@ -363,6 +463,15 @@ public class MediaPlayerActivity extends AppCompatActivity {
             String Imageurl = images.get(0).getUrl();
             Picasso.get().load(Imageurl).into(song_image);
             Picasso.get().load(Imageurl).into(setting_image);
+        }
+
+        if(track.getTrack().getValue().getIsLiked()){
+            favorite.setImageResource(R.drawable.like);
+            favorite2.setImageResource(R.drawable.like);
+        }
+        else{
+            favorite.setImageResource(R.drawable.favorite_border);
+            favorite2.setImageResource(R.drawable.favorite_border);
         }
     }
 
@@ -481,6 +590,8 @@ public class MediaPlayerActivity extends AppCompatActivity {
         setting_song_name = (TextView)findViewById(R.id.setting_song_name);
         setting_artist_id = (TextView)findViewById(R.id.setting_artist_id);
         settings_upper_relative_layout = (RelativeLayout)findViewById(R.id.settings_upper_relative_layout);
+        favorite = (ImageView)findViewById(R.id.favorite);
+        favorite2 = (ImageView)findViewById(R.id.favorite2);
 
     }
 

@@ -12,6 +12,9 @@ public class TrackInfo {
     private MutableLiveData<Boolean> isPlaying = new MutableLiveData<>();
     private MutableLiveData<Boolean> timerSet = new MutableLiveData<>();
     private MutableLiveData<Integer> duration = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isQueue = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isLiked = new MutableLiveData<>();
+    private MutableLiveData<Boolean> tryAgain = new MutableLiveData<>();
    // private MutableLiveData<Integer> currentPosition = new MutableLiveData<>();
 
 
@@ -53,5 +56,11 @@ public class TrackInfo {
     }
     public void setTimerSet(boolean s){timerSet.setValue(s);}
     public MutableLiveData<Boolean> getTimerSet(){return timerSet;}
+    public void setIsQueue(Boolean b){isQueue.setValue(b);}
+    public MutableLiveData<Boolean> getIsQueue(){return isQueue;}
+    public MutableLiveData<Boolean> getIsLiked(){return isLiked;}
+    public void setIsLiked(Boolean b){isLiked.setValue(b);}
+    public void setTryAgain(Boolean b){tryAgain.setValue(b);}
+    public MutableLiveData<Boolean> gettryAgain(){return tryAgain;}
 
 }

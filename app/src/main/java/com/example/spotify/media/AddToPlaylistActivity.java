@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,6 +23,8 @@ import com.example.spotify.R;
 import com.example.spotify.SpotifyClasses.Image;
 import com.example.spotify.SpotifyClasses.UserPlaylists;
 import com.example.spotify.login.user;
+import com.example.spotify.pojo.BasicPlaylist;
+import com.example.spotify.pojo.addTrackToPlaylistBody;
 import com.example.spotify.pojo.playlist;
 import com.squareup.picasso.Picasso;
 
@@ -38,9 +41,13 @@ public class AddToPlaylistActivity extends AppCompatActivity {
     private Button new_playlist_button;
     private ListView playlists_list_view;
     private Toast toast;
-    private UserPlaylists userPlaylists;
+    private List<BasicPlaylist> userPlaylists;
     private ProgressBar playlists_progress_bar;
     private String trackID;
+    private Button try_again;
+    private LinearLayout something_wrong_layout2;
+    private TextView something_wrong_text2;
+
 
 //    private Retrofit retrofit = new Retrofit.Builder()
 //            .baseUrl("http://192.168.1.7:3000/")
@@ -61,7 +68,9 @@ public class AddToPlaylistActivity extends AppCompatActivity {
 
         /////////////////////////List view attaching will be made in the on response callback///////
         //////make the request then attach it to the listview//////
-
+        playlists_progress_bar.setVisibility(View.VISIBLE);
+        something_wrong_layout2.setVisibility(View.GONE);
+        playlists_list_view.setVisibility(View.GONE);
         getPlaylists();
 
         //////////////////////////////////////////////////////////////////////////
@@ -90,21 +99,32 @@ public class AddToPlaylistActivity extends AppCompatActivity {
                 //take the playlist id and add the song to it
                 //TODO uncomment the below block in integeration
 
-//                if(userPlaylists !=null && userPlaylists.getItems() !=null){
-//                    String playlist_id = userPlaylists.getItems().get(position).getId();
-//                    if(trackID ==""){
-//                        toast = Toast.makeText(getApplicationContext(),"track isn't loaded yet check your internet connection",Toast.LENGTH_SHORT);
-//                        toast.show();
-//                    }
-//                    else{
-//                        addTrackToPlaylist(playlist_id , trackID);
-//                    }
-//
-//                }
+                if(userPlaylists !=null && userPlaylists.size()!=0){
+                    String playlist_id = userPlaylists.get(position).getId();
+                    if(trackID ==""){
+                        Toast.makeText(getApplicationContext(),"track isn't loaded yet check your internet connection",Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        addTrackToPlaylist(playlist_id , trackID);
+                    }
+
+                }
                 Intent intent = new Intent(AddToPlaylistActivity.this , MediaPlayerActivity.class);
                 startActivity(intent);
             }
         });
+
+
+        try_again.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playlists_progress_bar.setVisibility(View.VISIBLE);
+                something_wrong_layout2.setVisibility(View.GONE);
+                playlists_list_view.setVisibility(View.GONE);
+                getPlaylists();
+            }
+        });
+
         ////////////////////////////////////////////////////////////////
     }
 
@@ -114,29 +134,25 @@ public class AddToPlaylistActivity extends AppCompatActivity {
     }
 
     void addTrackToPlaylist(String pid , String tid){
-        Call<playlist> call = endPointAPI.AddTrackToAPlaylist(pid , tid , user.getToken());
+        addTrackToPlaylistBody t = new addTrackToPlaylistBody();
+        t.setTrackID(tid);
+        Call<Object> call = endPointAPI.AddTrackToAPlaylist(pid , t, user.getToken());
 
-        call.enqueue(new Callback<playlist>() {
+        call.enqueue(new Callback<Object>() {
             @Override
-            public void onResponse(Call<playlist> call, Response<playlist> response) {
+            public void onResponse(Call<Object> call, Response<Object> response) {
                 if(!response.isSuccessful()){
-                    toast = Toast.makeText(getApplicationContext(),"Code: "+response.code(),Toast.LENGTH_SHORT);
-                    toast.show();
+                    Toast.makeText(getApplicationContext(),"something wrong happened try again",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                else if(response.body()==null){
-                    toast = Toast.makeText(getApplicationContext(),"response body = null",Toast.LENGTH_SHORT);
-                    toast.show();
-                }
                 else {
-                    toast = Toast.makeText(getApplicationContext(),"track is added succesfully",Toast.LENGTH_SHORT);
-                    toast.show();
+                    Toast.makeText(getApplicationContext(),"track is added to playlist",Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
-            public void onFailure(Call<playlist> call, Throwable t) {
-                toast = Toast.makeText(getApplicationContext(),t.getMessage()+" ' failed '",Toast.LENGTH_SHORT);
-                toast.show();
+            public void onFailure(Call<Object> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),"something wrong happened check internet connection",Toast.LENGTH_SHORT).show();
+
             }
         });
     }
@@ -146,17 +162,23 @@ public class AddToPlaylistActivity extends AppCompatActivity {
         new_playlist_button = (Button)findViewById(R.id.new_playlist_button);
         playlists_list_view = (ListView)findViewById(R.id.playlists_list_view);
         playlists_progress_bar = (ProgressBar)findViewById(R.id.playlists_progress_bar);
+        try_again = (Button)findViewById(R.id.try_again);
+        something_wrong_layout2 = findViewById(R.id.something_wrong_layout2);
+        something_wrong_text2 = findViewById(R.id.something_wrong_text);
     }
 
     void getPlaylists(){
-        Call<UserPlaylists> call = endPointAPI.getUserPlaylists();
-
-        call.enqueue(new Callback<UserPlaylists>() {
+        Call<List<BasicPlaylist>> call = endPointAPI.getCurrentUserPlaylists( user.getToken());
+        call.enqueue(new Callback<List<BasicPlaylist>>() {
             @Override
-            public void onResponse(Call<UserPlaylists> call, Response<UserPlaylists> response) {
+            public void onResponse(Call<List<BasicPlaylist>> call, Response<List<BasicPlaylist>> response) {
                 if(!response.isSuccessful()){
                     toast = Toast.makeText(getApplicationContext(),"Code: "+response.code(),Toast.LENGTH_SHORT);
                     toast.show();
+                    something_wrong_layout2.setVisibility(View.VISIBLE);
+                    playlists_progress_bar.setVisibility(View.GONE);
+                    playlists_list_view.setVisibility(View.GONE);
+
                     return;
                 }
                 else if(response.body()==null){
@@ -167,17 +189,23 @@ public class AddToPlaylistActivity extends AppCompatActivity {
                     userPlaylists = response.body();
                     CustomAdapter customAdapter = new CustomAdapter();
                     playlists_list_view.setAdapter(customAdapter);
-
+                    something_wrong_layout2.setVisibility(View.GONE);
+                    playlists_list_view.setVisibility(View.VISIBLE);
                     playlists_progress_bar.setVisibility(View.GONE);
-                    toast = Toast.makeText(getApplicationContext(),"response came and is being parsed",Toast.LENGTH_SHORT);
-                    toast.show();
+//                    toast = Toast.makeText(getApplicationContext(),"response came and is being parsed",Toast.LENGTH_SHORT);
+//                    toast.show();
                 }
             }
 
             @Override
-            public void onFailure(Call<UserPlaylists> call, Throwable t) {
-                toast = Toast.makeText(getApplicationContext(),t.getMessage()+" ' failed '",Toast.LENGTH_SHORT);
-                toast.show();
+            public void onFailure(Call<List<BasicPlaylist>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),t.getMessage()+" ' failed '",Toast.LENGTH_SHORT).show();
+
+                something_wrong_layout2.setVisibility(View.VISIBLE);
+                playlists_progress_bar.setVisibility(View.GONE);
+                playlists_list_view.setVisibility(View.GONE);
+
+
             }
         });
 
@@ -195,22 +223,24 @@ public class AddToPlaylistActivity extends AppCompatActivity {
             TextView playlist_user_name = (TextView)convertView.findViewById(R.id.playlist_user_name);
 
 
-            if(userPlaylists.getItems()!=null) {
+            if(userPlaylists!=null) {
 
-                List<Image> images= userPlaylists.getItems().get(position).getImages();
-                String Imageurl = images.get(0).getUrl();
-                Picasso.get().load(Imageurl).into(user_playlist_image);
+                List<Object> images= userPlaylists.get(position).getImages();
+                if(images !=null && images.size()!=0){
+                    String Imageurl = images.get(0).toString();
+                    Picasso.get().load(Imageurl).into(user_playlist_image);
+                }
 
-                user_playlist_name.setText(userPlaylists.getItems().get(position).getName());
+                user_playlist_name.setText(userPlaylists.get(position).getName());
 
-                playlist_user_name.setText("by " + userPlaylists.getItems().get(position).getOwner().getDisplayName());
+                playlist_user_name.setText("by " + userPlaylists.get(position).getOwner());
             }
             return convertView;
         }
         @Override
         public int getCount() {
-            if(userPlaylists.getItems() != null){
-                return userPlaylists.getItems().size();
+            if(userPlaylists != null){
+                return userPlaylists.size();
             }
             else{
                 return 0;

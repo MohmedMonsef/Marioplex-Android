@@ -7,9 +7,12 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 
 import com.example.spotify.Fragments.HOME_FRAGMENT.homeFragment;
 import com.example.spotify.Fragments.LIBRARY_FRAGMENT.libraryFragment;
@@ -26,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TrackInfo track;
     private MediaPlayerService player;
+    private FrameLayout bottom_sheet_frame_layout;
     boolean serviceBound = false;
 
 
@@ -43,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
         if(!serviceBound) {
             startService();
         }
+        //hides bottom sheet  if there is no queue created yet
+        HideBottomSheet();
+
 
     }
     public void loadFragment(Fragment fragment) {
@@ -80,6 +87,21 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
+
+    void HideBottomSheet(){
+        bottom_sheet_frame_layout = findViewById(R.id.bottom_sheet_frame_layout);
+        track.getIsQueue().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(!aBoolean){
+                    bottom_sheet_frame_layout.setVisibility(View.GONE);
+                }
+                else{
+                    bottom_sheet_frame_layout.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {

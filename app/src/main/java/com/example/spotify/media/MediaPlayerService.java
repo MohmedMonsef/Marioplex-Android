@@ -33,6 +33,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     private MediaPlayer mediaPlayer ;
     private String audioFile ="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
     private Boolean isPlaying = false;
+    private int playFlag;
     private int resumePosition;
 //    private String TrackID1 ="7ouMYWpwJ422jRcDASZB7P";
 //    private String TrackID2 ="4VqPOruhp5EdPBeR92t6lQ";
@@ -72,7 +73,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     public void onCreate() {
         super.onCreate();
         initMediaPlayer();
+        playFlag = 0;
         track.setTimerSet(false);
+        track.setIsQueue(false);
+        track.setTryAgain(false);
         stopInTrackEnd = false;
 
     }
@@ -95,33 +99,33 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         //////////////////////////////////////////////////////////////////////
         //TODO must be in on response when the back finishes the url
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            // Set the data source to the mediaFile location
-            audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
-            mediaPlayer.setDataSource(audioFile);
-            prepared = false;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            stopSelf();
-        }
-        mediaPlayer.prepareAsync();
+//        try {
+//            // Set the data source to the mediaFile location
+//            audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+//            mediaPlayer.setDataSource(audioFile);
+//            prepared = false;
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            stopSelf();
+//        }
+//        mediaPlayer.prepareAsync();
     }
 
     public void playCurrentTrack(Call<currentTrack> call){
         getCurrentlyPlaying(call);
-        mediaPlayer.reset();
-        try {
-            // Set the data source to the mediaFile location
-            audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
-            mediaPlayer.setDataSource(audioFile);
-            prepared = false;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            stopSelf();
-        }
-        mediaPlayer.prepareAsync();
+//        mediaPlayer.reset();
+//        try {
+//            // Set the data source to the mediaFile location
+//            audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+//            mediaPlayer.setDataSource(audioFile);
+//            prepared = false;
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            stopSelf();
+//        }
+//        mediaPlayer.prepareAsync();
 
     }
 
@@ -130,17 +134,35 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             @Override
             public void onResponse(Call<currentTrack> call, Response<currentTrack> response) {
                 if (!response.isSuccessful()) {
-                    toast = Toast.makeText(getApplicationContext(),"Code: "+response.code(),Toast.LENGTH_SHORT);
-                    toast.show();
+                    //toast = Toast.makeText(getApplicationContext(),"Code: "+response.code(),Toast.LENGTH_SHORT);
+                    //toast.show();
+                    if(response.code() == 404){
+                        track.setIsQueue(false);
+                    }
                     //TODO that means queue wasn't created so you need to hide the bottom sheet
                     return;
                 }
                 else if(response.body()==null){
-                    toast = Toast.makeText(getApplicationContext(),"response body = null",Toast.LENGTH_SHORT);
-                    toast.show();
+                    //toast = Toast.makeText(getApplicationContext(),"response body = null",Toast.LENGTH_SHORT);
+                    //toast.show();
                 }
                 else {
                     track.setTrack(response.body());
+                    track.setIsQueue(true);
+                    track.setIsLiked(response.body().getIsLiked());
+
+                    mediaPlayer.reset();
+                    try {
+                        // Set the data source to the mediaFile location
+                        audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+                        mediaPlayer.setDataSource(audioFile);
+                        prepared = false;
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        stopSelf();
+                    }
+                    mediaPlayer.prepareAsync();
                     //audioFile = track.getTrack().getValue().getUri();
 //                    try {
 //                        mediaPlayer.setDataSource(audioFile);
@@ -154,11 +176,13 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             }
             @Override
             public void onFailure(Call<currentTrack> call, Throwable t) {
-                toast = Toast.makeText(getApplicationContext(),t.getMessage()+" 'failed '",Toast.LENGTH_SHORT);
-                toast.show();
+                Toast.makeText(getApplicationContext(),"something went wrong .check your internet connection",Toast.LENGTH_SHORT).show();
+                track.setTryAgain(true);
+
             }
         });
     }
+
 
 //    void getTracks(String trackID){
 //        Call<Tracks> call = endPointAPI.getTracks(trackID);
@@ -195,19 +219,19 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         getCurrentlyPlaying(call);
         //////////////////////////////////////////////////////////////////////
         pauseMedia();
-        mediaPlayer.reset();
-
-        try {
-            // Set the data source to the mediaFile location
-            audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3";
-            mediaPlayer.setDataSource(audioFile);
-            prepared = false;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            stopSelf();
-        }
-        mediaPlayer.prepareAsync();
+//        mediaPlayer.reset();
+//
+//        try {
+//            // Set the data source to the mediaFile location
+//            audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3";
+//            mediaPlayer.setDataSource(audioFile);
+//            prepared = false;
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            stopSelf();
+//        }
+//        mediaPlayer.prepareAsync();
 
     }
 
@@ -218,17 +242,17 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         getCurrentlyPlaying(call);
         //////////////////////////////////////////////////////////////////////
         pauseMedia();
-        mediaPlayer.reset();
-        try {
-            // Set the data source to the mediaFile location
-            audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3";
-            mediaPlayer.setDataSource(audioFile);
-            prepared = false;
-        } catch (IOException e) {
-            e.printStackTrace();
-            stopSelf();
-        }
-        mediaPlayer.prepareAsync();
+//        mediaPlayer.reset();
+//        try {
+//            // Set the data source to the mediaFile location
+//            audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3";
+//            mediaPlayer.setDataSource(audioFile);
+//            prepared = false;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            stopSelf();
+//        }
+//        mediaPlayer.prepareAsync();
     }
     public Boolean getIsPlaying(){
         return isPlaying;
@@ -327,9 +351,14 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     @Override
     public void onPrepared(MediaPlayer mp) {
+
         playMedia();
-        TrackInfo.getInstance().setDuration(mediaPlayer.getDuration());
         prepared = true;
+        TrackInfo.getInstance().setDuration(mediaPlayer.getDuration());
+        if(playFlag == 0) {
+            pauseMedia();
+        }
+        playFlag = 1;
 //        toast = Toast.makeText(getApplicationContext() , "audio is prepared " , Toast.LENGTH_SHORT);
 //        toast.show();
     }
@@ -389,8 +418,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             sleepTimer = new CountDownTimer(milliSeconds, 60000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
-                    toast = Toast.makeText(getApplicationContext(),"one minute passed",Toast.LENGTH_SHORT);
-                    toast.show();
+//                    toast = Toast.makeText(getApplicationContext(),"one minute passed",Toast.LENGTH_SHORT);
+//                    toast.show();
                 }
 
                 @Override

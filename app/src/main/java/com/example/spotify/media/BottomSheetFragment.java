@@ -10,19 +10,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.example.spotify.SpotifyClasses.Image;
+import com.example.spotify.login.user;
 import com.example.spotify.pojo.currentTrack;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class BottomSheetFragment extends Fragment {
@@ -30,6 +39,9 @@ public class BottomSheetFragment extends Fragment {
     ImageView bottom_image_id;
     TextView song_artist_name;
     ImageView bottom_play_pause;
+    ImageView bottom_favorite;
+    LinearLayout bottom_layout;
+    private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();
     private TrackInfo track;
     private MediaPlayerService player;
     boolean serviceBound = false;
@@ -65,6 +77,8 @@ public class BottomSheetFragment extends Fragment {
         bottom_image_id = root.findViewById(R.id.bottom_image_id);
         song_artist_name = root.findViewById(R.id.song_artist_name);
         bottom_play_pause = root.findViewById(R.id.bottom_play_pause);
+        bottom_layout = root.findViewById(R.id.bottom_layout);
+        bottom_favorite = root.findViewById(R.id.bottom_favorite);
 
         track = TrackInfo.getInstance();
         track.setName("song name");
@@ -107,6 +121,18 @@ public class BottomSheetFragment extends Fragment {
             }
         });
 
+        bottom_favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(track.getTrack().getValue().getIsLiked()){
+                    UnLikeTrack(track.getTrack().getValue().getTrack().getId());
+                }
+                else {
+                    LikeTrack(track.getTrack().getValue().getTrack().getId());
+                }
+            }
+        });
+
         //Observers
 //TODO here
         track.getTrack().observe(this, new Observer<currentTrack>() {
@@ -128,9 +154,88 @@ public class BottomSheetFragment extends Fragment {
             }
         });
 
+        track.getIsLiked().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    bottom_favorite.setImageResource(R.drawable.like);
+                }
+                else {
+                    bottom_favorite.setImageResource(R.drawable.favorite_border);
+                }
+            }
+        });
+
+        track.gettryAgain().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    player.playCurrentTrack(endPointAPI.getCurrentlyPlaying(user.getToken()));
+                }
+            }
+        });
+
+
+
 
         return root;
     }
+
+    private void LikeTrack(String trackID){
+        bottom_favorite.setEnabled(false);
+        Call<Void> call = endPointAPI.LikeTrack(trackID , user.getToken());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                bottom_favorite.setEnabled(true);
+                if(!response.isSuccessful()){
+                    Toast.makeText(getContext(),"something went wrong .try again",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else {
+                    bottom_favorite.setImageResource(R.drawable.like);
+                    Toast.makeText(getContext(),"Added to Liked Songs",Toast.LENGTH_SHORT).show();
+                    track.getTrack().getValue().setIsLiked(true);
+                    TrackInfo.getInstance().setIsLiked(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getContext(),"something went wrong .check your internet connection",Toast.LENGTH_SHORT).show();
+                bottom_favorite.setEnabled(true);
+            }
+        });
+    }
+
+    private void UnLikeTrack(String trackID){
+        bottom_favorite.setEnabled(false);
+        Call<Void> call = endPointAPI.UNLikeTrack(trackID , user.getToken());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                bottom_favorite.setEnabled(true);
+                if(!response.isSuccessful()){
+                    Toast.makeText(getContext(),"something went wrong .try again",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else {
+                    bottom_favorite.setImageResource(R.drawable.favorite_border);
+
+                    Toast.makeText(getContext(),"Removed from Liked Songs",Toast.LENGTH_SHORT).show();
+                    track.getTrack().getValue().setIsLiked(false);
+                    TrackInfo.getInstance().setIsLiked(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getContext(),"something went wrong .check your internet connection",Toast.LENGTH_SHORT).show();
+                bottom_favorite.setEnabled(true);
+            }
+        });
+    }
+
     //TODO here
     void UpdateUI(){
 
@@ -147,6 +252,13 @@ public class BottomSheetFragment extends Fragment {
         if(images !=null&& images.size()!=0){
         String Imageurl = images.get(0).getUrl();
         Picasso.get().load(Imageurl).into(bottom_image_id);
+        }
+
+        if(track.getTrack().getValue().getIsLiked()){
+            bottom_favorite.setImageResource(R.drawable.like);
+        }
+        else{
+            bottom_favorite.setImageResource(R.drawable.favorite_border);
         }
 //here any chang
     }

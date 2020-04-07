@@ -7,9 +7,12 @@ import com.example.spotify.login.LoginCredentials;
 import com.example.spotify.login.LoginResponse;
 import com.example.spotify.login.SignUpData;
 import com.example.spotify.login.user;
+import com.example.spotify.pojo.BasicPlaylist;
 import com.example.spotify.pojo.PlaylistTracks;
+import com.example.spotify.pojo.addTrackToPlaylistBody;
 import com.example.spotify.pojo.currentTrack;
 import com.example.spotify.pojo.playlist;
+import com.example.spotify.pojo.createPlaylistBody;
 
 import java.util.List;
 
@@ -84,20 +87,25 @@ public interface EndPointAPI {
     //@Headers("Authorization: Bearer "+token)
     Call<currentTrack> getCurrentlyPlaying(@Header("x-auth-token")String token1);
 
-    @GET("me/playlists")
+//    @GET("users/{user_id}/playlists")
+//    //@Headers("Authorization: Bearer "+token)
+//    Call<List<BasicPlaylist>> getCurrentUserPlaylists(@Path("user_id") String userID ,
+//                                                      @Header("x-auth-token")String token1);
+
+@GET("me/playlists")
     //@Headers("Authorization: Bearer "+token)
-    Call<Track> getCurrentUserPlaylists(@Header("x-auth-token")String token1);
+    Call<List<BasicPlaylist>> getCurrentUserPlaylists(@Header("x-auth-token")String token1);
 
 
     @POST("playlists/{playlist_id}/tracks")
     //@Headers("Authorization: Bearer "+token)
-    Call<playlist> AddTrackToAPlaylist(@Path("playlist_id") String playlistID
-                                      ,@Field("tracks") String track_id
-                                      ,@Header("x-auth-token")String token1);                    //check if fiels or Query
+    Call<Object> AddTrackToAPlaylist(@Path("playlist_id") String playlistID
+                                      ,@Body addTrackToPlaylistBody t
+                                      ,@Header("x-auth-token")String token1);
 
     @POST("users/playlists")
     //@Headers("Authorization: Bearer "+token)
-    Call<playlist> CreatePlaylist(@Field("name") String playlist_name
+    Call<playlist> CreatePlaylist(@Body createPlaylistBody c
                                  ,@Header("x-auth-token")String token1); //check if fiels of Query
 
 

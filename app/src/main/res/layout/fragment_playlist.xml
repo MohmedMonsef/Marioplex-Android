@@ -2,7 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:background="@color/backGroundColor"
+    android:background="@drawable/playlist_background"
     android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -39,6 +39,7 @@
                     android:layout_width="wrap_content"
                     android:id="@+id/playlist_settings_button"
                     android:padding="16dp"
+                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:src="@drawable/more_options"
@@ -49,8 +50,9 @@
                     android:id="@+id/like_playlist"
                     android:padding="16dp"
                     android:src="@drawable/favorite_border"
+                    android:visibility="invisible"
                     android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/playlist_settings_button"/>
+                    android:layout_alignParentRight="true"/>
 
             </RelativeLayout>
             <RelativeLayout
@@ -82,7 +84,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:textSize="32dp"
+                                android:textSize="32sp"
                                 android:textStyle="bold"
                                 android:textColor="@android:color/background_light"
                                 android:text="playList Name"
@@ -106,10 +108,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/rounded_button"
-                                android:text="shuffle play "
+                                android:text="shuffle play"
                                 android:paddingLeft="40dp"
                                 android:paddingRight="40dp"
                                 android:textSize="18dp"
+                                android:textAllCaps="true"
                                 android:layout_marginTop="8dp"
                                 android:layout_gravity="center_horizontal"
                                 android:textColor="@android:color/background_light"/>
@@ -147,6 +150,36 @@
             android:layout_centerInParent="true"
             android:visibility="gone"
             android:id="@+id/progress_bar_playlist"/>
-    </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/something_wrong_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            android:visibility="gone">
+            <TextView
+                android:id="@+id/something_wrong_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/background_light"
+                android:text="something went wrong"
+                android:gravity="center"/>
+            <Button
+                android:id="@+id/something_wrong_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/transparent_rounded_button"
+                android:text="Try Again"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                android:textSize="14dp"
+                android:layout_marginTop="32dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@android:color/background_light"/>
 
+        </LinearLayout>
+    </RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

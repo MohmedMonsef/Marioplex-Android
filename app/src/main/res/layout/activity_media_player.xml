@@ -59,7 +59,7 @@
             android:layout_weight="0.55"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@android:color/darker_gray"
+            android:src="@drawable/not_found1"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
             android:layout_marginTop="8dp"
@@ -140,6 +140,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:padding="8dp"
                 android:layout_weight="1"
                 android:src="@drawable/favorite_border"/>
             <ImageView
@@ -169,6 +170,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/favorite_border"
+                android:visibility="invisible"
+                android:padding="8dp"
                 android:layout_weight="1"/>
         </LinearLayout>
     </LinearLayout>
