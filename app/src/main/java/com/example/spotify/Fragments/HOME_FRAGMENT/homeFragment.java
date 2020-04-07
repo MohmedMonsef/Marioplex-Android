@@ -25,7 +25,9 @@ import android.widget.TextView;
 
 import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.Adapters.Adapter;
+import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
 import com.example.spotify.Fragments.SETTING_FRAGMENT.settingFragment;
+import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.R;
 import com.example.spotify.SpotifyClasses.NewRelease;

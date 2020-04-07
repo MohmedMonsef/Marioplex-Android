@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
 import com.example.spotify.R;
 
 import static android.widget.Toast.makeText;
@@ -40,6 +41,16 @@ public class premiumFragment extends Fragment implements LifecycleOwner {
         premiumViewModel =ViewModelProviders.of((MainActivity) getActivity()).get(viewmodelPremium.class);
         final TextView textView = view.findViewById(R.id.text_premium);
         ////*******************************RecyclerView***********************////
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) getActivity()).getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame_fragment,new PlaylistFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
         return view;
 
     }

@@ -155,18 +155,6 @@ public class IntroActivity extends AppCompatActivity {
 
     public void showLoginFragment(View view) {
         loginFragment = new LoginFragment(retrofit,endPointAPI);
-        //retrofit = new Retrofit.Builder().baseUrl("http://192.168.1.7:3000").addConverterFactory(GsonConverterFactory.create()).build();
-        retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
-        //apiSpotify = retrofit.create(ApiSpotify.class);
-        apiSpotify = com.example.spotify.Interfaces.Retrofit.getInstance().getApiSpotify();
-        calculateDisplayWidth();
-
-        findViewById(R.id.intro_fragment).setTranslationX(displayWidth);
-    }
-
-
-    public void showLoginFragment(View view) {
-        loginFragment = new LoginFragment(retrofit,apiSpotify);
         showFragment(loginFragment);
     }
 
