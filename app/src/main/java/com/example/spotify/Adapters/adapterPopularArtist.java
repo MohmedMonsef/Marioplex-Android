@@ -1,6 +1,6 @@
 package com.example.spotify.Adapters;
 
-import android.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -59,7 +59,7 @@ public class adapterPopularArtist extends RecyclerView.Adapter<adapterPopularArt
 
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 Fragment myFragment = new newReleaseFragment();
-                activity.getFragmentManager().beginTransaction().replace(R.id.frame_fragment, myFragment).addToBackStack(null).commit();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, myFragment).addToBackStack(null).commit();
 
             }
         });

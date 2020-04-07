@@ -1,7 +1,7 @@
 package com.example.spotify.Fragments.SEARCH_FRAGMENT;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import androidx.fragment.app.Fragment;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
@@ -127,11 +128,14 @@ public class searchfragment extends Fragment implements LifecycleOwner {
 
     }
 
+    /*
     @NonNull
     @Override
     public Lifecycle getLifecycle() {
         return null;
     }
+
+     */
 
 
 }

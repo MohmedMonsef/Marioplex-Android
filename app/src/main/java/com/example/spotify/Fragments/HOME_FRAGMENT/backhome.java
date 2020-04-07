@@ -1,9 +1,8 @@
 package com.example.spotify.Fragments.HOME_FRAGMENT;
 
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import androidx.fragment.app.Fragment;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +13,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
@@ -287,11 +288,16 @@ private void setRetrofitralbum()
 
     }
 
+    /*
     @NonNull
     @Override
     public Lifecycle getLifecycle() {
         return null;
     }
+
+     */
+
+
 
     public void loadFragmentSetting(Fragment fragment) {
         // create a FragmentManager

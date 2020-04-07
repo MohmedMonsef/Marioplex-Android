@@ -1,9 +1,8 @@
 package com.example.spotify.Activities;
 
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import androidx.fragment.app.Fragment;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -12,6 +11,8 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 
 import com.example.spotify.Fragments.HOME_FRAGMENT.backhome;
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void loadFragment(Fragment fragment) {
         // create a FragmentManager
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         // create a FragmentTransaction to begin the transaction and replace the Fragment
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         // replace the FrameLayout with new Fragment

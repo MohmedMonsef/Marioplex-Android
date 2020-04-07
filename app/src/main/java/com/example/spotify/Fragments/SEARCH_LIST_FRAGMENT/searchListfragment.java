@@ -1,6 +1,6 @@
 package com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT;
 
-import android.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -146,6 +146,7 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
 
     }
 
+    /*
     @NonNull
     @Override
     public Lifecycle getLifecycle() {
@@ -153,5 +154,7 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
 
 
     }
+
+     */
 
 }

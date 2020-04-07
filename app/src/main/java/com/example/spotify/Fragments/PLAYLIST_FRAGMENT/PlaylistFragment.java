@@ -103,7 +103,7 @@ public class PlaylistFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ////////////////return to my home fragment\\\\\\\\\\\\\\\\\\\\\
-                getActivity().getFragmentManager().beginTransaction()
+                getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.frame_fragment,new backhome())
                         .addToBackStack(null)
                         .commit();
@@ -192,6 +192,8 @@ public class PlaylistFragment extends Fragment {
                 }
             }
         });
+
+
 
         //////////////////////////show progress bar\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         playlist_contents_layout.setVisibility(View.GONE);

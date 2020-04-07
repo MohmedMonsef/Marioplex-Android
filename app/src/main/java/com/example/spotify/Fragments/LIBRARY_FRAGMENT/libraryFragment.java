@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
-import android.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 //import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
@@ -48,9 +48,12 @@ public class libraryFragment extends Fragment implements LifecycleOwner {
 
 
 
+    /*
     @NonNull
     @Override
     public Lifecycle getLifecycle() {
         return null;
     }
+
+     */
 }

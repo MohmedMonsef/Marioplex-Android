@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
@@ -24,7 +25,7 @@ import com.example.spotify.R;
 import retrofit2.Retrofit;
 
 
-public class see_all_albums_Fragment extends android.app.Fragment implements LifecycleOwner {
+public class see_all_albums_Fragment extends Fragment implements LifecycleOwner {
 
 
     Search searchList;
@@ -102,6 +103,7 @@ TextView Artist;
 
     }
 
+    /*
     @NonNull
     @Override
     public Lifecycle getLifecycle() {
@@ -109,5 +111,7 @@ TextView Artist;
 
 
     }
+
+     */
 
 }
