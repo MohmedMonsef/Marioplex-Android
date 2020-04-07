@@ -5,11 +5,13 @@ public class aclass
 String type;
 String name;
 String image;
+String _id;
 
-    public aclass(String type, String name, String image) {
+    public aclass(String type, String name, String image , String _id) {
         this.type = type;
         this.name = name;
         this.image = image;
+        this._id = _id;
     }
 
     public String getType() {
@@ -35,4 +37,8 @@ String image;
     public void setImage(String image) {
         this.image = image;
     }
+
+    public  String getid(){return _id;}
+
+    public void set_id(String  id){_id = id;}
 }

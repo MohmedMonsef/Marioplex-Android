@@ -28,6 +28,7 @@
                 android:layout_height="80dp"
                 android:layout_width="match_parent"
                 android:id="@+id/imgSearchitem"
+                android:src="@drawable/not_found_2"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true">
             </ImageView>

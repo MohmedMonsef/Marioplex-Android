@@ -2,11 +2,13 @@ package com.example.spotify.BackClasses.BackAdapter;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
 import com.example.spotify.Fragments.NEW_RELEASE_FRAHMENT.newReleaseFragment;
+import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
 import com.example.spotify.R;
 import com.example.spotify.SpotifyClasses.SearchClasses.aclass;
 import com.squareup.picasso.Picasso;
@@ -45,7 +48,7 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
                 }
                 list1.add(new aclass(LIST.getArtist().get(i).getType(),
                         LIST.getArtist().get(i).getName(),
-                        image));
+                        image,LIST.getArtist().get(i).getId()));
             }
         }
         if(LIST.getTrack()!=null) {
@@ -56,7 +59,8 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
                 }
                 list1.add(new aclass(LIST.getTrack().get(i).getType(),
                         LIST.getTrack().get(i).getName(),
-                        image));
+                        image,
+                        LIST.getTrack().get(i).getId()));
             }
         }
         if(LIST.getAlbum()!=null) {
@@ -67,7 +71,8 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
                 }
                 list1.add(new aclass(LIST.getAlbum().get(i).getType(),
                         LIST.getAlbum().get(i).getName(),
-                        image));
+                        image,
+                        LIST.getAlbum().get(i).getId()));
             }
         }
         if(LIST.getPlaylist()!=null) {
@@ -78,7 +83,8 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
                 }
                 list1.add(new aclass(LIST.getPlaylist().get(i).getType(),
                         LIST.getPlaylist().get(i).getName(),
-                        image));
+                        image,
+                        LIST.getPlaylist().get(i).getId()));
             }
         }
     }
@@ -92,7 +98,7 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull adapterSearch.MyviewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull adapterSearch.MyviewHolder holder, final int position) {
         holder.ArtistName.setText(list1.get(position).getName());
         holder.ArtistType.setText(list1.get(position).getType());
         Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
@@ -105,9 +111,23 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
             public void onClick(View v) {
                 Log.i(TAG, "onClick: pppppppppppppppppppppp");
 
-                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                Fragment myFragment = new newReleaseFragment();
-                activity.getFragmentManager().beginTransaction().replace(R.id.frame_fragment, myFragment).addToBackStack(null).commit();
+//                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+//                Fragment myFragment = new newReleaseFragment();
+//                activity.getFragmentManager().beginTransaction().replace(R.id.frame_fragment, myFragment).addToBackStack(null).commit();
+                if(list1.get(position).getType().equals("playlist")){
+                    Bundle bundle = new Bundle();
+                    bundle.putString("playlistID" , list1.get(position).getid());
+                    //bundle.putString("ownerName" , list1.getOwner().getName());
+
+                    androidx.fragment.app.Fragment f = new PlaylistFragment();
+                    f.setArguments(bundle);
+                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                    activity.getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.frame_fragment, f)
+                            .addToBackStack(null).commit();
+                }
+
 
             }
         });

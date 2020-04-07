@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +37,8 @@ public class AdaptersearcHes extends RecyclerView.Adapter<AdaptersearcHes.Myview
 
             list1.add(new aclass(LIST.getArtists().getItems().get(i).getType(),
                     LIST.getArtists().getItems().get(i).getName(),
-                    LIST.getArtists().getItems().get(i).getImages().get(0).getUrl()));
+                    LIST.getArtists().getItems().get(i).getImages().get(0).getUrl(),
+                    LIST.getArtists().getItems().get(i).getId()));
 
         }
 
@@ -45,7 +47,8 @@ public class AdaptersearcHes extends RecyclerView.Adapter<AdaptersearcHes.Myview
 
             list1.add(new aclass(LIST.getTracks().getItems().get(i).getType(),
                     LIST.getTracks().getItems().get(i).getName(),
-                    LIST.getTracks().getItems().get(i).getAlbum().getImages().get(0).getUrl()));
+                    LIST.getTracks().getItems().get(i).getAlbum().getImages().get(0).getUrl(),
+                    LIST.getArtists().getItems().get(i).getId()));
 
         }
 

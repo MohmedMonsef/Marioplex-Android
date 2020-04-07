@@ -18,6 +18,7 @@
         <ImageView
             android:id="@+id/entity_image"
             android:layout_width="160dp"
+            android:background="@drawable/not_found_2"
             android:layout_height="140dp"
             android:scaleType="centerCrop"/>
 

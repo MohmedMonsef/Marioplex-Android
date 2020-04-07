@@ -99,6 +99,9 @@ public class PlaylistFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_playlist,container,false);
+        ////////////////////get playlist id from the bundle\\\\\\\\\\\\\\\\\\\\\\\\
+        playlistID = getArguments().getString("playlistID");
+
         /////////////////////get all the views i will use/////////////////////////
         getViews(root);
 

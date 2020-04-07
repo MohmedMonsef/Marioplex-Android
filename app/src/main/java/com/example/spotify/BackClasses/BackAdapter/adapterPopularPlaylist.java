@@ -2,6 +2,7 @@ package com.example.spotify.BackClasses.BackAdapter;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify.BackClasses.Backclasses.backpopularplaylist.Playlist;
 import com.example.spotify.Fragments.NEW_RELEASE_FRAHMENT.newReleaseFragment;
+import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
 import com.example.spotify.R;
 import com.squareup.picasso.Picasso;
 
@@ -45,7 +47,7 @@ public class adapterPopularPlaylist extends RecyclerView.Adapter<adapterPopularP
     @Override
     public void onBindViewHolder(adapterPopularPlaylist.MyviewHolder holder, int position) {
 
-        Playlist item=PopularPlaylistList.get(position);
+        final Playlist item=PopularPlaylistList.get(position);
         holder.ImageName.setText(item.getName());
         Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
         if(item.getImages()!= null & item.getImages().size()!=0) {
@@ -57,9 +59,20 @@ public class adapterPopularPlaylist extends RecyclerView.Adapter<adapterPopularP
             {
                 Log.i(TAG, "onClick: jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
 
+//                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+//                Fragment myFragment = new newReleaseFragment();
+//                activity.getFragmentManager().beginTransaction().replace(R.id.frame_fragment, myFragment).addToBackStack(null).commit();
+                Bundle bundle = new Bundle();
+                bundle.putString("playlistID" , item.getId());
+                bundle.putString("ownerName" , item.getOwner().getName());
+
+                androidx.fragment.app.Fragment f = new PlaylistFragment();
+                f.setArguments(bundle);
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                Fragment myFragment = new newReleaseFragment();
-                activity.getFragmentManager().beginTransaction().replace(R.id.frame_fragment, myFragment).addToBackStack(null).commit();
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frame_fragment, f)
+                        .addToBackStack(null).commit();
 
             }
         });

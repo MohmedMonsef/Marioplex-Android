@@ -1,7 +1,7 @@
 package com.example.spotify.Adapters;
 
-import android.app.Fragment;
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +11,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.Fragments.NEW_RELEASE_FRAHMENT.newReleaseFragment;
+import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
 import com.example.spotify.R;
 import com.example.spotify.SpotifyClasses.Item;
 import com.squareup.picasso.Picasso;
@@ -46,7 +49,7 @@ public class AdapterNewRelease extends RecyclerView.Adapter<AdapterNewRelease.My
     @Override
     public void onBindViewHolder(AdapterNewRelease.MyviewHolder holder, int position) {
 
-        Item item=NewReleaseList.get(position);
+        final Item item=NewReleaseList.get(position);
         holder.ImageName.setText(item.getName());
         Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
         Picasso.get().load(item.getImages().get(0).getUrl()).into(holder.image);
@@ -57,9 +60,17 @@ public class AdapterNewRelease extends RecyclerView.Adapter<AdapterNewRelease.My
             {
                 Log.i(TAG, "onClick: on item");
 
-                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                Fragment myFragment = new newReleaseFragment();
-                activity.getFragmentManager().beginTransaction().replace(R.id.frame_fragment, myFragment).addToBackStack(null).commit();
+                Bundle bundle = new Bundle();
+                bundle.putString("playlistID" , item.getId());
+                //bundle.putString("ownerName" , item.getName());
+
+//                Fragment f = new PlaylistFragment();
+//                f.setArguments(bundle);
+//                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+//                activity.getSupportFragmentManager()
+//                        .beginTransaction()
+//                        .replace(R.id.frame_fragment, f)
+//                        .addToBackStack(null).commit();
 
             }
         });
