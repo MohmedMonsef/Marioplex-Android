@@ -1,5 +1,7 @@
 package com.example.spotify.login;
 
+import android.graphics.Color;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,11 +11,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.R;
 import com.example.spotify.login.apiClasses.SignUpData;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -26,6 +34,8 @@ public class SignUpFragment extends Fragment {
 
     private static Retrofit mRetrofit;
     private static EndPointAPI mEndPointAPI;
+
+    String email,password,birthday,username,gender;
 
     /*public SignUpFragment() {
         // Required empty public constructor
@@ -57,18 +67,41 @@ public class SignUpFragment extends Fragment {
             }
         });
 
+        final TextView maleButton = (TextView)rootView.findViewById(R.id.male_button);
+        final TextView femaleButton = (TextView)rootView.findViewById(R.id.female_button);
+        maleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                maleButton.setBackgroundColor(Color.GRAY);
+                maleButton.setTextColor(Color.WHITE);
+                femaleButton.setBackgroundColor(Color.WHITE);
+                femaleButton.setTextColor(Color.GRAY);
+                gender = "Male";
+            }
+        });
+
+        femaleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                maleButton.setBackgroundColor(Color.WHITE);
+                maleButton.setTextColor(Color.GRAY);
+                femaleButton.setBackgroundColor(Color.GRAY);
+                femaleButton.setTextColor(Color.WHITE);
+                gender = "Female";
+            }
+        });
+
         return rootView;
     }
 
     private void signUp(){
 
-        String email,password,birthday,username,gender;
         try {
             email = ((EditText) getView().findViewById(R.id.sign_up_email)).getText().toString();
             password = ((EditText) getView().findViewById(R.id.sign_up_password)).getText().toString();
             birthday = ((EditText) getView().findViewById(R.id.sign_up_date_of_birth)).getText().toString();
             username = ((EditText) getView().findViewById(R.id.sign_up_name)).getText().toString();
-            gender = ((EditText) getView().findViewById(R.id.sign_up_gender)).getText().toString();
+            //gender = ((EditText) getView().findViewById(R.id.sign_up_gender)).getText().toString();
         }
         catch (NullPointerException e){
             Toast.makeText(getContext(),"fill in the fields",Toast.LENGTH_SHORT).show();
@@ -76,6 +109,24 @@ public class SignUpFragment extends Fragment {
         }
         String country = "Egypt";
 
+        // form validation
+        if(!email.matches("(.+)@(.+).(.+)")){
+            Toast.makeText(getContext(),"incorrect email",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(password.length() < 4){
+            Toast.makeText(getContext(),"password can't be less than 4 characters",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(!birthday.matches("\\d{1,2}/\\d{1,2}/\\d{4}")){
+            Toast.makeText(getContext(),"incorrect date format",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //String[] days = birthday.split("\\\\");
+        if(gender == null){
+            Toast.makeText(getContext(),"Choose your gender",Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         SignUpData signUpData = new SignUpData(username,password,country,email,gender,birthday);
 
@@ -89,7 +140,7 @@ public class SignUpFragment extends Fragment {
                 }
                 else {
                     Log.i("Intro Activity",response.errorBody().toString());
-                    Toast.makeText(getContext(),"Failed " + response.code() + response.message(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"Failed " + response.code() +" "+ response.message(),Toast.LENGTH_SHORT).show();
                 }
             }
 

@@ -58,7 +58,7 @@
                 android:id="@+id/typeOfSearch"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
-                android:textColor="@color/layoutcolor"
+                android:textColor="@color/TextColor"
                 android:textSize="14sp" />
         </LinearLayout>
 

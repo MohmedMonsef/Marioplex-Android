@@ -25,6 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:background="#424242"
+        android:textColor="@android:color/white"
         android:inputType="textEmailAddress"
         android:selectAllOnFocus="true" />
 
@@ -42,6 +43,7 @@
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="42dp"
+        android:textColor="@android:color/white"
         android:background="#424242"
         android:imeOptions="actionDone"
         android:inputType="textPassword"
