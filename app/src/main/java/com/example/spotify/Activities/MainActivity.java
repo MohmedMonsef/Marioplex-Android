@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         ////*******************************BottomNavigation***********************////
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
+        loadFragment(new backhome());
 
         //get instance from the singleton class and start the service
         track = TrackInfo.getInstance();

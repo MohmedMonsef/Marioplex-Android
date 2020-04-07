@@ -36,31 +36,20 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-//import androidx.fragment.app.Fragment;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * to handle interaction events.
- * create an instance of this fragment.
- */
-
-public class searchListfragment extends Fragment implements LifecycleOwner {
+public class see_all_albums_Fragment extends android.app.Fragment implements LifecycleOwner {
 
 
     Search searchList;
     RecyclerView recyclerView;
     adapterSearch recyclerAdapter;
-    private TextView textViewResult,talbum,tartist,tplaylist,tsong;
+    private TextView textViewResult;
     LinearLayout l1;
-     int dochange;
+    int dochange;
     private Retrofit retrofit;
     private backinterfaces apiService;
-    SearchView searchView;
-    private SearchView.OnQueryTextListener queryTextListener;
-    MenuItem item;
     private viewmodelSearchList searchViewModel;
-    EditText editText;
+TextView Artist;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -69,31 +58,13 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
         searchViewModel = ViewModelProviders.of((MainActivity) getActivity()).get(viewmodelSearchList.class);
         //searchView.setOnSearchClickListener(View.OnClickListener on);
         final TextView textView = view.findViewById(R.id.text_home);
-        ////*****************************toolbar************************************////
-         l1=(LinearLayout) view.findViewById(R.id.searchlistlayout);
-        l1.setBackground(getResources().getDrawable(R.drawable.item));
-        editText=(EditText) view.findViewById(R.id.searchbarlist);
-
+       Artist=view.findViewById(R.id.textalbumsearch);
 /////##########$$$$$$$$$$$$$$$$$$
         retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
         apiService = retrofit.create(backinterfaces.class);
 
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {
-                if(s.length()==0)
-                    searchList=null;
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-            dochange=s.length();
-                if(s.length()!=0) {
-                    Log.i("onQueryTextChange", s.toString());
-
-                    Call<Search> call = apiService.getSearch(s.toString(), "artist,album,playlist,track" , "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTgwYzZhZjE0Yzg1NjZkNmNkOWI0MDAiLCJwcm9kdWN0IjoiZnJlZSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg2MDI2NjAyLCJleHAiOjQ3MzI1MTMwMDJ9.ztEjNCgbkyJ2-9WB6ojwLgDfhWsZ-ZGJVFUB8dYMz8s");
+/*
+                    Call<Search> call = apiService.getSearch(s, "artist,album,playlist,track" , "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTgwYzZhZjE0Yzg1NjZkNmNkOWI0MDAiLCJwcm9kdWN0IjoiZnJlZSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg2MDI2NjAyLCJleHAiOjQ3MzI1MTMwMDJ9.ztEjNCgbkyJ2-9WB6ojwLgDfhWsZ-ZGJVFUB8dYMz8s");
                     call.enqueue(new Callback<Search>() {
                         @Override
                         public void onResponse(Call<Search> call, Response<Search> response) {
@@ -112,14 +83,6 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
                             else {
                                 Log.d("TAG", "Response = " + searchList);
                                 recyclerAdapter = new adapterSearch(getActivity(), searchList);
-                                if(dochange==1)
-                                {l1.setBackground(getResources().getDrawable(R.drawable.searchb2));}
-                                if(dochange==2)
-                                {l1.setBackground(getResources().getDrawable(R.drawable.searchb3));}
-                                if(dochange==3)
-                                {l1.setBackground(getResources().getDrawable(R.drawable.searchb4));}
-                                if(dochange==4)
-                                {l1.setBackground(getResources().getDrawable(R.drawable.searchb1));}
                                 recyclerView.setAdapter(recyclerAdapter);
                                 recyclerView.setHasFixedSize(true);
                             }
@@ -130,18 +93,11 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
                             textViewResult.setText(t.getMessage() + "hey there failed");
                         }
                     });
-                }
-                searchList=null;
 
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(s.length()==0)
-                    searchList=null;
 
-            }
-        });
+*/
+
 
 
 

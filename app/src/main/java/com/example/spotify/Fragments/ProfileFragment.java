@@ -89,7 +89,6 @@ public class ProfileFragment extends Fragment {
 
     private void updateProfile(updateProfile data){
         EndPointAPI api = Retrofit.getInstance().getEndPointAPI();
-
         api.updateProfile(user.getToken(),data).enqueue(new Callback<ResponseBody>() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override

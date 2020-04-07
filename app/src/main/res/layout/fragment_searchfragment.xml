@@ -4,9 +4,9 @@
     android:id="@+id/layoutSearchFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/layoutcolor"
+    android:background="@drawable/category"
     android:orientation="vertical"
-    tools:context=".Fragments.SEARCH_FRAGMENT.searchFragment">
+    tools:context=".BackClasses.BackFragment.searchfragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -32,7 +32,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Browse all/backend"
+        android:text="Browse all"
         android:textColor="@color/TextColor"
         android:textSize="24dp"
         android:textStyle="bold"

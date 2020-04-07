@@ -2,6 +2,9 @@ package com.example.spotify.BackClasses.BackInterfaces;
 
 import com.example.spotify.BackClasses.Backclasses.backcategory.Category;
 import com.example.spotify.BackClasses.Backclasses.backnewrelease.Newreleases;
+import com.example.spotify.BackClasses.Backclasses.backpopularalbum.PopularAlbum;
+import com.example.spotify.BackClasses.Backclasses.backpopularartist.PopularArtist;
+import com.example.spotify.BackClasses.Backclasses.backpopularplaylist.PopularPlaylist;
 import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
 
 import retrofit2.Call;
@@ -15,15 +18,24 @@ public interface backinterfaces
 
     //get list of new backhome
     @GET("browse/new-releases?country=SE&limit=10&offset=0")
-    //@Headers("Authorization: Bearer "+token)
+
     public Call<Newreleases> getNewRelease();
 
+    @GET("browse/popular-albums")
+    public Call<PopularAlbum> getPopularAlbum();
+
+
+    @GET("browse/popular-playlists")
+    public Call<PopularPlaylist> getPopularPlaylist();
+
+    @GET("browse/popular-artists")
+    public Call<PopularArtist> getPopularArtist();
+
+
     @GET("/search")
-    //@Headers("x-auth-token"+token)
     public Call<Search> getSearch(@Query("name") String name, @Query("type") String type, @Header("x-auth-token") String token);
 
     @GET("/browse/categories")
-    //@Headers("Authorization: Bearer BQCy8FwJKOCxKsmpvloyQWr2n3Wik9ZQckF4jJLC2z47jA5uycHOn0caqv0MaGaVWdb7S-eaIYD3opU812dFvnS_DlwB5sG2-PbEANHN5FAbO7fEZhq7yvxI8ZYoYi83BX5BMDmAboftrl2VzMWXKv40APnKRoexFVSDkfDBQKQUeSadyBc8UPn408pQvJ23rnmvFPJPIXzcsUN-3gcjF5HhiygOL0YthZDC9spwqo83RRfPQV4Omj8EJF7vvgPLwH-rnWblMhw88kBS9lzsGdW2jjNUfdpfmw")
     public Call<Category> getCategories(@Header("x-auth-token") String token);
 
 }

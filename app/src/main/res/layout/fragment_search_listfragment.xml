@@ -3,20 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/as"
+    android:id="@+id/searchlistlayout"
     android:orientation="vertical">
 
-
     <EditText
-        android:id="@+id/yamoshal"
+        android:id="@+id/searchbarlist"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:drawableLeft="@drawable/ic_back"
+        android:textColor="@color/TextColor"
         />
-
-
     <TextView
-        android:text="BackFragment"
         android:id="@+id/texta"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,6 +28,37 @@
         android:layout_weight="1">
 
     </androidx.recyclerview.widget.RecyclerView>
-
+    <TextView
+        android:id="@+id/textartist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/TextColor"
+        android:text="See all artist"
+        android:textSize="24dp"
+        tools:ignore="MissingConstraints" />
+    <TextView
+        android:id="@+id/texttrack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/TextColor"
+        android:text="See all song"
+        android:textSize="24dp"
+        tools:ignore="MissingConstraints" />
+    <TextView
+        android:id="@+id/textplaylist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/TextColor"
+        android:text="See all playlist"
+        android:textSize="24dp"
+        tools:ignore="MissingConstraints" />
+    <TextView
+        android:id="@+id/textalbums"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/TextColor"
+        android:text="See all albums"
+        android:textSize="24dp"
+        tools:ignore="MissingConstraints" />
 
 </LinearLayout>

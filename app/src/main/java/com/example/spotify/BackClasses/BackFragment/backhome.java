@@ -22,8 +22,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.BackClasses.BackAdapter.adapterNewreleases;
+import com.example.spotify.BackClasses.BackAdapter.adapterPopularAlbum;
+import com.example.spotify.BackClasses.BackAdapter.adapterPopularArtist;
+import com.example.spotify.BackClasses.BackAdapter.adapterPopularPlaylist;
 import com.example.spotify.BackClasses.BackInterfaces.backinterfaces;
 import com.example.spotify.BackClasses.Backclasses.backnewrelease.Newreleases;
+import com.example.spotify.BackClasses.Backclasses.backpopularalbum.PopularAlbum;
+import com.example.spotify.BackClasses.Backclasses.backpopularartist.PopularArtist;
+import com.example.spotify.BackClasses.Backclasses.backpopularplaylist.PopularPlaylist;
 import com.example.spotify.Fragments.HOME_FRAGMENT.viewmodelHome;
 import com.example.spotify.Fragments.SETTING_FRAGMENT.settingFragment;
 import com.example.spotify.R;
@@ -44,8 +50,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class backhome extends Fragment implements LifecycleOwner {
     Newreleases NewReleaseList;
-    RecyclerView recyclerView;
+    PopularAlbum popularAlbumList;
+    PopularPlaylist popularPlaylist;
+    PopularArtist popularArtistlist;
+    RecyclerView recyclerView,
+            recyclerView1,
+            recyclerView2,
+            recyclerView3;
     adapterNewreleases recyclerAdapter;
+    adapterPopularArtist recyclerAdapterArtist;
+    adapterPopularAlbum recyclerAdapterAlbum;
+    adapterPopularPlaylist recyclerAdapterPlaylist;
     private TextView textViewResult;
     Toolbar toolbar;
     private viewmodelHome homeViewModel;
@@ -80,9 +95,34 @@ public class backhome extends Fragment implements LifecycleOwner {
         LinearLayoutManager layoutManager;
         layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
+        ////////////////////////////
+        popularAlbumList=new PopularAlbum();
+        recyclerView1 = (RecyclerView) view.findViewById(R.id.recyclealbum);
+        LinearLayoutManager layoutManager1;
+        layoutManager1 = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
+        recyclerView1.setLayoutManager(layoutManager1);
+       ///////////////////////////////////////
+        popularPlaylist=new PopularPlaylist();
+        recyclerView2 = (RecyclerView) view.findViewById(R.id.recycleplaylist);
+        LinearLayoutManager layoutManager2;
+        layoutManager2 = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
+        recyclerView2.setLayoutManager(layoutManager2);
+/////////////////////////////////////////////////////////
+        popularArtistlist=new PopularArtist();
+        recyclerView3 = (RecyclerView) view.findViewById(R.id.recycleartist);
+        LinearLayoutManager layoutManager3;
+        layoutManager3 = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
+        recyclerView3.setLayoutManager(layoutManager3);
+
+
         SetRetrofit();
+        setRetrofitralbum();
+        setRetrofitartist();
+        setRetrofitplaylist();
+        /////////////////////////////////////
+
         ////*******************************To check the state***********************////
-        textViewResult = view.findViewById(R.id.Popular_new_releases_back);
+        textViewResult = view.findViewById(R.id.Popular_new_releases);
 
         return view;
 
@@ -91,6 +131,7 @@ public class backhome extends Fragment implements LifecycleOwner {
     ////*******************************Retrofit****************************////
     private void SetRetrofit()
     {
+
         Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
         backinterfaces apiService = retrofit.create(backinterfaces.class);
         Call<Newreleases> call = apiService.getNewRelease();
@@ -111,6 +152,7 @@ public class backhome extends Fragment implements LifecycleOwner {
                 else {
                     Log.d("TAG", "Response = " + NewReleaseList);
                     recyclerAdapter = new adapterNewreleases(getActivity(), NewReleaseList.getAlbums());
+                    recyclerAdapterAlbum=new adapterPopularAlbum(getActivity(),popularAlbumList.getAlbums());
                     recyclerView.setAdapter(recyclerAdapter);
                     recyclerView.setHasFixedSize(true);
                 }
@@ -122,9 +164,131 @@ public class backhome extends Fragment implements LifecycleOwner {
                 textViewResult.setText(t.getMessage() + "failed");
             }
         });
+    }
+private void setRetrofitralbum()
+{
+    ///////////////////////////////////////////////////////////////////////////////////////
+    Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
+    backinterfaces apiService = retrofit.create(backinterfaces.class);
+    Call<PopularAlbum> call = apiService.getPopularAlbum();
+    call.enqueue(new Callback<PopularAlbum>() {
+        @Override
+        public void onResponse(Call<PopularAlbum> call, Response<PopularAlbum> response) {
+            if (response.code() == 401)
+                textViewResult.setText(response.errorBody().toString() + "401");
+            else if (!response.isSuccessful()) {
+                textViewResult.setText("Code: " + response.code());
+                return;
+            }
+            popularAlbumList = response.body();
+            if (response.body() == null)
+                textViewResult.setText("responce body = null");
+            else if (popularAlbumList == null)
+                textViewResult.setText(response.body().toString() + " track = null");
+            else {
+                Log.d("TAG", "Response = " + popularAlbumList);
+                recyclerAdapterAlbum=new adapterPopularAlbum(getActivity(),popularAlbumList.getAlbums());
+                recyclerView1.setAdapter(recyclerAdapterAlbum);
+                recyclerView1.setHasFixedSize(true);
+            }
+
+        }
+
+        @Override
+        public void onFailure(Call<PopularAlbum> call, Throwable t) {
+            textViewResult.setText(t.getMessage() + "failed");
+
+        }
+
+
+    });
+
+
+}
+
+    private void setRetrofitplaylist()
+    {
+        ///////////////////////////////////////////////////////////////////////////////////////
+        Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
+        backinterfaces apiService = retrofit.create(backinterfaces.class);
+        Call<PopularPlaylist> call = apiService.getPopularPlaylist();
+        call.enqueue(new Callback<PopularPlaylist>() {
+            @Override
+            public void onResponse(Call<PopularPlaylist> call, Response<PopularPlaylist> response) {
+                if (response.code() == 401)
+                    textViewResult.setText(response.errorBody().toString() + "401");
+                else if (!response.isSuccessful()) {
+                    textViewResult.setText("Code: " + response.code());
+                    return;
+                }
+                popularPlaylist = response.body();
+                if (response.body() == null)
+                    textViewResult.setText("responce body = null");
+                else if (popularPlaylist == null)
+                    textViewResult.setText(response.body().toString() + " track = null");
+                else {
+                    Log.d("TAG", "Response = " + popularPlaylist);
+                    recyclerAdapterPlaylist=new adapterPopularPlaylist(getActivity(),popularPlaylist.getPlaylists());
+                    recyclerView2.setAdapter(recyclerAdapterPlaylist);
+                    recyclerView2.setHasFixedSize(true);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<PopularPlaylist> call, Throwable t) {
+                textViewResult.setText(t.getMessage() + "failed");
+
+            }
+
+
+        });
 
 
     }
+////////////////////////////////////////////////////////////////////
+
+    private void setRetrofitartist()
+    {
+        ///////////////////////////////////////////////////////////////////////////////////////
+        Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
+        backinterfaces apiService = retrofit.create(backinterfaces.class);
+        Call<PopularArtist> call = apiService.getPopularArtist();
+        call.enqueue(new Callback<PopularArtist>() {
+            @Override
+            public void onResponse(Call<PopularArtist> call, Response<PopularArtist> response) {
+                if (response.code() == 401)
+                    textViewResult.setText(response.errorBody().toString() + "401");
+                else if (!response.isSuccessful()) {
+                    textViewResult.setText("Code: " + response.code());
+                    return;
+                }
+                popularArtistlist = response.body();
+                if (response.body() == null)
+                    textViewResult.setText("responce body = null");
+                else if (popularArtistlist == null)
+                    textViewResult.setText(response.body().toString() + " track = null");
+                else {
+                    Log.d("TAG", "Response = " + popularArtistlist);
+                    recyclerAdapterArtist=new adapterPopularArtist(getActivity(),popularArtistlist.getArtists());
+                    recyclerView3.setAdapter(recyclerAdapterArtist);
+                    recyclerView3.setHasFixedSize(true);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<PopularArtist> call, Throwable t) {
+                textViewResult.setText(t.getMessage() + "failed");
+
+            }
+
+
+        });
+
+
+    }
+
     @NonNull
     @Override
     public Lifecycle getLifecycle() {

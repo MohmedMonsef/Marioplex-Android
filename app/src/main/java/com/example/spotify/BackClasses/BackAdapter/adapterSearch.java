@@ -37,52 +37,56 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
         this.context = context;
         // this.ArtistList = ArtistList;
         list1=new ArrayList<aclass>();
-        for (int i=0;i<LIST.getArtist().size();i++)
-        {   String image = "";
-            if(LIST.getArtist().get(i).getImages()!=null && LIST.getArtist().get(i).getImages().size() !=0) {
-                image = LIST.getArtist().get(i).getImages().get(0).toString();
+        if(LIST.getArtist()!=null) {
+            for (int i = 0; i < LIST.getArtist().size(); i++) {
+                String image = "";
+                if (LIST.getArtist().get(i).getImages() != null && LIST.getArtist().get(i).getImages().size() != 0) {
+                    image = LIST.getArtist().get(i).getImages().get(0).toString();
+                }
+                list1.add(new aclass(LIST.getArtist().get(i).getType(),
+                        LIST.getArtist().get(i).getName(),
+                        image));
             }
-            list1.add(new aclass(LIST.getArtist().get(i).getType(),
-                    LIST.getArtist().get(i).getName(),
-                    image));
         }
-
-        for (int i=0;i<LIST.getTrack().size();i++)
-        {
-            String image = "";
-            if(LIST.getTrack().get(i).getImages()!= null && LIST.getTrack().get(i).getImages().size()!= 0) {
-                image = LIST.getTrack().get(i).getImages().get(0).toString();
+        if(LIST.getTrack()!=null) {
+            for (int i = 0; i < LIST.getTrack().size(); i++) {
+                String image = "";
+                if (LIST.getTrack().get(i).getImages() != null && LIST.getTrack().get(i).getImages().size() != 0) {
+                    image = LIST.getTrack().get(i).getImages().get(0).toString();
+                }
+                list1.add(new aclass(LIST.getTrack().get(i).getType(),
+                        LIST.getTrack().get(i).getName(),
+                        image));
             }
-            list1.add(new aclass(LIST.getTrack().get(i).getType(),
-                    LIST.getTrack().get(i).getName(),
-                    image));
         }
-        for(int i=0;i<LIST.getAlbum().size();i++)
-        {
-            String image = "";
-            if(LIST.getAlbum().get(i).getImages()!= null && LIST.getAlbum().get(i).getImages().size()!= 0) {
-                image =LIST.getAlbum().get(i).getImages().get(0).toString();
+        if(LIST.getAlbum()!=null) {
+            for (int i = 0; i < LIST.getAlbum().size(); i++) {
+                String image = "";
+                if (LIST.getAlbum().get(i).getImages() != null && LIST.getAlbum().get(i).getImages().size() != 0) {
+                    image = LIST.getAlbum().get(i).getImages().get(0).toString();
+                }
+                list1.add(new aclass(LIST.getAlbum().get(i).getType(),
+                        LIST.getAlbum().get(i).getName(),
+                        image));
             }
-            list1.add(new aclass(LIST.getAlbum().get(i).getType(),
-                    LIST.getAlbum().get(i).getName(),
-                    image));
         }
-        for(int i=0;i<LIST.getPlaylist().size();i++)
-        {
-            String image = "";
-            if(LIST.getPlaylist().get(i).getImages()!= null && LIST.getPlaylist().get(i).getImages().size()!= 0) {
-                image =LIST.getPlaylist().get(i).getImages().get(0).toString();
+        if(LIST.getPlaylist()!=null) {
+            for (int i = 0; i < LIST.getPlaylist().size(); i++) {
+                String image = "";
+                if (LIST.getPlaylist().get(i).getImages() != null && LIST.getPlaylist().get(i).getImages().size() != 0) {
+                    image = LIST.getPlaylist().get(i).getImages().get(0).toString();
+                }
+                list1.add(new aclass(LIST.getPlaylist().get(i).getType(),
+                        LIST.getPlaylist().get(i).getName(),
+                        image));
             }
-            list1.add(new aclass(LIST.getPlaylist().get(i).getType(),
-                    LIST.getPlaylist().get(i).getName(),
-                    image));
         }
-
     }
 
     @NonNull
     @Override
-    public adapterSearch.MyviewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public adapterSearch.MyviewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    {
         View view = LayoutInflater.from(context).inflate(R.layout.searchitemartist, parent, false);
         return new MyviewHolder(view);
     }
@@ -121,7 +125,8 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
 
     }
 
-    public class MyviewHolder extends RecyclerView.ViewHolder {
+    public class MyviewHolder extends RecyclerView.ViewHolder
+    {
         TextView ArtistName, ArtistType;
         ImageView ArtistImage;
 
