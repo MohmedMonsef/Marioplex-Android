@@ -50,6 +50,9 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
 
 
         /////////////////////some listeners\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        /**
+         * listener for the press on the back arrow to exit the activity
+         */
         back_arrow_from_preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,6 +71,9 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
 //        });
 
         ///////////////////////observers\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        /**
+         * observes for the response of the get playlists requests and updates the UI
+         */
         if(PlaylistInfo.getinstance().getplaylistTracks()!=null) {
             PlaylistInfo.getinstance().getplaylistTracks().observe(this, new Observer<PlaylistTracks>() {
                 @Override
@@ -79,6 +85,10 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
             });
         }
     }
+
+    /**
+     * gets all the views i will use
+     */
     void getViews(){
         back_arrow_from_preview = findViewById(R.id.back_arrow_from_preview);
         playlist_name_preview_top = findViewById(R.id.playlist_name_preview_top);
@@ -86,6 +96,13 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
         playlist_list_view_preview = findViewById(R.id.playlist_list_view_preview);
         progress_bar_playlist_preview = findViewById(R.id.progress_bar_playlist_preview);
     }
+
+    /**
+     * sends request to like the track and updates the UI on response
+     * @param trackID
+     * @param view1
+     * @param pos
+     */
 
     private void LikeTrack(String trackID ,final ImageView view1 ,final int pos){
         view1.setEnabled(false);
@@ -117,6 +134,13 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * sends request to unlike the track and updates the UI on response
+     * @param trackID
+     * @param view1
+     * @param pos
+     */
+
     private void UnLikeTrack(String trackID ,final ImageView view1 , final int pos){
         view1.setEnabled(false);
         Call<Void> call = endPointAPI.UNLikeTrack(trackID , user.getToken());
@@ -147,6 +171,11 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * checks if the track the user pressed on is the same track that's currently playing
+     * @param position
+     * @return
+     */
     Boolean CheckTrack(int position){
         TrackInfo trackInfo = TrackInfo.getInstance();
         if(trackInfo.getIsQueue() != null &&
@@ -165,6 +194,9 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
     private class CustomAdapter extends BaseAdapter {
 
         @Override
+        /**
+         * updates the UI with the playlists when the response comes
+         */
         public View getView(final int position, View convertView, ViewGroup parent) {
             convertView = getLayoutInflater().inflate(R.layout.playlist_preview_list_view_layout, parent, false);
             ImageView preview_playlist_image = (ImageView)convertView.findViewById(R.id.preview_song_image);

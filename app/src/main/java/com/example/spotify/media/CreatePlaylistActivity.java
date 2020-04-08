@@ -45,7 +45,11 @@ public class CreatePlaylistActivity extends AppCompatActivity {
 
         trackID = getIntent().getStringExtra("track_id");
 
+
         //////////////////////////listeners/////////////////////////////
+        /**
+         * closes the create playlist activity and return to the media player activity
+         */
         cancel_create_playlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,6 +57,9 @@ public class CreatePlaylistActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        /**
+         * takes the playlist name and it ti's not empty it sends the request to create the playlist
+         */
 
         playlist_name_edit_text.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -76,6 +83,11 @@ public class CreatePlaylistActivity extends AppCompatActivity {
         });
         ////////////////////////////////////////////////////////////////
     }
+
+    /**
+     * takes the playlist name and sends request to create the playlist
+     * @param playlistName
+     */
 
     void creatPlaylist(String playlistName){
         createPlaylistBody mcreatePlaylistBody = new createPlaylistBody();
@@ -107,6 +119,11 @@ public class CreatePlaylistActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * checks if the plaulist id is empty then display message else it adds the track to playlist
+     * @param playlistID
+     */
+
     void addToPlaylist(String playlistID){
         //TODO uncomment the below block in integeration
 
@@ -119,6 +136,11 @@ public class CreatePlaylistActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * takes the track id and the playlist id and adds the track to the playlist
+     * @param pid playlist id
+     * @param tid track id
+     */
     void addTrackToPlaylist(String pid , String tid){
         addTrackToPlaylistBody t = new addTrackToPlaylistBody();
         t.setTrackID(tid);
@@ -141,6 +163,10 @@ public class CreatePlaylistActivity extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * gets all the views i will use
+     */
     void getViews(){
         cancel_create_playlist = (Button)findViewById(R.id.cancel_create_playlist);
         playlist_name_edit_text = (EditText)findViewById(R.id.playlist_name_edit_text);

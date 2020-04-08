@@ -35,20 +35,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     private Boolean isPlaying = false;
     private int playFlag;
     private int resumePosition;
-    //    private String TrackID1 ="7ouMYWpwJ422jRcDASZB7P";
-//    private String TrackID2 ="4VqPOruhp5EdPBeR92t6lQ";
-//    private String TrackID3 ="2takcwOaAZWiXQijPHIx7B";
-//    private Tracks tracks;
     private boolean stopInTrackEnd;
 
     private boolean prepared;
-//TODO change the base url here
-
-    //    private Retrofit retrofit = new Retrofit.Builder()
-//            .baseUrl("http://192.168.1.7:3000/")
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build();
-//    private EndPointAPI endPointAPI = retrofit.create(EndPointAPI.class);
     private Toast toast;
     private TrackInfo track = TrackInfo.getInstance();
     private CountDownTimer sleepTimer = null;
@@ -69,6 +58,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         return super.onStartCommand(intent, flags, startId);
     }
 
+    /**
+     * initializes some variables when the service is created
+     */
     @Override
     public void onCreate() {
         super.onCreate();
@@ -80,6 +72,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         stopInTrackEnd = false;
 
     }
+
+    /**
+     * initializes the media player and sends request to get the current track then plays it
+     */
 
     private void initMediaPlayer() {
         mediaPlayer = new MediaPlayer();
@@ -128,6 +124,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 //        mediaPlayer.prepareAsync();
 
     }
+
+    /**
+     * sends request to get the current track
+     * @param call
+     */
 
     void getCurrentlyPlaying(Call<currentTrack> call){
         call.enqueue(new Callback<currentTrack>() {
@@ -184,33 +185,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     }
 
 
-    //    void getTracks(String trackID){
-//        Call<Tracks> call = endPointAPI.getTracks(trackID);
-//
-//        call.enqueue(new Callback<Tracks>() {
-//            @Override
-//            public void onResponse(Call<Tracks> call, Response<Tracks> response) {
-//                if(!response.isSuccessful()){
-//                    toast = Toast.makeText(getApplicationContext(),"Code: "+response.code(),Toast.LENGTH_SHORT);
-//                    toast.show();
-//                    return;
-//                }
-//                else if(response.body()==null){
-//                    toast = Toast.makeText(getApplicationContext(),"response body = null",Toast.LENGTH_SHORT);
-//                    toast.show();
-//                }
-//                else {
-//                    tracks = response.body();
-//                    track.setTrack(tracks.getTracks().get(0));
-//                }
-//            }
-//            @Override
-//            public void onFailure(Call<Tracks> call, Throwable t) {
-//                toast = Toast.makeText(getApplicationContext(),t.getMessage()+" 'failed '",Toast.LENGTH_SHORT);
-//                toast.show();
-//            }
-//        });
-//    }
+    /**
+     * sends request to get the next track
+     */
     public void next(){
         ///////////////////request the current track//////////////////////////
         //Call<currentTrack> call = endPointAPI.getNext(user.getToken());
@@ -234,6 +211,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 //        mediaPlayer.prepareAsync();
 
     }
+
+    /**
+     * sends request to get the previous track
+     */
 
     public void previous(){
         ///////////////////request the current track//////////////////////////
@@ -260,6 +241,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     public Boolean getStopInTrackEnd(){return stopInTrackEnd;}
     public void setStopInTrackEnd(boolean b){stopInTrackEnd = b;}
 
+    /**
+     * plays the song
+     */
     public void playMedia() {
         if (!mediaPlayer.isPlaying()) {
             mediaPlayer.start();
@@ -268,6 +252,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         }
     }
 
+    /**
+     * stops the media player
+     */
     public void stopMedia() {
         if (mediaPlayer == null) return;
         if (mediaPlayer.isPlaying()) {
@@ -277,6 +264,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         }
         //cancelTimer();
     }
+
+    /**
+     * pauses the media player
+     */
 
     public void pauseMedia() {
         if (mediaPlayer.isPlaying()) {
@@ -288,6 +279,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         //cancelTimer();
     }
 
+    /**
+     * @return the current position of the song to update the progress bar
+     */
     public int getCurrentPosition(){
         if(mediaPlayer!=null&&prepared) {
             return mediaPlayer.getCurrentPosition();
@@ -297,6 +291,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         }
     }
 
+    /**
+     *
+     * @return the duration of the song
+     */
     public int getDuration(){
         if(mediaPlayer !=null&&prepared) {
             return mediaPlayer.getDuration();
@@ -306,6 +304,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         }
     }
 
+    /**
+     * navigates the media player to the given position and starts playing the song
+     * @param s
+     */
     public void seekTo(int s){
         if(mediaPlayer != null) {
             mediaPlayer.seekTo(s * 1000);
@@ -314,6 +316,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             TrackInfo.getInstance().setIsPlaying(true);
         }
     }
+
+    /**
+     * resume the song
+     */
 
     public void resumeMedia() {
         if (!mediaPlayer.isPlaying()) {
@@ -330,6 +336,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         return iBinder;
     }
 
+    /**
+     * when the song is completed it stops
+     * @param mp
+     */
     @Override
     public void onCompletion(MediaPlayer mp) {
         stopMedia();
@@ -349,6 +359,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     }
 
+    /**
+     * when the media player is prepared it starts the song
+     * @param mp
+     */
     @Override
     public void onPrepared(MediaPlayer mp) {
 
@@ -413,6 +427,12 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         }
     }
 
+    /**
+     * starts the sleep timer and on finish pauses the media player
+     * takes time in millisecond
+     * @param milliSeconds
+     */
+
     public void startTimer(long milliSeconds){
         if(mediaPlayer != null) {
             sleepTimer = new CountDownTimer(milliSeconds, 60000) {
@@ -436,6 +456,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         track.setTimerSet(true);
     }
 
+    /**
+     * cancels the sleep timer
+     */
     public void cancelTimer(){
         if(sleepTimer!=null){
             sleepTimer.cancel();
