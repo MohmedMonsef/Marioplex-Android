@@ -35,20 +35,23 @@ public class MainActivity extends AppCompatActivity {
     private MediaPlayerService player;
     private FrameLayout bottom_sheet_frame_layout;
     boolean serviceBound = false;
-
     static Retrofit retrofit;
     static EndPointAPI endPointAPI;
 
-
+    /**
+     *
+     * @param savedInstanceState --> a bundle that load the needed object
+     * one of the life cycle step of the activity when it is ready
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ////*******************************BottomNavigation***********************////
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        loadFragment(new backhome());
-
+        loadFragment(new backhome());// start the main activity with home fragment
         //get instance from the singleton class and start the service
         track = TrackInfo.getInstance();
         if(!serviceBound) {
@@ -57,26 +60,49 @@ public class MainActivity extends AppCompatActivity {
         //hides bottom sheet  if there is no queue created yet
         HideBottomSheet();
 
-
         endPointAPI = com.example.spotify.Interfaces.Retrofit.getInstance().getEndPointAPI();
 
     }
+
+    /**
+     *
+     * @param fragment -->it is fragment that i go to
+     * transfer between the fragments
+     */
     public void loadFragment(Fragment fragment) {
         // create a FragmentManager
         FragmentManager fm = getSupportFragmentManager();
         // create a FragmentTransaction to begin the transaction and replace the Fragment
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         // replace the FrameLayout with new Fragment
-        //fragmentTransaction.add(R.id.frame_fragment,fragment);
         fragmentTransaction.replace(R.id.frame_fragment,fragment);
-        fragmentTransaction.commit(); // save the changes
-
+        // save the changes
+        fragmentTransaction.commit();
     }
 
-
+    /**
+     * a listener on the navigation bar
+     * when a button is pressed it call the selected fragment from
+     * {backhome,
+     * searchfragment
+     * libraryFragment
+     * premiumFragment
+     * }
+     */
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
+        /**
+         *
+         * @param item --> the pressed button
+         * when a button in the navigation bar is pressed it call the selected fragment from
+         * {
+         * backhome,
+         * searchfragment
+         * libraryFragment
+         * premiumFragment
+         *  }
+         * @return true if fragment calling succeeded and false if there is an error
+         */
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {

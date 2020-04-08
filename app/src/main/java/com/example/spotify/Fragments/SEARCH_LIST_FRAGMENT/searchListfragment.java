@@ -42,22 +42,23 @@ import retrofit2.Retrofit;
  * create an instance of this fragment.
  */
 
-public class searchListfragment extends Fragment implements LifecycleOwner {
-
-
+public class searchListfragment extends Fragment implements LifecycleOwner
+{
     Search searchList;
     RecyclerView recyclerView;
     adapterSearch recyclerAdapter;
     private TextView textViewResult,talbum,tartist,tplaylist,tsong;
     LinearLayout l1;
-     int dochange;
+    int dochange;
     private Retrofit retrofit;
     private backinterfaces apiService;
     private viewmodelSearchList searchViewModel;
     EditText editText;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)
+    {
         View view = inflater.inflate(R.layout.fragment_search_listfragment, container, false);
         searchViewModel = ViewModelProviders.of((MainActivity) getActivity()).get(viewmodelSearchList.class);
         final TextView textView = view.findViewById(R.id.text_home);
@@ -66,7 +67,27 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
         editText=(EditText) view.findViewById(R.id.searchbarlist);
         retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
         apiService = retrofit.create(backinterfaces.class);
-        editText.addTextChangedListener(new TextWatcher() {
+        ////*******************************RecyclerView***********************////
+        searchList = new Search();
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycleSearch);
+        LinearLayoutManager layoutManager;
+        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        ////*******************************To check the state***********************////
+        textViewResult = view.findViewById(R.id.texta);
+        /**
+         * a listener for change in search in edit text
+         */
+        editText.addTextChangedListener(new TextWatcher()
+        {
+            /**
+             *
+             * @param s --> the current CharSequence in the edit text
+             * @param start -->start position in the CharSequence
+             * @param count -->size of the CharSequence
+             * @param after -->after current  position in the CharSequenceg
+             *  a handeler before changing in the edit text
+             */
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after)
             {
@@ -74,31 +95,58 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
                     searchList=null;
             }
 
+            /**
+             *
+             * @param s --> the current CharSequence in the edit text
+             * @param start -->start position in the CharSequence
+             * @param count -->size of the CharSequence
+             * @param before -->before current  position in the CharSequenceg
+             *  a handeler for changing in the edit text
+             */
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count)
             {
+                //flag to change the background color
             dochange=s.length();
-                if(s.length()!=0) {
+                if(s.length()!=0)
+                {
                     Log.i("onQueryTextChange", s.toString());
                     Call<Search> call = apiService.getSearch(s.toString(), "artist,album,playlist,track" , "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTgwYzZhZjE0Yzg1NjZkNmNkOWI0MDAiLCJwcm9kdWN0IjoiZnJlZSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg2MDI2NjAyLCJleHAiOjQ3MzI1MTMwMDJ9.ztEjNCgbkyJ2-9WB6ojwLgDfhWsZ-ZGJVFUB8dYMz8s");
-                    call.enqueue(new Callback<Search>() {
+                    call.enqueue(new Callback<Search>()
+                    {
+                        /**
+                         *
+                         * @param call --> interface request
+                         * @param response --> interface response
+                         * called when every changed requests and set the data
+                         */
                         @Override
-                        public void onResponse(Call<Search> call, Response<Search> response) {
+                        public void onResponse(Call<Search> call, Response<Search> response)
+                        {
+                            //error in the server
                             if (response.code() == 401)
                                 textViewResult.setText(response.errorBody().toString() + "401");
-                            else if (!response.isSuccessful()) {
+                            //may internet disconnected
+                            else if (!response.isSuccessful())
+                            {
                                 textViewResult.setText("Code: " + response.code());
                                 return;
                             }
+                            //if responcse is successful and the server send response
                             searchList = response.body();
-                            //        Tracklist = response.body();
+                            //error in GET request url
                             if (response.body() == null)
                                 textViewResult.setText("responce body = null");
+                            //error in binding interface
                             else if (searchList == null)
-                                textViewResult.setText(response.body().toString() + " track = null");
-                            else {
+                                textViewResult.setText(response.body().toString() + " search = null");
+                            //Successful
+                            else
+                                {
                                 Log.d("TAG", "Response = " + searchList);
+                                //set the search recyclerview
                                 recyclerAdapter = new adapterSearch(getActivity(), searchList);
+                                //change the background
                                 if(dochange==1)
                                 {l1.setBackground(getResources().getDrawable(R.drawable.searchb2));}
                                 if(dochange==2)
@@ -109,11 +157,18 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
                                 {l1.setBackground(getResources().getDrawable(R.drawable.searchb1));}
                                 recyclerView.setAdapter(recyclerAdapter);
                                 recyclerView.setHasFixedSize(true);
-                            }
+                                }
                         }
 
+                        /**
+                         *
+                         * @param call -->interface request
+                         * @param t -->type of error of the request
+                         * called when every errored requests and set its type
+                         */
                         @Override
-                        public void onFailure(Call<Search> call, Throwable t) {
+                        public void onFailure(Call<Search> call, Throwable t)
+                        {
                             textViewResult.setText(t.getMessage() + "hey there failed");
                         }
                     });
@@ -122,27 +177,21 @@ public class searchListfragment extends Fragment implements LifecycleOwner {
 
             }
 
+            /**
+             *
+             * @param s --> current Editable in edit text
+             */
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s)
+            {
+                //auto complete with first album index
+               // s.append(searchList.getAlbum().get(0).getName());
                 if(s.length()==0)
                     searchList=null;
 
             }
         });
-
-
-
-        ////*******************************RecyclerView***********************////
-        searchList = new Search();
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycleSearch);
-        LinearLayoutManager layoutManager;
-        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        //SetRetrofit();
-        ////*******************************To check the state***********************////
-        textViewResult = view.findViewById(R.id.texta);
-
-        return view;
+                return view;
 
     }
 

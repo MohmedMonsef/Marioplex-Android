@@ -19,35 +19,63 @@ import java.util.List;
 public class adapterCategories extends RecyclerView.Adapter<adapterCategories.MyviewHolder> {
     private Context context;
     private List<Category_> Categorylist;
-
-    public adapterCategories(Context context, List<Category_> Categorylist) {
+    /**
+     * @param context
+     * @param Categorylist
+     * set the adapterCategories with list
+     */
+    public adapterCategories(Context context, List<Category_> Categorylist)
+    {
         this.context = context;
         this.Categorylist = Categorylist;
     }
 
-    public void setMovieList(List<Category_> Categorylist) {
+    public void setMovieList(List<Category_> Categorylist)
+    {
         this.Categorylist = Categorylist;
         notifyDataSetChanged();
     }
 
+    /**
+     * @param parent --> the view that has the recyclerview of this class
+     * @param viewType-->
+     * @return new object of the view holder
+     */
+
     @Override
-    public adapterCategories.MyviewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public adapterCategories.MyviewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    {
         View view = LayoutInflater.from(context).inflate(R.layout.categoryitem,parent,false);
         return new MyviewHolder(view);
     }
 
+    /**
+     *
+     * @param holder -->that has the view item (layout)
+     * @param position -->index of the item in the list
+     * set on item of recyclerview with its data
+     */
     @Override
-    public void onBindViewHolder(adapterCategories.MyviewHolder holder, int position) {
+    public void onBindViewHolder(adapterCategories.MyviewHolder holder, int position)
+    {
+
 
         Category_ item=Categorylist.get(position);
         holder.ImageName.setText(item.getName());
         Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
-        if(item.getImages().size()!=0) {
+        /// check if the image not null
+        if(item.getImages().size()!=0)
+        {
+            // load the image
             Picasso.get().load(item.getImages().get(0).toString()).into(holder.image);
         }
 
     }
 
+    /**
+     *
+     * @return --> Categorylist size
+     */
     @Override
     public int getItemCount()
     {
@@ -59,7 +87,11 @@ public class adapterCategories extends RecyclerView.Adapter<adapterCategories.My
 
     }
 
-    public class MyviewHolder extends RecyclerView.ViewHolder {
+    /**
+     * a class that handel the parsing of the recyclerview data
+     */
+    public class MyviewHolder extends RecyclerView.ViewHolder
+    {
         TextView ImageName;
         ImageView image;
 
