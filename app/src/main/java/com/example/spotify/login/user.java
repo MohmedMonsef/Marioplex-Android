@@ -132,7 +132,7 @@ public class user {
     /**
      * fetch user data from backend server
      */
-    static void fetchUserData(){
+    public static void fetchUserData(){
         if(token == null)
             return;
 
