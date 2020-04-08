@@ -68,6 +68,11 @@ public class LoginFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Login using provided email and password
+     * On login success launches main app activity
+     * On login failure displays a toast message
+     */
     public void login(){
         String email = ((EditText) getView().findViewById(R.id.email)).getText().toString();
         String password = ((EditText) getView().findViewById(R.id.password)).getText().toString();

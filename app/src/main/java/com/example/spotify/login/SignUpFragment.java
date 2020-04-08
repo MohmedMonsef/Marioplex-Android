@@ -94,6 +94,10 @@ public class SignUpFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Validate sign up form data and send it to backend server
+     * Displays a Toast message indicating sign up request result
+     */
     private void signUp(){
 
         try {
