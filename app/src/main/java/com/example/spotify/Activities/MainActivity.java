@@ -69,7 +69,8 @@ public class MainActivity extends AppCompatActivity {
      * @param fragment -->it is fragment that i go to
      * transfer between the fragments
      */
-    public void loadFragment(Fragment fragment) {
+    public void loadFragment(Fragment fragment)
+    {
         // create a FragmentManager
         FragmentManager fm = getSupportFragmentManager();
         // create a FragmentTransaction to begin the transaction and replace the Fragment
@@ -104,8 +105,10 @@ public class MainActivity extends AppCompatActivity {
          * @return true if fragment calling succeeded and false if there is an error
          */
         @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
+        public boolean onNavigationItemSelected(@NonNull MenuItem item)
+        {
+            switch (item.getItemId())
+            {
                 case R.id.navigation_home:
                     loadFragment(new backhome());
                     return true;
