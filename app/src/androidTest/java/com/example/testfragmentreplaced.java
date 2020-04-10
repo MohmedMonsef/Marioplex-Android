@@ -1,6 +1,7 @@
 package com.example;
 
 import android.app.Activity;
+import android.widget.AbsListView;
 import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
@@ -29,6 +30,8 @@ import com.example.spotify.media.TrackInfo;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.espresso.ViewAssertion;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -44,20 +47,25 @@ import static androidx.core.content.ContextCompat.startActivity;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.addGlobalAssertion;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.PositionAssertions.isAbove;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static java.lang.Thread.sleep;
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.junit.Assert.*;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
+import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -81,47 +89,81 @@ import kotlin.jvm.JvmField;
 @RunWith(AndroidJUnit4.class)
 
 public class testfragmentreplaced<introact>
+
 {
+
 IntroActivity introact;
-
-
 @Rule
 public ActivityTestRule<IntroActivity> mact=new ActivityTestRule<>(IntroActivity.class);
 
 @Test
-public void textUI()
+public void textIntroUI()
 {
- onView(withId(R.id.login_facebook_button)).check(isAbove(withId(R.id.introya)));
-}
-@Test
-public void buttombar()
-{
-    greeterSaysHello();
-    onView(withId(R.id.navigation_search)).perform(click());
-    onView(withId(R.id.text_search)).check(matches(isDisplayed()));
-
-
+        onView(withId(R.id.login_facebook_button)).check(isAbove(withId(R.id.introya)));
+        onView(withId(R.id.signup)).check(isAbove(withId(R.id.login_facebook_button)));
 }
 
+@Test
+public void textLoginUI()
+{
+
+        textIntroUI();
+        onView(withId(R.id.introya)).perform(click());
+
+        onView(withId(R.id.emailtext)).check(isAbove(withId(R.id.email)));
+        onView(withId(R.id.email)).check(isAbove(withId(R.id.passwordtext)));
+        onView(withId(R.id.passwordtext)).check(isAbove(withId(R.id.password)));
+        onView(withId(R.id.password)).check(isAbove(withId(R.id.loginButton)));
+
+}
 
 @Test
-    public void greeterSaysHello() {
+public void greeterSaysHello()
+{
 
 
         //startActivity(new Intent(introact.getBaseContext(), IntroActivity.class));
-
         onView(withId(R.id.introya)).perform(click());
-    onView(withId(R.id.email)).perform(typeText("lenaa@gmail.com"));
+        onView(withId(R.id.email)).perform(typeText("lenaa@gmail.com"));
         onView(withId(R.id.password)).perform(typeText("lenaa"));
         onView(withId(R.id.loginButton)).perform(click());
     try {
         sleep(70000);
-    } catch (InterruptedException e) {
+        }
+    catch (InterruptedException e)
+        {
         e.printStackTrace();
-    }
+        }
 onView(withId(R.id.navigation)).check(matches(isDisplayed()));
 //onView(withText("Hello Steve!")).check(matches(isDisplayed()));
     }
+@Test
+public void HOME()
+{
+    greeterSaysHello();
+    //onView(withId(R.id.recycle)).check((ViewAssertion) allOf(isAssignableFrom(ScrollView.class)));
+   // onView(withId(R.id.recycle)).perform(RecyclerView.a)
+
+    //isAssignableFrom(HorizontalScrollView.class));
+}
+
+    @Test
+    public void buttombar()
+    {
+        greeterSaysHello();
+        onView(withId(R.id.navigation_search)).perform(click());
+        onView(withId(R.id.text_search)).check(matches(isDisplayed()));
+        /////////////////////////
+        onView(withId(R.id.navigation_library)).perform(click());
+        onView(withId(R.id.text_library)).check(matches(isDisplayed()));
+        ////////////////////////
+        onView(withId(R.id.navigation_premium)).perform(click());
+        onView(withId(R.id.text_premium)).check(matches(isDisplayed()));
+        /////////////////////////
+        onView(withId(R.id.navigation_home)).perform(click());
+        onView(withId(R.id.navigation)).check(matches(isDisplayed()));
+    }
+
 /*@Test
     public void basicLifecycle() throws Throwable {
       //  final FragmentManager fm = mActivity.getSupportFragmentManager();
