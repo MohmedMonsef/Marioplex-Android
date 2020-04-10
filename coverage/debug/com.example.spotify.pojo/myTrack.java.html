@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>myTrack.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.pojo</a> &gt; <span class="el_source">myTrack.java</span></div><h1>myTrack.java</h1><pre class="source lang-java linenums">package com.example.spotify.pojo;
+
+import com.example.spotify.SpotifyClasses.Image;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
+<span class="nc" id="L9">public class myTrack {</span>
+<span class="nc" id="L10">    @SerializedName(&quot;images&quot;)</span>
+    @Expose
+    private List&lt;Image&gt; images = null;
+
+<span class="nc" id="L14">    @SerializedName(&quot;availableMarkets&quot;)</span>
+    @Expose
+    private List&lt;String&gt; availableMarkets = null;
+    @SerializedName(&quot;_id&quot;)
+    @Expose
+    private String id;
+    @SerializedName(&quot;trackNumber&quot;)
+    @Expose
+    private Integer trackNumber;
+    @SerializedName(&quot;url&quot;)
+    @Expose
+    private String url;
+    @SerializedName(&quot;name&quot;)
+    @Expose
+    private String name;
+    @SerializedName(&quot;artistId&quot;)
+    @Expose
+    private String artistId;
+    @SerializedName(&quot;albumId&quot;)
+    @Expose
+    private String albumId;
+    @SerializedName(&quot;discNumber&quot;)
+    @Expose
+    private Integer discNumber;
+    @SerializedName(&quot;explicit&quot;)
+    @Expose
+    private Boolean explicit;
+    @SerializedName(&quot;type&quot;)
+    @Expose
+    private String type;
+    @SerializedName(&quot;acousticness&quot;)
+    @Expose
+    private Integer acousticness;
+    @SerializedName(&quot;danceability&quot;)
+    @Expose
+    private Integer danceability;
+    @SerializedName(&quot;energy&quot;)
+    @Expose
+    private Integer energy;
+    @SerializedName(&quot;instrumentalness&quot;)
+    @Expose
+    private Integer instrumentalness;
+    @SerializedName(&quot;key&quot;)
+    @Expose
+    private Integer key;
+    @SerializedName(&quot;liveness&quot;)
+    @Expose
+    private Integer liveness;
+    @SerializedName(&quot;loudness&quot;)
+    @Expose
+    private Integer loudness;
+    @SerializedName(&quot;mode&quot;)
+    @Expose
+    private Integer mode;
+    @SerializedName(&quot;speechiness&quot;)
+    @Expose
+    private Integer speechiness;
+    @SerializedName(&quot;tempo&quot;)
+    @Expose
+    private Integer tempo;
+    @SerializedName(&quot;timeSignature&quot;)
+    @Expose
+    private String timeSignature;
+    @SerializedName(&quot;valence&quot;)
+    @Expose
+    private Integer valence;
+    @SerializedName(&quot;__v&quot;)
+    @Expose
+    private Integer v;
+
+    public List&lt;String&gt; getAvailableMarkets() {
+<span class="nc" id="L85">        return availableMarkets;</span>
+    }
+
+    public void setAvailableMarkets(List&lt;String&gt; availableMarkets) {
+<span class="nc" id="L89">        this.availableMarkets = availableMarkets;</span>
+<span class="nc" id="L90">    }</span>
+
+    public String getId() {
+<span class="nc" id="L93">        return id;</span>
+    }
+
+    public void setId(String id) {
+<span class="nc" id="L97">        this.id = id;</span>
+<span class="nc" id="L98">    }</span>
+
+    public Integer getTrackNumber() {
+<span class="nc" id="L101">        return trackNumber;</span>
+    }
+
+    public void setTrackNumber(Integer trackNumber) {
+<span class="nc" id="L105">        this.trackNumber = trackNumber;</span>
+<span class="nc" id="L106">    }</span>
+
+    public String getUrl() {
+<span class="nc" id="L109">        return url;</span>
+    }
+
+    public void setUrl(String url) {
+<span class="nc" id="L113">        this.url = url;</span>
+<span class="nc" id="L114">    }</span>
+
+    public String getName() {
+<span class="nc" id="L117">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="nc" id="L121">        this.name = name;</span>
+<span class="nc" id="L122">    }</span>
+
+    public String getArtistId() {
+<span class="nc" id="L125">        return artistId;</span>
+    }
+
+    public void setArtistId(String artistId) {
+<span class="nc" id="L129">        this.artistId = artistId;</span>
+<span class="nc" id="L130">    }</span>
+
+    public String getAlbumId() {
+<span class="nc" id="L133">        return albumId;</span>
+    }
+
+    public void setAlbumId(String albumId) {
+<span class="nc" id="L137">        this.albumId = albumId;</span>
+<span class="nc" id="L138">    }</span>
+
+    public Integer getDiscNumber() {
+<span class="nc" id="L141">        return discNumber;</span>
+    }
+
+    public void setDiscNumber(Integer discNumber) {
+<span class="nc" id="L145">        this.discNumber = discNumber;</span>
+<span class="nc" id="L146">    }</span>
+
+    public Boolean getExplicit() {
+<span class="nc" id="L149">        return explicit;</span>
+    }
+
+    public void setExplicit(Boolean explicit) {
+<span class="nc" id="L153">        this.explicit = explicit;</span>
+<span class="nc" id="L154">    }</span>
+
+    public String getType() {
+<span class="nc" id="L157">        return type;</span>
+    }
+
+    public void setType(String type) {
+<span class="nc" id="L161">        this.type = type;</span>
+<span class="nc" id="L162">    }</span>
+
+    public Integer getAcousticness() {
+<span class="nc" id="L165">        return acousticness;</span>
+    }
+
+    public void setAcousticness(Integer acousticness) {
+<span class="nc" id="L169">        this.acousticness = acousticness;</span>
+<span class="nc" id="L170">    }</span>
+
+    public Integer getDanceability() {
+<span class="nc" id="L173">        return danceability;</span>
+    }
+
+    public void setDanceability(Integer danceability) {
+<span class="nc" id="L177">        this.danceability = danceability;</span>
+<span class="nc" id="L178">    }</span>
+
+    public Integer getEnergy() {
+<span class="nc" id="L181">        return energy;</span>
+    }
+
+    public void setEnergy(Integer energy) {
+<span class="nc" id="L185">        this.energy = energy;</span>
+<span class="nc" id="L186">    }</span>
+
+    public Integer getInstrumentalness() {
+<span class="nc" id="L189">        return instrumentalness;</span>
+    }
+
+    public void setInstrumentalness(Integer instrumentalness) {
+<span class="nc" id="L193">        this.instrumentalness = instrumentalness;</span>
+<span class="nc" id="L194">    }</span>
+
+    public Integer getKey() {
+<span class="nc" id="L197">        return key;</span>
+    }
+
+    public void setKey(Integer key) {
+<span class="nc" id="L201">        this.key = key;</span>
+<span class="nc" id="L202">    }</span>
+
+    public Integer getLiveness() {
+<span class="nc" id="L205">        return liveness;</span>
+    }
+
+    public void setLiveness(Integer liveness) {
+<span class="nc" id="L209">        this.liveness = liveness;</span>
+<span class="nc" id="L210">    }</span>
+
+    public Integer getLoudness() {
+<span class="nc" id="L213">        return loudness;</span>
+    }
+
+    public void setLoudness(Integer loudness) {
+<span class="nc" id="L217">        this.loudness = loudness;</span>
+<span class="nc" id="L218">    }</span>
+
+    public Integer getMode() {
+<span class="nc" id="L221">        return mode;</span>
+    }
+
+    public void setMode(Integer mode) {
+<span class="nc" id="L225">        this.mode = mode;</span>
+<span class="nc" id="L226">    }</span>
+
+    public Integer getSpeechiness() {
+<span class="nc" id="L229">        return speechiness;</span>
+    }
+
+    public void setSpeechiness(Integer speechiness) {
+<span class="nc" id="L233">        this.speechiness = speechiness;</span>
+<span class="nc" id="L234">    }</span>
+
+    public Integer getTempo() {
+<span class="nc" id="L237">        return tempo;</span>
+    }
+
+    public void setTempo(Integer tempo) {
+<span class="nc" id="L241">        this.tempo = tempo;</span>
+<span class="nc" id="L242">    }</span>
+
+    public String getTimeSignature() {
+<span class="nc" id="L245">        return timeSignature;</span>
+    }
+
+    public void setTimeSignature(String timeSignature) {
+<span class="nc" id="L249">        this.timeSignature = timeSignature;</span>
+<span class="nc" id="L250">    }</span>
+
+    public Integer getValence() {
+<span class="nc" id="L253">        return valence;</span>
+    }
+
+    public void setValence(Integer valence) {
+<span class="nc" id="L257">        this.valence = valence;</span>
+<span class="nc" id="L258">    }</span>
+
+    public Integer getV() {
+<span class="nc" id="L261">        return v;</span>
+    }
+
+    public void setV(Integer v) {
+<span class="nc" id="L265">        this.v = v;</span>
+<span class="nc" id="L266">    }</span>
+
+    public List&lt;Image&gt; getImages() {
+<span class="nc" id="L269">        return images;</span>
+    }
+
+    public void setImages(List&lt;Image&gt; images) {
+<span class="nc" id="L273">        this.images = images;</span>
+<span class="nc" id="L274">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

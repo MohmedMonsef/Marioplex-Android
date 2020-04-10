@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SignUpFragment.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.login</a> &gt; <span class="el_source">SignUpFragment.java</span></div><h1>SignUpFragment.java</h1><pre class="source lang-java linenums">package com.example.spotify.login;
+
+import android.graphics.Color;
+import android.icu.util.Calendar;
+import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.R;
+import com.example.spotify.login.apiClasses.SignUpData;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
+
+public class SignUpFragment extends Fragment {
+
+    private static Retrofit mRetrofit;
+    private static EndPointAPI mEndPointAPI;
+
+    String email,password,birthday,username,gender;
+
+    /*public SignUpFragment() {
+        // Required empty public constructor
+    }*/
+
+<span class="nc" id="L44">    SignUpFragment(Retrofit retrofit, EndPointAPI EndPointAPI){</span>
+<span class="nc" id="L45">        mRetrofit = retrofit;</span>
+<span class="nc" id="L46">        mEndPointAPI = EndPointAPI;</span>
+<span class="nc" id="L47">    }</span>
+
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+<span class="nc" id="L53">        super.onCreate(savedInstanceState);</span>
+
+<span class="nc" id="L55">    }</span>
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+<span class="nc" id="L61">        View rootView = inflater.inflate(R.layout.fragment_sign_up, container, false);</span>
+
+<span class="nc" id="L63">        rootView.findViewById(R.id.signUpButton).setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L66">                signUp();</span>
+<span class="nc" id="L67">            }</span>
+        });
+
+<span class="nc" id="L70">        final TextView maleButton = (TextView)rootView.findViewById(R.id.male_button);</span>
+<span class="nc" id="L71">        final TextView femaleButton = (TextView)rootView.findViewById(R.id.female_button);</span>
+<span class="nc" id="L72">        maleButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L75">                maleButton.setBackgroundColor(Color.GRAY);</span>
+<span class="nc" id="L76">                maleButton.setTextColor(Color.WHITE);</span>
+<span class="nc" id="L77">                femaleButton.setBackgroundColor(Color.WHITE);</span>
+<span class="nc" id="L78">                femaleButton.setTextColor(Color.GRAY);</span>
+<span class="nc" id="L79">                gender = &quot;Male&quot;;</span>
+<span class="nc" id="L80">            }</span>
+        });
+
+<span class="nc" id="L83">        femaleButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L86">                maleButton.setBackgroundColor(Color.WHITE);</span>
+<span class="nc" id="L87">                maleButton.setTextColor(Color.GRAY);</span>
+<span class="nc" id="L88">                femaleButton.setBackgroundColor(Color.GRAY);</span>
+<span class="nc" id="L89">                femaleButton.setTextColor(Color.WHITE);</span>
+<span class="nc" id="L90">                gender = &quot;Female&quot;;</span>
+<span class="nc" id="L91">            }</span>
+        });
+
+<span class="nc" id="L94">        return rootView;</span>
+    }
+
+    /**
+     * Validate sign up form data and send it to backend server
+     * Displays a Toast message indicating sign up request result
+     */
+    private void signUp(){
+
+        try {
+<span class="nc" id="L104">            email = ((EditText) getView().findViewById(R.id.sign_up_email)).getText().toString();</span>
+<span class="nc" id="L105">            password = ((EditText) getView().findViewById(R.id.sign_up_password)).getText().toString();</span>
+<span class="nc" id="L106">            birthday = ((EditText) getView().findViewById(R.id.sign_up_date_of_birth)).getText().toString();</span>
+<span class="nc" id="L107">            username = ((EditText) getView().findViewById(R.id.sign_up_name)).getText().toString();</span>
+            //gender = ((EditText) getView().findViewById(R.id.sign_up_gender)).getText().toString();
+        }
+<span class="nc" id="L110">        catch (NullPointerException e){</span>
+<span class="nc" id="L111">            Toast.makeText(getContext(),&quot;fill in the fields&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L112">            return;</span>
+<span class="nc" id="L113">        }</span>
+<span class="nc" id="L114">        String country = &quot;Egypt&quot;;</span>
+
+        // form validation
+<span class="nc bnc" id="L117" title="All 2 branches missed.">        if(!email.matches(&quot;(.+)@(.+).(.+)&quot;)){</span>
+<span class="nc" id="L118">            Toast.makeText(getContext(),&quot;incorrect email&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L119">            return;</span>
+        }
+<span class="nc bnc" id="L121" title="All 2 branches missed.">        if(password.length() &lt; 4){</span>
+<span class="nc" id="L122">            Toast.makeText(getContext(),&quot;password can't be less than 4 characters&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L123">            return;</span>
+        }
+<span class="nc bnc" id="L125" title="All 2 branches missed.">        if(!birthday.matches(&quot;\\d{1,2}/\\d{1,2}/\\d{4}&quot;)){</span>
+<span class="nc" id="L126">            Toast.makeText(getContext(),&quot;incorrect date format&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L127">            return;</span>
+        }
+        //String[] days = birthday.split(&quot;\\\\&quot;);
+<span class="nc bnc" id="L130" title="All 2 branches missed.">        if(gender == null){</span>
+<span class="nc" id="L131">            Toast.makeText(getContext(),&quot;Choose your gender&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L132">            return;</span>
+        }
+
+<span class="nc" id="L135">        SignUpData signUpData = new SignUpData(username,password,country,email,gender,birthday);</span>
+
+<span class="nc" id="L137">        mEndPointAPI.signUp(signUpData).enqueue(new Callback&lt;ResponseBody&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;ResponseBody&gt; call, Response&lt;ResponseBody&gt; response) {
+<span class="nc bnc" id="L140" title="All 2 branches missed.">                if(response.isSuccessful()){</span>
+<span class="nc" id="L141">                    Log.v(&quot;Intro Activity&quot;,response.body().toString());</span>
+<span class="nc" id="L142">                    Toast.makeText(getContext(),&quot;Sucess &quot; + response.code(),Toast.LENGTH_SHORT).show();</span>
+
+                }
+                else {
+<span class="nc" id="L146">                    Log.i(&quot;Intro Activity&quot;,response.errorBody().toString());</span>
+<span class="nc" id="L147">                    Toast.makeText(getContext(),&quot;Failed &quot; + response.code() +&quot; &quot;+ response.message(),Toast.LENGTH_SHORT).show();</span>
+                }
+<span class="nc" id="L149">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;ResponseBody&gt; call, Throwable t) {
+<span class="nc" id="L153">                Log.e(&quot;Intro Activity&quot;,t.getMessage());</span>
+<span class="nc" id="L154">                Toast.makeText(getContext(),&quot;Failed to connect&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L155">            }</span>
+        });
+
+<span class="nc" id="L158">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

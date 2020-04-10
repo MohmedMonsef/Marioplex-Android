@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Item.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.SpotifyClasses</a> &gt; <span class="el_source">Item.java</span></div><h1>Item.java</h1><pre class="source lang-java linenums">package com.example.spotify.SpotifyClasses;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
+public class Item {
+
+    @SerializedName(&quot;album_type&quot;)
+    @Expose
+    private String albumType;
+<span class="nc" id="L13">    @SerializedName(&quot;artists&quot;)</span>
+    @Expose
+    private List&lt;Artist&gt; artists = null;
+<span class="nc" id="L16">    @SerializedName(&quot;available_markets&quot;)</span>
+    @Expose
+    private List&lt;String&gt; availableMarkets = null;
+    @SerializedName(&quot;external_urls&quot;)
+    @Expose
+    private ExternalUrls_ externalUrls;
+    @SerializedName(&quot;href&quot;)
+    @Expose
+    private String href;
+    @SerializedName(&quot;id&quot;)
+    @Expose
+    private String id;
+<span class="nc" id="L28">    @SerializedName(&quot;images&quot;)</span>
+    @Expose
+    private List&lt;Image&gt; images = null;
+    @SerializedName(&quot;name&quot;)
+    @Expose
+    private String name;
+    @SerializedName(&quot;type&quot;)
+    @Expose
+    private String type;
+    @SerializedName(&quot;uri&quot;)
+    @Expose
+    private String uri;
+
+    /**
+     * No args constructor for use in serialization
+     *
+     */
+<span class="nc" id="L45">    public Item() {</span>
+<span class="nc" id="L46">    }</span>
+
+    /**
+     *
+     * @param images
+     * @param artists
+     * @param albumType
+     * @param availableMarkets
+     * @param name
+     * @param externalUrls
+     * @param href
+     * @param id
+     * @param type
+     * @param uri
+     */
+    public Item(String albumType, List&lt;Artist&gt; artists, List&lt;String&gt; availableMarkets, ExternalUrls_ externalUrls, String href, String id, List&lt;Image&gt; images, String name, String type, String uri) {
+<span class="nc" id="L62">        super();</span>
+<span class="nc" id="L63">        this.albumType = albumType;</span>
+<span class="nc" id="L64">        this.artists = artists;</span>
+<span class="nc" id="L65">        this.availableMarkets = availableMarkets;</span>
+<span class="nc" id="L66">        this.externalUrls = externalUrls;</span>
+<span class="nc" id="L67">        this.href = href;</span>
+<span class="nc" id="L68">        this.id = id;</span>
+<span class="nc" id="L69">        this.images = images;</span>
+<span class="nc" id="L70">        this.name = name;</span>
+<span class="nc" id="L71">        this.type = type;</span>
+<span class="nc" id="L72">        this.uri = uri;</span>
+<span class="nc" id="L73">    }</span>
+
+    public String getAlbumType() {
+<span class="nc" id="L76">        return albumType;</span>
+    }
+
+    public void setAlbumType(String albumType) {
+<span class="nc" id="L80">        this.albumType = albumType;</span>
+<span class="nc" id="L81">    }</span>
+
+    public List&lt;Artist&gt; getArtists() {
+<span class="nc" id="L84">        return artists;</span>
+    }
+
+    public void setArtists(List&lt;Artist&gt; artists) {
+<span class="nc" id="L88">        this.artists = artists;</span>
+<span class="nc" id="L89">    }</span>
+
+    public List&lt;String&gt; getAvailableMarkets() {
+<span class="nc" id="L92">        return availableMarkets;</span>
+    }
+
+    public void setAvailableMarkets(List&lt;String&gt; availableMarkets) {
+<span class="nc" id="L96">        this.availableMarkets = availableMarkets;</span>
+<span class="nc" id="L97">    }</span>
+
+    public ExternalUrls_ getExternalUrls() {
+<span class="nc" id="L100">        return externalUrls;</span>
+    }
+
+    public void setExternalUrls(ExternalUrls_ externalUrls) {
+<span class="nc" id="L104">        this.externalUrls = externalUrls;</span>
+<span class="nc" id="L105">    }</span>
+
+    public String getHref() {
+<span class="nc" id="L108">        return href;</span>
+    }
+
+    public void setHref(String href) {
+<span class="nc" id="L112">        this.href = href;</span>
+<span class="nc" id="L113">    }</span>
+
+    public String getId() {
+<span class="nc" id="L116">        return id;</span>
+    }
+
+    public void setId(String id) {
+<span class="nc" id="L120">        this.id = id;</span>
+<span class="nc" id="L121">    }</span>
+
+    public List&lt;Image&gt; getImages() {
+<span class="nc" id="L124">        return images;</span>
+    }
+
+    public void setImages(List&lt;Image&gt; images) {
+<span class="nc" id="L128">        this.images = images;</span>
+<span class="nc" id="L129">    }</span>
+
+    public String getName() {
+<span class="nc" id="L132">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="nc" id="L136">        this.name = name;</span>
+<span class="nc" id="L137">    }</span>
+
+    public String getType() {
+<span class="nc" id="L140">        return type;</span>
+    }
+
+    public void setType(String type) {
+<span class="nc" id="L144">        this.type = type;</span>
+<span class="nc" id="L145">    }</span>
+
+    public String getUri() {
+<span class="nc" id="L148">        return uri;</span>
+    }
+
+    public void setUri(String uri) {
+<span class="nc" id="L152">        this.uri = uri;</span>
+<span class="nc" id="L153">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

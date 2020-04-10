@@ -3,7 +3,6 @@ package com.example;
 import android.app.Activity;
 import android.widget.AbsListView;
 import android.widget.Button;
-
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;

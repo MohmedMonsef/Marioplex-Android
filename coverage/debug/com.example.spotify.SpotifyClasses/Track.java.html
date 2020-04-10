@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Track.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.SpotifyClasses</a> &gt; <span class="el_source">Track.java</span></div><h1>Track.java</h1><pre class="source lang-java linenums">package com.example.spotify.SpotifyClasses;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
+<span class="nc" id="L8">public class Track {</span>
+
+    @SerializedName(&quot;album&quot;)
+    @Expose
+    private Album album;
+<span class="nc" id="L13">    @SerializedName(&quot;artists&quot;)</span>
+    @Expose
+    private List&lt;Artist_&gt; artists = null;
+//    @SerializedName(&quot;available_markets&quot;)
+//    @Expose
+//    private List&lt;String&gt; availableMarkets = null;
+    @SerializedName(&quot;disc_number&quot;)
+    @Expose
+    private Integer discNumber;
+    @SerializedName(&quot;duration_ms&quot;)
+    @Expose
+    private Integer durationMs;
+    @SerializedName(&quot;explicit&quot;)
+    @Expose
+    private Boolean explicit;
+    @SerializedName(&quot;external_ids&quot;)
+    @Expose
+    private ExternalIds externalIds;
+    @SerializedName(&quot;external_urls&quot;)
+    @Expose
+    private ExternalUrls___ externalUrls;
+    @SerializedName(&quot;href&quot;)
+    @Expose
+    private String href;
+    @SerializedName(&quot;id&quot;)
+    @Expose
+    private String id;
+    @SerializedName(&quot;is_local&quot;)
+    @Expose
+    private Boolean isLocal;
+    @SerializedName(&quot;name&quot;)
+    @Expose
+    private String name;
+    @SerializedName(&quot;popularity&quot;)
+    @Expose
+    private Integer popularity;
+    @SerializedName(&quot;preview_url&quot;)
+    @Expose
+    private Object previewUrl;
+    @SerializedName(&quot;track_number&quot;)
+    @Expose
+    private Integer trackNumber;
+    @SerializedName(&quot;type&quot;)
+    @Expose
+    private String type;
+    @SerializedName(&quot;uri&quot;)
+    @Expose
+    private String uri;
+
+    public Album getAlbum() {
+<span class="nc" id="L63">        return album;</span>
+    }
+
+    public void setAlbum(Album album) {
+<span class="nc" id="L67">        this.album = album;</span>
+<span class="nc" id="L68">    }</span>
+
+    public Track withAlbum(Album album) {
+<span class="nc" id="L71">        this.album = album;</span>
+<span class="nc" id="L72">        return this;</span>
+    }
+
+    public List&lt;Artist_&gt; getArtists() {
+<span class="nc" id="L76">        return artists;</span>
+    }
+
+    public void setArtists(List&lt;Artist_&gt; artists) {
+<span class="nc" id="L80">        this.artists = artists;</span>
+<span class="nc" id="L81">    }</span>
+
+    public Track withArtists(List&lt;Artist_&gt; artists) {
+<span class="nc" id="L84">        this.artists = artists;</span>
+<span class="nc" id="L85">        return this;</span>
+    }
+
+//    public List&lt;String&gt; getAvailableMarkets() {
+//        return availableMarkets;
+//    }
+//
+//    public void setAvailableMarkets(List&lt;String&gt; availableMarkets) {
+//        this.availableMarkets = availableMarkets;
+//    }
+//
+//    public Track withAvailableMarkets(List&lt;String&gt; availableMarkets) {
+//        this.availableMarkets = availableMarkets;
+//        return this;
+//    }
+
+    public Integer getDiscNumber() {
+<span class="nc" id="L102">        return discNumber;</span>
+    }
+
+    public void setDiscNumber(Integer discNumber) {
+<span class="nc" id="L106">        this.discNumber = discNumber;</span>
+<span class="nc" id="L107">    }</span>
+
+    public Track withDiscNumber(Integer discNumber) {
+<span class="nc" id="L110">        this.discNumber = discNumber;</span>
+<span class="nc" id="L111">        return this;</span>
+    }
+
+    public Integer getDurationMs() {
+<span class="nc" id="L115">        return durationMs;</span>
+    }
+
+    public void setDurationMs(Integer durationMs) {
+<span class="nc" id="L119">        this.durationMs = durationMs;</span>
+<span class="nc" id="L120">    }</span>
+
+    public Track withDurationMs(Integer durationMs) {
+<span class="nc" id="L123">        this.durationMs = durationMs;</span>
+<span class="nc" id="L124">        return this;</span>
+    }
+
+    public Boolean getExplicit() {
+<span class="nc" id="L128">        return explicit;</span>
+    }
+
+    public void setExplicit(Boolean explicit) {
+<span class="nc" id="L132">        this.explicit = explicit;</span>
+<span class="nc" id="L133">    }</span>
+
+    public Track withExplicit(Boolean explicit) {
+<span class="nc" id="L136">        this.explicit = explicit;</span>
+<span class="nc" id="L137">        return this;</span>
+    }
+
+    public ExternalIds getExternalIds() {
+<span class="nc" id="L141">        return externalIds;</span>
+    }
+
+    public void setExternalIds(ExternalIds externalIds) {
+<span class="nc" id="L145">        this.externalIds = externalIds;</span>
+<span class="nc" id="L146">    }</span>
+
+    public Track withExternalIds(ExternalIds externalIds) {
+<span class="nc" id="L149">        this.externalIds = externalIds;</span>
+<span class="nc" id="L150">        return this;</span>
+    }
+
+    public ExternalUrls___ getExternalUrls() {
+<span class="nc" id="L154">        return externalUrls;</span>
+    }
+
+    public void setExternalUrls(ExternalUrls___ externalUrls) {
+<span class="nc" id="L158">        this.externalUrls = externalUrls;</span>
+<span class="nc" id="L159">    }</span>
+
+    public Track withExternalUrls(ExternalUrls___ externalUrls) {
+<span class="nc" id="L162">        this.externalUrls = externalUrls;</span>
+<span class="nc" id="L163">        return this;</span>
+    }
+
+    public String getHref() {
+<span class="nc" id="L167">        return href;</span>
+    }
+
+    public void setHref(String href) {
+<span class="nc" id="L171">        this.href = href;</span>
+<span class="nc" id="L172">    }</span>
+
+    public Track withHref(String href) {
+<span class="nc" id="L175">        this.href = href;</span>
+<span class="nc" id="L176">        return this;</span>
+    }
+
+    public String getId() {
+<span class="nc" id="L180">        return id;</span>
+    }
+
+    public void setId(String id) {
+<span class="nc" id="L184">        this.id = id;</span>
+<span class="nc" id="L185">    }</span>
+
+    public Track withId(String id) {
+<span class="nc" id="L188">        this.id = id;</span>
+<span class="nc" id="L189">        return this;</span>
+    }
+
+    public Boolean getIsLocal() {
+<span class="nc" id="L193">        return isLocal;</span>
+    }
+
+    public void setIsLocal(Boolean isLocal) {
+<span class="nc" id="L197">        this.isLocal = isLocal;</span>
+<span class="nc" id="L198">    }</span>
+
+    public Track withIsLocal(Boolean isLocal) {
+<span class="nc" id="L201">        this.isLocal = isLocal;</span>
+<span class="nc" id="L202">        return this;</span>
+    }
+
+    public String getName() {
+<span class="nc" id="L206">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="nc" id="L210">        this.name = name;</span>
+<span class="nc" id="L211">    }</span>
+
+    public Track withName(String name) {
+<span class="nc" id="L214">        this.name = name;</span>
+<span class="nc" id="L215">        return this;</span>
+    }
+
+    public Integer getPopularity() {
+<span class="nc" id="L219">        return popularity;</span>
+    }
+
+    public void setPopularity(Integer popularity) {
+<span class="nc" id="L223">        this.popularity = popularity;</span>
+<span class="nc" id="L224">    }</span>
+
+    public Track withPopularity(Integer popularity) {
+<span class="nc" id="L227">        this.popularity = popularity;</span>
+<span class="nc" id="L228">        return this;</span>
+    }
+
+    public Object getPreviewUrl() {
+<span class="nc" id="L232">        return previewUrl;</span>
+    }
+
+    public void setPreviewUrl(Object previewUrl) {
+<span class="nc" id="L236">        this.previewUrl = previewUrl;</span>
+<span class="nc" id="L237">    }</span>
+
+    public Track withPreviewUrl(Object previewUrl) {
+<span class="nc" id="L240">        this.previewUrl = previewUrl;</span>
+<span class="nc" id="L241">        return this;</span>
+    }
+
+    public Integer getTrackNumber() {
+<span class="nc" id="L245">        return trackNumber;</span>
+    }
+
+    public void setTrackNumber(Integer trackNumber) {
+<span class="nc" id="L249">        this.trackNumber = trackNumber;</span>
+<span class="nc" id="L250">    }</span>
+
+    public Track withTrackNumber(Integer trackNumber) {
+<span class="nc" id="L253">        this.trackNumber = trackNumber;</span>
+<span class="nc" id="L254">        return this;</span>
+    }
+
+    public String getType() {
+<span class="nc" id="L258">        return type;</span>
+    }
+
+    public void setType(String type) {
+<span class="nc" id="L262">        this.type = type;</span>
+<span class="nc" id="L263">    }</span>
+
+    public Track withType(String type) {
+<span class="nc" id="L266">        this.type = type;</span>
+<span class="nc" id="L267">        return this;</span>
+    }
+
+    public String getUri() {
+<span class="nc" id="L271">        return uri;</span>
+    }
+
+    public void setUri(String uri) {
+<span class="nc" id="L275">        this.uri = uri;</span>
+<span class="nc" id="L276">    }</span>
+
+    public Track withUri(String uri) {
+<span class="nc" id="L279">        this.uri = uri;</span>
+<span class="nc" id="L280">        return this;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

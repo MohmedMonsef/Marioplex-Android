@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>backhome.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.Fragments.HOME_FRAGMENT</a> &gt; <span class="el_source">backhome.java</span></div><h1>backhome.java</h1><pre class="source lang-java linenums">package com.example.spotify.Fragments.HOME_FRAGMENT;
+
+
+import androidx.fragment.app.Fragment;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Adapters.adapterNewreleases;
+import com.example.spotify.Adapters.adapterPopularAlbum;
+import com.example.spotify.Adapters.adapterPopularArtist;
+import com.example.spotify.Adapters.adapterPopularPlaylist;
+import com.example.spotify.Interfaces.backinterfaces;
+import com.example.spotify.BackClasses.Backclasses.backnewrelease.Newreleases;
+import com.example.spotify.BackClasses.Backclasses.backpopularalbum.PopularAlbum;
+import com.example.spotify.BackClasses.Backclasses.backpopularartist.PopularArtist;
+import com.example.spotify.BackClasses.Backclasses.backpopularplaylist.PopularPlaylist;
+import com.example.spotify.Fragments.SETTING_FRAGMENT.settingFragment;
+import com.example.spotify.R;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
+//import androidx.fragment.app.Fragment;
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * to handle interaction events.
+ * create an instance of this fragment.
+ */
+<span class="fc" id="L50">public class backhome extends Fragment implements LifecycleOwner</span>
+{
+    Newreleases NewReleaseList;
+    PopularAlbum popularAlbumList;
+    PopularPlaylist popularPlaylist;
+    PopularArtist popularArtistlist;
+    RecyclerView recyclerView,
+            recyclerView1,
+            recyclerView2,
+            recyclerView3;
+    adapterNewreleases recyclerAdapter;
+    adapterPopularArtist recyclerAdapterArtist;
+    adapterPopularAlbum recyclerAdapterAlbum;
+    adapterPopularPlaylist recyclerAdapterPlaylist;
+    private TextView textViewResult;
+    Toolbar toolbar;
+    private viewmodelHome homeViewModel;
+
+    /**
+     *
+     * @param inflater --&gt;layout for this fragment
+     * @param container --&gt;ViewGroup that contain layout of the fragment(linear layout)
+     * @param savedInstanceState --&gt;saved object needed before calling the fragment (type of storage)
+     *
+     * @return --&gt;view of this fragment
+     */
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState)
+    {
+        // Inflate the layout for this fragment
+<span class="fc" id="L81">        View view = inflater.inflate(R.layout.fragment_back_home, container, false);</span>
+<span class="fc" id="L82">        homeViewModel =ViewModelProviders.of((MainActivity) getActivity()).get(viewmodelHome.class);</span>
+<span class="fc" id="L83">        final TextView textView = view.findViewById(R.id.text_home);</span>
+        ////*****************************toolbar************************************////
+<span class="fc" id="L85">        toolbar = (Toolbar)view.findViewById(R.id.toolbar); // get the reference of Toolbar</span>
+<span class="fc" id="L86">        toolbar.setTitle(&quot;&quot;); // set Title for Toolbar</span>
+        /**
+         * a listener for change in setting button
+         */
+<span class="fc" id="L90">        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener()</span>
+<span class="fc" id="L91">        {</span>
+            /**
+             *
+             * @param item--&gt;item in toolbar
+             * @return true if fragment calling succeeded and false if there is an error
+             */
+            @Override
+            public boolean onMenuItemClick(MenuItem item)
+            {
+<span class="nc" id="L100">                int id = item.getItemId();</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">                if (id == R.id.action_settings)</span>
+                {
+                    //go to setting fragments
+<span class="nc" id="L104">                    loadFragmentSetting(new settingFragment());</span>
+                }
+<span class="nc" id="L106">                return true;</span>
+
+            }
+        });
+
+
+        ////*******************************RecyclerView of NewReleaseList***********************////
+<span class="fc" id="L113">        NewReleaseList = new Newreleases();</span>
+<span class="fc" id="L114">        recyclerView = (RecyclerView) view.findViewById(R.id.recycle);</span>
+        LinearLayoutManager layoutManager;
+<span class="fc" id="L116">        layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);</span>
+<span class="fc" id="L117">        recyclerView.setLayoutManager(layoutManager);</span>
+        ////*******************************RecyclerView of popularAlbumList***********************////
+<span class="fc" id="L119">        popularAlbumList=new PopularAlbum();</span>
+<span class="fc" id="L120">        recyclerView1 = (RecyclerView) view.findViewById(R.id.recyclealbum);</span>
+        LinearLayoutManager layoutManager1;
+<span class="fc" id="L122">        layoutManager1 = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);</span>
+<span class="fc" id="L123">        recyclerView1.setLayoutManager(layoutManager1);</span>
+        ////*******************************RecyclerView of popularPlaylist***********************////
+<span class="fc" id="L125">        popularPlaylist=new PopularPlaylist();</span>
+<span class="fc" id="L126">        recyclerView2 = (RecyclerView) view.findViewById(R.id.recycleplaylist);</span>
+        LinearLayoutManager layoutManager2;
+<span class="fc" id="L128">        layoutManager2 = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);</span>
+<span class="fc" id="L129">        recyclerView2.setLayoutManager(layoutManager2);</span>
+        ////*******************************RecyclerView of popularArtistlist***********************////
+<span class="fc" id="L131">        popularArtistlist=new PopularArtist();</span>
+<span class="fc" id="L132">        recyclerView3 = (RecyclerView) view.findViewById(R.id.recycleartist);</span>
+        LinearLayoutManager layoutManager3;
+<span class="fc" id="L134">        layoutManager3 = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);</span>
+<span class="fc" id="L135">        recyclerView3.setLayoutManager(layoutManager3);</span>
+        //calling the retrofit function
+<span class="fc" id="L137">        SetRetrofit();</span>
+<span class="fc" id="L138">        setRetrofitralbum();</span>
+<span class="fc" id="L139">        setRetrofitartist();</span>
+<span class="fc" id="L140">        setRetrofitplaylist();</span>
+        ////*******************************To check the state***********************////
+<span class="fc" id="L142">        textViewResult = view.findViewById(R.id.Popular_new_releases);</span>
+<span class="fc" id="L143">        return view;</span>
+
+    }
+
+    ////*******************************Retrofit****************************////
+    private void SetRetrofit()
+    {
+
+<span class="fc" id="L151">        Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();</span>
+<span class="fc" id="L152">        backinterfaces apiService = retrofit.create(backinterfaces.class);</span>
+<span class="fc" id="L153">        Call&lt;Newreleases&gt; call = apiService.getNewRelease();</span>
+<span class="fc" id="L154">        call.enqueue(new Callback&lt;Newreleases&gt;()</span>
+<span class="fc" id="L155">        {</span>
+            /**
+             *
+             * @param call --&gt; interface request
+             * @param response --&gt; interface response
+             * called when every changed requests and set the data
+             */
+            @Override
+            public void onResponse(Call&lt;Newreleases&gt; call, Response&lt;Newreleases&gt; response)
+            {
+                //error in the server
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">                if (response.code() == 401)</span>
+<span class="nc" id="L167">                    textViewResult.setText(response.errorBody().toString() + &quot;401&quot;);</span>
+                //may internet disconnected
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">                else if (!response.isSuccessful())</span>
+                {
+<span class="nc" id="L171">                    textViewResult.setText(&quot;Code: &quot; + response.code());</span>
+<span class="nc" id="L172">                    return;</span>
+                }
+                //if responcse is successful and the server send response
+<span class="fc" id="L175">                NewReleaseList = response.body();</span>
+                //error in GET request url
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">                if (response.body() == null)</span>
+<span class="nc" id="L178">                    textViewResult.setText(&quot;responce body = null&quot;);</span>
+                //error in binding interface
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">                else if (NewReleaseList == null)</span>
+<span class="nc" id="L181">                    textViewResult.setText(response.body().toString() + &quot; NewReleaseList = null&quot;);</span>
+                //Successful
+                else
+                    {
+<span class="fc" id="L185">                    Log.d(&quot;TAG&quot;, &quot;Response = &quot; + NewReleaseList);</span>
+<span class="fc" id="L186">                    recyclerAdapter = new adapterNewreleases(getActivity(), NewReleaseList.getAlbums());</span>
+<span class="fc" id="L187">                    recyclerAdapterAlbum=new adapterPopularAlbum(getActivity(),popularAlbumList.getAlbums());</span>
+<span class="fc" id="L188">                    recyclerView.setAdapter(recyclerAdapter);</span>
+<span class="fc" id="L189">                    recyclerView.setHasFixedSize(true);</span>
+                    }
+
+<span class="fc" id="L192">            }</span>
+
+            /**
+             *
+             * @param call --&gt;interface request
+             * @param t --&gt;type of error of the request
+             * called when every errored requests and set its type
+             */
+            @Override
+            public void onFailure(Call&lt;Newreleases&gt; call, Throwable t)
+            {
+<span class="nc" id="L203">                textViewResult.setText(t.getMessage() + &quot;failed&quot;);</span>
+<span class="nc" id="L204">            }</span>
+        });
+<span class="fc" id="L206">    }</span>
+
+    ////*******************************set Retrofitr album****************************////
+    private void setRetrofitralbum()
+
+    {
+<span class="fc" id="L212">    Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();</span>
+<span class="fc" id="L213">    backinterfaces apiService = retrofit.create(backinterfaces.class);</span>
+<span class="fc" id="L214">    Call&lt;PopularAlbum&gt; call = apiService.getPopularAlbum();</span>
+<span class="fc" id="L215">    call.enqueue(new Callback&lt;PopularAlbum&gt;()</span>
+<span class="fc" id="L216">    {</span>
+        /**
+         *
+         * @param call --&gt; interface request
+         * @param response --&gt; interface response
+         * called when every changed requests and set the data
+         */
+        @Override
+        public void onResponse(Call&lt;PopularAlbum&gt; call, Response&lt;PopularAlbum&gt; response)
+        {
+            //error in the server
+<span class="pc bpc" id="L227" title="1 of 2 branches missed.">            if (response.code() == 401)</span>
+<span class="nc" id="L228">                textViewResult.setText(response.errorBody().toString() + &quot;401&quot;);</span>
+            //may internet disconnected
+<span class="pc bpc" id="L230" title="1 of 2 branches missed.">            else if (!response.isSuccessful())</span>
+            {
+<span class="nc" id="L232">                textViewResult.setText(&quot;Code: &quot; + response.code());</span>
+<span class="nc" id="L233">                return;</span>
+            }
+            //if responcse is successful and the server send response
+<span class="fc" id="L236">            popularAlbumList = response.body();</span>
+            //error in GET request url
+<span class="pc bpc" id="L238" title="1 of 2 branches missed.">            if (response.body() == null)</span>
+<span class="nc" id="L239">                textViewResult.setText(&quot;responce body = null&quot;);</span>
+            //error in binding interface
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">            else if (popularAlbumList == null)</span>
+<span class="nc" id="L242">                textViewResult.setText(response.body().toString() + &quot; popularAlbumList = null&quot;);</span>
+            //Successful
+            else
+                {
+<span class="fc" id="L246">                Log.d(&quot;TAG&quot;, &quot;Response = &quot; + popularAlbumList);</span>
+<span class="fc" id="L247">                recyclerAdapterAlbum=new adapterPopularAlbum(getActivity(),popularAlbumList.getAlbums());</span>
+<span class="fc" id="L248">                recyclerView1.setAdapter(recyclerAdapterAlbum);</span>
+<span class="fc" id="L249">                recyclerView1.setHasFixedSize(true);</span>
+                }
+
+<span class="fc" id="L252">        }</span>
+        /**
+         *
+         * @param call --&gt;interface request
+         * @param t --&gt;type of error of the request
+         * called when every errored requests and set its type
+         */
+        @Override
+        public void onFailure(Call&lt;PopularAlbum&gt; call, Throwable t)
+        {
+<span class="nc" id="L262">            textViewResult.setText(t.getMessage() + &quot;failed&quot;);</span>
+
+<span class="nc" id="L264">        }</span>
+
+    });
+
+
+<span class="fc" id="L269">}</span>
+    ////*******************************set Retrofitr playlist****************************////
+    private void setRetrofitplaylist()
+    {
+<span class="fc" id="L273">        Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();</span>
+<span class="fc" id="L274">        backinterfaces apiService = retrofit.create(backinterfaces.class);</span>
+<span class="fc" id="L275">        Call&lt;PopularPlaylist&gt; call = apiService.getPopularPlaylist();</span>
+<span class="fc" id="L276">        call.enqueue(new Callback&lt;PopularPlaylist&gt;()</span>
+<span class="fc" id="L277">        {</span>
+            /**
+             *
+             * @param call --&gt; interface request
+             * @param response --&gt; interface response
+             * called when every changed requests and set the data
+             */
+            @Override
+            public void onResponse(Call&lt;PopularPlaylist&gt; call, Response&lt;PopularPlaylist&gt; response)
+            {
+                //error in the server
+<span class="pc bpc" id="L288" title="1 of 2 branches missed.">                if (response.code() == 401)</span>
+<span class="nc" id="L289">                    textViewResult.setText(response.errorBody().toString() + &quot;401&quot;);</span>
+                //may internet disconnected
+<span class="pc bpc" id="L291" title="1 of 2 branches missed.">                else if (!response.isSuccessful())</span>
+                {
+<span class="nc" id="L293">                    textViewResult.setText(&quot;Code: &quot; + response.code());</span>
+<span class="nc" id="L294">                    return;</span>
+                }
+                //if responcse is successful and the server send response
+<span class="fc" id="L297">                popularPlaylist = response.body();</span>
+                //error in GET request url
+<span class="pc bpc" id="L299" title="1 of 2 branches missed.">                if (response.body() == null)</span>
+<span class="nc" id="L300">                    textViewResult.setText(&quot;responce body = null&quot;);</span>
+                //error in binding interface
+<span class="pc bpc" id="L302" title="1 of 2 branches missed.">                else if (popularPlaylist == null)</span>
+<span class="nc" id="L303">                    textViewResult.setText(response.body().toString() + &quot; popularPlaylist = null&quot;);</span>
+                //Successful
+                else
+                    {
+<span class="fc" id="L307">                    Log.d(&quot;TAG&quot;, &quot;Response = &quot; + popularPlaylist);</span>
+<span class="fc" id="L308">                    recyclerAdapterPlaylist=new adapterPopularPlaylist(getActivity(),popularPlaylist.getPlaylists());</span>
+<span class="fc" id="L309">                    recyclerView2.setAdapter(recyclerAdapterPlaylist);</span>
+<span class="fc" id="L310">                    recyclerView2.setHasFixedSize(true);</span>
+                    }
+
+<span class="fc" id="L313">            }</span>
+            /**
+             *
+             * @param call --&gt;interface request
+             * @param t --&gt;type of error of the request
+             * called when every errored requests and set its type
+             */
+            @Override
+            public void onFailure(Call&lt;PopularPlaylist&gt; call, Throwable t)
+            {
+<span class="nc" id="L323">                textViewResult.setText(t.getMessage() + &quot;failed&quot;);</span>
+
+<span class="nc" id="L325">            }</span>
+
+
+        });
+
+
+<span class="fc" id="L331">    }</span>
+
+    ////*******************************set Retrofitr artist****************************////
+    private void setRetrofitartist()
+    {
+
+<span class="fc" id="L337">        Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();</span>
+<span class="fc" id="L338">        backinterfaces apiService = retrofit.create(backinterfaces.class);</span>
+<span class="fc" id="L339">        Call&lt;PopularArtist&gt; call = apiService.getPopularArtist();</span>
+<span class="fc" id="L340">        call.enqueue(new Callback&lt;PopularArtist&gt;()</span>
+<span class="fc" id="L341">        {</span>
+            /**
+             *
+             * @param call --&gt; interface request
+             * @param response --&gt; interface response
+             * called when every changed requests and set the data
+             */
+            @Override
+            public void onResponse(Call&lt;PopularArtist&gt; call, Response&lt;PopularArtist&gt; response)
+            {
+                //error in the server
+<span class="pc bpc" id="L352" title="1 of 2 branches missed.">                if (response.code() == 401)</span>
+<span class="nc" id="L353">                    textViewResult.setText(response.errorBody().toString() + &quot;401&quot;);</span>
+                //may internet disconnected
+<span class="pc bpc" id="L355" title="1 of 2 branches missed.">                else if (!response.isSuccessful())</span>
+                {
+<span class="nc" id="L357">                    textViewResult.setText(&quot;Code: &quot; + response.code());</span>
+<span class="nc" id="L358">                    return;</span>
+                }
+                //if responcse is successful and the server send response
+<span class="fc" id="L361">                popularArtistlist = response.body();</span>
+                //error in GET request url
+<span class="pc bpc" id="L363" title="1 of 2 branches missed.">                if (response.body() == null)</span>
+<span class="nc" id="L364">                    textViewResult.setText(&quot;responce body = null&quot;);</span>
+                //error in binding interface
+<span class="pc bpc" id="L366" title="1 of 2 branches missed.">                else if (popularArtistlist == null)</span>
+<span class="nc" id="L367">                    textViewResult.setText(response.body().toString() + &quot; track = null&quot;);</span>
+                //Successful
+                else
+                    {
+<span class="fc" id="L371">                    Log.d(&quot;TAG&quot;, &quot;Response = &quot; + popularArtistlist);</span>
+<span class="fc" id="L372">                    recyclerAdapterArtist=new adapterPopularArtist(getActivity(),popularArtistlist.getArtists());</span>
+<span class="fc" id="L373">                    recyclerView3.setAdapter(recyclerAdapterArtist);</span>
+<span class="fc" id="L374">                    recyclerView3.setHasFixedSize(true);</span>
+                    }
+
+<span class="fc" id="L377">            }</span>
+            /**
+             *
+             * @param call --&gt;interface request
+             * @param t --&gt;type of error of the request
+             * called when every errored requests and set its type
+             */
+            @Override
+            public void onFailure(Call&lt;PopularArtist&gt; call, Throwable t)
+            {
+<span class="nc" id="L387">                textViewResult.setText(t.getMessage() + &quot;failed&quot;);</span>
+
+<span class="nc" id="L389">            }</span>
+
+
+        });
+
+
+<span class="fc" id="L395">    }</span>
+
+    /*
+    @NonNull
+    @Override
+    public Lifecycle getLifecycle() {
+        return null;
+    }
+
+     */
+
+
+    /**
+     *
+     * @param fragment --&gt;it is fragment that i go to
+     * transfer between the fragments
+     */
+    public void loadFragmentSetting(Fragment fragment)
+    {
+        // create a FragmentManager
+<span class="nc" id="L415">        FragmentManager fm = getFragmentManager();</span>
+        // create a FragmentTransaction to begin the transaction and replace the Fragment
+<span class="nc" id="L417">        FragmentTransaction fragmentTransaction = fm.beginTransaction();</span>
+        // replace the FrameLayout with new Fragment
+<span class="nc" id="L419">        fragmentTransaction.replace(R.id.frame_fragment,fragment);</span>
+        // save the changes
+<span class="nc" id="L421">        fragmentTransaction.commit();</span>
+
+<span class="nc" id="L423">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

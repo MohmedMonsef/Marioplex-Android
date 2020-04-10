@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>searchfragment.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.Fragments.SEARCH_FRAGMENT</a> &gt; <span class="el_source">searchfragment.java</span></div><h1>searchfragment.java</h1><pre class="source lang-java linenums">package com.example.spotify.Fragments.SEARCH_FRAGMENT;
+
+import androidx.fragment.app.Fragment;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Adapters.adapterCategories;
+import com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT.searchListfragment;
+import com.example.spotify.Interfaces.backinterfaces;
+import com.example.spotify.BackClasses.Backclasses.backcategory.Category;
+import com.example.spotify.R;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
+//import androidx.fragment.app.Fragment;
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * to handle interaction events.
+ * create an instance of this fragment.
+ */
+<span class="fc" id="L41">public class searchfragment extends Fragment implements LifecycleOwner</span>
+{
+    Category CategoriesList;
+    RecyclerView recyclerView;
+    adapterCategories recyclerAdapter;
+    private TextView textViewResult;
+    ImageView searchimg;
+    private viewmodelSearch searchViewmodel;
+
+    /**
+     *
+     * @param inflater --&gt;layout for this fragment
+     * @param container --&gt;ViewGroup that contain layout of the fragment(linear layout)
+     * @param savedInstanceState --&gt;saved object needed before calling the fragment (type of storage)
+     *
+     * @return --&gt;view of this fragment
+     */
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState)
+    {
+
+        // Inflate the layout for this fragment
+<span class="fc" id="L64">        View view = inflater.inflate(R.layout.fragment_searchfragment, container, false);</span>
+<span class="fc" id="L65">        searchViewmodel = ViewModelProviders.of((MainActivity) getActivity()).get(viewmodelSearch.class);</span>
+<span class="fc" id="L66">        final TextView textView = view.findViewById(R.id.text_setting);</span>
+<span class="fc" id="L67">        searchimg = view.findViewById(R.id.searchImg);</span>
+<span class="fc" id="L68">        textViewResult = view.findViewById(R.id.textcategor);</span>
+        ////*******************************RecyclerView***********************////
+<span class="fc" id="L70">        CategoriesList = new Category();</span>
+<span class="fc" id="L71">        recyclerView = (RecyclerView) view.findViewById(R.id.recycleCategory);</span>
+        LinearLayoutManager layoutManager;
+<span class="fc" id="L73">        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);</span>
+<span class="fc" id="L74">        recyclerView.setLayoutManager(layoutManager);</span>
+<span class="fc" id="L75">        SetRetrofit();</span>
+        /**
+         * a listener for change in searchimage
+         */
+<span class="fc" id="L79">        searchimg.setOnClickListener(new View.OnClickListener() {</span>
+            /**
+             *
+             * @param view --&gt; current layout
+             * go to next fragments
+             */
+            @Override
+            public void onClick(View view)
+            {
+                // Create new fragment and transaction
+<span class="nc" id="L89">                Fragment newFragment = new searchListfragment();</span>
+                // consider using Java coding conventions (upper first char class names!!!)
+<span class="nc" id="L91">                FragmentTransaction transaction = getFragmentManager().beginTransaction();</span>
+                // Replace whatever is in the fragment_container view with this fragment,
+<span class="nc" id="L93">                transaction.replace(R.id.frame_fragment, newFragment);</span>
+                // and add the transaction to the back stack
+<span class="nc" id="L95">                transaction.addToBackStack(null);</span>
+                // Commit the transaction
+<span class="nc" id="L97">                transaction.commit();</span>
+<span class="nc" id="L98">            }</span>
+
+        });
+
+<span class="fc" id="L102">        return view;</span>
+
+    }
+    ////*******************************Retrofit****************************////
+    /**
+     * Set the retrofit function
+     */
+    private void SetRetrofit()
+    {
+
+<span class="fc" id="L112">        Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();</span>
+<span class="fc" id="L113">        backinterfaces apiService = retrofit.create(backinterfaces.class);</span>
+<span class="fc" id="L114">        Call&lt;Category&gt; call = apiService.getCategories(&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTgwYzZhZjE0Yzg1NjZkNmNkOWI0MDAiLCJwcm9kdWN0IjoiZnJlZSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg2MDI2NjAyLCJleHAiOjQ3MzI1MTMwMDJ9.ztEjNCgbkyJ2-9WB6ojwLgDfhWsZ-ZGJVFUB8dYMz8s&quot;);</span>
+<span class="fc" id="L115">        call.enqueue(new Callback&lt;Category&gt;()</span>
+<span class="fc" id="L116">        {</span>
+
+            /**
+             *
+             * @param call --&gt; interface request
+             * @param response --&gt; interface response
+             * called when every changed requests and set the data
+             */
+            @Override
+            public void onResponse(Call&lt;Category&gt; call, Response&lt;Category&gt; response)
+            {
+                //error in the server
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">                if (response.code() == 401)</span>
+<span class="nc" id="L129">                    textViewResult.setText(response.errorBody().toString() + &quot;401&quot;);</span>
+                //may internet disconnected
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">                else if (!response.isSuccessful())</span>
+                {
+<span class="nc" id="L133">                    textViewResult.setText(&quot;Code: &quot; + response.code());</span>
+<span class="nc" id="L134">                    return;</span>
+                }
+                //if responcse is successful and the server send response
+<span class="fc" id="L137">                CategoriesList = response.body();</span>
+                //error in GET request url
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">                if (response.body() == null)</span>
+<span class="nc" id="L140">                    textViewResult.setText(&quot;responce body = null&quot;);</span>
+                //error in binding interface
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">                else if (CategoriesList == null)</span>
+<span class="nc" id="L143">                    textViewResult.setText(response.body().toString() + &quot; CategoriesList = null&quot;);</span>
+                //Successful
+                else
+                    {
+<span class="fc" id="L147">                    Log.d(&quot;TAG&quot;, &quot;Response = &quot; + CategoriesList);</span>
+<span class="fc" id="L148">                    recyclerAdapter = new adapterCategories(getActivity(), CategoriesList.getCategories());</span>
+<span class="fc" id="L149">                    recyclerView.setAdapter(recyclerAdapter);</span>
+<span class="fc" id="L150">                    recyclerView.setHasFixedSize(true);</span>
+                    }
+
+<span class="fc" id="L153">            }</span>
+            /**
+             *
+             * @param call --&gt;interface request
+             * @param t --&gt;type of error of the request
+             * called when every errored requests and set its type
+             */
+            @Override
+            public void onFailure(Call&lt;Category&gt; call, Throwable t)
+            {
+<span class="nc" id="L163">                textViewResult.setText(t.getMessage() + &quot;failed&quot;);</span>
+<span class="nc" id="L164">            }</span>
+        });
+
+
+<span class="fc" id="L168">    }</span>
+
+    /*
+    @NonNull
+    @Override
+    public Lifecycle getLifecycle() {
+        return null;
+    }
+
+     */
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>
