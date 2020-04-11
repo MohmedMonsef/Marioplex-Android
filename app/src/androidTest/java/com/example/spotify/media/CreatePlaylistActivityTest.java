@@ -112,7 +112,7 @@ public class CreatePlaylistActivityTest {
         onView(withId(R.id.password)).perform(typeText("hager"));
         onView(withId(R.id.loginButton)).perform(click());
         try {
-            sleep(7000);
+            sleep(10000);
         }
         catch (InterruptedException e)
         {
