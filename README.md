@@ -1,5 +1,3 @@
-# Marioplex-Android
-Software Engineering Project(Spotify)-Android Team
 #Project Title  :
 _______________
 
@@ -15,8 +13,20 @@ ________________
 *Prerequisites:
 _______________
 
-- you need to install Android studio ""
-- you must have an internet connection
+-you need to install Android studio "https://developer.android.com/studio/?gclid=CjwKCAjw1cX0BRBmEiwAy9tKHsfJ9T5RUFtlU2dYP6ipkWzfxQ8I61SzgyYOqoCrre5ANsOn5CzZmxoCg8IQAvD_BwE&gclsrc=aw.ds"
+-you must have an internet connection
+-you need before run any test or generate code coverage to
+
+"enable Developer option on your device" :
+(head to setting->update&security->aboutphone->click 7 times at software version->Developer option will appear )
+by using either:
+
+1)connect your device with USP
+
+or
+
+2)Emulator by using "https://www.dummies.com/web-design-development/mobile-apps/how-to-set-up-an-emulator-in-android-studio/"
+
 
 *Installing:
 _______________
@@ -32,18 +42,57 @@ _______________
 
 #Running Tests:
 _______________
--you will have an example folder in the "com (android test)"
+-Test will be in "TestHomeSearch"
+-you must turn off animation on your phone:
+Developer option->turn off (Window animation scale,Transition animation scale,animator deuration scale)
+-open Android studio 
+-in the project tap in the lift 
+-->open project name "FragSpotify"
+->click on app
+-->src
+-->androidTest
+-->right click on java and choose "Run'AllTests'"
 
+
+*To Generate Code Coverage:
+___________________________
+-Open Android Studio
+-click on Gradle  in top right
+--> click on app
+ -->click on the Gradle icon
+-->write in the command line"createDebugAndroidTestCoverageReport"
+
+-the tests will run when finished the report will be in app->>build->>reports->>coverage->>debug
+-then open index.html in browse
 
 *****************************************************************************************
 
-#Deployment:
+#How to run for developers:
+____________
+
+- Open project in Android Studio
+- Press Shift+F10 to run
+
+********************************************************************************************* 
+
+#How to build for production:
 ____________
 
 - choose Build in toolbar
 - select Build APK
 - copy the APK file to your phone and install it
-- then you will have on your phone running
+- then you will have APP on your phone running
+
+********************************************************************************************* 
+
+#Generate Functional Documentation:
+___________________________________
+-open Android studio
+-Go to Tools
+-click on Generate "JavaDoc"
+-choose you output directory
+-choose the function type
+-then OK
 
 ********************************************************************************************* 
 
@@ -86,6 +135,9 @@ implementation 'com.sothree.slidinguppanel:library:3.4.0'
 (9) For testing :
 
 androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+androidTestImplementation 'androidx.test:runner:1.2.0'
+androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+androidTestImplementation 'androidx.test:rules:1.2.0'
 
 *************************************************************************************
 
