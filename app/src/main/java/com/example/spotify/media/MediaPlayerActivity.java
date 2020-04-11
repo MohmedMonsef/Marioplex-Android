@@ -7,7 +7,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -371,8 +370,8 @@ public class MediaPlayerActivity extends AppCompatActivity {
                     start_time.setText(getTimeString(mCurrentPosition));
                     end_time.setText(getTimeString(duration-mCurrentPosition));
                 }
-                //mHandler.postDelayed(this, 500);
-                mHandler.post(this);
+                mHandler.postDelayed(this, 500);
+                //mHandler.post(this);
             }
         });
 

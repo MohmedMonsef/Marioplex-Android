@@ -19,41 +19,52 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static java.lang.Thread.sleep;
 
 @RunWith(AndroidJUnit4.class)
-public class AddToPlaylistActivityTest {
-
-//    @Rule
-//    public ActivityTestRule<AddToPlaylistActivity> mact=new ActivityTestRule<AddToPlaylistActivity>(AddToPlaylistActivity.class);
-//    private AddToPlaylistActivity addToPlaylistActivity = null;
+public class BottomSheetFragmentTest {
 
     @Rule
     public ActivityTestRule<IntroActivity> mact=new ActivityTestRule<>(IntroActivity.class);
 
-
     @Test
-    public void views_displayed_test() {
+    public void aviews_displayed_test() {
 
         greeterSaysHello();
 
-        onView(withId(R.id.bottom_image_id)).perform(click());
-        onView(withId(R.id.song_settings_button)).perform(click());
-        onView(withId(R.id.settings_add_to_playlist)).perform(click());
+        onView(withId(R.id.bottom_image_id)).check(matches(isDisplayed()));
+        onView(withId(R.id.song_artist_name)).check(matches(isDisplayed()));
+        onView(withId(R.id.bottom_favorite)).check(matches(isDisplayed()));
+        onView(withId(R.id.bottom_play_pause)).check(matches(isDisplayed()));
 
-        onView(withId(R.id.back_button_to_mediaplayer)).check(matches(isDisplayed()));
-        onView(withId(R.id.new_playlist_button)).check(matches(isDisplayed()));
-        onView(withId(R.id.new_playlist_button)).check(matches(isDisplayed()));
-        onView(withId(R.id.new_playlist_button)).perform(click());
-        onView(withId(R.id.playlist_name_edit_text)).check(matches(isDisplayed()));
 
 
     }
 
-    @Test
-    public void list_view_test() {
+     @Test
+    public void play_pause_test() {
 
         greeterSaysHello();
-        onView(withId(R.id.bottom_image_id)).perform(click());
-        onView(withId(R.id.song_settings_button)).perform(click());
-        onView(withId(R.id.settings_add_to_playlist)).perform(click());
+
+        onView(withId(R.id.bottom_play_pause)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.bottom_play_pause)).perform(click());
+         try {
+             sleep(2000);
+         }
+         catch (InterruptedException e)
+         {
+             e.printStackTrace();
+         }
+         onView(withId(R.id.bottom_play_pause)).perform(click());
+
+
+    }
+
+     @Test
+     public void like_unlike_test() {
+        greeterSaysHello();
+
+        onView(withId(R.id.bottom_favorite)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.bottom_favorite)).perform(click());
         try {
             sleep(10000);
         }
@@ -61,12 +72,14 @@ public class AddToPlaylistActivityTest {
         {
             e.printStackTrace();
         }
-
-        onView(withId(R.id.playlists_list_view)).check(matches(isDisplayed()));
-
-        onView(withId(R.id.back_button_to_mediaplayer)).perform(click());
-        onView(withId(R.id.play)).check(matches(isDisplayed()));
-
+        onView(withId(R.id.bottom_favorite)).perform(click());
+         try {
+             sleep(10000);
+         }
+         catch (InterruptedException e)
+         {
+             e.printStackTrace();
+         }
 
     }
 
@@ -75,6 +88,7 @@ public class AddToPlaylistActivityTest {
 
     public void greeterSaysHello()
     {
+
 
         //startActivity(new Intent(introact.getBaseContext(), IntroActivity.class));
         onView(withId(R.id.introya)).perform(click());
@@ -90,5 +104,4 @@ public class AddToPlaylistActivityTest {
         }
         onView(withId(R.id.navigation)).check(matches(isDisplayed()));
     }
-
 }

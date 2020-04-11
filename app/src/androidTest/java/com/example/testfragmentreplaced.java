@@ -1,88 +1,23 @@
 package com.example;
 
-import android.app.Activity;
-import android.widget.AbsListView;
-import android.widget.Button;
-import androidx.fragment.app.Fragment;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.FrameLayout;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
-
-import com.example.spotify.Fragments.HOME_FRAGMENT.backhome;
-import com.example.spotify.Fragments.SEARCH_FRAGMENT.searchfragment;
-import com.example.spotify.Fragments.LIBRARY_FRAGMENT.libraryFragment;
-import com.example.spotify.Fragments.PREMIUM_FRAGMENT.premiumFragment;
-import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.R;
 import com.example.spotify.login.IntroActivity;
-import com.example.spotify.media.MediaPlayerService;
-import com.example.spotify.media.TrackInfo;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.test.espresso.ViewAssertion;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
-import com.example.spotify.Activities.MainActivity;
-import com.example.spotify.R;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.app.PendingIntent.getActivity;
-import static androidx.core.content.ContextCompat.startActivity;
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.addGlobalAssertion;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.PositionAssertions.isAbove;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static java.lang.Thread.sleep;
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.junit.Assert.*;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.HorizontalScrollView;
-import android.widget.ScrollView;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
-import androidx.test.rule.ActivityTestRule;
-
-import com.example.spotify.Fragments.HOME_FRAGMENT.backhome;
-import com.example.spotify.Fragments.SEARCH_FRAGMENT.searchfragment;
-import com.example.spotify.Fragments.LIBRARY_FRAGMENT.libraryFragment;
-import com.example.spotify.Fragments.PREMIUM_FRAGMENT.premiumFragment;
-import com.example.spotify.Interfaces.EndPointAPI;
-import com.example.spotify.R;
-import com.example.spotify.media.MediaPlayerService;
-import com.example.spotify.media.TrackInfo;
-
-import kotlin.jvm.JvmField;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -116,9 +51,8 @@ public void textLoginUI()
 
 }
 
-@Test
-public void greeterSaysHello()
-{
+    public void greeterSaysHello()
+    {
 
 
         //startActivity(new Intent(introact.getBaseContext(), IntroActivity.class));
@@ -127,7 +61,7 @@ public void greeterSaysHello()
         onView(withId(R.id.password)).perform(typeText("lenaa"));
         onView(withId(R.id.loginButton)).perform(click());
     try {
-        sleep(70000);
+        sleep(15000);
         }
     catch (InterruptedException e)
         {
@@ -136,15 +70,16 @@ public void greeterSaysHello()
 onView(withId(R.id.navigation)).check(matches(isDisplayed()));
 //onView(withText("Hello Steve!")).check(matches(isDisplayed()));
     }
-@Test
-public void HOME()
-{
-    greeterSaysHello();
-    //onView(withId(R.id.recycle)).check((ViewAssertion) allOf(isAssignableFrom(ScrollView.class)));
-   // onView(withId(R.id.recycle)).perform(RecyclerView.a)
 
-    //isAssignableFrom(HorizontalScrollView.class));
-}
+//    @Test
+//    public void HOME()
+//    {
+//        greeterSaysHello();
+//    //onView(withId(R.id.recycle)).check((ViewAssertion) allOf(isAssignableFrom(ScrollView.class)));
+//   // onView(withId(R.id.recycle)).perform(RecyclerView.a)
+//
+//    //isAssignableFrom(HorizontalScrollView.class));
+//    }
 
     @Test
     public void buttombar()
