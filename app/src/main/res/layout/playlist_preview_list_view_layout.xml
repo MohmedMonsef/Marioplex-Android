@@ -14,7 +14,7 @@
         <ImageView
             android:id="@+id/preview_song_image"
             android:background="@drawable/curved_image_layout"
-            android:src="@drawable/not_found1"
+            android:src="@drawable/ic_smile1"
             android:layout_width="80dp"
             android:layout_height="80dp"/>
         <LinearLayout

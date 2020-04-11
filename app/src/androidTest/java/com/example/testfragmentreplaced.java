@@ -1,5 +1,8 @@
 package com.example;
 
+import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
@@ -80,6 +83,174 @@ onView(withId(R.id.navigation)).check(matches(isDisplayed()));
 //
 //    //isAssignableFrom(HorizontalScrollView.class));
 //    }
+
+
+    @Test
+    public void HOME()
+    {
+        greeterSaysHello();
+//        onView(withId(R.id.recycle)).check((ViewAssertion) allOf(isAssignableFrom(ScrollView.class)));
+        // onView(withId(R.id.recycle)).perform(RecyclerView.a)
+//onView(ViewMatchers.withId(R.id.recycle)).perform(RecyclerViewActions.scrollToHolder((Matcher<RecyclerView.ViewHolder>) matches(isDisplayed())));
+        onView(ViewMatchers.withId(R.id.recycle)).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
+        onView(withId(R.id.text_newRelease)).check(matches(isDisplayed()));
+        onView(withId(R.id.navigation_home)).perform(click());
+        onView(withId(R.id.navigation)).check(matches(isDisplayed()));
+///////////////////////////////////////////////
+        try
+        {
+            sleep(7000);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+////////////////////////////////////////////////
+        onView(ViewMatchers.withId(R.id.recyclealbum)).perform(RecyclerViewActions.actionOnItemAtPosition(3,click()));
+        onView(withId(R.id.text_newRelease)).check(matches(isDisplayed()));
+        onView(withId(R.id.navigation_home)).perform(click());
+        onView(withId(R.id.navigation)).check(matches(isDisplayed()));
+//////////////////////******************************///////////////////////////////
+        try
+        {
+            sleep(7000);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+////////////////////////////////////////////////
+        onView(withId(R.id.recycleplaylist)).perform(ViewActions.scrollTo());
+        onView(withId(R.id.recycleplaylist)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.shuffle_play_button)).check(matches(isDisplayed()));
+        onView(withId(R.id.navigation_home)).perform(click());
+        onView(withId(R.id.navigation)).check(matches(isDisplayed()));
+
+///////////////////////////////////////////////////////////////////////
+        try
+        {
+            sleep(7000);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+////////////////////////////////////////////////
+        onView(withId(R.id.recycleartist)).perform(ViewActions.scrollTo());
+        onView(withId(R.id.recycleartist)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.text_newRelease)).check(matches(isDisplayed()));
+        onView(withId(R.id.navigation_home)).perform(click());
+        onView(withId(R.id.navigation)).check(matches(isDisplayed()));
+
+        //  onView(withId(R.id.navigation)).check(matches(isDisplayed()));
+        ///////////////////////////////////////////////
+        //onView(withId(R.id.action_settings)).perform(click());
+        //onView(withId(R.id.profile_picture)).check(matches(isDisplayed()));
+        /////////////////////////////////////////////////////////////
+        //onView(withId(R.id.recycle)).perform(ViewActions.scrollTo());
+        //onView(withId(R.id.recycle)).perform(RecyclerViewActions.actionOnItemAtPosition(7, click()));
+        //onView(withId(R.id.text_newRelease)).check(matches(isDisplayed()));
+//////////////////////////////////////
+        //onView(withId(R.id.navigation_home)).perform(click());
+        //onView(withId(R.id.navigation)).check(matches(isDisplayed()));
+///////////////////////////////////////////////////////////////////////
+        // onView(withText("Launch")).perform(ViewActions.scrollTo()).check(matches(isDisplayed()));
+        //Espresso.onView(ViewMatchers.withId(R.id.recyclealbum)).perform(ViewActions.swipeUp());
+        //////////////////////////////////////////////
+        //onView(withId(R.id.recyclealbum)).perform(ViewActions.scrollTo());
+        //onView(withId(R.id.recyclealbum)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        //onView(withId(R.id.text_newRelease)).check(matches(isDisplayed()));
+        //////////////////////////////////////
+        /*onView(withId(R.id.navigation_home)).perform(click());
+        onView(withId(R.id.navigation)).check(matches(isDisplayed()));
+///////////////////////////////////////////////////////////////////////
+        onView(withId(R.id.recycleartist)).perform(ViewActions.scrollTo());
+        onView(withId(R.id.recycleartist)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.text_newRelease)).check(matches(isDisplayed()));
+        //////////////////////////////////////
+        onView(withId(R.id.navigation_home)).perform(click());
+        onView(withId(R.id.navigation)).check(matches(isDisplayed()));
+///////////////////////////////////////////////////////////////////////
+        onView(withId(R.id.recycleplaylist)).perform(ViewActions.scrollTo());
+        onView(withId(R.id.recycleplaylist)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.text_newRelease)).check(matches(isDisplayed()));
+        ////////////////////////////////////////////////////////////////////
+        onView(withId(R.id.navigation_home)).perform(click());
+        onView(withId(R.id.navigation)).check(matches(isDisplayed()));
+        //onView(ViewMatchers.withId(R.id.recycle)).check(matches(isDisplayed()));
+        //isAssignableFrom(HorizontalScrollView.class));*/
+    }
+    @Test
+    public void CATEGORY()
+    {
+        greeterSaysHello();
+        onView(withId(R.id.navigation_search)).perform(click());
+        onView(withId(R.id.text_search)).check(matches(isDisplayed()));
+        onView(withId(R.id.text_search)).check(isAbove(withId(R.id.searchImg)));
+        onView(withId(R.id.searchImg)).check(isAbove(withId(R.id.textcategor)));
+        //onView(ViewMatchers.withId(R.id.recycleCategory)).perform(RecyclerViewActions.actionOnItemAtPosition(1,click()));
+        //onView(ViewMatchers.withId(R.id.recycleCategory)).perform(RecyclerViewActions.scrollToHolder((Matcher<RecyclerView.ViewHolder>) matches(isDisplayed())));
+
+    }
+    @Test
+    public void SEARCH()
+    {greeterSaysHello();
+        onView(withId(R.id.navigation_search)).perform(click());
+        onView(withId(R.id.text_search)).check(matches(isDisplayed()));
+        onView(withId(R.id.searchImg)).perform(click());
+        onView(withId(R.id.textartist)).check(isAbove(withId(R.id.texttrack)));
+        onView(withId(R.id.texttrack)).check(isAbove(withId(R.id.textplaylist)));
+        onView(withId(R.id.textplaylist)).check(isAbove(withId(R.id.textalbums)));
+
+        onView(withId(R.id.searchbarlist)).check(isAbove(withId(R.id.texta)));
+        try {
+            sleep(7000);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+
+        onView(withId(R.id.searchbarlist)).perform(typeText("n"));
+        try {
+            sleep(7000);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+        onView(withId(R.id.searchbarlist)).perform(typeText("a"));
+        try {
+            sleep(7000);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+        onView(withId(R.id.searchbarlist)).perform(typeText("d"));
+        try {
+            sleep(7000);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+        onView(withId(R.id.searchbarlist)).perform(typeText("a"));
+        try {
+            sleep(70000);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+
+
+
+
+
+    }
+
+
 
     @Test
     public void buttombar()
