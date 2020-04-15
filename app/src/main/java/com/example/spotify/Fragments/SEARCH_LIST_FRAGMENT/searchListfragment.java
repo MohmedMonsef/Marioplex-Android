@@ -11,11 +11,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
@@ -24,6 +26,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.Adapters.adapterSearch;
+import com.example.spotify.Fragments.SEARCH_FRAGMENT.searchfragment;
+import com.example.spotify.Fragments.SEE_ALBUMS_FRAGMENT.see_all_albums_Fragment;
+import com.example.spotify.Fragments.SEE_ARTISTS_FRAGMENT.see_all_artist_Fragment;
+import com.example.spotify.Fragments.SEE_PLAYLIST_FRAGMENT.see_all_playlist_Fragment;
+import com.example.spotify.Fragments.SEE_SONG_FRAGMENT.see_all_song_Fragment;
 import com.example.spotify.Interfaces.backinterfaces;
 import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
 import com.example.spotify.R;
@@ -47,9 +54,11 @@ public class searchListfragment extends Fragment implements LifecycleOwner
     Search searchList;
     RecyclerView recyclerView;
     adapterSearch recyclerAdapter;
+    ImageView back_button_to_searchlist;
     private TextView textViewResult,talbum,tartist,tplaylist,tsong;
     LinearLayout l1;
     int dochange;
+    String word;
     private Retrofit retrofit;
     private backinterfaces apiService;
     private viewmodelSearchList searchViewModel;
@@ -73,6 +82,56 @@ public class searchListfragment extends Fragment implements LifecycleOwner
         LinearLayoutManager layoutManager;
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
+        ////************************************************************************////
+        talbum=view.findViewById(R.id.textalbums);
+        talbum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                loadSearchFragment("album");
+            }
+        });
+        ////************************************************************************////
+        tartist=view.findViewById(R.id.textartist);
+        tartist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                loadSearchFragment("artist");
+            }
+        });
+        ////************************************************************************////
+        tsong=view.findViewById(R.id.texttrack);
+        tsong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                loadSearchFragment("song");
+            }
+        });
+        ////************************************************************************////
+        tplaylist=view.findViewById(R.id.textplaylist);
+        tplaylist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                loadSearchFragment("playlist");
+            }
+        });
+        //*************************************************************************///
+        back_button_to_searchlist=view.findViewById(R.id.back_button_to_searchlist);
+        back_button_to_searchlist.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Fragment newFragment = new searchfragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_fragment, newFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
         ////*******************************To check the state***********************////
         textViewResult = view.findViewById(R.id.texta);
         /**
@@ -108,6 +167,7 @@ public class searchListfragment extends Fragment implements LifecycleOwner
             {
                 //flag to change the background color
             dochange=s.length();
+            word=s.toString();
                 if(s.length()!=0)
                 {
                     Log.i("onQueryTextChange", s.toString());
@@ -195,15 +255,53 @@ public class searchListfragment extends Fragment implements LifecycleOwner
 
     }
 
-    /*
-    @NonNull
-    @Override
-    public Lifecycle getLifecycle() {
-        return null;
+    public void loadSearchFragment(String type)
+    {
+        Fragment newFragment;
+        FragmentTransaction transaction;
+        Bundle args=new Bundle();
+        if(type=="album")
+        {
+            newFragment = new see_all_albums_Fragment();
+            args.putString("DATA_RECIEVE_Album",word);
+            newFragment.setArguments(args);
+             transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_fragment, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+        else if(type=="artist")
+        {
+            newFragment = new see_all_artist_Fragment();
+            args.putString("DATA_RECIEVE_Artist",word);
+            newFragment.setArguments(args);
+            transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_fragment, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+        else if(type=="song")
+        {
+            newFragment = new see_all_song_Fragment();
+            args.putString("DATA_RECIEVE_Song",word);
+            newFragment.setArguments(args);
+            transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_fragment, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+        else if(type=="playlist")
+        {
+            newFragment = new see_all_playlist_Fragment();
+            args.putString("DATA_RECIEVE_Playlist",word);
+            newFragment.setArguments(args);
+            transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_fragment, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
 
 
     }
-
-     */
 
 }

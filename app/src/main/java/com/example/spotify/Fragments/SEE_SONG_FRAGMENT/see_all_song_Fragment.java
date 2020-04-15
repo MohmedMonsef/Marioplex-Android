@@ -5,107 +5,144 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Adapters.adapterSearch;
+import com.example.spotify.Adapters.adapterSeeAll;
+import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
+import com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT.searchListfragment;
+import com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT.viewmodelSearchList;
+import com.example.spotify.Interfaces.backinterfaces;
 import com.example.spotify.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link see_all_song_Fragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link see_all_song_Fragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class see_all_song_Fragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+public class see_all_song_Fragment extends Fragment implements LifecycleOwner {
+    Search searchList;
+    RecyclerView recyclerView;
+    adapterSeeAll recyclerAdapter;
+    private TextView textViewResult;
+    private Retrofit retrofit;
+    private backinterfaces apiService;
+    private viewmodelSearchList searchViewModel;
+    public static String DATA_RECIEVE="data_recieve";
+    TextView ArtistText;
+    String wordRecieve;
+    ImageView back_button_to_seeAllSong;
 
-    public see_all_song_Fragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment see_all_song_Fragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static see_all_song_Fragment newInstance(String param1, String param2) {
-        see_all_song_Fragment fragment = new see_all_song_Fragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_see_all_song_, container, false);
+        View view = inflater.inflate(R.layout.fragment_see_all_song_, container, false);
+        searchViewModel = ViewModelProviders.of((MainActivity) getActivity()).get(viewmodelSearchList.class);
+        //searchView.setOnSearchClickListener(View.OnClickListener on);
+        final TextView textView = view.findViewById(R.id.text_home);
+        ArtistText=view.findViewById(R.id.textalbumsearch);
+        retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
+        apiService = retrofit.create(backinterfaces.class);
+        ////*******************************RecyclerView***********************////
+        searchList = new Search();
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycleSearchSeeAllSong);
+        LinearLayoutManager layoutManager;
+        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        Bundle args=getArguments();
+        wordRecieve = getArguments().getString("DATA_RECIEVE_Song");
+        ArtistText.setText("'"+wordRecieve+"'"+"  in Songs ");
+        back_button_to_seeAllSong=view.findViewById(R.id.back_button_to_seeAllSong);
+        back_button_to_seeAllSong.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Fragment newFragment = new searchListfragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_fragment, newFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+        SetRetrofitsearchalbum(wordRecieve);
+        ////*******************************To check the state***********************////
+        textViewResult = view.findViewById(R.id.texta);
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    public void SetRetrofitsearchalbum(String s)
+    {
+        Call<Search> call = apiService.getSearch(s, "track" , "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTgwYzZhZjE0Yzg1NjZkNmNkOWI0MDAiLCJwcm9kdWN0IjoiZnJlZSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg2MDI2NjAyLCJleHAiOjQ3MzI1MTMwMDJ9.ztEjNCgbkyJ2-9WB6ojwLgDfhWsZ-ZGJVFUB8dYMz8s");
+        call.enqueue(new Callback<Search>()
+        {
+            /**
+             *
+             * @param call --> interface request
+             * @param response --> interface response
+             * called when every changed requests and set the data
+             */
+            @Override
+            public void onResponse(Call<Search> call, Response<Search> response)
+            {
+                //error in the server
+                if (response.code() == 401)
+                    textViewResult.setText(response.errorBody().toString() + "401");
+                    //may internet disconnected
+                else if (!response.isSuccessful())
+                {
+                    textViewResult.setText("Code: " + response.code());
+                    return;
+                }
+                //if responcse is successful and the server send response
+                searchList = response.body();
+                //error in GET request url
+                if (response.body() == null)
+                    textViewResult.setText("responce body = null");
+                    //error in binding interface
+                else if (searchList == null)
+                    textViewResult.setText(response.body().toString() + " search = null");
+                    //Successful
+                else
+                {
+                    Log.d("TAG", "Response = " + searchList);
+                    //set the search recyclerview
+                    recyclerAdapter = new adapterSeeAll(getActivity(), searchList);
+                    recyclerView.setAdapter(recyclerAdapter);
+                    recyclerView.setHasFixedSize(true);
+                }
+            }
+
+            /**
+             *
+             * @param call -->interface request
+             * @param t -->type of error of the request
+             * called when every errored requests and set its type
+             */
+            @Override
+            public void onFailure(Call<Search> call, Throwable t)
+            {
+                textViewResult.setText(t.getMessage() + "hey there failed");
+            }
+        });
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
+
 }

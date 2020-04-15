@@ -4,29 +4,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="160dp"
     android:layout_height="200dp"
-    android:id="@+id/layout_item_recycler"
+    android:id="@+id/layout_playlist_recycler"
     android:layout_margin="10dp"
+    android:background="@color/bgBottomNavigation"
     app:cardCornerRadius="8dp"
     app:cardElevation="10dp">
 
     <LinearLayout
-        android:id="@+id/LinearForImage"
+        android:id="@+id/LinearForImageplay"
         android:layout_width="160dp"
         android:layout_height="200dp"
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/entity_image"
+            android:id="@+id/play_image"
             android:layout_width="160dp"
             android:background="@drawable/ic_smile2"
-            android:layout_height="140dp"
+            android:layout_height="160dp"
             android:scaleType="centerCrop"/>
 
         <TextView
-            android:id="@+id/NameOfImage"
+            android:id="@+id/NameOfImageplay"
             android:layout_width="160dp"
-            android:layout_height="match_parent"
             android:background="@color/bgBottomNavigation"
+            android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
             android:textColor="@color/TextColor"
             android:textSize="20dp"/>
