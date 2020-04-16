@@ -362,8 +362,8 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
                         try{
                             String TID = "5e9841144b29c2d6f0cfb3dd";
                             //TID = mplaylistTracks.getTracks().get(position).getTrackid();
-                            String s = Retrofit.getInstance().getBaseurl() + "api/tracks/android/" + TID + "type=review";
-                            mediaPlayer.setDataSource(PlaylistPreviewActivity.this , Uri.parse("http://192.168.1.6:3000/api/tracks/android/5e9841144b29c2d6f0cfb3dd?type=review") , headers);
+                            String s = Retrofit.getInstance().getBaseurl() + "api/tracks/android/" + TID + "?type=review";
+                            mediaPlayer.setDataSource(PlaylistPreviewActivity.this , Uri.parse(s) , headers);
                             //loadingProgressbar1.setVisibility(View.VISIBLE);
                             //preview_playlist_image.setVisibility(View.GONE);
                             prepare.setValue(true);

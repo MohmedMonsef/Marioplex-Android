@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.IBinder;
@@ -12,17 +13,17 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.login.user;
 import com.example.spotify.pojo.currentTrack;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MediaPlayerService extends Service implements MediaPlayer.OnCompletionListener , MediaPlayer.OnPreparedListener ,
         MediaPlayer.OnBufferingUpdateListener ,MediaPlayer.OnErrorListener , MediaPlayer.OnSeekCompleteListener  {
@@ -36,6 +37,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     private int playFlag;
     private int resumePosition;
     private boolean stopInTrackEnd;
+    private Map<String,String> headers = new HashMap<String, String>();
+
 
     private boolean prepared;
     private Toast toast;
@@ -45,16 +48,6 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-//        try {
-//            //An audio file is passed to the service through putExtra();
-//            audioFile = intent.getExtras().getString("media");
-//        } catch (NullPointerException e) {
-//            stopSelf();
-//        }
-
-//        if (audioFile != null && audioFile != "")
-//            initMediaPlayer();
-//
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -63,6 +56,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
      */
     @Override
     public void onCreate() {
+        headers.put("x-auth-token" , user.getToken());
         super.onCreate();
         initMediaPlayer();
         playFlag = 0;
@@ -87,42 +81,16 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         mediaPlayer.setOnSeekCompleteListener(this);
         //Reset so that the MediaPlayer is not pointing to another data source
         mediaPlayer.reset();
-
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         ///////////////////request the current track//////////////////////////
         //Call<currentTrack> call = endPointAPI.getCurrentlyPlaying(user.getToken());
         Call<currentTrack> call = Retrofit.getInstance().getEndPointAPI().getCurrentlyPlaying(user.getToken());
         getCurrentlyPlaying(call);
-        //////////////////////////////////////////////////////////////////////
-        //TODO must be in on response when the back finishes the url
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//        try {
-//            // Set the data source to the mediaFile location
-//            audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
-//            mediaPlayer.setDataSource(audioFile);
-//            prepared = false;
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            stopSelf();
-//        }
-//        mediaPlayer.prepareAsync();
+
     }
 
     public void playCurrentTrack(Call<currentTrack> call){
         getCurrentlyPlaying(call);
-//        mediaPlayer.reset();
-//        try {
-//            // Set the data source to the mediaFile location
-//            audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
-//            mediaPlayer.setDataSource(audioFile);
-//            prepared = false;
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            stopSelf();
-//        }
-//        mediaPlayer.prepareAsync();
-
     }
 
     /**
@@ -155,24 +123,23 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                     mediaPlayer.reset();
                     try {
                         // Set the data source to the mediaFile location
-                        audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
-                        mediaPlayer.setDataSource(audioFile);
+                        String TID = "5e9841144b29c2d6f0cfb3dd";
+                        //TID = response.body().getTrack().getId();
+                        String s = Retrofit.getInstance().getBaseurl() + "api/tracks/android/" + TID + "?type=medium";
+                        mediaPlayer.setDataSource(MediaPlayerService.this , Uri.parse(s) , headers);
+
+
+                        //audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+                        //mediaPlayer.setDataSource(audioFile);
                         prepared = false;
+                        mediaPlayer.prepareAsync();
 
                     } catch (IOException e) {
                         e.printStackTrace();
                         stopSelf();
                     }
-                    mediaPlayer.prepareAsync();
-                    //audioFile = track.getTrack().getValue().getUri();
-//                    try {
-//                        mediaPlayer.setDataSource(audioFile);
-//                         prepared = false
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                        stopSelf();
-//                    }
-                    // mediaPlayer.prepareAsync();
+
+
                 }
             }
             @Override
@@ -196,19 +163,6 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         getCurrentlyPlaying(call);
         //////////////////////////////////////////////////////////////////////
         pauseMedia();
-//        mediaPlayer.reset();
-//
-//        try {
-//            // Set the data source to the mediaFile location
-//            audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3";
-//            mediaPlayer.setDataSource(audioFile);
-//            prepared = false;
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            stopSelf();
-//        }
-//        mediaPlayer.prepareAsync();
 
     }
 
@@ -223,17 +177,6 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         getCurrentlyPlaying(call);
         //////////////////////////////////////////////////////////////////////
         pauseMedia();
-//        mediaPlayer.reset();
-//        try {
-//            // Set the data source to the mediaFile location
-//            audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3";
-//            mediaPlayer.setDataSource(audioFile);
-//            prepared = false;
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            stopSelf();
-//        }
-//        mediaPlayer.prepareAsync();
     }
     public Boolean getIsPlaying(){
         return isPlaying;
@@ -323,7 +266,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     public void resumeMedia() {
         if (!mediaPlayer.isPlaying()) {
-            mediaPlayer.seekTo(resumePosition);
+            //mediaPlayer.seekTo(resumePosition);
             mediaPlayer.start();
             isPlaying = true;
             TrackInfo.getInstance().setIsPlaying(true);
