@@ -168,17 +168,17 @@ public class PlaylistFragment extends Fragment {
 
         //TODO till the make makes it
 
-//        like_playlist.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(playlistTracks.getIsLiked()) {
-//                    unLikePlaylist();
-//                }
-//                else{
-//                    LikePlaylist();
-//                }
-//            }
-//        });
+        like_playlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(playlistTracks.getIsLiked()) {
+                    unLikePlaylist();
+                }
+                else{
+                    LikePlaylist();
+                }
+            }
+        });
 
         /**
          * requests the get current playlist info requests if something goes wrong
@@ -312,7 +312,7 @@ public class PlaylistFragment extends Fragment {
                     playlist_contents_layout.setVisibility(View.VISIBLE);
                     something_wrong_layout.setVisibility(View.GONE);
                     progress_bar_playlist.setVisibility(View.GONE);
-                    playlistTracks.setIsLiked(true);
+                    //playlistTracks.setIsLiked(true);
                     updateUI();
                 }
             }
@@ -425,12 +425,12 @@ public class PlaylistFragment extends Fragment {
 
 //TODO till the back makes it
 
-//        if(playlistTracks.getIsLiked()){
-//            like_playlist.setImageResource(R.drawable.like);
-//        }
-//        else{
-//            like_playlist.setImageResource(R.drawable.favorite_border);
-//        }
+        if(playlistTracks.getIsLiked()){
+            like_playlist.setImageResource(R.drawable.like);
+        }
+        else{
+            like_playlist.setImageResource(R.drawable.favorite_border);
+        }
     }
 
 
