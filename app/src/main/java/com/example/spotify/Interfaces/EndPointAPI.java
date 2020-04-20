@@ -1,6 +1,14 @@
 package com.example.spotify.Interfaces;
 
+import com.example.spotify.BackClasses.Backclasses.albumInform.AlbumObject;
+import com.example.spotify.BackClasses.Backclasses.albumTrack.AlbumTracks;
 import com.example.spotify.BackClasses.Backclasses.backcategory.Category;
+import com.example.spotify.BackClasses.Backclasses.backcategoryplaylist.CategoryPlaylist;
+import com.example.spotify.BackClasses.Backclasses.backnewrelease.Newreleases;
+import com.example.spotify.BackClasses.Backclasses.backpopularalbum.PopularAlbum;
+import com.example.spotify.BackClasses.Backclasses.backpopularartist.PopularArtist;
+import com.example.spotify.BackClasses.Backclasses.backpopularplaylist.PopularPlaylist;
+import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
 import com.example.spotify.login.apiClasses.FacebookLoginData;
 import com.example.spotify.login.apiClasses.LoginCredentials;
 import com.example.spotify.login.apiClasses.LoginResponse;
@@ -154,6 +162,42 @@ public interface EndPointAPI {
     @GET("api/browse/categories?country=SE&locale=sv_SE&limit=10&offset=5")
     @Headers("Authorization: Bearer "+token)
     public Call<Category> getCategories();
+//////*******************************Home Requests*************************/////////
+    @GET("api/browse/new-releases?country=SE&limit=10&offset=0")
+    public Call<Newreleases> getNewRelease();
 
+    @GET("api/browse/popular-albums")
+    public Call<PopularAlbum> getPopularAlbum();
+
+
+    @GET("api/browse/popular-playlists")
+    public Call<PopularPlaylist> getPopularPlaylist();
+
+    @GET("api/browse/popular-artists")
+    public Call<PopularArtist> getPopularArtist();
+
+//////*******************************Search Requests*************************/////////
+
+    @GET("api/search")
+    public Call<Search> getSearch(@Query("name") String name, @Query("type") String type, @Header("x-auth-token") String token);
+//////*******************************Category Requests*************************/////////
+
+    @GET("api/browse/categories")
+    public Call<Category> getCategories(@Header("x-auth-token") String token);
+
+    @GET("api/browse/categories/:category_id/playlists")
+    public Call<CategoryPlaylist> getCategoryPlaylist(@Path("category_id") String category_id, @Header("x-auth-token") String token);
+//////*******************************Albums Requests*************************/////////
+    @GET("api/albums/{album_id}")
+    public Call<AlbumObject> getAlbumObject(@Path("album_id") String album_id, @Header("x-auth-token") String token);
+
+    @GET("api/albums/{id}/tracks")
+    public Call<AlbumTracks> getAlbumTracks(@Path("id") String album_id, @Header("x-auth-token") String token);
+
+    @PUT("api/me/Albums")
+    public Call<Void> LIKE_ALBUM(@Body String ids,@Header("x-auth-token") String token);
+    //api/me/Albums
+    //@DELETE("api/me/albums")
+  //  public Call<Void> UN_LIKE_ALBUM(@Body String id,@Header("x-auth-token") String token);
 
 }

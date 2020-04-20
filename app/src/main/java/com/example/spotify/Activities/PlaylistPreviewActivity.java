@@ -109,7 +109,8 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
         Call<Void> call = endPointAPI.LikeTrack(trackID , user.getToken());
         call.enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<Void> call, Response<Void> response)
+            {
                 view1.setEnabled(true);
                 if(!response.isSuccessful()){
                     Toast.makeText(getApplicationContext(),"something went wrong .try again",Toast.LENGTH_SHORT).show();
@@ -197,7 +198,8 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
         /**
          * updates the UI with the playlists when the response comes
          */
-        public View getView(final int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent)
+        {
             convertView = getLayoutInflater().inflate(R.layout.playlist_preview_list_view_layout, parent, false);
             ImageView preview_playlist_image = (ImageView)convertView.findViewById(R.id.preview_song_image);
             TextView preview_song_name = (TextView)convertView.findViewById(R.id.preview_song_name);
@@ -219,10 +221,12 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
             preview_song_name.setText(song);
             preview_artist_name.setText(artist);
 
-            if(mplaylistTracks.getTracks().get(position).getIsLiked()){
+            if(mplaylistTracks.getTracks().get(position).getIsLiked())
+            {
                 preview_like.setImageResource(R.drawable.like);
             }
-            else{
+            else
+             {
                 preview_like.setImageResource(R.drawable.favorite_border);
             }
 
@@ -230,10 +234,12 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    if(mplaylistTracks.getTracks().get(position).getIsLiked()){
+                    if(mplaylistTracks.getTracks().get(position).getIsLiked())
+                    {
                         UnLikeTrack(mplaylistTracks.getTracks().get(position).getTrackid() ,(ImageView)v , position);
                     }
-                    else{
+                    else
+                        {
                         LikeTrack(mplaylistTracks.getTracks().get(position).getTrackid() ,(ImageView)v , position);
                     }
                 }
