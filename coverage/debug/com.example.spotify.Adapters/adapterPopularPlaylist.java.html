@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>adapterPopularPlaylist.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.Adapters</a> &gt; <span class="el_source">adapterPopularPlaylist.java</span></div><h1>adapterPopularPlaylist.java</h1><pre class="source lang-java linenums">package com.example.spotify.Adapters;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.spotify.BackClasses.Backclasses.backpopularplaylist.Playlist;
+import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
+import com.example.spotify.R;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+import static android.content.ContentValues.TAG;
+
+public class adapterPopularPlaylist extends RecyclerView.Adapter&lt;adapterPopularPlaylist.MyviewHolder&gt;
+{
+    private Context context;
+    private List&lt;Playlist&gt; PopularPlaylistList;
+    /**
+     * @param context
+     * @param PopularPlaylistList
+     * set the adapterPopularPlaylist with list
+     */
+    public adapterPopularPlaylist(Context context, List&lt;Playlist&gt; PopularPlaylistList)
+<span class="fc" id="L35">    {</span>
+<span class="fc" id="L36">        this.context = context;</span>
+<span class="fc" id="L37">        this.PopularPlaylistList = PopularPlaylistList;</span>
+<span class="fc" id="L38">    }</span>
+
+    public void setMovieList(List&lt;Playlist&gt; movieList)
+    {
+<span class="nc" id="L42">        this.PopularPlaylistList = movieList;</span>
+<span class="nc" id="L43">        notifyDataSetChanged();</span>
+<span class="nc" id="L44">    }</span>
+    /**
+     * @param parent --&gt; the view that has the recyclerview of this class
+     * @param viewType--&gt;
+     * @return new object of the view holder
+     */
+    @Override
+    public adapterPopularPlaylist.MyviewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    {
+<span class="fc" id="L53">        View view = LayoutInflater.from(context).inflate(R.layout.item_recycler,parent,false);</span>
+<span class="fc" id="L54">        return new MyviewHolder(view);</span>
+    }
+    /**
+     *
+     * @param holder --&gt;that has the view item (layout)
+     * @param position --&gt;index of the item in the list
+     * set on item of recyclerview with its data
+     */
+    @Override
+    public void onBindViewHolder(adapterPopularPlaylist.MyviewHolder holder, int position) {
+
+<span class="fc" id="L65">        final Playlist item=PopularPlaylistList.get(position);</span>
+<span class="fc" id="L66">        holder.ImageName.setText(item.getName());</span>
+        //Toast.makeText(context.getApplicationContext(),&quot;Image Loading&quot;,Toast.LENGTH_SHORT).show();
+        /// check if the image not null
+<span class="pc bpc" id="L69" title="3 of 6 branches missed.">        if(item.getImages()!= null &amp; item.getImages().size()!=0)</span>
+        {
+            // load the image
+<span class="nc" id="L72">            Picasso.get().load(item.getImages().get(0).toString()).into(holder.image);</span>
+        }
+<span class="fc" id="L74">        holder.itemView.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v)
+            {
+
+<span class="nc" id="L79">                Bundle bundle = new Bundle();</span>
+<span class="nc" id="L80">                bundle.putString(&quot;playlistID&quot; , item.getId());</span>
+<span class="nc" id="L81">                bundle.putString(&quot;ownerName&quot; , item.getOwner().getName());</span>
+<span class="nc" id="L82">                androidx.fragment.app.Fragment f = new PlaylistFragment();</span>
+<span class="nc" id="L83">                f.setArguments(bundle);</span>
+<span class="nc" id="L84">                AppCompatActivity activity = (AppCompatActivity) v.getContext();</span>
+<span class="nc" id="L85">                activity.getSupportFragmentManager()</span>
+<span class="nc" id="L86">                        .beginTransaction()</span>
+<span class="nc" id="L87">                        .replace(R.id.frame_fragment, f)</span>
+<span class="nc" id="L88">                        .addToBackStack(null).commit();</span>
+
+<span class="nc" id="L90">            }</span>
+        });
+
+
+
+<span class="fc" id="L95">    }</span>
+
+    /**
+     *
+     * @return --&gt; PopularPlaylistList size
+     */
+    @Override
+    public int getItemCount()
+    {
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">        if(PopularPlaylistList != null){</span>
+<span class="fc" id="L105">            return PopularPlaylistList.size();</span>
+        }
+<span class="nc" id="L107">        return 0;</span>
+
+    }
+    /**
+     * a class that handel the parsing of the recyclerview data
+     */
+    public class MyviewHolder extends RecyclerView.ViewHolder
+    {
+        TextView ImageName;
+        ImageView image;
+
+        public MyviewHolder(View itemView)
+<span class="fc" id="L119">        {</span>
+<span class="fc" id="L120">            super(itemView);</span>
+<span class="fc" id="L121">            ImageName = (TextView)itemView.findViewById(R.id.NameOfImage);</span>
+<span class="fc" id="L122">            image = (ImageView)itemView.findViewById(R.id.entity_image);</span>
+<span class="fc" id="L123">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

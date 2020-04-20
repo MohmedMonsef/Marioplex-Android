@@ -23,30 +23,40 @@ import static android.content.ContentValues.TAG;
 public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHolder> {
 
     private Context context;
-    //private search LIST;
-//    private List<Item> ArtistList;
     private ArrayList<aclass> list1;
-//private List<Item> ArtistList;
-
-    public adapterSearch(Context context, Search LIST) {
+    /**
+     * @param context
+     * @param LIST
+     * set the adapterSearch with list
+     */
+    public adapterSearch(Context context, Search LIST)
+    {
         this.context = context;
-        // this.ArtistList = ArtistList;
         list1=new ArrayList<aclass>();
-        if(LIST.getArtist()!=null) {
-            for (int i = 0; i < LIST.getArtist().size(); i++) {
+        if(LIST.getArtist()!=null)
+        {
+            //fill the artist list
+            for (int i = 0; i < LIST.getArtist().size(); i++)
+            {
                 String image = "";
-                if (LIST.getArtist().get(i).getImages() != null && LIST.getArtist().get(i).getImages().size() != 0) {
+                if (LIST.getArtist().get(i).getImages() != null && LIST.getArtist().get(i).getImages().size() != 0)
+                {
                     image = LIST.getArtist().get(i).getImages().get(0).toString();
                 }
                 list1.add(new aclass(LIST.getArtist().get(i).getType(),
                         LIST.getArtist().get(i).getName(),
-                        image,LIST.getArtist().get(i).getId()));
+                        image,
+                        LIST.getArtist().get(i).getId()));
             }
         }
-        if(LIST.getTrack()!=null) {
-            for (int i = 0; i < LIST.getTrack().size(); i++) {
+        if(LIST.getTrack()!=null)
+        {
+            //fill the track list
+            for (int i = 0; i < LIST.getTrack().size(); i++)
+            {
                 String image = "";
-                if (LIST.getTrack().get(i).getImages() != null && LIST.getTrack().get(i).getImages().size() != 0) {
+                if (LIST.getTrack().get(i).getImages() != null && LIST.getTrack().get(i).getImages().size() != 0)
+                {
                     image = LIST.getTrack().get(i).getImages().get(0).toString();
                 }
                 list1.add(new aclass(LIST.getTrack().get(i).getType(),
@@ -55,10 +65,14 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
                         LIST.getTrack().get(i).getId()));
             }
         }
-        if(LIST.getAlbum()!=null) {
-            for (int i = 0; i < LIST.getAlbum().size(); i++) {
+        if(LIST.getAlbum()!=null)
+        {
+            //fill the album list
+            for (int i = 0; i < LIST.getAlbum().size(); i++)
+            {
                 String image = "";
-                if (LIST.getAlbum().get(i).getImages() != null && LIST.getAlbum().get(i).getImages().size() != 0) {
+                if (LIST.getAlbum().get(i).getImages() != null && LIST.getAlbum().get(i).getImages().size() != 0)
+                {
                     image = LIST.getAlbum().get(i).getImages().get(0).toString();
                 }
                 list1.add(new aclass(LIST.getAlbum().get(i).getType(),
@@ -67,10 +81,14 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
                         LIST.getAlbum().get(i).getId()));
             }
         }
-        if(LIST.getPlaylist()!=null) {
-            for (int i = 0; i < LIST.getPlaylist().size(); i++) {
+        if(LIST.getPlaylist()!=null)
+        {
+            //fill the playlist list
+            for (int i = 0; i < LIST.getPlaylist().size(); i++)
+            {
                 String image = "";
-                if (LIST.getPlaylist().get(i).getImages() != null && LIST.getPlaylist().get(i).getImages().size() != 0) {
+                if (LIST.getPlaylist().get(i).getImages() != null && LIST.getPlaylist().get(i).getImages().size() != 0)
+                {
                     image = LIST.getPlaylist().get(i).getImages().get(0).toString();
                 }
                 list1.add(new aclass(LIST.getPlaylist().get(i).getType(),
@@ -81,6 +99,11 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
         }
     }
 
+    /**
+     * @param parent --> the view that has the recyclerview of this class
+     * @param viewType-->
+     * @return new object of the view holder
+     */
     @NonNull
     @Override
     public adapterSearch.MyviewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
@@ -90,22 +113,21 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull adapterSearch.MyviewHolder holder, final int position) {
-        holder.ArtistName.setText(list1.get(position).getName());
-        holder.ArtistType.setText(list1.get(position).getType());
+    public void onBindViewHolder(@NonNull adapterSearch.MyviewHolder holder, final int position)
+    {
+        holder.itemName.setText(list1.get(position).getName());
+        holder.itemType.setText(list1.get(position).getType());
         Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
-        if(list1.get(position).getImage() !="") {
-            Picasso.get().load(list1.get(position).getImage()).into(holder.ArtistImage);
+
+        if(list1.get(position).getImage() !="")
+        {
+            Picasso.get().load(list1.get(position).getImage()).into(holder.itemImage);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "onClick: pppppppppppppppppppppp");
 
-//                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-//                Fragment myFragment = new newReleaseFragment();
-//                activity.getFragmentManager().beginTransaction().replace(R.id.frame_fragment, myFragment).addToBackStack(null).commit();
                 if(list1.get(position).getType().equals("playlist")){
                     Bundle bundle = new Bundle();
                     bundle.putString("playlistID" , list1.get(position).getid());
@@ -127,26 +149,33 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
 
     }
 
-
+    /**
+     *
+     * @return --> search list1 size
+     */
     @Override
-    public int getItemCount() {
-        if (list1!= null) {
+    public int getItemCount()
+    {
+        if (list1!= null)
+        {
             return list1.size();
         }
         return 1;
 
     }
-
+    /**
+     * a class that handel the parsing of the recyclerview data
+     */
     public class MyviewHolder extends RecyclerView.ViewHolder
     {
-        TextView ArtistName, ArtistType;
-        ImageView ArtistImage;
+        TextView itemName, itemType;
+        ImageView itemImage;
 
         public MyviewHolder(View itemView) {
             super(itemView);
-            ArtistName = (TextView) itemView.findViewById(R.id.nameOfSearch);
-            ArtistType = (TextView) itemView.findViewById(R.id.typeOfSearch);
-            ArtistImage = (ImageView)itemView.findViewById(R.id.imgSearchitem);
+            itemName = (TextView) itemView.findViewById(R.id.nameOfSearch);
+            itemType = (TextView) itemView.findViewById(R.id.typeOfSearch);
+            itemImage = (ImageView)itemView.findViewById(R.id.imgSearchitem);
 
         }
     }

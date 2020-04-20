@@ -99,6 +99,9 @@ public class PlaylistFragment extends Fragment {
         bindService();
 
         /////////////////////some listeners\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        /**
+         * when pressed the activity closes
+         */
         back_arrow_playlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,6 +112,10 @@ public class PlaylistFragment extends Fragment {
                         .commit();
             }
         });
+        /**
+         * listener for the preview button
+         * on click the preview activity opens
+         */
 
         preview_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,6 +124,10 @@ public class PlaylistFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        /**
+         * listener for the track names text
+         * on press the preview activity opens
+         */
 
         artist_name_song_name_playlist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,6 +136,9 @@ public class PlaylistFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        /**
+         * listener for the shuffle play button and on press it sends a request to turn on the shuffle mode
+         */
 
         shuffle_play_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,6 +180,9 @@ public class PlaylistFragment extends Fragment {
 //            }
 //        });
 
+        /**
+         * requests the get current playlist info requests if something goes wrong
+         */
         something_wrong_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,6 +196,9 @@ public class PlaylistFragment extends Fragment {
         });
 
         ///////////////////////////observers\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        /**
+         * updates the shuffle play button text with pause if the track is playing and with shuffle play if the track is paused
+         */
         TrackInfo.getInstance().getIsPlaying().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -207,6 +227,10 @@ public class PlaylistFragment extends Fragment {
         return root;
     }
 
+    /**
+     * send a request to create queue of the current playlist's tracks and takes a track id and sets it as the current track
+     * @param trackID
+     */
     void CreateQueue(String trackID){
         Call<Void> call = endPointAPI.CreateQueue(playlistID , trackID , true , user.getToken());
         call.enqueue(new Callback<Void>() {
@@ -230,6 +254,10 @@ public class PlaylistFragment extends Fragment {
             }
         });
     }
+
+    /**
+     * send a request to turn on the shuffle mode and to play a random track from the playlist
+     */
 
     void shuffleTracks(){
         Call<Void> call = endPointAPI.toggleShuffle(true , user.getToken());
@@ -256,6 +284,11 @@ public class PlaylistFragment extends Fragment {
             }
         });
     }
+
+    /**
+     * sends a request to get the current playlist's tracks
+     * @param playlistID
+     */
 
     void GetPlaylistTracksInfo(String playlistID){
         Call<List<PlaylistTracks>> call = endPointAPI.getPlaylistTracks(playlistID , user.getToken());
@@ -296,6 +329,9 @@ public class PlaylistFragment extends Fragment {
         });
     }
 
+    /**
+     * send a request to like(follow) the playlist
+     */
     void LikePlaylist(){
         Call<Void> call = endPointAPI.LikePlaylist(playlistID , user.getToken());
         call.enqueue(new Callback<Void>() {
@@ -319,6 +355,9 @@ public class PlaylistFragment extends Fragment {
         });
     }
 
+    /**
+     * send a request to unlike(unfollow) the playlist
+     */
     void unLikePlaylist(){
         Call<Void> call = endPointAPI.UNLikePlaylist(playlistID , user.getToken());
         call.enqueue(new Callback<Void>() {
@@ -341,6 +380,10 @@ public class PlaylistFragment extends Fragment {
             }
         });
     }
+
+    /**
+     * updates the UI with the playlist and tracks info
+     */
 
     void updateUI(){
         List<Object> images= playlistTracks.getImages();
@@ -391,7 +434,10 @@ public class PlaylistFragment extends Fragment {
     }
 
 
-    ///////checks if the currently playing track is from the current playlist
+    /**
+     * checks if the currently playing track is from the current playlist
+     * @return
+     */
     Boolean CheckTrackInPlaylist(){
         if(TrackInfo.getInstance().getIsQueue()!=null &&
            TrackInfo.getInstance().getIsQueue().getValue() &&
@@ -411,6 +457,11 @@ public class PlaylistFragment extends Fragment {
         }
         return false;
     }
+
+    /**
+     * gets all the views i will use
+     * @param root
+     */
 
     void getViews(View root){
         back_arrow_playlist = root.findViewById(R.id.back_arrow_playlist);

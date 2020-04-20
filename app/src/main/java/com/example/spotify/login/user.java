@@ -20,7 +20,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-
+/**
+ * Holds current user data
+ */
 public class user {
     private static String name = null;
     private static String id = null;
@@ -127,6 +129,9 @@ public class user {
         user.password = password;
     }
 
+    /**
+     * fetch user data from backend server
+     */
     public static void fetchUserData(){
         if(token == null)
             return;

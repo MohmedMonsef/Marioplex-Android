@@ -88,6 +88,10 @@ public class ProfileFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * updates user data with passed new data
+     * @param data user new data
+     */
     private void updateProfile(updateProfile data){
         EndPointAPI api = Retrofit.getInstance().getEndPointAPI();
         api.updateProfile(user.getToken(),data).enqueue(new Callback<ResponseBody>() {

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>adapterPopularArtist.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.Adapters</a> &gt; <span class="el_source">adapterPopularArtist.java</span></div><h1>adapterPopularArtist.java</h1><pre class="source lang-java linenums">package com.example.spotify.Adapters;
+
+import androidx.fragment.app.Fragment;
+import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.spotify.BackClasses.Backclasses.backpopularartist.Artist;
+import com.example.spotify.Fragments.NEW_RELEASE_FRAHMENT.newReleaseFragment;
+import com.example.spotify.R;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+import static android.content.ContentValues.TAG;
+
+public class adapterPopularArtist extends RecyclerView.Adapter&lt;adapterPopularArtist.MyviewHolder&gt;
+{
+    private Context context;
+    private List&lt;Artist&gt; PopularArtistList;
+    /**
+     * @param context
+     * @param PopularArtistList
+     * set the adapterPopularArtist with list
+     */
+    public adapterPopularArtist(Context context, List&lt;Artist&gt; PopularArtistList)
+<span class="fc" id="L35">    {</span>
+<span class="fc" id="L36">        this.context = context;</span>
+<span class="fc" id="L37">        this.PopularArtistList = PopularArtistList;</span>
+<span class="fc" id="L38">    }</span>
+
+    public void setMovieList(List&lt;Artist&gt; movieList) {
+<span class="nc" id="L41">        this.PopularArtistList = movieList;</span>
+<span class="nc" id="L42">        notifyDataSetChanged();</span>
+<span class="nc" id="L43">    }</span>
+    /**
+     * @param parent --&gt; the view that has the recyclerview of this class
+     * @param viewType--&gt;
+     * @return new object of the view holder
+     */
+    @Override
+    public adapterPopularArtist.MyviewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    {
+<span class="fc" id="L52">        View view = LayoutInflater.from(context).inflate(R.layout.item_recycler,parent,false);</span>
+<span class="fc" id="L53">        return new MyviewHolder(view);</span>
+    }
+
+    /**
+     *
+     * @param holder --&gt;that has the view item (layout)
+     * @param position --&gt;index of the item in the list
+     * set on item of recyclerview with its data
+     */
+    @Override
+    public void onBindViewHolder(adapterPopularArtist.MyviewHolder holder, int position)
+    {
+
+<span class="fc" id="L66">        Artist item=PopularArtistList.get(position);</span>
+<span class="fc" id="L67">        holder.ImageName.setText(item.getName());</span>
+      //  Toast.makeText(context.getApplicationContext(),&quot;Image Loading&quot;,Toast.LENGTH_SHORT).show();
+        /// check if the image not null
+<span class="pc bpc" id="L70" title="3 of 6 branches missed.">        if(item.getImages()!= null &amp; item.getImages().size()!=0)</span>
+        {
+            // load the image
+<span class="nc" id="L73">            Picasso.get().load(item.getImages().get(0).toString()).into(holder.image);</span>
+        }
+        /**
+         * a click listener handel the item view
+         */
+<span class="fc" id="L78">        holder.itemView.setOnClickListener(new View.OnClickListener()</span>
+<span class="fc" id="L79">        {</span>
+            /**
+             *
+             * @param v
+             * go to the next fragment from the selected item view
+             */
+            @Override
+            public void onClick(View v)
+            {
+
+<span class="nc" id="L89">                AppCompatActivity activity = (AppCompatActivity) v.getContext();</span>
+<span class="nc" id="L90">                Fragment myFragment = new newReleaseFragment();</span>
+<span class="nc" id="L91">                activity.getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, myFragment).addToBackStack(null).commit();</span>
+
+<span class="nc" id="L93">            }</span>
+        });
+
+
+
+<span class="fc" id="L98">    }</span>
+    /**
+     *
+     * @return --&gt; PopularArtistList size
+     */
+    @Override
+    public int getItemCount()
+    {
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">        if(PopularArtistList != null)</span>
+        {
+<span class="fc" id="L108">            return PopularArtistList.size();</span>
+        }
+<span class="nc" id="L110">        return 0;</span>
+
+    }
+    /**
+     * a class that handel the parsing of the recyclerview data
+     */
+    public class MyviewHolder extends RecyclerView.ViewHolder
+    {
+        TextView ImageName;
+        ImageView image;
+
+        public MyviewHolder(View itemView)
+<span class="fc" id="L122">        {</span>
+<span class="fc" id="L123">            super(itemView);</span>
+<span class="fc" id="L124">            ImageName = (TextView)itemView.findViewById(R.id.NameOfImage);</span>
+<span class="fc" id="L125">            image = (ImageView)itemView.findViewById(R.id.entity_image);</span>
+<span class="fc" id="L126">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

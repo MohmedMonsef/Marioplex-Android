@@ -45,7 +45,9 @@ public class BottomSheetFragment extends Fragment {
     private TrackInfo track;
     private MediaPlayerService player;
     boolean serviceBound = false;
-    //Binding this Client to the AudioPlayer Service
+    /**
+     * Binding this Client to the AudioPlayer Service
+     */
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -95,6 +97,9 @@ public class BottomSheetFragment extends Fragment {
 
 
         //Click Listeners
+        /**
+         * listener for the click on the play and pause button
+         */
         bottom_play_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,6 +117,9 @@ public class BottomSheetFragment extends Fragment {
                 }
             }
         });
+        /**
+         * listener for the click on the image to open the bottom sheet
+         */
 
         bottom_image_id.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +128,9 @@ public class BottomSheetFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        /**
+         * listener for the like button to send the like/unlike request
+         */
 
         bottom_favorite.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,6 +145,9 @@ public class BottomSheetFragment extends Fragment {
         });
 
         //Observers
+        /**
+         * observer for any change in track information to update the UI
+         */
 //TODO here
         track.getTrack().observe(this, new Observer<currentTrack>() {
             @Override
@@ -154,6 +168,10 @@ public class BottomSheetFragment extends Fragment {
             }
         });
 
+        /**
+         * if the track is liked update the UI
+         */
+
         track.getIsLiked().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -165,6 +183,9 @@ public class BottomSheetFragment extends Fragment {
                 }
             }
         });
+        /**
+         * if the get current track fails it repeats it
+         */
 
         track.gettryAgain().observe(this, new Observer<Boolean>() {
             @Override
@@ -180,6 +201,11 @@ public class BottomSheetFragment extends Fragment {
 
         return root;
     }
+
+    /**
+     * sends like request for the current track and updates the UI on response
+     * @param trackID
+     */
 
     private void LikeTrack(String trackID){
         bottom_favorite.setEnabled(false);
@@ -208,6 +234,10 @@ public class BottomSheetFragment extends Fragment {
         });
     }
 
+    /**
+     * sends unlike request for the current track and updates the UI on response
+     * @param trackID
+     */
     private void UnLikeTrack(String trackID){
         bottom_favorite.setEnabled(false);
         Call<Void> call = endPointAPI.UNLikeTrack(trackID , user.getToken());
@@ -236,7 +266,9 @@ public class BottomSheetFragment extends Fragment {
         });
     }
 
-    //TODO here
+    /**
+     * updates the ui when the track info changes
+     */
     void UpdateUI(){
 
         String artistName = "";

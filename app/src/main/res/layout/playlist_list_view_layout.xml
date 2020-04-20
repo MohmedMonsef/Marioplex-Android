@@ -11,7 +11,7 @@
         android:layout_marginBottom="8dp"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/not_found1"
+        android:src="@drawable/ic_smile1"
         android:background="@android:color/darker_gray"
         android:layout_gravity="center_vertical" />
     <LinearLayout

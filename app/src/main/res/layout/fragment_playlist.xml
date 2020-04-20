@@ -77,7 +77,7 @@
                                 android:layout_height="150dp"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginTop="8dp"
-                                android:src = "@drawable/not_found1"
+                                android:src = "@drawable/ic_smile1"
                                 android:layout_marginBottom="20dp"/>
                             <TextView
                                 android:id="@+id/playlist_name_middle"

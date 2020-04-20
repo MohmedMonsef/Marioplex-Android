@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>see_all_artist_Fragment.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.Fragments.SEE_ARTISTS_FRAGMENT</a> &gt; <span class="el_source">see_all_artist_Fragment.java</span></div><h1>see_all_artist_Fragment.java</h1><pre class="source lang-java linenums">package com.example.spotify.Fragments.SEE_ARTISTS_FRAGMENT;
+
+import android.content.Context;
+import android.net.Uri;
+import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.example.spotify.R;
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link see_all_artist_Fragment.OnFragmentInteractionListener} interface
+ * to handle interaction events.
+ * Use the {@link see_all_artist_Fragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class see_all_artist_Fragment extends Fragment {
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = &quot;param1&quot;;
+    private static final String ARG_PARAM2 = &quot;param2&quot;;
+
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+
+    private OnFragmentInteractionListener mListener;
+
+<span class="nc" id="L35">    public see_all_artist_Fragment() {</span>
+        // Required empty public constructor
+<span class="nc" id="L37">    }</span>
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment see_all_artist_Fragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static see_all_artist_Fragment newInstance(String param1, String param2) {
+<span class="nc" id="L49">        see_all_artist_Fragment fragment = new see_all_artist_Fragment();</span>
+<span class="nc" id="L50">        Bundle args = new Bundle();</span>
+<span class="nc" id="L51">        args.putString(ARG_PARAM1, param1);</span>
+<span class="nc" id="L52">        args.putString(ARG_PARAM2, param2);</span>
+<span class="nc" id="L53">        fragment.setArguments(args);</span>
+<span class="nc" id="L54">        return fragment;</span>
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+<span class="nc" id="L59">        super.onCreate(savedInstanceState);</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (getArguments() != null) {</span>
+<span class="nc" id="L61">            mParam1 = getArguments().getString(ARG_PARAM1);</span>
+<span class="nc" id="L62">            mParam2 = getArguments().getString(ARG_PARAM2);</span>
+        }
+<span class="nc" id="L64">    }</span>
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+<span class="nc" id="L70">        return inflater.inflate(R.layout.fragment_see_all_artist_, container, false);</span>
+    }
+
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        if (mListener != null) {</span>
+<span class="nc" id="L76">            mListener.onFragmentInteraction(uri);</span>
+        }
+<span class="nc" id="L78">    }</span>
+
+    @Override
+    public void onAttach(Context context) {
+<span class="nc" id="L82">        super.onAttach(context);</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (context instanceof OnFragmentInteractionListener) {</span>
+<span class="nc" id="L84">            mListener = (OnFragmentInteractionListener) context;</span>
+        } else {
+<span class="nc" id="L86">            throw new RuntimeException(context.toString()</span>
+                    + &quot; must implement OnFragmentInteractionListener&quot;);
+        }
+<span class="nc" id="L89">    }</span>
+
+    @Override
+    public void onDetach() {
+<span class="nc" id="L93">        super.onDetach();</span>
+<span class="nc" id="L94">        mListener = null;</span>
+<span class="nc" id="L95">    }</span>
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * &lt;p&gt;
+     * See the Android Training lesson &lt;a href=
+     * &quot;http://developer.android.com/training/basics/fragments/communicating.html&quot;
+     * &gt;Communicating with Other Fragments&lt;/a&gt; for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

@@ -5,14 +5,27 @@
     android:layout_height="match_parent"
     android:id="@+id/searchlistlayout"
     android:orientation="vertical">
-
-    <EditText
-        android:id="@+id/searchbarlist"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:drawableLeft="@drawable/ic_back"
-        android:textColor="@color/TextColor"
-        />
+        >
+
+        <EditText
+            android:id="@+id/searchbarlist"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:drawableLeft="@drawable/ic_back"
+            android:textColor="@color/TextColor"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/back_button_to_searchlist"
+            android:src="@drawable/back_button"
+            android:padding="8dp"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/texta"
         android:layout_width="match_parent"

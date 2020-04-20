@@ -76,6 +76,9 @@ public class AddToPlaylistActivity extends AppCompatActivity {
         //////////////////////////////////////////////////////////////////////////
 
         /////////////////////////Listeners//////////////////////////////
+        /**
+         * back button to go to the previous fragment
+         */
         back_button_to_mediaplayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,6 +86,10 @@ public class AddToPlaylistActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        /**
+         * listener for the create playlist button when pressed it goes to the create playlist activity
+         */
 
         new_playlist_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +100,9 @@ public class AddToPlaylistActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * listenes for the view pressed in the playlist views and sends request to add the current track to it
+         */
         playlists_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -113,7 +123,10 @@ public class AddToPlaylistActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        /**
+         * listener for the try again button
+         * on press it sends the request to get the playlists again
+         */
 
         try_again.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,6 +146,11 @@ public class AddToPlaylistActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    /**
+     * takes the current track id and adds the track to the playlist the user pressed on
+     * @param pid playlist id
+     * @param tid track id
+     */
     void addTrackToPlaylist(String pid , String tid){
         addTrackToPlaylistBody t = new addTrackToPlaylistBody();
         t.setTrackID(tid);
@@ -157,6 +175,10 @@ public class AddToPlaylistActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * get all th viewa  i will use
+     */
+
     void getviews(){
         back_button_to_mediaplayer = (ImageView)findViewById(R.id.back_button_to_mediaplayer);
         new_playlist_button = (Button)findViewById(R.id.new_playlist_button);
@@ -167,6 +189,9 @@ public class AddToPlaylistActivity extends AppCompatActivity {
         something_wrong_text2 = findViewById(R.id.something_wrong_text);
     }
 
+    /**
+     * get current user's playlists and updates the UI on response
+     */
     void getPlaylists(){
         Call<List<BasicPlaylist>> call = endPointAPI.getCurrentUserPlaylists( user.getToken());
         call.enqueue(new Callback<List<BasicPlaylist>>() {
@@ -216,6 +241,9 @@ public class AddToPlaylistActivity extends AppCompatActivity {
     private class CustomAdapter extends BaseAdapter{
 
         @Override
+        /**
+         * updates the UI with the playlists
+         */
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = getLayoutInflater().inflate(R.layout.playlist_list_view_layout, parent, false);
             ImageView user_playlist_image = (ImageView)convertView.findViewById(R.id.user_playlist_image);

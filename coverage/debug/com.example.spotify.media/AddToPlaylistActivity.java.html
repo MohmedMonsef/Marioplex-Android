@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AddToPlaylistActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.media</a> &gt; <span class="el_source">AddToPlaylistActivity.java</span></div><h1>AddToPlaylistActivity.java</h1><pre class="source lang-java linenums">package com.example.spotify.media;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.Interfaces.Retrofit;
+import com.example.spotify.R;
+import com.example.spotify.SpotifyClasses.Image;
+import com.example.spotify.SpotifyClasses.UserPlaylists;
+import com.example.spotify.login.user;
+import com.example.spotify.pojo.BasicPlaylist;
+import com.example.spotify.pojo.addTrackToPlaylistBody;
+import com.example.spotify.pojo.playlist;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+<span class="fc" id="L38">public class AddToPlaylistActivity extends AppCompatActivity {</span>
+
+    private ImageView back_button_to_mediaplayer;
+    private Button new_playlist_button;
+    private ListView playlists_list_view;
+    private Toast toast;
+    private List&lt;BasicPlaylist&gt; userPlaylists;
+    private ProgressBar playlists_progress_bar;
+    private String trackID;
+    private Button try_again;
+    private LinearLayout something_wrong_layout2;
+    private TextView something_wrong_text2;
+
+
+//    private Retrofit retrofit = new Retrofit.Builder()
+//            .baseUrl(&quot;http://192.168.1.7:3000/&quot;)
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build();
+<span class="fc" id="L56">    private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();</span>
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+<span class="fc" id="L60">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L61">        setContentView(R.layout.activity_add_to_playlist);</span>
+
+<span class="fc" id="L63">        getviews();</span>
+
+<span class="fc" id="L65">        trackID = getIntent().getStringExtra(&quot;track_id&quot;);</span>
+
+
+
+        /////////////////////////List view attaching will be made in the on response callback///////
+        //////make the request then attach it to the listview//////
+<span class="fc" id="L71">        playlists_progress_bar.setVisibility(View.VISIBLE);</span>
+<span class="fc" id="L72">        something_wrong_layout2.setVisibility(View.GONE);</span>
+<span class="fc" id="L73">        playlists_list_view.setVisibility(View.GONE);</span>
+<span class="fc" id="L74">        getPlaylists();</span>
+
+        //////////////////////////////////////////////////////////////////////////
+
+        /////////////////////////Listeners//////////////////////////////
+        /**
+         * back button to go to the previous fragment
+         */
+<span class="fc" id="L82">        back_button_to_mediaplayer.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L85">                Intent intent = new Intent(AddToPlaylistActivity.this , MediaPlayerActivity.class);</span>
+<span class="nc" id="L86">                startActivity(intent);</span>
+<span class="nc" id="L87">            }</span>
+        });
+
+        /**
+         * listener for the create playlist button when pressed it goes to the create playlist activity
+         */
+
+<span class="fc" id="L94">        new_playlist_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L97">                Intent intent = new Intent(AddToPlaylistActivity.this , CreatePlaylistActivity.class);</span>
+<span class="nc" id="L98">                intent.putExtra(&quot;track_id&quot;, trackID);</span>
+<span class="nc" id="L99">                startActivity(intent);</span>
+<span class="nc" id="L100">            }</span>
+        });
+
+        /**
+         * listenes for the view pressed in the playlist views and sends request to add the current track to it
+         */
+<span class="fc" id="L106">        playlists_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {</span>
+            @Override
+            public void onItemClick(AdapterView&lt;?&gt; parent, View view, int position, long id) {
+                //take the playlist id and add the song to it
+                //TODO uncomment the below block in integeration
+
+<span class="nc bnc" id="L112" title="All 4 branches missed.">                if(userPlaylists !=null &amp;&amp; userPlaylists.size()!=0){</span>
+<span class="nc" id="L113">                    String playlist_id = userPlaylists.get(position).getId();</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">                    if(trackID ==&quot;&quot;){</span>
+<span class="nc" id="L115">                        Toast.makeText(getApplicationContext(),&quot;track isn't loaded yet check your internet connection&quot;,Toast.LENGTH_SHORT).show();</span>
+                    }
+                    else{
+<span class="nc" id="L118">                        addTrackToPlaylist(playlist_id , trackID);</span>
+                    }
+
+                }
+<span class="nc" id="L122">                Intent intent = new Intent(AddToPlaylistActivity.this , MediaPlayerActivity.class);</span>
+<span class="nc" id="L123">                startActivity(intent);</span>
+<span class="nc" id="L124">            }</span>
+        });
+        /**
+         * listener for the try again button
+         * on press it sends the request to get the playlists again
+         */
+
+<span class="fc" id="L131">        try_again.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L134">                playlists_progress_bar.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L135">                something_wrong_layout2.setVisibility(View.GONE);</span>
+<span class="nc" id="L136">                playlists_list_view.setVisibility(View.GONE);</span>
+<span class="nc" id="L137">                getPlaylists();</span>
+<span class="nc" id="L138">            }</span>
+        });
+
+        ////////////////////////////////////////////////////////////////
+<span class="fc" id="L142">    }</span>
+
+    @Override
+    protected void onDestroy() {
+<span class="fc" id="L146">        super.onDestroy();</span>
+<span class="fc" id="L147">    }</span>
+
+    /**
+     * takes the current track id and adds the track to the playlist the user pressed on
+     * @param pid playlist id
+     * @param tid track id
+     */
+    void addTrackToPlaylist(String pid , String tid){
+<span class="nc" id="L155">        addTrackToPlaylistBody t = new addTrackToPlaylistBody();</span>
+<span class="nc" id="L156">        t.setTrackID(tid);</span>
+<span class="nc" id="L157">        Call&lt;Object&gt; call = endPointAPI.AddTrackToAPlaylist(pid , t, user.getToken());</span>
+
+<span class="nc" id="L159">        call.enqueue(new Callback&lt;Object&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;Object&gt; call, Response&lt;Object&gt; response) {
+<span class="nc bnc" id="L162" title="All 2 branches missed.">                if(!response.isSuccessful()){</span>
+<span class="nc" id="L163">                    Toast.makeText(getApplicationContext(),&quot;something wrong happened try again&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L164">                    return;</span>
+                }
+                else {
+<span class="nc" id="L167">                    Toast.makeText(getApplicationContext(),&quot;track is added to playlist&quot;,Toast.LENGTH_SHORT).show();</span>
+                }
+<span class="nc" id="L169">            }</span>
+            @Override
+            public void onFailure(Call&lt;Object&gt; call, Throwable t) {
+<span class="nc" id="L172">                Toast.makeText(getApplicationContext(),&quot;something wrong happened check internet connection&quot;,Toast.LENGTH_SHORT).show();</span>
+
+<span class="nc" id="L174">            }</span>
+        });
+<span class="nc" id="L176">    }</span>
+
+    /**
+     * get all th viewa  i will use
+     */
+
+    void getviews(){
+<span class="fc" id="L183">        back_button_to_mediaplayer = (ImageView)findViewById(R.id.back_button_to_mediaplayer);</span>
+<span class="fc" id="L184">        new_playlist_button = (Button)findViewById(R.id.new_playlist_button);</span>
+<span class="fc" id="L185">        playlists_list_view = (ListView)findViewById(R.id.playlists_list_view);</span>
+<span class="fc" id="L186">        playlists_progress_bar = (ProgressBar)findViewById(R.id.playlists_progress_bar);</span>
+<span class="fc" id="L187">        try_again = (Button)findViewById(R.id.try_again);</span>
+<span class="fc" id="L188">        something_wrong_layout2 = findViewById(R.id.something_wrong_layout2);</span>
+<span class="fc" id="L189">        something_wrong_text2 = findViewById(R.id.something_wrong_text);</span>
+<span class="fc" id="L190">    }</span>
+
+    /**
+     * get current user's playlists and updates the UI on response
+     */
+    void getPlaylists(){
+<span class="fc" id="L196">        Call&lt;List&lt;BasicPlaylist&gt;&gt; call = endPointAPI.getCurrentUserPlaylists( user.getToken());</span>
+<span class="fc" id="L197">        call.enqueue(new Callback&lt;List&lt;BasicPlaylist&gt;&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;List&lt;BasicPlaylist&gt;&gt; call, Response&lt;List&lt;BasicPlaylist&gt;&gt; response) {
+<span class="pc bpc" id="L200" title="1 of 2 branches missed.">                if(!response.isSuccessful()){</span>
+<span class="fc" id="L201">                    toast = Toast.makeText(getApplicationContext(),&quot;Code: &quot;+response.code(),Toast.LENGTH_SHORT);</span>
+<span class="fc" id="L202">                    toast.show();</span>
+<span class="fc" id="L203">                    something_wrong_layout2.setVisibility(View.VISIBLE);</span>
+<span class="fc" id="L204">                    playlists_progress_bar.setVisibility(View.GONE);</span>
+<span class="fc" id="L205">                    playlists_list_view.setVisibility(View.GONE);</span>
+
+<span class="fc" id="L207">                    return;</span>
+                }
+<span class="nc bnc" id="L209" title="All 2 branches missed.">                else if(response.body()==null){</span>
+<span class="nc" id="L210">                    toast = Toast.makeText(getApplicationContext(),&quot;response body = null&quot;,Toast.LENGTH_SHORT);</span>
+<span class="nc" id="L211">                    toast.show();</span>
+                }
+                else {
+<span class="nc" id="L214">                    userPlaylists = response.body();</span>
+<span class="nc" id="L215">                    CustomAdapter customAdapter = new CustomAdapter();</span>
+<span class="nc" id="L216">                    playlists_list_view.setAdapter(customAdapter);</span>
+<span class="nc" id="L217">                    something_wrong_layout2.setVisibility(View.GONE);</span>
+<span class="nc" id="L218">                    playlists_list_view.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L219">                    playlists_progress_bar.setVisibility(View.GONE);</span>
+//                    toast = Toast.makeText(getApplicationContext(),&quot;response came and is being parsed&quot;,Toast.LENGTH_SHORT);
+//                    toast.show();
+                }
+<span class="nc" id="L223">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;List&lt;BasicPlaylist&gt;&gt; call, Throwable t) {
+<span class="nc" id="L227">                Toast.makeText(getApplicationContext(),t.getMessage()+&quot; ' failed '&quot;,Toast.LENGTH_SHORT).show();</span>
+
+<span class="nc" id="L229">                something_wrong_layout2.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L230">                playlists_progress_bar.setVisibility(View.GONE);</span>
+<span class="nc" id="L231">                playlists_list_view.setVisibility(View.GONE);</span>
+
+
+<span class="nc" id="L234">            }</span>
+        });
+
+<span class="fc" id="L237">    }</span>
+
+
+
+<span class="nc" id="L241">    private class CustomAdapter extends BaseAdapter{</span>
+
+        @Override
+        /**
+         * updates the UI with the playlists
+         */
+        public View getView(int position, View convertView, ViewGroup parent) {
+<span class="nc" id="L248">            convertView = getLayoutInflater().inflate(R.layout.playlist_list_view_layout, parent, false);</span>
+<span class="nc" id="L249">            ImageView user_playlist_image = (ImageView)convertView.findViewById(R.id.user_playlist_image);</span>
+<span class="nc" id="L250">            TextView user_playlist_name = (TextView)convertView.findViewById(R.id.user_playlist_name);</span>
+<span class="nc" id="L251">            TextView playlist_user_name = (TextView)convertView.findViewById(R.id.playlist_user_name);</span>
+
+
+<span class="nc bnc" id="L254" title="All 2 branches missed.">            if(userPlaylists!=null) {</span>
+
+<span class="nc" id="L256">                List&lt;Object&gt; images= userPlaylists.get(position).getImages();</span>
+<span class="nc bnc" id="L257" title="All 4 branches missed.">                if(images !=null &amp;&amp; images.size()!=0){</span>
+<span class="nc" id="L258">                    String Imageurl = images.get(0).toString();</span>
+<span class="nc" id="L259">                    Picasso.get().load(Imageurl).into(user_playlist_image);</span>
+                }
+
+<span class="nc" id="L262">                user_playlist_name.setText(userPlaylists.get(position).getName());</span>
+
+<span class="nc" id="L264">                playlist_user_name.setText(&quot;by &quot; + userPlaylists.get(position).getOwner());</span>
+            }
+<span class="nc" id="L266">            return convertView;</span>
+        }
+        @Override
+        public int getCount() {
+<span class="nc bnc" id="L270" title="All 2 branches missed.">            if(userPlaylists != null){</span>
+<span class="nc" id="L271">                return userPlaylists.size();</span>
+            }
+            else{
+<span class="nc" id="L274">                return 0;</span>
+            }
+        }
+
+        @Override
+        public Object getItem(int position) {
+<span class="nc" id="L280">            return null;</span>
+        }
+
+        @Override
+        public long getItemId(int position) {
+<span class="nc" id="L285">            return 0;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

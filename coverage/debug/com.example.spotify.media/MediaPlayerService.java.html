@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MediaPlayerService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.media</a> &gt; <span class="el_source">MediaPlayerService.java</span></div><h1>MediaPlayerService.java</h1><pre class="source lang-java linenums">package com.example.spotify.media;
+
+import android.app.Service;
+import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.os.Binder;
+import android.os.CountDownTimer;
+import android.os.IBinder;
+import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.Interfaces.Retrofit;
+import com.example.spotify.login.user;
+import com.example.spotify.pojo.currentTrack;
+
+import java.io.IOException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+<span class="fc" id="L27">public class MediaPlayerService extends Service implements MediaPlayer.OnCompletionListener , MediaPlayer.OnPreparedListener ,</span>
+        MediaPlayer.OnBufferingUpdateListener ,MediaPlayer.OnErrorListener , MediaPlayer.OnSeekCompleteListener  {
+
+    //AudioManager.OnAudioFocusChangeListener
+
+<span class="fc" id="L32">    private final IBinder iBinder = new LocalBinder();</span>
+    private MediaPlayer mediaPlayer ;
+<span class="fc" id="L34">    private String audioFile =&quot;https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3&quot;;</span>
+<span class="fc" id="L35">    private Boolean isPlaying = false;</span>
+    private int playFlag;
+    private int resumePosition;
+    private boolean stopInTrackEnd;
+
+    private boolean prepared;
+    private Toast toast;
+<span class="fc" id="L42">    private TrackInfo track = TrackInfo.getInstance();</span>
+<span class="fc" id="L43">    private CountDownTimer sleepTimer = null;</span>
+
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+//        try {
+//            //An audio file is passed to the service through putExtra();
+//            audioFile = intent.getExtras().getString(&quot;media&quot;);
+//        } catch (NullPointerException e) {
+//            stopSelf();
+//        }
+
+//        if (audioFile != null &amp;&amp; audioFile != &quot;&quot;)
+//            initMediaPlayer();
+//
+<span class="fc" id="L58">        return super.onStartCommand(intent, flags, startId);</span>
+    }
+
+    /**
+     * initializes some variables when the service is created
+     */
+    @Override
+    public void onCreate() {
+<span class="fc" id="L66">        super.onCreate();</span>
+<span class="fc" id="L67">        initMediaPlayer();</span>
+<span class="fc" id="L68">        playFlag = 0;</span>
+<span class="fc" id="L69">        track.setTimerSet(false);</span>
+<span class="fc" id="L70">        track.setIsQueue(false);</span>
+<span class="fc" id="L71">        track.setTryAgain(false);</span>
+<span class="fc" id="L72">        stopInTrackEnd = false;</span>
+
+<span class="fc" id="L74">    }</span>
+
+    /**
+     * initializes the media player and sends request to get the current track then plays it
+     */
+
+    private void initMediaPlayer() {
+<span class="fc" id="L81">        mediaPlayer = new MediaPlayer();</span>
+        //Set up MediaPlayer event listeners
+<span class="fc" id="L83">        mediaPlayer.setOnCompletionListener(this);</span>
+<span class="fc" id="L84">        mediaPlayer.setOnErrorListener(this);</span>
+<span class="fc" id="L85">        mediaPlayer.setOnPreparedListener(this);</span>
+<span class="fc" id="L86">        mediaPlayer.setOnBufferingUpdateListener(this);</span>
+<span class="fc" id="L87">        mediaPlayer.setOnSeekCompleteListener(this);</span>
+        //Reset so that the MediaPlayer is not pointing to another data source
+<span class="fc" id="L89">        mediaPlayer.reset();</span>
+
+        ///////////////////request the current track//////////////////////////
+        //Call&lt;currentTrack&gt; call = endPointAPI.getCurrentlyPlaying(user.getToken());
+<span class="fc" id="L93">        Call&lt;currentTrack&gt; call = Retrofit.getInstance().getEndPointAPI().getCurrentlyPlaying(user.getToken());</span>
+<span class="fc" id="L94">        getCurrentlyPlaying(call);</span>
+        //////////////////////////////////////////////////////////////////////
+        //TODO must be in on response when the back finishes the url
+<span class="fc" id="L97">        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);</span>
+//        try {
+//            // Set the data source to the mediaFile location
+//            audioFile = &quot;https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3&quot;;
+//            mediaPlayer.setDataSource(audioFile);
+//            prepared = false;
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            stopSelf();
+//        }
+//        mediaPlayer.prepareAsync();
+<span class="fc" id="L109">    }</span>
+
+    public void playCurrentTrack(Call&lt;currentTrack&gt; call){
+<span class="nc" id="L112">        getCurrentlyPlaying(call);</span>
+//        mediaPlayer.reset();
+//        try {
+//            // Set the data source to the mediaFile location
+//            audioFile = &quot;https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3&quot;;
+//            mediaPlayer.setDataSource(audioFile);
+//            prepared = false;
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            stopSelf();
+//        }
+//        mediaPlayer.prepareAsync();
+
+<span class="nc" id="L126">    }</span>
+
+    /**
+     * sends request to get the current track
+     * @param call
+     */
+
+    void getCurrentlyPlaying(Call&lt;currentTrack&gt; call){
+<span class="fc" id="L134">        call.enqueue(new Callback&lt;currentTrack&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;currentTrack&gt; call, Response&lt;currentTrack&gt; response) {
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">                if (!response.isSuccessful()) {</span>
+                    //toast = Toast.makeText(getApplicationContext(),&quot;Code: &quot;+response.code(),Toast.LENGTH_SHORT);
+                    //toast.show();
+<span class="pc bpc" id="L140" title="1 of 2 branches missed.">                    if(response.code() == 404){</span>
+<span class="fc" id="L141">                        track.setIsQueue(false);</span>
+                    }
+                    //TODO that means queue wasn't created so you need to hide the bottom sheet
+<span class="fc" id="L144">                    return;</span>
+                }
+<span class="nc bnc" id="L146" title="All 2 branches missed.">                else if(response.body()==null){</span>
+                    //toast = Toast.makeText(getApplicationContext(),&quot;response body = null&quot;,Toast.LENGTH_SHORT);
+                    //toast.show();
+                }
+                else {
+<span class="nc" id="L151">                    track.setTrack(response.body());</span>
+<span class="nc" id="L152">                    track.setIsQueue(true);</span>
+<span class="nc" id="L153">                    track.setIsLiked(response.body().getIsLiked());</span>
+
+<span class="nc" id="L155">                    mediaPlayer.reset();</span>
+                    try {
+                        // Set the data source to the mediaFile location
+<span class="nc" id="L158">                        audioFile = &quot;https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3&quot;;</span>
+<span class="nc" id="L159">                        mediaPlayer.setDataSource(audioFile);</span>
+<span class="nc" id="L160">                        prepared = false;</span>
+
+<span class="nc" id="L162">                    } catch (IOException e) {</span>
+<span class="nc" id="L163">                        e.printStackTrace();</span>
+<span class="nc" id="L164">                        stopSelf();</span>
+<span class="nc" id="L165">                    }</span>
+<span class="nc" id="L166">                    mediaPlayer.prepareAsync();</span>
+                    //audioFile = track.getTrack().getValue().getUri();
+//                    try {
+//                        mediaPlayer.setDataSource(audioFile);
+//                         prepared = false
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                        stopSelf();
+//                    }
+                    // mediaPlayer.prepareAsync();
+                }
+<span class="nc" id="L177">            }</span>
+            @Override
+            public void onFailure(Call&lt;currentTrack&gt; call, Throwable t) {
+<span class="nc" id="L180">                Toast.makeText(getApplicationContext(),&quot;something went wrong .check your internet connection&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L181">                track.setTryAgain(true);</span>
+
+<span class="nc" id="L183">            }</span>
+        });
+<span class="fc" id="L185">    }</span>
+
+
+    /**
+     * sends request to get the next track
+     */
+    public void next(){
+        ///////////////////request the current track//////////////////////////
+        //Call&lt;currentTrack&gt; call = endPointAPI.getNext(user.getToken());
+<span class="nc" id="L194">        Call&lt;currentTrack&gt; call = Retrofit.getInstance().getEndPointAPI().getNext(user.getToken());</span>
+
+<span class="nc" id="L196">        getCurrentlyPlaying(call);</span>
+        //////////////////////////////////////////////////////////////////////
+<span class="nc" id="L198">        pauseMedia();</span>
+//        mediaPlayer.reset();
+//
+//        try {
+//            // Set the data source to the mediaFile location
+//            audioFile = &quot;https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3&quot;;
+//            mediaPlayer.setDataSource(audioFile);
+//            prepared = false;
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            stopSelf();
+//        }
+//        mediaPlayer.prepareAsync();
+
+<span class="nc" id="L213">    }</span>
+
+    /**
+     * sends request to get the previous track
+     */
+
+    public void previous(){
+        ///////////////////request the current track//////////////////////////
+        //Call&lt;currentTrack&gt; call = endPointAPI.getPrevious(user.getToken());
+<span class="nc" id="L222">        Call&lt;currentTrack&gt; call = Retrofit.getInstance().getEndPointAPI().getPrevious(user.getToken());</span>
+<span class="nc" id="L223">        getCurrentlyPlaying(call);</span>
+        //////////////////////////////////////////////////////////////////////
+<span class="nc" id="L225">        pauseMedia();</span>
+//        mediaPlayer.reset();
+//        try {
+//            // Set the data source to the mediaFile location
+//            audioFile = &quot;https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3&quot;;
+//            mediaPlayer.setDataSource(audioFile);
+//            prepared = false;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            stopSelf();
+//        }
+//        mediaPlayer.prepareAsync();
+<span class="nc" id="L237">    }</span>
+    public Boolean getIsPlaying(){
+<span class="nc" id="L239">        return isPlaying;</span>
+    }
+<span class="nc" id="L241">    public Boolean getStopInTrackEnd(){return stopInTrackEnd;}</span>
+<span class="nc" id="L242">    public void setStopInTrackEnd(boolean b){stopInTrackEnd = b;}</span>
+
+    /**
+     * plays the song
+     */
+    public void playMedia() {
+<span class="nc bnc" id="L248" title="All 2 branches missed.">        if (!mediaPlayer.isPlaying()) {</span>
+<span class="nc" id="L249">            mediaPlayer.start();</span>
+<span class="nc" id="L250">            isPlaying = true;</span>
+<span class="nc" id="L251">            TrackInfo.getInstance().setIsPlaying(true);</span>
+        }
+<span class="nc" id="L253">    }</span>
+
+    /**
+     * stops the media player
+     */
+    public void stopMedia() {
+<span class="nc bnc" id="L259" title="All 2 branches missed.">        if (mediaPlayer == null) return;</span>
+<span class="nc bnc" id="L260" title="All 2 branches missed.">        if (mediaPlayer.isPlaying()) {</span>
+<span class="nc" id="L261">            mediaPlayer.stop();</span>
+<span class="nc" id="L262">            isPlaying = false;</span>
+<span class="nc" id="L263">            TrackInfo.getInstance().setIsPlaying(false);</span>
+        }
+        //cancelTimer();
+<span class="nc" id="L266">    }</span>
+
+    /**
+     * pauses the media player
+     */
+
+    public void pauseMedia() {
+<span class="nc bnc" id="L273" title="All 2 branches missed.">        if (mediaPlayer.isPlaying()) {</span>
+<span class="nc" id="L274">            mediaPlayer.pause();</span>
+<span class="nc" id="L275">            isPlaying = false;</span>
+<span class="nc" id="L276">            TrackInfo.getInstance().setIsPlaying(false);</span>
+<span class="nc" id="L277">            resumePosition = mediaPlayer.getCurrentPosition();</span>
+        }
+        //cancelTimer();
+<span class="nc" id="L280">    }</span>
+
+    /**
+     * @return the current position of the song to update the progress bar
+     */
+    public int getCurrentPosition(){
+<span class="nc bnc" id="L286" title="All 4 branches missed.">        if(mediaPlayer!=null&amp;&amp;prepared) {</span>
+<span class="nc" id="L287">            return mediaPlayer.getCurrentPosition();</span>
+        }
+        else{
+<span class="nc" id="L290">            return 0;</span>
+        }
+    }
+
+    /**
+     *
+     * @return the duration of the song
+     */
+    public int getDuration(){
+<span class="nc bnc" id="L299" title="All 4 branches missed.">        if(mediaPlayer !=null&amp;&amp;prepared) {</span>
+<span class="nc" id="L300">            return mediaPlayer.getDuration();</span>
+        }
+        else {
+<span class="nc" id="L303">            return 1;</span>
+        }
+    }
+
+    /**
+     * navigates the media player to the given position and starts playing the song
+     * @param s
+     */
+    public void seekTo(int s){
+<span class="nc bnc" id="L312" title="All 2 branches missed.">        if(mediaPlayer != null) {</span>
+<span class="nc" id="L313">            mediaPlayer.seekTo(s * 1000);</span>
+<span class="nc" id="L314">            mediaPlayer.start();</span>
+<span class="nc" id="L315">            isPlaying = true;</span>
+<span class="nc" id="L316">            TrackInfo.getInstance().setIsPlaying(true);</span>
+        }
+<span class="nc" id="L318">    }</span>
+
+    /**
+     * resume the song
+     */
+
+    public void resumeMedia() {
+<span class="nc bnc" id="L325" title="All 2 branches missed.">        if (!mediaPlayer.isPlaying()) {</span>
+<span class="nc" id="L326">            mediaPlayer.seekTo(resumePosition);</span>
+<span class="nc" id="L327">            mediaPlayer.start();</span>
+<span class="nc" id="L328">            isPlaying = true;</span>
+<span class="nc" id="L329">            TrackInfo.getInstance().setIsPlaying(true);</span>
+        }
+<span class="nc" id="L331">    }</span>
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+<span class="fc" id="L336">        return iBinder;</span>
+    }
+
+    /**
+     * when the song is completed it stops
+     * @param mp
+     */
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+<span class="nc" id="L345">        stopMedia();</span>
+//        if(stopInTrackEnd) {
+//            setStopInTrackEnd(false);
+//            track.setTimerSet(false);
+//            stopMedia();
+//        }
+//        else {
+//            track.setIsPlaying(false);
+//            next();
+//        }
+<span class="nc" id="L355">    }</span>
+
+    @Override
+    public void onSeekComplete(MediaPlayer mp) {
+
+<span class="nc" id="L360">    }</span>
+
+    /**
+     * when the media player is prepared it starts the song
+     * @param mp
+     */
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+
+<span class="nc" id="L369">        playMedia();</span>
+<span class="nc" id="L370">        prepared = true;</span>
+<span class="nc" id="L371">        TrackInfo.getInstance().setDuration(mediaPlayer.getDuration());</span>
+<span class="nc bnc" id="L372" title="All 2 branches missed.">        if(playFlag == 0) {</span>
+<span class="nc" id="L373">            pauseMedia();</span>
+        }
+<span class="nc" id="L375">        playFlag = 1;</span>
+//        toast = Toast.makeText(getApplicationContext() , &quot;audio is prepared &quot; , Toast.LENGTH_SHORT);
+//        toast.show();
+<span class="nc" id="L378">    }</span>
+
+    @Override
+    public void onBufferingUpdate(MediaPlayer mp, int percent) {
+
+<span class="nc" id="L383">    }</span>
+
+    @Override
+    public boolean onError(MediaPlayer mp, int what, int extra) {
+        //Invoked when there has been an error during an asynchronous operation
+<span class="nc bnc" id="L388" title="All 4 branches missed.">        switch (what) {</span>
+            case MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK:
+<span class="nc" id="L390">                Log.d(&quot;MediaPlayer Error&quot;, &quot;MEDIA ERROR NOT VALID FOR PROGRESSIVE PLAYBACK &quot; + extra);</span>
+<span class="nc" id="L391">                break;</span>
+            case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
+<span class="nc" id="L393">                Log.d(&quot;MediaPlayer Error&quot;, &quot;MEDIA ERROR SERVER DIED &quot; + extra);</span>
+<span class="nc" id="L394">                break;</span>
+            case MediaPlayer.MEDIA_ERROR_UNKNOWN:
+<span class="nc" id="L396">                Log.d(&quot;MediaPlayer Error&quot;, &quot;MEDIA ERROR UNKNOWN &quot; + extra);</span>
+                break;
+        }
+<span class="nc" id="L399">        return false;</span>
+    }
+
+//    @Override
+//    public void onAudioFocusChange(int focusChange) {
+//
+//    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        //when the app is removed from the recently used apps stop the service
+<span class="nc" id="L410">        super.onTaskRemoved(rootIntent);</span>
+<span class="nc" id="L411">        stopSelf();</span>
+<span class="nc" id="L412">    }</span>
+
+    @Override
+    public void onDestroy() {
+<span class="nc" id="L416">        super.onDestroy();</span>
+<span class="nc bnc" id="L417" title="All 2 branches missed.">        if(mediaPlayer !=null){</span>
+<span class="nc" id="L418">            stopMedia();</span>
+<span class="nc" id="L419">            mediaPlayer.release();</span>
+        }
+<span class="nc" id="L421">        cancelTimer();</span>
+<span class="nc" id="L422">    }</span>
+
+<span class="fc" id="L424">    public class LocalBinder extends Binder {</span>
+        public MediaPlayerService getservice(){
+<span class="fc" id="L426">            return MediaPlayerService.this;</span>
+        }
+    }
+
+    /**
+     * starts the sleep timer and on finish pauses the media player
+     * takes time in millisecond
+     * @param milliSeconds
+     */
+
+    public void startTimer(long milliSeconds){
+<span class="nc bnc" id="L437" title="All 2 branches missed.">        if(mediaPlayer != null) {</span>
+<span class="nc" id="L438">            sleepTimer = new CountDownTimer(milliSeconds, 60000) {</span>
+                @Override
+                public void onTick(long millisUntilFinished) {
+//                    toast = Toast.makeText(getApplicationContext(),&quot;one minute passed&quot;,Toast.LENGTH_SHORT);
+//                    toast.show();
+<span class="nc" id="L443">                }</span>
+
+                @Override
+                public void onFinish() {
+<span class="nc bnc" id="L447" title="All 2 branches missed.">                    if (mediaPlayer != null) {</span>
+<span class="nc" id="L448">                        pauseMedia();</span>
+<span class="nc" id="L449">                        track.setTimerSet(false);</span>
+<span class="nc" id="L450">                        toast = Toast.makeText(getApplicationContext(),&quot;sleep timer ended&quot;,Toast.LENGTH_SHORT);</span>
+<span class="nc" id="L451">                        toast.show();</span>
+                    }
+<span class="nc" id="L453">                }</span>
+<span class="nc" id="L454">            }.start();</span>
+        }
+<span class="nc" id="L456">        track.setTimerSet(true);</span>
+<span class="nc" id="L457">    }</span>
+
+    /**
+     * cancels the sleep timer
+     */
+    public void cancelTimer(){
+<span class="nc bnc" id="L463" title="All 2 branches missed.">        if(sleepTimer!=null){</span>
+<span class="nc" id="L464">            sleepTimer.cancel();</span>
+<span class="nc" id="L465">            track.setTimerSet(false);</span>
+        }
+<span class="nc bnc" id="L467" title="All 2 branches missed.">        if(stopInTrackEnd){</span>
+<span class="nc" id="L468">            setStopInTrackEnd(false);</span>
+        }
+//        toast = Toast.makeText(getApplicationContext() , &quot;cancel timer called&quot; , Toast.LENGTH_SHORT);
+//        toast.show();
+<span class="nc" id="L472">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

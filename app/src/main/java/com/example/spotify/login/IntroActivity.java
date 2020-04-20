@@ -70,6 +70,9 @@ public class IntroActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Fetch user data from facebook and use to login into the app
+     */
     private void loginByFacebook(){
         LoginManager loginManager = LoginManager.getInstance();
         loginManager.logOut();
@@ -116,15 +119,13 @@ public class IntroActivity extends AppCompatActivity {
                 Toast.makeText(IntroActivity.this,"Error",Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
-
-
-
     }
 
-    public void saveAndLaunchMainActivity(FacebookLoginData data){
+    /**
+     * Send user's facebook data to the database and launche the main app activity
+     * @param data User data received from facebook api
+     */
+    private void saveAndLaunchMainActivity(FacebookLoginData data){
         endPointAPI.facebookLogin(data).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
@@ -147,23 +148,35 @@ public class IntroActivity extends AppCompatActivity {
         });
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * Display login screen
+     * @param view The calling View
+     */
     public void showLoginFragment(View view) {
         loginFragment = new LoginFragment(retrofit,endPointAPI);
         showFragment(loginFragment);
     }
 
 
+    /**
+     * Display Sign up screen
+     * @param view The calling View
+     */
     public void showSignUpFragment(View view){
         signUpFragment = new SignUpFragment(retrofit,endPointAPI);
         showFragment(signUpFragment);
     }
 
+    /**
+     * Called when the activity has detected the user's press of the back key.
+     */
     @Override
     public void onBackPressed() {
         if(loginFragment != null){
@@ -180,12 +193,21 @@ public class IntroActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Display passed fragment
+     * @param fragment loginFragment or SignUpFragment
+     */
     public void showFragment(Fragment fragment){
         getSupportFragmentManager().beginTransaction().replace(R.id.intro_fragment,fragment).commit();
         findViewById(R.id.intro).animate().translationX(-displayWidth);
         findViewById(R.id.intro_fragment).animate().translationX(0);
     }
 
+
+    /**
+     * Hide passed fragment
+     * @param fragment loginFragment or SignUpFragment
+     */
     public void hideFragment(final Fragment fragment){
         findViewById(R.id.intro).animate().translationX(0);
         findViewById(R.id.intro_fragment).animate().translationX(displayWidth).withEndAction(new Runnable() {
@@ -196,6 +218,9 @@ public class IntroActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Read the device display width
+     */
     public void calculateDisplayWidth(){
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);

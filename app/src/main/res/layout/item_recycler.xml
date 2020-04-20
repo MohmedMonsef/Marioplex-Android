@@ -18,7 +18,7 @@
         <ImageView
             android:id="@+id/entity_image"
             android:layout_width="160dp"
-            android:background="@drawable/not_found_2"
+            android:background="@drawable/ic_smile2"
             android:layout_height="140dp"
             android:scaleType="centerCrop"/>
 
@@ -26,7 +26,9 @@
             android:id="@+id/NameOfImage"
             android:layout_width="160dp"
             android:layout_height="match_parent"
+            android:background="@color/bgBottomNavigation"
             android:layout_gravity="center_horizontal"
+            android:textColor="@color/TextColor"
             android:textSize="20dp"/>
 
 

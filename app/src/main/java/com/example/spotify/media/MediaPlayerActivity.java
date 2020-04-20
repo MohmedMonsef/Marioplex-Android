@@ -7,7 +7,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -91,7 +90,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
     Toast toast;
 
 
-    //Binding this Client to the AudioPlayer Service
+    /**
+     * Binding this Client to the AudioPlayer Service
+     */
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -128,6 +129,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
         //////////////////////////////////////////////////////////////////
         ////////////////////settings listeners////////////////////////////
         //////////////////////////////////////////////////////////////////
+        /**
+         * on press sets the duration of the sleep timer
+         */
         five.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -176,6 +180,10 @@ public class MediaPlayerActivity extends AppCompatActivity {
 //                toast.show();
 //            }
 //        });
+
+        /**
+         * on press the sleep timer bottom sheet expands
+         */
         turn_of_timer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,6 +193,10 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 toast.show();
             }
         });
+
+        /**
+         * on press the add to playlist activity opens
+         */
 
         settings_add_to_playlist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,8 +217,10 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
         header.setText(track.getName());
 
-//TODO here
         //Observers
+        /**
+         * observes for any changes in the current track info to update the UI
+         */
         if(track.getTrack()!=null) {
             track.getTrack().observe(this, new Observer<currentTrack>() {
                 @Override
@@ -215,6 +229,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 }
             });
         }
+        /**
+         * observes if there is a track playing to update the pause/play button image
+         */
 
         track.getIsPlaying().observe(this, new Observer<Boolean>() {
             @Override
@@ -227,6 +244,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 }
             }
         });
+        /**
+         * sets the progress bar duration with the current track duration
+         */
 
         track.getDuration().observe(this, new Observer<Integer>() {
             @Override
@@ -235,6 +255,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * observes if there is a timer set to update the UI
+         */
         track.getTimerSet().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -250,6 +273,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
         });
 
         //Click Listeners
+        /**
+         * listener for the back arrow button to close the media player activity
+         */
         arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -259,7 +285,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 //finish();
             }
         });
-
+        /**
+         * listener for the click on the play/pause button
+         */
         play_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -276,6 +304,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * listener for the click on the next button
+         */
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -283,6 +314,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 player.next();
             }
         });
+        /**
+         * listener for the click on the previous button
+         */
 
         previous.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -292,6 +326,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * listener for the click on the heart image to like/unlike the track
+         */
         favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -304,6 +341,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * listener for the click on the setting heart image to like/unlike the track
+         */
         favorite2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -317,8 +357,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
         });
 
 
-//TODO here
-        //UPDATE THE SEEK BAR AND THE START AND END TIME EVERY SECOND
+        /**
+         * UPDATE THE SEEK BAR AND THE START AND END TIME EVERY SECOND
+         */
         MediaPlayerActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -329,15 +370,15 @@ public class MediaPlayerActivity extends AppCompatActivity {
                     start_time.setText(getTimeString(mCurrentPosition));
                     end_time.setText(getTimeString(duration-mCurrentPosition));
                 }
-                //mHandler.postDelayed(this, 500);
-                mHandler.post(this);
+                mHandler.postDelayed(this, 500);
+                //mHandler.post(this);
             }
         });
 
 
-
-
-        //SEEK BAR LISTENER TO NAVIGATE THROW THE SONG
+        /**
+         * SEEK BAR LISTENER TO NAVIGATE THROW THE SONG
+         */
         seek_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -355,6 +396,10 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
 
     }
+    /**
+     * sends request to like the current track and on response it updates the heart image
+     * @param trackID
+     */
 
     private void LikeTrack(String trackID){
         favorite.setEnabled(false);
@@ -387,6 +432,11 @@ public class MediaPlayerActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * sends request to unlike the current track and on response it updates the heart image
+     * @param trackID
+     */
+
     private void UnLikeTrack(String trackID){
         favorite.setEnabled(false);
         favorite2.setEnabled(false);
@@ -418,7 +468,11 @@ public class MediaPlayerActivity extends AppCompatActivity {
         });
     }
 
-    //CONVERTS THE TIME FORMAT FROM MILLISECONDS TO MM:SS
+    /**
+     * CONVERTS THE TIME FORMAT FROM MILLISECONDS TO MM:SS
+     * @param millis
+     * @return
+     */
     private String getTimeString(long millis) {
         StringBuffer buf = new StringBuffer();
 
@@ -432,13 +486,20 @@ public class MediaPlayerActivity extends AppCompatActivity {
         return buf.toString();
     }
 
+    /**
+     * bindes the media player service to the activity
+     */
+
     private void bindService(){
         Intent serviceIntent1 = new Intent(this , MediaPlayerService.class);
         // serviceIntent1.putExtra("media" , media);
         bindService(serviceIntent1 , serviceConnection , Context.BIND_AUTO_CREATE);
 
     }
-    //TODO here
+
+    /**
+     * updates the media player activity's UI
+     */
     void UpdateUI(){
         String trackName = "";
         if(track.getTrack().getValue().getTrack()!=null) {
@@ -476,6 +537,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * sets the expand and collapse behavior of the song settings fragment
+     */
     void setSheetBehavior(){
         sheetBehavior.setHideable(true);
         sheetBehavior.setPeekHeight(0);
@@ -516,6 +580,10 @@ public class MediaPlayerActivity extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * sets the expand and collapse behavior of the sleep timer fragment
+     */
     void setSleepTimerBehaviour(){
         sleepTimer.setHideable(true);
         sleepTimer.setPeekHeight(0);
@@ -555,7 +623,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
         });
     }
 
-    //FINDS ALL VIEWS BY ID
+    /**
+     * gets all the views i will use
+     */
     private void getViews(){
         top_layout = (RelativeLayout)findViewById(R.id.top_layout);
         song_name = (TextView)findViewById(R.id.song_name);
@@ -596,6 +666,11 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * starts the sleep timer
+     * takes the time in milliseconds
+     * @param milliSeconds
+     */
 
     void startTimer(long milliSeconds){
         player.startTimer(milliSeconds);   //3 seconds
