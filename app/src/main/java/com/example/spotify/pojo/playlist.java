@@ -1,6 +1,5 @@
 package com.example.spotify.pojo;
 
-import com.example.spotify.SpotifyClasses.Image;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -31,7 +30,7 @@ public class playlist {
     private String ownerId;
     @SerializedName("images")
     @Expose
-    private List<Image> images = null;
+    private List<Object> images = null;
     @SerializedName("snapshot")
     @Expose
     private List<snapshot> snapshot = null;
@@ -95,11 +94,11 @@ public class playlist {
         this.ownerId = ownerId;
     }
 
-    public List<Image> getImages() {
+    public List<Object> getImages() {
         return images;
     }
 
-    public void setImages(List<Image> images) {
+    public void setImages(List<Object> images) {
         this.images = images;
     }
 

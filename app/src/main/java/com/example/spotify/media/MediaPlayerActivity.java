@@ -26,7 +26,6 @@ import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
-import com.example.spotify.SpotifyClasses.Image;
 import com.example.spotify.SpotifyClasses.Track;
 import com.example.spotify.login.user;
 import com.example.spotify.pojo.currentTrack;
@@ -208,6 +207,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 else{
                     intent.putExtra("track_id", "");
                 }
+                intent.putExtra("from" , "MediaPlayerActivity");
                 startActivity(intent);
             }
         });
@@ -370,7 +370,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
                     start_time.setText(getTimeString(mCurrentPosition));
                     end_time.setText(getTimeString(duration-mCurrentPosition));
                 }
-                mHandler.postDelayed(this, 500);
+                mHandler.postDelayed(this, 200);
                 //mHandler.post(this);
             }
         });
@@ -520,9 +520,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
         header.setText("PLAYING SONG");
 
 
-        List<Image> images= track.getTrack().getValue().getTrack().getImages();
+        List<Object> images= track.getTrack().getValue().getTrack().getImages();
         if(images !=null&& images.size() !=0){
-            String Imageurl = images.get(0).getUrl();
+            String Imageurl = images.get(0).toString();
             Picasso.get().load(Imageurl).into(song_image);
             Picasso.get().load(Imageurl).into(setting_image);
         }

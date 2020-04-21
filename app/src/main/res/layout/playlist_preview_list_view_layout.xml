@@ -17,6 +17,12 @@
             android:src="@drawable/ic_smile1"
             android:layout_width="80dp"
             android:layout_height="80dp"/>
+        <ImageView
+            android:id="@+id/tran_play"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:padding="25dp"
+            android:src="@drawable/trans_play"/>
         <ProgressBar
             android:id="@+id/loadingProgressbar"
             android:visibility="gone"

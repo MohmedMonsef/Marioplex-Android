@@ -156,12 +156,12 @@ public class PlaylistFragment extends Fragment {
                     }
                 }
                 else if(playlistTracks !=null && playlistTracks.getTracks()!=null && playlistTracks.getTracks().size()!=0){
-                    if(TrackInfo.getInstance().getIsQueue()!=null&& TrackInfo.getInstance().getIsQueue().getValue()){
-                        shuffleTracks();
-                    }
-                    else{
+//                    if(TrackInfo.getInstance().getIsQueue()!=null&& TrackInfo.getInstance().getIsQueue().getValue()){
+//                        shuffleTracks();
+//                    }
+//                    else{
                         CreateQueue(playlistTracks.getTracks().get(0).getTrackid());
-                    }
+                    //}
                 }
             }
         });
@@ -422,8 +422,6 @@ public class PlaylistFragment extends Fragment {
                 shuffle_play_button.setText("shuffle play");
             }
         }
-
-//TODO till the back makes it
 
         if(playlistTracks.getIsLiked()){
             like_playlist.setImageResource(R.drawable.like);

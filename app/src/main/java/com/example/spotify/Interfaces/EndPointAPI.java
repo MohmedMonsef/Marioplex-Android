@@ -7,23 +7,20 @@ import com.example.spotify.login.apiClasses.LoginResponse;
 import com.example.spotify.login.apiClasses.SignUpData;
 import com.example.spotify.login.apiClasses.updateProfile;
 import com.example.spotify.login.apiClasses.userProfile;
-import com.example.spotify.login.user;
-
-import java.util.ArrayList;
 import com.example.spotify.pojo.BasicPlaylist;
 import com.example.spotify.pojo.PlaylistTracks;
 import com.example.spotify.pojo.addTrackToPlaylistBody;
+import com.example.spotify.pojo.createPlaylistBody;
 import com.example.spotify.pojo.currentTrack;
 import com.example.spotify.pojo.playlist;
-import com.example.spotify.pojo.createPlaylistBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
-import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
@@ -101,19 +98,18 @@ public interface EndPointAPI {
 //    Call<List<BasicPlaylist>> getCurrentUserPlaylists(@Path("user_id") String userID ,
 //                                                      @Header("x-auth-token")String token1);
 
-@GET("api/me/playlists")
-    //@Headers("Authorization: Bearer "+token)
+    @GET("api/me/playlists")
     Call<List<BasicPlaylist>> getCurrentUserPlaylists(@Header("x-auth-token")String token1);
 
+    @GET("api/tracks/related/full-track/{track_id}")
+    Call<List<currentTrack>> getSongTracks(@Path("track_id") String TrackID , @Header("x-auth-token")String token1);
 
     @POST("api/playlists/{playlist_id}/tracks")
-    //@Headers("Authorization: Bearer "+token)
     Call<Object> AddTrackToAPlaylist(@Path("playlist_id") String playlistID
                                       ,@Body addTrackToPlaylistBody t
                                       ,@Header("x-auth-token")String token1);
 
     @POST("api/users/playlists")
-    //@Headers("Authorization: Bearer "+token)
     Call<playlist> CreatePlaylist(@Body createPlaylistBody c
                                  ,@Header("x-auth-token")String token1); //check if fiels of Query
 

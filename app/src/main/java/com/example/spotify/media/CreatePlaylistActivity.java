@@ -11,18 +11,18 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.example.spotify.login.user;
 import com.example.spotify.pojo.addTrackToPlaylistBody;
-import com.example.spotify.pojo.playlist;
 import com.example.spotify.pojo.createPlaylistBody;
+import com.example.spotify.pojo.playlist;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CreatePlaylistActivity extends AppCompatActivity {
 
@@ -34,6 +34,7 @@ public class CreatePlaylistActivity extends AppCompatActivity {
 //            .build();
     private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();
     private String trackID;
+    private String from;
     private playlist createdPlaylist;
 
     @Override
@@ -44,6 +45,7 @@ public class CreatePlaylistActivity extends AppCompatActivity {
         getViews();
 
         trackID = getIntent().getStringExtra("track_id");
+        from = getIntent().getStringExtra("from");
 
 
         //////////////////////////listeners/////////////////////////////
@@ -53,7 +55,15 @@ public class CreatePlaylistActivity extends AppCompatActivity {
         cancel_create_playlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CreatePlaylistActivity.this , MediaPlayerActivity.class);
+                //Intent intent = new Intent(CreatePlaylistActivity.this , MediaPlayerActivity.class);
+                Intent intent = null;
+                if(from.equals("MediaPlayerActivity")) {
+                    intent = new Intent(CreatePlaylistActivity.this, MediaPlayerActivity.class);
+                }
+                else if (from.equals("TrackFragment")) {
+                    intent = new Intent(getBaseContext(), MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                }
                 startActivity(intent);
             }
         });
@@ -72,8 +82,18 @@ public class CreatePlaylistActivity extends AppCompatActivity {
 
                         creatPlaylist(playlist_name_edit_text.getText().toString());
 
-                        Intent intent = new Intent(CreatePlaylistActivity.this , MediaPlayerActivity.class);
+//                        Intent intent = new Intent(CreatePlaylistActivity.this , MediaPlayerActivity.class);
+//                        startActivity(intent);
+                        Intent intent = null;
+                        if(from.equals("MediaPlayerActivity")) {
+                            intent = new Intent(CreatePlaylistActivity.this, MediaPlayerActivity.class);
+                        }
+                        else if (from.equals("TrackFragment")) {
+                            intent = new Intent(getBaseContext(), MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        }
                         startActivity(intent);
+
                     }
 
                     return true;

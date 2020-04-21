@@ -1,6 +1,11 @@
 package com.example.spotify.Fragments;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +15,34 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.spotify.Activities.PlaylistPreviewActivity;
+import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistInfo;
 import com.example.spotify.Fragments.SEARCH_FRAGMENT.searchfragment;
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
+import com.example.spotify.login.user;
+import com.example.spotify.media.AddToPlaylistActivity;
+import com.example.spotify.media.MediaPlayerService;
+import com.example.spotify.media.TrackInfo;
+import com.example.spotify.pojo.BasicTrack;
+import com.example.spotify.pojo.PlaylistTracks;
+import com.example.spotify.pojo.currentTrack;
+import com.example.spotify.pojo.myTrack;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TrackFragment extends Fragment {
     private ImageView back_arrow_track;
@@ -34,20 +60,56 @@ public class TrackFragment extends Fragment {
     private LinearLayout something_wrong_layout_track;
     private TextView something_wrong_text_track;
     private Button something_wrong_button_track;
+    private Button add_to_playlist_button;
 
 
-    private String TrckID = "";
+    private String TrackID = "";
+    private String TrackName = "";
+    private String TrackImage = "";
+    private String CurrentTrackID = "";
+    private int CurrentTrackPosInPlaylist;
+    private MediaPlayerService player;
+    private Boolean serviceBound = false;
+    private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();
+    private List<currentTrack> songTracks ;
+
+
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            MediaPlayerService.LocalBinder binder = (MediaPlayerService.LocalBinder) service;
+            player = binder.getservice();
+            serviceBound = true;
+
+            //   Toast.makeText(getContext(), "Service Bound", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            serviceBound = false;
+        }
+    };
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_track,container,false);
         ////////////////////get playlist id from the bundle\\\\\\\\\\\\\\\\\\\\\\\\
-        TrckID = getArguments().getString("TrackID");
+        //TrackID = getArguments().getString("TrackID");
+        TrackID = "5e9b5e2de9c8d87fdc2eca81";
+        TrackName = getArguments().getString("TrackName");
+        TrackImage = getArguments().getString("TrackImage");
 
         /////////////////////get all the views i will use/////////////////////////
         getViews(root);
 
+        //////////////////////Bind the service\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        bindService();
+
+
+        /////////////////////some listeners\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
         /**
          * when pressed the activity closes
@@ -63,8 +125,330 @@ public class TrackFragment extends Fragment {
             }
         });
 
+        like_track.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(PlaylistInfo.getinstance().getplaylistTracks().getValue().getTracks().get(0).getIsLiked()) {
+                    unLikeTrack();
+                }
+                else{
+                    LikeTrack();
+                }
+            }
+        });
+
+        //TODO don't forget to implement it
+        add_to_playlist_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AddToPlaylistActivity.class);
+                intent.putExtra("from" , "TrackFragment");
+                intent.putExtra("track_id" , TrackID);
+                startActivity(intent);
+            }
+        });
+
+        /**
+         * listener for the track names text
+         * on press the preview activity opens
+         */
+
+        artist_name_song_name_track.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), PlaylistPreviewActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        /**
+         * requests the get current playlist info requests if something goes wrong
+         */
+        something_wrong_button_track.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //////////////////////////show progress bar\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+                track_contents_layout.setVisibility(View.GONE);
+                something_wrong_layout_track.setVisibility(View.GONE);
+                progress_bar_track.setVisibility(View.VISIBLE);
+                /////////////////////////get Plsylist's tracks information\\\\\\\\\\\\\\\\\\\\\\\
+                GetSongTracksInfo(TrackID);
+            }
+        });
+
+        /**
+         * listener for the shuffle play button and on press it sends a request to turn on the shuffle mode
+         */
+
+        shuffle_play_button_track.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(CheckTrackInPlaylist() && !player.getIsPlaying()){
+                    TrackInfo.getInstance().setIsPlaying(true);
+                    player.resumeMedia();
+                }
+                else if(songTracks !=null && songTracks.size()!=0){
+                    CreateQueue(songTracks.get(0).getTrack().getId());
+                }
+            }
+        });
+
+
+
+        //////////////////////////show progress bar\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        track_contents_layout.setVisibility(View.GONE);
+        something_wrong_layout_track.setVisibility(View.GONE);
+        progress_bar_track.setVisibility(View.VISIBLE);
+        /////////////////////////get Plsylist's tracks information\\\\\\\\\\\\\\\\\\\\\\\
+        GetSongTracksInfo(TrackID);
+
 
         return root;
+    }
+
+    /**
+     * send a request to create queue of the current playlist's tracks and takes a track id and sets it as the current track
+     * @param trackID
+     */
+    void CreateQueue(String trackID){
+        Call<Void> call = endPointAPI.CreateQueue(songTracks.get(0).getAlbum().getId() , trackID , false , user.getToken());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(!response.isSuccessful()){
+                    Toast.makeText(getContext(),"Code: "+response.code(),Toast.LENGTH_SHORT).show();
+                    return;
+                }
+//                else if(response.body()==null){
+//                    Toast.makeText(getContext(),"response body = null",Toast.LENGTH_SHORT).show();
+//                }
+                else {
+                    shuffleTracks();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getContext(),t.getMessage()+" ' failed '",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * send a request to turn on the shuffle mode and to play a random track from the playlist
+     */
+
+    void shuffleTracks(){
+        Call<Void> call = endPointAPI.toggleShuffle(true , user.getToken());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(!response.isSuccessful()){
+                    Toast.makeText(getContext(),"Code: "+response.code(),Toast.LENGTH_SHORT).show();
+                    return;
+                }
+//                else if(response.body()==null){
+//                    Toast.makeText(getContext(),"response body = null",Toast.LENGTH_SHORT).show();
+//                }
+                else {
+                    ///////call mediaplayer get current playing \\\\\\\\\\
+                    Call<currentTrack> call1 = endPointAPI.getNext(user.getToken());
+                    player.playCurrentTrack(call1);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getContext(),t.getMessage()+" ' failed '",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    void GetSongTracksInfo(String TrackID){
+        Call<List<currentTrack>> call = endPointAPI.getSongTracks(TrackID , user.getToken());
+        call.enqueue(new Callback<List<currentTrack>>() {
+            @Override
+            public void onResponse(Call<List<currentTrack>> call, Response<List<currentTrack>> response) {
+                if(!response.isSuccessful() ||response.body() == null){
+                    //Toast.makeText(getContext(),"Code: "+response.code(),Toast.LENGTH_SHORT).show();
+                    progress_bar_track.setVisibility(View.GONE);
+                    track_contents_layout.setVisibility(View.GONE);
+                    something_wrong_text_track.setText("something went wrong .try again");
+                    something_wrong_layout_track.setVisibility(View.VISIBLE);
+                    return;
+                }
+                else {
+                    songTracks = response.body();
+                    FillPlaylistTracks(songTracks);
+
+                    track_contents_layout.setVisibility(View.VISIBLE);
+                    something_wrong_layout_track.setVisibility(View.GONE);
+                    progress_bar_track.setVisibility(View.GONE);
+                    updateUI();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<currentTrack>> call, Throwable t) {
+                //Toast.makeText(getContext(),t.getMessage()+" ' failed '",Toast.LENGTH_SHORT).show();
+                progress_bar_track.setVisibility(View.GONE);
+                track_contents_layout.setVisibility(View.GONE);
+                something_wrong_text_track.setText("something went wrong .check your internet connection");
+                something_wrong_layout_track.setVisibility(View.VISIBLE);
+
+            }
+        });
+    }
+
+    void FillPlaylistTracks(List<currentTrack> SongTracks){
+
+        PlaylistTracks p = new PlaylistTracks();
+        myTrack t = SongTracks.get(0).getTrack();
+        p.setId(t.getId());
+        p.setIsLiked(SongTracks.get(0).getIsLiked());
+        p.setImages(t.getImages());
+        p.setName(t.getName());
+        p.setType("song");
+        List<BasicTrack> basic = new ArrayList<>();
+        for(int i = 0 ; i < SongTracks.size() ; i++){
+            t = SongTracks.get(i).getTrack();
+            BasicTrack basict = new BasicTrack();
+            basict.setIsLiked(SongTracks.get(i).getIsLiked());
+            basict.setAlbumId(SongTracks.get(i).getAlbum().getId());
+            basict.setAlbumName(SongTracks.get(i).getAlbum().getName());
+            basict.setArtistId(SongTracks.get(i).getAlbum().getArtist().getId());
+            basict.setArtistName(SongTracks.get(i).getAlbum().getArtist().getName());
+            basict.setTrackid(t.getId());
+            basict.setName(t.getName());
+            basict.setImages(t.getImages());
+            basic.add(basict);
+        }
+        p.setTracks(basic);
+        PlaylistInfo.getinstance().setPlaylistTracks(p);
+    }
+
+
+    /**
+     * send a request to like(follow) the playlist
+     */
+    void LikeTrack(){
+        Call<Void> call = endPointAPI.LikeTrack(TrackID , user.getToken());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                if(!response.isSuccessful()){
+                    Toast.makeText(getContext(),"something went wrong .try again",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else {
+                    like_track.setImageResource(R.drawable.like);
+                    PlaylistInfo.getinstance().getplaylistTracks().getValue().getTracks().get(0).setIsLiked(true);
+                    //SongTracks.setIsLiked(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getContext(),"something went wrong .check your internet connection",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * send a request to unlike(unfollow) the playlist
+     */
+    void unLikeTrack(){
+        Call<Void> call = endPointAPI.UNLikeTrack(TrackID , user.getToken());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                if(!response.isSuccessful()){
+                    Toast.makeText(getContext(),"something went wrong .try again",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else {
+                    like_track.setImageResource(R.drawable.favorite_border);
+                    PlaylistInfo.getinstance().getplaylistTracks().getValue().getTracks().get(0).setIsLiked(false);
+                    //SongTracks.setIsLiked(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getContext(),"something went wrong .check your internet connection",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+
+    void updateUI(){
+        List<Object> images= songTracks.get(0).getTrack().getImages();
+        if(images != null && images.size()!=0) {
+            String Imageurl = images.get(0).toString();
+            Picasso.get().load(Imageurl).into(track_image_track_fragment);
+        }
+        track_name_middle.setText(songTracks.get(0).getTrack().getName());
+
+//        if(!TrackImage.isEmpty()){
+//            Picasso.get().load(TrackImage).into(track_image_track_fragment);
+//        }
+//        track_name_middle.setText(TrackName);
+
+        track_singer.setText("Song by " + songTracks.get(0).getAlbum().getArtist().getName());
+
+        String songsNames = "";
+        List<currentTrack> tracks = songTracks;
+        int n  = 7;
+
+        if(songTracks.size() < 7){
+            n = songTracks.size();
+        }
+        else if(songTracks.size() == 0){
+            n=0;
+        }
+        for(int i =0 ; i<n; i++){
+            songsNames+= tracks.get(i).getAlbum().getArtist().getName()+" ";
+            songsNames+= tracks.get(i).getTrack().getName()+" . ";
+        }
+        if(songTracks.size() !=0){
+            songsNames+="and more";
+        }
+        artist_name_song_name_track.setText(songsNames);
+
+
+        if(songTracks.get(0).getIsLiked()){
+            like_track.setImageResource(R.drawable.like);
+        }
+        else{
+            like_track.setImageResource(R.drawable.favorite_border);
+        }
+    }
+
+    /**
+     * checks if the currently playing track is from the current playlist
+     * @return
+     */
+    Boolean CheckTrackInPlaylist(){
+        if(TrackInfo.getInstance().getIsQueue()!=null &&
+                TrackInfo.getInstance().getIsQueue().getValue() &&
+                TrackInfo.getInstance().getTrack()!=null &&
+                TrackInfo.getInstance().getTrack().getValue().getTrack()!=null){
+            CurrentTrackID = TrackInfo.getInstance().getTrack().getValue().getTrack().getId();
+
+            List<currentTrack> tracks = songTracks;
+
+            for(int i =0 ; i<tracks.size(); i++){
+                if(tracks.get(i).getTrack().getId().equals(CurrentTrackID)){
+                    CurrentTrackPosInPlaylist = i;
+                    return true;
+                }
+            }
+
+        }
+        return false;
     }
 
     void getViews(View root){
@@ -82,5 +466,14 @@ public class TrackFragment extends Fragment {
         something_wrong_layout_track = root.findViewById(R.id.something_wrong_layout_track);
         something_wrong_text_track = root.findViewById(R.id.something_wrong_text_track);
         something_wrong_button_track = root.findViewById(R.id.something_wrong_button_track);
+        add_to_playlist_button = root.findViewById(R.id.add_to_playlist_button);
     }
+
+    private void bindService(){
+        Intent serviceIntent1 = new Intent(getContext() , MediaPlayerService.class);
+        getActivity().bindService(serviceIntent1 , serviceConnection , Context.BIND_AUTO_CREATE);
+
+    }
+
+
 }

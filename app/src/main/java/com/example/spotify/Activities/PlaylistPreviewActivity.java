@@ -54,6 +54,7 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
     private ProgressBar loadingProgressbar;
     private ImageView preview_song_image1;
     private MutableLiveData<Boolean> prepare = new MutableLiveData<>();
+    private int idOfView ;
     private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();
 
     private PlaylistTracks mplaylistTracks;
@@ -153,6 +154,7 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
             @Override
             public void onChanged(Boolean aBoolean) {
                 CustomAdapter customAdapter = new CustomAdapter();
+                playlist_list_view_preview.setAdapter(customAdapter);
                 customAdapter.notifyDataSetChanged();
             }
         });
@@ -311,6 +313,7 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
             TextView preview_artist_name = (TextView)convertView.findViewById(R.id.preview_song_artist);
             ImageView preview_like = (ImageView)convertView.findViewById(R.id.preview_like);
             RelativeLayout preview_container = convertView.findViewById(R.id.preview_container);
+            final ImageView tran_play = convertView.findViewById(R.id.tran_play);
             final ProgressBar loadingProgressbar1 = convertView.findViewById(R.id.loadingProgressbar);
 
             List<Object> images= mplaylistTracks.getImages();
@@ -360,13 +363,15 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
                         headers.put("x-auth-token" , user.getToken());
                         mediaPlayer.reset();
                         try{
-                            String TID = "5e9841144b29c2d6f0cfb3dd";
-                            //TID = mplaylistTracks.getTracks().get(position).getTrackid();
+                            String TID = "5e9b64e4e9c8d87fdc2ecbd8";
+                            //String TID = mplaylistTracks.getTracks().get(position).getTrackid();
                             String s = Retrofit.getInstance().getBaseurl() + "api/tracks/android/" + TID + "?type=review";
                             mediaPlayer.setDataSource(PlaylistPreviewActivity.this , Uri.parse(s) , headers);
-                            //loadingProgressbar1.setVisibility(View.VISIBLE);
-                            //preview_playlist_image.setVisibility(View.GONE);
+                            loadingProgressbar1.setVisibility(View.VISIBLE);
+                            preview_playlist_image.setVisibility(View.INVISIBLE);
+                            tran_play.setVisibility(View.INVISIBLE);
                             prepare.setValue(true);
+                            idOfView = position;
                             mediaPlayer.prepareAsync();
 
                         }
@@ -381,18 +386,31 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
+                    Toast.makeText(getApplicationContext() , "prepared " , Toast.LENGTH_SHORT);
                     if(player.getIsPlaying()){
                         player.pauseMedia();
                         TrackInfo.getInstance().setIsPlaying(false);
                     }
-                    prepare.setValue(false);
-                    //loadingProgressbar1.setVisibility(View.GONE);
+                    loadingProgressbar1.setVisibility(View.INVISIBLE);
                     //preview_playlist_image.setImageResource(R.drawable.ic_smile1);
-                    //preview_playlist_image.setVisibility(View.VISIBLE);
+                    preview_playlist_image.setVisibility(View.VISIBLE);
+                    prepare.setValue(false);
+
                     mediaPlayer.start();
 
                 }
             });
+            if(prepare.getValue()&&position == idOfView){
+                loadingProgressbar1.setVisibility(View.VISIBLE);
+                preview_playlist_image.setVisibility(View.INVISIBLE);
+                tran_play.setVisibility(View.INVISIBLE);
+            }
+            else {
+                loadingProgressbar1.setVisibility(View.INVISIBLE);
+                //preview_playlist_image.setImageResource(R.drawable.ic_smile1);
+                preview_playlist_image.setVisibility(View.VISIBLE);
+                tran_play.setVisibility(View.VISIBLE);
+            }
 
 
             TrackInfo trackInfo = TrackInfo.getInstance();

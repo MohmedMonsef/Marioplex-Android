@@ -22,7 +22,6 @@ import androidx.lifecycle.Observer;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
-import com.example.spotify.SpotifyClasses.Image;
 import com.example.spotify.login.user;
 import com.example.spotify.pojo.currentTrack;
 import com.squareup.picasso.Picasso;
@@ -280,9 +279,9 @@ public class BottomSheetFragment extends Fragment {
         song_artist_name.setText(songName+" . "+artistName);
 
 
-        List<Image> images= track.getTrack().getValue().getTrack().getImages();
+        List<Object> images= track.getTrack().getValue().getTrack().getImages();
         if(images !=null&& images.size()!=0){
-            String Imageurl = images.get(0).getUrl();
+            String Imageurl = images.get(0).toString();
             Picasso.get().load(Imageurl).into(bottom_image_id);
         }
 

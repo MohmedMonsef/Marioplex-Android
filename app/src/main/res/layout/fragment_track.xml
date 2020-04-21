@@ -50,7 +50,7 @@
                     android:id="@+id/like_track"
                     android:padding="16dp"
                     android:src="@drawable/favorite_border"
-                    android:visibility="invisible"
+                    android:visibility="visible"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"/>
 
@@ -104,6 +104,19 @@
                                 android:textAllCaps="true"
                                 android:gravity="center"/>
                             <Button
+                                android:id="@+id/add_to_playlist_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/transparent_rounded_button"
+                                android:text="ADD TO PLAYLIST"
+                                android:paddingLeft="25dp"
+                                android:paddingRight="25dp"
+                                android:textSize="14sp"
+                                android:layout_marginTop="18dp"
+                                android:layout_marginBottom="18dp"
+                                android:layout_gravity="center_horizontal"
+                                android:textColor="@android:color/background_light"/>
+                            <Button
                                 android:id="@+id/shuffle_play_button_track"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -111,7 +124,7 @@
                                 android:text="shuffle play"
                                 android:paddingLeft="40dp"
                                 android:paddingRight="40dp"
-                                android:textSize="18dp"
+                                android:textSize="18sp"
                                 android:textAllCaps="true"
                                 android:layout_marginTop="8dp"
                                 android:layout_gravity="center_horizontal"
@@ -136,7 +149,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:visibility="gone"
             android:id="@+id/progress_bar_track"/>
         <LinearLayout
             android:id="@+id/something_wrong_layout_track"

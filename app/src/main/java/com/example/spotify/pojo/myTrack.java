@@ -1,6 +1,5 @@
 package com.example.spotify.pojo;
 
-import com.example.spotify.SpotifyClasses.Image;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,7 +8,7 @@ import java.util.List;
 public class myTrack {
     @SerializedName("images")
     @Expose
-    private List<Image> images = null;
+    private List<Object> images = null;
 
     @SerializedName("availableMarkets")
     @Expose
@@ -55,7 +54,7 @@ public class myTrack {
     private Integer instrumentalness;
     @SerializedName("key")
     @Expose
-    private Integer key;
+    private String key;
     @SerializedName("liveness")
     @Expose
     private Integer liveness;
@@ -193,11 +192,11 @@ public class myTrack {
         this.instrumentalness = instrumentalness;
     }
 
-    public Integer getKey() {
+    public String getKey() {
         return key;
     }
 
-    public void setKey(Integer key) {
+    public void setKey(String key) {
         this.key = key;
     }
 
@@ -265,11 +264,11 @@ public class myTrack {
         this.v = v;
     }
 
-    public List<Image> getImages() {
+    public List<Object> getImages() {
         return images;
     }
 
-    public void setImages(List<Image> images) {
+    public void setImages(List<Object> images) {
         this.images = images;
     }
 }

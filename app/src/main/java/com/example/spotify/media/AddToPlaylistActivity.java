@@ -17,23 +17,21 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
-import com.example.spotify.SpotifyClasses.Image;
-import com.example.spotify.SpotifyClasses.UserPlaylists;
 import com.example.spotify.login.user;
 import com.example.spotify.pojo.BasicPlaylist;
 import com.example.spotify.pojo.addTrackToPlaylistBody;
-import com.example.spotify.pojo.playlist;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AddToPlaylistActivity extends AppCompatActivity {
 
@@ -44,6 +42,7 @@ public class AddToPlaylistActivity extends AppCompatActivity {
     private List<BasicPlaylist> userPlaylists;
     private ProgressBar playlists_progress_bar;
     private String trackID;
+    private String from;
     private Button try_again;
     private LinearLayout something_wrong_layout2;
     private TextView something_wrong_text2;
@@ -63,6 +62,7 @@ public class AddToPlaylistActivity extends AppCompatActivity {
         getviews();
 
         trackID = getIntent().getStringExtra("track_id");
+        from = getIntent().getStringExtra("from");
 
 
 
@@ -82,7 +82,14 @@ public class AddToPlaylistActivity extends AppCompatActivity {
         back_button_to_mediaplayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddToPlaylistActivity.this , MediaPlayerActivity.class);
+                Intent intent = null;
+                if(from.equals("MediaPlayerActivity")) {
+                   intent = new Intent(AddToPlaylistActivity.this, MediaPlayerActivity.class);
+                }
+                else if (from.equals("TrackFragment")) {
+                    intent = new Intent(getBaseContext(), MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                }
                 startActivity(intent);
             }
         });
@@ -96,6 +103,7 @@ public class AddToPlaylistActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(AddToPlaylistActivity.this , CreatePlaylistActivity.class);
                 intent.putExtra("track_id", trackID);
+                intent.putExtra("from" , from);
                 startActivity(intent);
             }
         });
@@ -119,7 +127,15 @@ public class AddToPlaylistActivity extends AppCompatActivity {
                     }
 
                 }
-                Intent intent = new Intent(AddToPlaylistActivity.this , MediaPlayerActivity.class);
+                //Intent intent = new Intent(AddToPlaylistActivity.this , MediaPlayerActivity.class);
+                Intent intent = null;
+                if(from.equals("MediaPlayerActivity")) {
+                    intent = new Intent(AddToPlaylistActivity.this, MediaPlayerActivity.class);
+                }
+                else if (from.equals("TrackFragment")) {
+                    intent = new Intent(getBaseContext(), MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                }
                 startActivity(intent);
             }
         });
@@ -212,6 +228,7 @@ public class AddToPlaylistActivity extends AppCompatActivity {
                 }
                 else {
                     userPlaylists = response.body();
+                    filterPlaylists();
                     CustomAdapter customAdapter = new CustomAdapter();
                     playlists_list_view.setAdapter(customAdapter);
                     something_wrong_layout2.setVisibility(View.GONE);
@@ -236,6 +253,15 @@ public class AddToPlaylistActivity extends AppCompatActivity {
 
     }
 
+    void filterPlaylists(){
+        List<BasicPlaylist> temp = new ArrayList<>();
+        for (int i =0 ; i <userPlaylists.size() ; i ++){
+            if(userPlaylists.get(i).getType().equals("created")){
+                temp.add(userPlaylists.get(i));
+            }
+        }
+        userPlaylists = temp;
+    }
 
 
     private class CustomAdapter extends BaseAdapter{

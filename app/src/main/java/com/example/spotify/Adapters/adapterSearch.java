@@ -145,6 +145,8 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
                 else if(list1.get(position).getType().equals("Track")){
                     Bundle bundle = new Bundle();
                     bundle.putString("TrackID" , list1.get(position).getid());
+                    bundle.putString("TrackName" , list1.get(position).getName());
+                    bundle.putString("TrackImage" , list1.get(position).getImage());
                     //bundle.putString("ownerName" , list1.getOwner().getName());
 
                     androidx.fragment.app.Fragment f = new TrackFragment();
