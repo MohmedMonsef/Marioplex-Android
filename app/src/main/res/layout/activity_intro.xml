@@ -9,7 +9,6 @@
     android:id="@+id/root_view"
     tools:context=".login.IntroActivity">
 
-
     <LinearLayout
         android:id="@+id/intro"
         android:layout_width="match_parent"

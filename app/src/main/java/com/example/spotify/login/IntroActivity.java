@@ -1,10 +1,15 @@
 package com.example.spotify.login;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.widget.ToolbarWidgetWrapper;
 import androidx.fragment.app.Fragment;
 
 import android.animation.TimeAnimator;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -43,6 +48,8 @@ public class IntroActivity extends AppCompatActivity {
     private static EndPointAPI endPointAPI = null;
     private static LoginFragment loginFragment = null;
     private static SignUpFragment signUpFragment= null;
+
+
     //private static String token = null;
     private static float displayWidth;
 
@@ -184,8 +191,10 @@ public class IntroActivity extends AppCompatActivity {
             loginFragment = null;
         }
         else if(signUpFragment != null){
-            hideFragment(signUpFragment);
-            signUpFragment = null;
+            if(!signUpFragment.handleOnBackPressed()) {
+                hideFragment(signUpFragment);
+                signUpFragment = null;
+            }
         }
         else{
             super.onBackPressed();
@@ -203,7 +212,6 @@ public class IntroActivity extends AppCompatActivity {
         findViewById(R.id.intro_fragment).animate().translationX(0);
     }
 
-
     /**
      * Hide passed fragment
      * @param fragment loginFragment or SignUpFragment
@@ -213,7 +221,7 @@ public class IntroActivity extends AppCompatActivity {
         findViewById(R.id.intro_fragment).animate().translationX(displayWidth).withEndAction(new Runnable() {
             @Override
             public void run() {
-                getSupportFragmentManager().beginTransaction().remove(fragment);
+                getSupportFragmentManager().beginTransaction().remove(fragment).commit();
             }
         });
     }
@@ -226,4 +234,9 @@ public class IntroActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         displayWidth = displayMetrics.widthPixels;
     }
+
+    public static float getDisplayWidth() {
+        return displayWidth;
+    }
+
 }
