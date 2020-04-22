@@ -67,9 +67,11 @@ public class PlaylistFragment extends Fragment {
     private Boolean serviceBound = false;
 
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    private ServiceConnection serviceConnection = new ServiceConnection()
+    {
         @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
+        public void onServiceConnected(ComponentName name, IBinder service)
+        {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             MediaPlayerService.LocalBinder binder = (MediaPlayerService.LocalBinder) service;
             player = binder.getservice();
@@ -91,13 +93,10 @@ public class PlaylistFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_playlist,container,false);
         ////////////////////get playlist id from the bundle\\\\\\\\\\\\\\\\\\\\\\\\
         playlistID = getArguments().getString("playlistID");
-
         /////////////////////get all the views i will use/////////////////////////
         getViews(root);
-
         //////////////////////Bind the service\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         bindService();
-
         /////////////////////some listeners\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         /**
          * when pressed the activity closes
@@ -183,7 +182,7 @@ public class PlaylistFragment extends Fragment {
         /**
          * requests the get current playlist info requests if something goes wrong
          */
-        something_wrong_button.setOnClickListener(new View.OnClickListener() {
+             something_wrong_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //////////////////////////show progress bar\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -306,7 +305,8 @@ public class PlaylistFragment extends Fragment {
 //                else if(response.body()==null){
 //                    Toast.makeText(getContext(),"response body = null",Toast.LENGTH_SHORT).show();
 //                }
-                else {
+                else
+                    {
                     playlistTracks = response.body().get(0);
                     PlaylistInfo.getinstance().setPlaylistTracks(playlistTracks);
                     playlist_contents_layout.setVisibility(View.VISIBLE);
@@ -392,13 +392,10 @@ public class PlaylistFragment extends Fragment {
             Picasso.get().load(Imageurl).into(playlist_image_playlist_fragment);
         }
         playlist_name_middle.setText(playlistTracks.getName());
-
         playlist_owner.setText("BY " + playlistOwner);
-
         String songsNames = "";
         List<BasicTrack> tracks = playlistTracks.getTracks();
         int n  = 7;
-
         if(playlistTracks.getTracks().size() < 7){
             n = playlistTracks.getTracks().size();
         }
@@ -461,7 +458,8 @@ public class PlaylistFragment extends Fragment {
      * @param root
      */
 
-    void getViews(View root){
+    void getViews(View root)
+    {
         back_arrow_playlist = root.findViewById(R.id.back_arrow_playlist);
         like_playlist = root.findViewById(R.id.like_playlist);
         playlist_settings_button = root.findViewById(R.id.playlist_settings_button);
@@ -484,7 +482,8 @@ public class PlaylistFragment extends Fragment {
     }
 
     @Override
-    public void onDestroyView() {
+    public void onDestroyView()
+    {
         super.onDestroyView();
         PlaylistInfo.getinstance().clearinstance();
     }
@@ -493,4 +492,5 @@ public class PlaylistFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
     }
+
 }

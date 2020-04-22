@@ -1,6 +1,7 @@
 package com.example.spotify.Adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify.BackClasses.Backclasses.backcategory.Category_;
+import com.example.spotify.Fragments.CATEGORY_PLAYLISTS.categoryplaylist;
+import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
 import com.example.spotify.R;
 import com.squareup.picasso.Picasso;
 
@@ -56,7 +60,7 @@ public class adapterCategories extends RecyclerView.Adapter<adapterCategories.My
      * set on item of recyclerview with its data
      */
     @Override
-    public void onBindViewHolder(adapterCategories.MyviewHolder holder, int position)
+    public void onBindViewHolder(adapterCategories.MyviewHolder holder, final int position)
     {
 
 
@@ -69,6 +73,32 @@ public class adapterCategories extends RecyclerView.Adapter<adapterCategories.My
             // load the image
             Picasso.get().load(item.getImages().get(0).toString()).into(holder.image);
         }
+        /**
+         * a click listener handel the item view
+         */
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            /**
+             *
+             * @param v
+             * go to the next fragment from the selected item view
+             */
+            @Override
+            public void onClick(View v)
+            {
+
+                Bundle bundle = new Bundle();
+                bundle.putString("CategoryID" ,Categorylist.get(position).getId());
+                //bundle.putString("ownerName" , list1.getOwner().getName());
+                androidx.fragment.app.Fragment f = new categoryplaylist();
+                f.setArguments(bundle);
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frame_fragment, f)
+                        .addToBackStack(null).commit();
+            }
+        });
+
 
     }
 

@@ -9,7 +9,8 @@ public class PlaylistInfo {
     private MutableLiveData<PlaylistTracks> playlistTracks = new MutableLiveData<>();
     private MutableLiveData<Boolean> InfoReady;
 
-    public static PlaylistInfo getinstance(){
+    public static PlaylistInfo getinstance()
+    {
         if(instance == null){
             instance = new PlaylistInfo();
         }

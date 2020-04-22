@@ -5,7 +5,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class BasicTrack {
+public class BasicTrack
+{
     @SerializedName("trackid")
     @Expose
     private String trackid;
