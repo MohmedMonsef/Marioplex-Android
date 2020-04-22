@@ -143,6 +143,7 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
                 @Override
                 public void onChanged(PlaylistTracks playlistTracks) {
                     mplaylistTracks = playlistTracks;
+                    playlist_name_preview.setText(mplaylistTracks.getName());
                     CustomAdapter customAdapter = new CustomAdapter();
                     playlist_list_view_preview.setAdapter(customAdapter);
                     customAdapter.notifyDataSetChanged();
@@ -340,7 +341,7 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
              {
                 preview_like.setImageResource(R.drawable.favorite_border);
             }
-            playlist_name_preview.setText(mplaylistTracks.getName());
+
             preview_like.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

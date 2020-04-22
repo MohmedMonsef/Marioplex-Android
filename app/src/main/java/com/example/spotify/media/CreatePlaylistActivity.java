@@ -64,6 +64,10 @@ public class CreatePlaylistActivity extends AppCompatActivity {
                     intent = new Intent(getBaseContext(), MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 }
+                else if (from.equals("Playlist_library")){
+                    intent = new Intent(getBaseContext(), MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                }
                 startActivity(intent);
             }
         });
@@ -89,6 +93,10 @@ public class CreatePlaylistActivity extends AppCompatActivity {
                             intent = new Intent(CreatePlaylistActivity.this, MediaPlayerActivity.class);
                         }
                         else if (from.equals("TrackFragment")) {
+                            intent = new Intent(getBaseContext(), MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        }
+                        else if (from.equals("Playlist_library")){
                             intent = new Intent(getBaseContext(), MainActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                         }
@@ -128,7 +136,9 @@ public class CreatePlaylistActivity extends AppCompatActivity {
                 else {
                     Toast.makeText(getApplicationContext(),"playlist is created",Toast.LENGTH_SHORT).show();
                     createdPlaylist = response.body();
-                    addToPlaylist(createdPlaylist.getId());
+                    if(!from.equals("Playlist_library")){
+                        addToPlaylist(createdPlaylist.getId());
+                    }
                 }
             }
             @Override

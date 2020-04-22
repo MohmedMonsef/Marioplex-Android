@@ -23,6 +23,7 @@ import androidx.lifecycle.Observer;
 
 import com.example.spotify.Activities.PlaylistPreviewActivity;
 import com.example.spotify.Fragments.HOME_FRAGMENT.backhome;
+import com.example.spotify.Fragments.LIBRARY_FRAGMENT.libraryFragment;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
@@ -65,6 +66,7 @@ public class PlaylistFragment extends Fragment {
     private String CurrentTrackID = "";
     private int CurrentTrackPosInPlaylist;
     private Boolean serviceBound = false;
+    String from = "";
 
 
     private ServiceConnection serviceConnection = new ServiceConnection()
@@ -93,6 +95,8 @@ public class PlaylistFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_playlist,container,false);
         ////////////////////get playlist id from the bundle\\\\\\\\\\\\\\\\\\\\\\\\
         playlistID = getArguments().getString("playlistID");
+        from = getArguments().getString("from");
+        if(from == null ){from = "";}
         /////////////////////get all the views i will use/////////////////////////
         getViews(root);
         //////////////////////Bind the service\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -105,10 +109,19 @@ public class PlaylistFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ////////////////return to my home fragment\\\\\\\\\\\\\\\\\\\\\
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_fragment,new backhome())
-                        .addToBackStack(null)
-                        .commit();
+                if(from.equals("Playlist_library")){
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.frame_fragment,new libraryFragment())
+                            .addToBackStack(null)
+                            .commit();
+                }
+                else {
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.frame_fragment, new backhome())
+                            .addToBackStack(null)
+                            .commit();
+                    }
+
             }
         });
         /**
