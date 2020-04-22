@@ -149,7 +149,11 @@ public class SignUpFragment extends Fragment {
         confirmEmailButton.setOnClickListener(onNextClickListener);
         confirmPasswordButton.setOnClickListener(onNextClickListener);
 
-        //((DatePicker)rootView.findViewById(R.id.datePicker)).;
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR,-18);
+        ((DatePicker)rootView.findViewById(R.id.datePicker)).setMaxDate(calendar.getTimeInMillis());
+        calendar.add(Calendar.YEAR,-102);
+        ((DatePicker)rootView.findViewById(R.id.datePicker)).setMinDate(calendar.getTimeInMillis());
 
         positionViews(rootView);
         return rootView;
