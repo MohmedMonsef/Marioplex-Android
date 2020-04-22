@@ -1,7 +1,6 @@
 package com.example.spotify.Interfaces;
 
 import com.example.spotify.BackClasses.Backclasses.backcategory.Category;
-import com.example.spotify.BackClasses.Backclasses.backcategoryplaylist.CategoryPlaylist;
 import com.example.spotify.BackClasses.Backclasses.backnewrelease.Newreleases;
 import com.example.spotify.BackClasses.Backclasses.backpopularalbum.PopularAlbum;
 import com.example.spotify.BackClasses.Backclasses.backpopularartist.PopularArtist;
@@ -11,7 +10,6 @@ import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface backinterfaces
@@ -39,9 +37,5 @@ public interface backinterfaces
 
     @GET("api/browse/categories")
     public Call<Category> getCategories(@Header("x-auth-token") String token);
-
-    @GET("api/browse/categories/{category_id}/playlists")
-    public Call<CategoryPlaylist> getCategoryPlaylist(@Path("category_id") String category_id,@Header("x-auth-token") String token);
-
 
 }

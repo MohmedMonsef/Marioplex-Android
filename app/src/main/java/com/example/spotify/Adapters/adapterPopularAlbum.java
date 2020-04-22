@@ -2,7 +2,6 @@ package com.example.spotify.Adapters;
 
 import androidx.fragment.app.Fragment;
 import android.content.Context;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify.BackClasses.Backclasses.backpopularalbum.Album;
-import com.example.spotify.Fragments.ALBUM_FRAGMENT.album;
 import com.example.spotify.Fragments.NEW_RELEASE_FRAHMENT.newReleaseFragment;
 import com.example.spotify.R;
 import com.squareup.picasso.Picasso;
@@ -67,7 +65,7 @@ public class adapterPopularAlbum extends RecyclerView.Adapter<adapterPopularAlbu
     @Override
     public void onBindViewHolder(adapterPopularAlbum.MyviewHolder holder, int position)
     {
-        final Album item=PopularAlbumList.get(position);
+        Album item=PopularAlbumList.get(position);
         holder.ImageName.setText(item.getName());
         Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
         /// check if the image not null
@@ -79,21 +77,19 @@ public class adapterPopularAlbum extends RecyclerView.Adapter<adapterPopularAlbu
         /**
          * a click listener handel the item view
          */
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener()
+        {
+            /**
+             *
+             * @param v
+             * go to the next fragment from the selected item view
+             */
             @Override
             public void onClick(View v)
             {
-
-                Bundle bundle = new Bundle();
-                bundle.putString("albumID" , item.getId());
-                bundle.putString("artistName" , item.getArtist().getName());
-                androidx.fragment.app.Fragment f = new album();
-                f.setArguments(bundle);
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                activity.getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.frame_fragment, f)
-                        .addToBackStack(null).commit();
+                Fragment myFragment = new newReleaseFragment();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, myFragment).addToBackStack(null).commit();
 
             }
         });

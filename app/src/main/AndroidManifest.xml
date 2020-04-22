@@ -2,61 +2,52 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.spotify">
 
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
-
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="true"
         android:icon="@mipmap/launcher_icon"
         android:label="@string/app_name"
-        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.SettingAlbumActivity"></activity>
-        <activity android:name=".Activities.AlbumPreviewActivity" />
         <activity
             android:name=".login.IntroActivity"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.MainActivity" />
-        <activity android:name=".media.MediaPlayerActivity" />
-        <activity android:name=".media.AddToPlaylistActivity" />
-        <activity android:name=".media.CreatePlaylistActivity" />
-
-        <service android:name=".media.MediaPlayerService" />
-
-        <activity android:name=".Activities.PlaylistPreviewActivity" />
-
+        <activity android:name="com.example.spotify.Activities.MainActivity"/>
+        <activity android:name="com.example.spotify.media.MediaPlayerActivity" />
+        <activity android:name="com.example.spotify.media.AddToPlaylistActivity" />
+        <activity android:name="com.example.spotify.media.CreatePlaylistActivity" />
+        <service android:name="com.example.spotify.media.MediaPlayerService" />
+        <activity android:name=".Activities.PlaylistPreviewActivity"/>
         <meta-data
             android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" /> <!-- facebook related stuff -->
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+            android:resource="@array/preloaded_fonts" />
 
-        <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+        <!-- facebook related stuff -->
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
