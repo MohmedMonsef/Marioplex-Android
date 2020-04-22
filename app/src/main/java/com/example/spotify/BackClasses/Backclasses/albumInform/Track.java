@@ -1,9 +1,10 @@
 
 package com.example.spotify.BackClasses.Backclasses.albumInform;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class Track {
 
@@ -16,6 +17,13 @@ public class Track {
     @SerializedName("images")
     @Expose
     private List<Object> images = null;
+    @SerializedName("isLiked")
+    @Expose
+    private Integer  isLiked = null;
+
+    public Integer  getLiked() { return isLiked; }
+
+    public void setLiked(Integer  liked) { isLiked = liked; }
 
     public String getId() {
         return id;

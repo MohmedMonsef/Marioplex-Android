@@ -5,10 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-
 import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,20 +14,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.spotify.Activities.AlbumPreviewActivity;
-import com.example.spotify.Activities.SettingAlbumActivity;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+
+import com.example.spotify.Activities.PlaylistPreviewActivity;
 import com.example.spotify.BackClasses.Backclasses.albumInform.AlbumObject;
 import com.example.spotify.BackClasses.Backclasses.albumInform.Track;
 import com.example.spotify.Fragments.HOME_FRAGMENT.backhome;
+import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistInfo;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.example.spotify.login.user;
 import com.example.spotify.media.MediaPlayerService;
 import com.example.spotify.media.TrackInfo;
+import com.example.spotify.pojo.BasicTrack;
+import com.example.spotify.pojo.PlaylistTracks;
 import com.example.spotify.pojo.currentTrack;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -134,10 +136,12 @@ public class album extends Fragment
         preview_text_album.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AlbumPreviewActivity.class);
-                intent.putExtra("ARTIST_NAME",Artist_Name);
-                intent.putExtra("ALBUM_ID",albumID);
-                intent.putExtra("Album_Name",Album_Name);
+//                Intent intent = new Intent(getActivity(), AlbumPreviewActivity.class);
+//                intent.putExtra("ARTIST_NAME",Artist_Name);
+//                intent.putExtra("ALBUM_ID",albumID);
+//                intent.putExtra("Album_Name",Album_Name);
+//                startActivity(intent);
+                Intent intent = new Intent(getActivity(), PlaylistPreviewActivity.class);
                 startActivity(intent);
             }
         });
@@ -293,7 +297,8 @@ public class album extends Fragment
                 else
                     {
                     AlbumObject = response.body();
-                    albumData.getinstance().setalbumObject(AlbumObject);
+                    FillPlaylistTracks(AlbumObject);
+                    //albumData.getinstance().setalbumObject(AlbumObject);
                     AlbumObject.setIsSaved(true);
                     updateUI();
                 }
@@ -304,6 +309,38 @@ public class album extends Fragment
                 Toast.makeText(getContext(), t.getMessage() + " ' failed '", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    void FillPlaylistTracks(AlbumObject albumTracks){
+
+        PlaylistTracks p = new PlaylistTracks();
+        p.setId(albumTracks.getId());
+        p.setIsLiked(albumTracks.isIsSaved());
+        p.setImages(albumTracks.getImages());
+        p.setName(albumTracks.getName());
+        p.setType("album");
+        List<BasicTrack> basic = new ArrayList<>();
+        Track t ;
+        for(int i = 0 ; i < albumTracks.getTrack().size() ; i++){
+            t = albumTracks.getTrack().get(i);
+            BasicTrack basict = new BasicTrack();
+            if(t.getLiked() == 1) {
+                basict.setIsLiked(true);
+            }
+            else {
+                basict.setIsLiked(false);
+            }
+            basict.setAlbumId(albumTracks.getId());
+            basict.setAlbumName(albumTracks.getName());
+            basict.setArtistId(albumTracks.getArtistId());
+            basict.setArtistName(albumTracks.getArtistName());
+            basict.setTrackid(t.getId());
+            basict.setName(t.getName());
+            basict.setImages(t.getImages());
+            basic.add(basict);
+        }
+        p.setTracks(basic);
+        PlaylistInfo.getinstance().setPlaylistTracks(p);
     }
 
 
@@ -332,7 +369,7 @@ public class album extends Fragment
         }
         for(int i =0 ; i<n; i++)
         {
-            songsNames+= tracks.get(i).getName()+" ";
+            //songsNames+= tracks.get(i).getName()+" ";
             songsNames+= tracks.get(i).getName()+" . ";
         }
         if(AlbumObject.getTrack().size() !=0)

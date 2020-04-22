@@ -59,52 +59,20 @@ public interface EndPointAPI {
     @POST("api/auth/facebookAndroid")
     Call<LoginResponse> facebookLogin(@Body FacebookLoginData facebookLoginData);
     ////////////////////////////////////////////////////////////////////////////////////
-
-    //////////////////////////////home requests//////////////////////////////////////////
+    //////////////////////////////home requests/////////////////////////////////////////
 
 
 
     ////////////////////////////////////////////////////////////////////////////////////
-
-    /////////////////////////////media player requests//////////////////////////////////////
-
-//    @GET("v1/tracks/3n3Ppam7vgaVa1iaRUc9Lp")
-//    @Headers("Authorization: Bearer "+token)
-//    Call<Track> getATrack();
-//
-//    @GET("v1/tracks")
-//    @Headers("Authorization: Bearer "+token)
-//    Call<Tracks> getTracks(@Query("ids") String tracksid);
-
-
-
-//    @PUT("me/like")
-//    //@Headers("Authorization: Bearer "+token)
-//    Call<ResponseBody> LikeATrack(@Query("id") String id);
-
-//    @DELETE("me/unlike")
-//    //@Headers("Authorization: Bearer "+token)
-//    Call<ResponseBody> unLikeATrack(@Query("id") String id);
-
-    //////////////////////////////////our api requests//////////////////////////////////////////
-    /////////you need to change the Base URL//////////////////
+    //////////////////////////////////our api requests//////////////////////////////////
     @POST("api/me/player/next-playing")
-    //@Headers("Authorization: Bearer "+token)
     Call<currentTrack> getNext(@Header("x-auth-token")String token1);
-    //Call<currentTrack> getNext(@Header("Authorization")String token1);
 
     @POST("api/me/player/prev-playing")
-    //@Headers("Authorization: Bearer "+token)
     Call<currentTrack> getPrevious(@Header("x-auth-token")String token1);
 
     @GET("api/me/player/currently-playing")
-    //@Headers("Authorization: Bearer "+token)
     Call<currentTrack> getCurrentlyPlaying(@Header("x-auth-token")String token1);
-
-//    @GET("users/{user_id}/playlists")
-//    //@Headers("Authorization: Bearer "+token)
-//    Call<List<BasicPlaylist>> getCurrentUserPlaylists(@Path("user_id") String userID ,
-//                                                      @Header("x-auth-token")String token1);
 
     @GET("api/me/playlists")
     Call<List<BasicPlaylist>> getCurrentUserPlaylists(@Header("x-auth-token")String token1);
