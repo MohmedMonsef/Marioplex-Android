@@ -1,58 +1,53 @@
 package com.example.spotify.Adapters;
 
-import androidx.fragment.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.spotify.BackClasses.Backclasses.backpopularalbum.Album;
-import com.example.spotify.Fragments.ALBUM_FRAGMENT.album;
+import com.example.spotify.BackClasses.Backclasses.backcategoryplaylist.CategoryPlaylist;
+import com.example.spotify.BackClasses.Backclasses.backcategoryplaylist.Playlist;
 import com.example.spotify.Fragments.NEW_RELEASE_FRAHMENT.newReleaseFragment;
+import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
 import com.example.spotify.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import static android.content.ContentValues.TAG;
-
-public class adapterPopularAlbum extends RecyclerView.Adapter<adapterPopularAlbum.MyviewHolder> {
+public class adapterCategoryPlaylists extends RecyclerView.Adapter<adapterCategoryPlaylists.MyviewHolder> {
     private Context context;
-    private List<Album> PopularAlbumList;
-
+    private List<Playlist> Categoryplaylist;
     /**
      * @param context
-     * @param PopularAlbumList
-     * set the adapterPopularAlbum with list
+     * @param Categoryplaylist
+     * set the adapterPopularArtist with list
      */
-    public adapterPopularAlbum(Context context, List<Album> PopularAlbumList) {
+    public adapterCategoryPlaylists(Context context, CategoryPlaylist Categoryplaylist)
+    {
         this.context = context;
-        this.PopularAlbumList = PopularAlbumList;
+        this.Categoryplaylist = Categoryplaylist.getPlaylists();
     }
 
-    public void setMovieList(List<Album> PopularAlbumList)
+    public void setMovieList(CategoryPlaylist movieList)
     {
-        this.PopularAlbumList = PopularAlbumList;
+        this.Categoryplaylist = movieList.getPlaylists();
         notifyDataSetChanged();
     }
+
     /**
-     *
      * @param parent --> the view that has the recyclerview of this class
      * @param viewType-->
-     *
-     *
      * @return new object of the view holder
      */
     @Override
-    public adapterPopularAlbum.MyviewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public adapterCategoryPlaylists.MyviewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         View view = LayoutInflater.from(context).inflate(R.layout.item_recycler,parent,false);
         return new MyviewHolder(view);
@@ -65,36 +60,40 @@ public class adapterPopularAlbum extends RecyclerView.Adapter<adapterPopularAlbu
      * set on item of recyclerview with its data
      */
     @Override
-    public void onBindViewHolder(adapterPopularAlbum.MyviewHolder holder, int position)
+    public void onBindViewHolder(adapterCategoryPlaylists.MyviewHolder holder, final int position)
     {
-        final Album item=PopularAlbumList.get(position);
-        holder.ImageName.setText(item.getName());
-        Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
+
+        holder.ImageName.setText(Categoryplaylist.get(position).getName());
         /// check if the image not null
-        if(item.getImages()!= null & item.getImages().size()!=0)
+        if(Categoryplaylist.get(position).getImages()!= null & Categoryplaylist.get(position).getImages().size()!=0)
         {
             // load the image
-            Picasso.get().load(item.getImages().get(0).toString()).into(holder.image);
+            Picasso.get().load(Categoryplaylist.get(position).getImages().get(0).toString()).into(holder.image);
         }
         /**
          * a click listener handel the item view
          */
         holder.itemView.setOnClickListener(new View.OnClickListener() {
+            /**
+             *
+             * @param v
+             * go to the next fragment from the selected item view
+             */
             @Override
             public void onClick(View v)
             {
 
                 Bundle bundle = new Bundle();
-                bundle.putString("albumID" , item.getId());
-                bundle.putString("artistName" , item.getArtist().getName());
-                androidx.fragment.app.Fragment f = new album();
+                bundle.putString("playlistID" , Categoryplaylist.get(position).getId());
+                //bundle.putString("ownerName" , list1.getOwner().getName());
+
+                androidx.fragment.app.Fragment f = new PlaylistFragment();
                 f.setArguments(bundle);
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 activity.getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.frame_fragment, f)
                         .addToBackStack(null).commit();
-
             }
         });
 
@@ -104,15 +103,16 @@ public class adapterPopularAlbum extends RecyclerView.Adapter<adapterPopularAlbu
 
     /**
      *
-     * @return --> PopularAlbumList size
+     * @return --> NewReleaseList size
      */
     @Override
-    public int getItemCount() {
-        if(PopularAlbumList != null){
-            return PopularAlbumList.size();
+    public int getItemCount()
+    {
+        if(Categoryplaylist != null)
+        {
+            return Categoryplaylist.size();
         }
         return 0;
-
     }
 
     /**
