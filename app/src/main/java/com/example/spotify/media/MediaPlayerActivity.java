@@ -522,10 +522,17 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
         List<Object> images= track.getTrack().getValue().getTrack().getImages();
         if(images !=null&& images.size() !=0){
-            String Imageurl = images.get(0).toString();
+            String imageID = images.get(0).toString();
+            imageID = "5e9c9790fc69ad92e0a7eda5?belongs";
+            String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=artist";
             Picasso.get().load(Imageurl).into(song_image);
             Picasso.get().load(Imageurl).into(setting_image);
         }
+
+        
+//        String Imageurl = "http://192.168.1.6:3000/api/images/5e9c9790fc69ad92e0a7eda5?belongs_to=artist";
+//        Picasso.get().load(Imageurl).into(song_image);
+//        Picasso.get().load(Imageurl).into(setting_image);
 
         if(track.getTrack().getValue().getIsLiked()){
             favorite.setImageResource(R.drawable.like);
