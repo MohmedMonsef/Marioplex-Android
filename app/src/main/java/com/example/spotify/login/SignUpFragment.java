@@ -2,8 +2,10 @@ package com.example.spotify.login;
 
 import android.graphics.Color;
 import android.icu.util.Calendar;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
@@ -45,7 +47,8 @@ public class SignUpFragment extends Fragment {
     private static float displayWidth = IntroActivity.getDisplayWidth();
     private int currentForm = 0;
 
-    String email, password, birthday, username, gender;
+    String email, password, username, gender;
+    Calendar birthday;
 
     /*public SignUpFragment() {
         // Required empty public constructor
@@ -63,11 +66,12 @@ public class SignUpFragment extends Fragment {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_sign_up, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_sign_up, container, false);
 
         rootView.findViewById(R.id.signUpButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,8 +107,10 @@ public class SignUpFragment extends Fragment {
 
         final View confirmEmailButton = rootView.findViewById(R.id.confirm_email_button);
         final View confirmPasswordButton = rootView.findViewById(R.id.confirm_password_button);
+        final View confirmDateButton = rootView.findViewById(R.id.confirm_date_button);
         confirmEmailButton.setEnabled(false);
         confirmPasswordButton.setEnabled(false);
+
         ((EditText)rootView.findViewById(R.id.sign_up_email)).addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -113,7 +119,10 @@ public class SignUpFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                confirmEmailButton.setEnabled(validateEmail(s.toString()));
+                if(validateEmail(s.toString())){
+                    confirmEmailButton.setEnabled(true);
+                    email = s.toString();
+                }
             }
 
             @Override
@@ -130,7 +139,10 @@ public class SignUpFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                confirmPasswordButton.setEnabled(validatePassword(s.toString()));
+                if(validatePassword(s.toString())){
+                    confirmPasswordButton.setEnabled(true);
+                    password = s.toString();
+                }
             }
 
             @Override
@@ -138,6 +150,7 @@ public class SignUpFragment extends Fragment {
 
             }
         });
+
 
         View.OnClickListener onNextClickListener = new View.OnClickListener() {
             @Override
@@ -149,11 +162,26 @@ public class SignUpFragment extends Fragment {
         confirmEmailButton.setOnClickListener(onNextClickListener);
         confirmPasswordButton.setOnClickListener(onNextClickListener);
 
+        // Date form related
+        final DatePicker datePicker = rootView.findViewById(R.id.datePicker);
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR,-18);
-        ((DatePicker)rootView.findViewById(R.id.datePicker)).setMaxDate(calendar.getTimeInMillis());
+        datePicker.setMaxDate(calendar.getTimeInMillis());
         calendar.add(Calendar.YEAR,-102);
-        ((DatePicker)rootView.findViewById(R.id.datePicker)).setMinDate(calendar.getTimeInMillis());
+        datePicker.setMinDate(calendar.getTimeInMillis());
+
+        confirmDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                birthday = Calendar.getInstance();
+                birthday.set(datePicker.getYear() + 1900,datePicker.getMonth(),datePicker.getDayOfMonth());
+                nextForm();
+            }
+        });
+
+
+
+
 
         positionViews(rootView);
         return rootView;
@@ -201,12 +229,10 @@ public class SignUpFragment extends Fragment {
      * Validate sign up form data and send it to backend server
      * Displays a Toast message indicating sign up request result
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void signUp() {
 
         try {
-            email = ((EditText) getView().findViewById(R.id.sign_up_email)).getText().toString();
-            password = ((EditText) getView().findViewById(R.id.sign_up_password)).getText().toString();
-            //birthday = ((EditText) getView().findViewById(R.id.sign_up_date_of_birth)).getText().toString();
             username = ((EditText) getView().findViewById(R.id.sign_up_name)).getText().toString();
             //gender = ((EditText) getView().findViewById(R.id.sign_up_gender)).getText().toString();
         } catch (NullPointerException e) {
@@ -218,10 +244,7 @@ public class SignUpFragment extends Fragment {
         // form validation
 
 
-        if (!birthday.matches("\\d{1,2}/\\d{1,2}/\\d{4}")) {
-            Toast.makeText(getContext(), "incorrect date format", Toast.LENGTH_SHORT).show();
-            return;
-        }
+
         //String[] days = birthday.split("\\\\");
         if (gender == null) {
             Toast.makeText(getContext(), "Choose your gender", Toast.LENGTH_SHORT).show();
@@ -259,6 +282,8 @@ public class SignUpFragment extends Fragment {
     boolean validatePassword(String password){
         return password.length() >= 8;
     }
+
+
 
     boolean handleOnBackPressed() {
         if (currentForm == 0) {

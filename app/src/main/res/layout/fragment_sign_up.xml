@@ -135,6 +135,7 @@
             android:datePickerMode="spinner"/>
 
         <ImageView
+            android:id="@+id/confirm_date_button"
             android:layout_width="150dp"
             android:layout_height="61dp"
             android:layout_gravity="center_horizontal"
