@@ -1,6 +1,8 @@
 package com.example.spotify.login;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -142,6 +144,7 @@ public class LoginFragment extends Fragment {
                 if(response.isSuccessful()){
                     token = response.body().getToken();
                     user.setToken(token);
+                    saveToken();
                     Toast.makeText(getContext(),"Sucess " +response.code(),Toast.LENGTH_SHORT).show();
                     user.fetchUserData();
                     startActivity(new Intent(getActivity(), MainActivity.class));
@@ -163,6 +166,17 @@ public class LoginFragment extends Fragment {
     boolean validateEmail(String email){
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
+
+    void saveToken(){
+        String token = user.getToken();
+        if(token!=null){
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences("token", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("token",token);
+            editor.apply();
+        }
+    }
+
 
 
 }

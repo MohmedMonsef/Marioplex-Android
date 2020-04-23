@@ -7,7 +7,9 @@ import androidx.appcompat.widget.ToolbarWidgetWrapper;
 import androidx.fragment.app.Fragment;
 
 import android.animation.TimeAnimator;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -58,6 +60,14 @@ public class IntroActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(loadToken()){
+            user.fetchUserData();
+            startActivity(new Intent(IntroActivity.this, MainActivity.class));
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_intro);
 
         retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
@@ -224,6 +234,18 @@ public class IntroActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().remove(fragment).commit();
             }
         });
+    }
+
+    boolean loadToken(){
+        SharedPreferences sharedPreferences = getSharedPreferences("token", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("token",null);
+        if(token == null){
+            return false;
+        }
+        else{
+            user.setToken(token);
+            return true;
+        }
     }
 
     /**

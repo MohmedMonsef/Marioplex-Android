@@ -2,6 +2,7 @@ package com.example.spotify.login;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
@@ -280,6 +281,7 @@ public class SignUpFragment extends Fragment {
                     Log.v("Intro Activity", response.body().toString());
                     Toast.makeText(getContext(), "Sucess " + response.code(), Toast.LENGTH_SHORT).show();
                     user.setToken(response.body().getToken());
+                    saveToken();
                     user.fetchUserData();
                     startActivity(new Intent(getActivity(), MainActivity.class));
                     getActivity().finish();
@@ -306,7 +308,15 @@ public class SignUpFragment extends Fragment {
         return password.length() >= 8;
     }
 
-
+    void saveToken(){
+        String token = user.getToken();
+        if(token!=null){
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences("token", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("token",token);
+            editor.apply();
+        }
+    }
 
     boolean handleOnBackPressed() {
         if (currentForm == 0) {

@@ -24,6 +24,7 @@ import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.example.spotify.login.apiClasses.updateProfile;
 import com.example.spotify.login.user;
+import com.example.spotify.pojo.playlist;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -88,7 +89,12 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        ((TextView)rootView.findViewById(R.id.no_of_playlists)).setText(""+user.getPlaylists().length);
+        playlist[] playlists = user.getPlaylists();
+        int no_of_playlists = 0;
+        if(playlists != null){
+            no_of_playlists = playlists.length;
+        }
+        ((TextView)rootView.findViewById(R.id.no_of_playlists)).setText(String.valueOf(no_of_playlists));
 
         return rootView;
     }
