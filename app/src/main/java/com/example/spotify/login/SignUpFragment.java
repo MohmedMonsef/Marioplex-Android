@@ -1,6 +1,7 @@
 package com.example.spotify.login;
 
-import android.graphics.Color;
+import android.content.Context;
+import android.content.Intent;
 import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,28 +11,21 @@ import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Patterns;
-import android.util.TimeUtils;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.R;
+import com.example.spotify.login.apiClasses.LoginResponse;
 import com.example.spotify.login.apiClasses.SignUpData;
-import com.example.spotify.login.apiClasses.updateProfile;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -42,13 +36,18 @@ import retrofit2.Retrofit;
 
 public class SignUpFragment extends Fragment {
 
+    final String FEMALE = "female";
+    final String MALE = "male";
+
     private static Retrofit mRetrofit;
     private static EndPointAPI mEndPointAPI;
     private static float displayWidth = IntroActivity.getDisplayWidth();
     private int currentForm = 0;
 
-    String email, password, username, gender;
-    Calendar birthday;
+    String email, password, username;
+    String country = "Egypt";
+    String gender;
+    String birthdate;
 
     /*public SignUpFragment() {
         // Required empty public constructor
@@ -73,34 +72,10 @@ public class SignUpFragment extends Fragment {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_sign_up, container, false);
 
-        rootView.findViewById(R.id.signUpButton).setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.create_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signUp();
-            }
-        });
-
-        final TextView maleButton = (TextView) rootView.findViewById(R.id.male_button);
-        final TextView femaleButton = (TextView) rootView.findViewById(R.id.female_button);
-        maleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                maleButton.setBackgroundColor(Color.GRAY);
-                maleButton.setTextColor(Color.WHITE);
-                femaleButton.setBackgroundColor(Color.WHITE);
-                femaleButton.setTextColor(Color.GRAY);
-                gender = "Male";
-            }
-        });
-
-        femaleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                maleButton.setBackgroundColor(Color.WHITE);
-                maleButton.setTextColor(Color.GRAY);
-                femaleButton.setBackgroundColor(Color.GRAY);
-                femaleButton.setTextColor(Color.WHITE);
-                gender = "Female";
+                submit();
             }
         });
 
@@ -108,8 +83,10 @@ public class SignUpFragment extends Fragment {
         final View confirmEmailButton = rootView.findViewById(R.id.confirm_email_button);
         final View confirmPasswordButton = rootView.findViewById(R.id.confirm_password_button);
         final View confirmDateButton = rootView.findViewById(R.id.confirm_date_button);
+        final View createButton = rootView.findViewById(R.id.create_button);
         confirmEmailButton.setEnabled(false);
         confirmPasswordButton.setEnabled(false);
+        createButton.setEnabled(false);
 
         ((EditText)rootView.findViewById(R.id.sign_up_email)).addTextChangedListener(new TextWatcher() {
             @Override
@@ -122,6 +99,9 @@ public class SignUpFragment extends Fragment {
                 if(validateEmail(s.toString())){
                     confirmEmailButton.setEnabled(true);
                     email = s.toString();
+                }
+                else{
+                    confirmEmailButton.setEnabled(false);
                 }
             }
 
@@ -143,6 +123,9 @@ public class SignUpFragment extends Fragment {
                     confirmPasswordButton.setEnabled(true);
                     password = s.toString();
                 }
+                else{
+                    confirmPasswordButton.setEnabled(false);
+                }
             }
 
             @Override
@@ -152,15 +135,25 @@ public class SignUpFragment extends Fragment {
         });
 
 
-        View.OnClickListener onNextClickListener = new View.OnClickListener() {
+
+        confirmEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ((EditText)rootView.findViewById(R.id.sign_up_email)).clearFocus();
+                ((EditText)rootView.findViewById(R.id.sign_up_password)).requestFocus();
                 nextForm();
             }
-        };
+        });
 
-        confirmEmailButton.setOnClickListener(onNextClickListener);
-        confirmPasswordButton.setOnClickListener(onNextClickListener);
+        confirmPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((EditText)rootView.findViewById(R.id.sign_up_password)).clearFocus();
+                ((DatePicker)rootView.findViewById(R.id.datePicker)).requestFocus();
+                hideSoftKeyboard();
+                nextForm();
+            }
+        });
 
         // Date form related
         final DatePicker datePicker = rootView.findViewById(R.id.datePicker);
@@ -173,14 +166,58 @@ public class SignUpFragment extends Fragment {
         confirmDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                birthday = Calendar.getInstance();
-                birthday.set(datePicker.getYear() + 1900,datePicker.getMonth(),datePicker.getDayOfMonth());
+                birthdate = datePicker.getDayOfMonth() + "/" + datePicker.getMonth() + "/" + datePicker.getYear();
                 nextForm();
             }
         });
 
+        // Gender form related
+        rootView.findViewById(R.id.female_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gender = FEMALE;
+                nextForm();
+            }
+        });
 
+        rootView.findViewById(R.id.male_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gender = MALE;
+                nextForm();
+            }
+        });
 
+        //name form related
+        ((EditText)rootView.findViewById(R.id.sign_up_name)).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.toString().length() > 0){
+                    username = s.toString();
+                    createButton.setEnabled(true);
+                }
+                else{
+                    createButton.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        createButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submit();
+            }
+        });
 
 
         positionViews(rootView);
@@ -189,7 +226,7 @@ public class SignUpFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        Toast.makeText(getContext(), "fragment destroyed", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "fragment destroyed", Toast.LENGTH_SHORT).show();
         super.onDestroy();
     }
 
@@ -230,36 +267,22 @@ public class SignUpFragment extends Fragment {
      * Displays a Toast message indicating sign up request result
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void signUp() {
-
-        try {
-            username = ((EditText) getView().findViewById(R.id.sign_up_name)).getText().toString();
-            //gender = ((EditText) getView().findViewById(R.id.sign_up_gender)).getText().toString();
-        } catch (NullPointerException e) {
-            Toast.makeText(getContext(), "fill in the fields", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        String country = "Egypt";
-
-        // form validation
+    private void submit() {
 
 
 
-        //String[] days = birthday.split("\\\\");
-        if (gender == null) {
-            Toast.makeText(getContext(), "Choose your gender", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        SignUpData signUpData = new SignUpData(username, password, country, email, gender, birthdate);
 
-        SignUpData signUpData = new SignUpData(username, password, country, email, gender, birthday);
-
-        mEndPointAPI.signUp(signUpData).enqueue(new Callback<ResponseBody>() {
+        mEndPointAPI.signUp(signUpData).enqueue(new Callback<LoginResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<com.example.spotify.login.apiClasses.LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
                     Log.v("Intro Activity", response.body().toString());
                     Toast.makeText(getContext(), "Sucess " + response.code(), Toast.LENGTH_SHORT).show();
-
+                    user.setToken(response.body().getToken());
+                    user.fetchUserData();
+                    startActivity(new Intent(getActivity(), MainActivity.class));
+                    getActivity().finish();
                 } else {
                     Log.i("Intro Activity", response.errorBody().toString());
                     Toast.makeText(getContext(), "Failed " + response.code() + " " + response.message(), Toast.LENGTH_SHORT).show();
@@ -267,7 +290,7 @@ public class SignUpFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
                 Log.e("Intro Activity", t.getMessage());
                 Toast.makeText(getContext(), "Failed to connect", Toast.LENGTH_SHORT).show();
             }
@@ -291,6 +314,15 @@ public class SignUpFragment extends Fragment {
         } else {
             previousForm();
             return true;
+        }
+    }
+
+    void hideSoftKeyboard(){
+        // Check if no view has focus:
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 

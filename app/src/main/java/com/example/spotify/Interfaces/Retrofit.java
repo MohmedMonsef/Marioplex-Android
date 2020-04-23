@@ -1,6 +1,5 @@
 package com.example.spotify.Interfaces;
 
-import com.example.spotify.login.ApiSpotify;
 import com.example.spotify.media.TrackInfo;
 
 import java.util.concurrent.TimeUnit;
@@ -17,7 +16,7 @@ public class Retrofit {
             .build();
     //http://52.205.254.29/
     private retrofit2.Retrofit retrofit = new retrofit2.Retrofit.Builder()
-            .baseUrl("http://52.205.254.29/")
+            .baseUrl("http://192.168.1.33:3000/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build();

@@ -1,7 +1,5 @@
 package com.example.spotify.login.apiClasses;
 
-import android.icu.util.Calendar;
-
 import com.google.gson.annotations.SerializedName;
 
 public class SignUpData {
@@ -16,9 +14,9 @@ public class SignUpData {
     @SerializedName("gender")
     private String gender;
     @SerializedName("birthday")
-    private android.icu.util.Calendar birthday;
+    private String birthday;
 
-    public SignUpData(String username, String password, String country, String email, String gender, android.icu.util.Calendar birthday) {
+    public SignUpData(String username, String password, String country, String email, String gender, String birthday) {
         this.username = username;
         this.password = password;
         this.country = country;
@@ -67,11 +65,11 @@ public class SignUpData {
         this.gender = gender;
     }
 
-    public android.icu.util.Calendar getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Calendar birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 }

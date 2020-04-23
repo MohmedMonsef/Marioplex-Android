@@ -100,7 +100,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingTop="20dp"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <TextView
             android:layout_width="match_parent"
@@ -125,6 +125,7 @@
 <!--            android:textColor="@android:color/white"-->
 <!--            android:textCursorDrawable="@drawable/color_cursor" />-->
         <DatePicker
+            android:descendantFocusability="blocksDescendants"
             android:spinnersShown="true"
             android:theme="@style/MyDatePicker"
             android:layout_gravity="center_horizontal"
@@ -173,34 +174,21 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="55dp"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/male_button"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@android:color/white"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="Male"
-                android:textStyle="bold" />
-
-            <TextView
+            <ImageView
                 android:id="@+id/female_button"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
-                android:layout_margin="10dp"
-                android:background="@android:color/white"
-                android:drawableTint="@android:color/black"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="Female"
-                android:textStyle="bold" />
+                android:layout_width="106dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/female_button_states" />
+
+            <ImageView
+                android:id="@+id/male_button"
+                android:layout_width="94dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/male_button_states" />
 
         </LinearLayout>
     </LinearLayout>
@@ -212,7 +200,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingTop="20dp"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <TextView
             android:layout_width="match_parent"
@@ -237,15 +225,13 @@
             android:textCursorDrawable="@drawable/color_cursor" />
 
 
-        <Button
-            android:id="@+id/signUpButton"
-            android:layout_width="160dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="22dp"
-            android:enabled="true"
-            android:text="Sign up"
-            android:textSize="24sp" />
+        <ImageView
+            android:layout_marginTop="40dp"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/create_button"
+            android:layout_width="150dp"
+            android:layout_height="61dp"
+            android:src="@drawable/create_account_button_states"/>
     </LinearLayout>
 
 
