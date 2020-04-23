@@ -9,7 +9,7 @@
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="settings"
-        android:icon="@drawable/settings"
+        android:icon="@drawable/settings_button_states"
         app:showAsAction="always" />
 
 </menu>
