@@ -64,12 +64,11 @@
                 android:src="@drawable/facebook_button_states" />
 
             <ImageView
-                android:layout_width="90dp"
                 android:id="@+id/intro_login_button"
+                android:layout_width="95dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="40dp"
-                android:adjustViewBounds="true"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:onClick="showLoginFragment"
                 android:src="@drawable/intro_login_button_states" />

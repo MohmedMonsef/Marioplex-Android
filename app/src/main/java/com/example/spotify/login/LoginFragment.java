@@ -5,7 +5,10 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +37,10 @@ public class LoginFragment extends Fragment {
     private static EndPointAPI mEndPointAPI;
     private static String token = null;
 
+    String email,password;
 
+    boolean emailValid = false;
+    boolean passwordValid = false;
     /*public LoginFragment() {
         // Required empty public constructor
     }*/
@@ -58,10 +64,60 @@ public class LoginFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
-        rootView.findViewById(R.id.loginButton).setOnClickListener(new View.OnClickListener() {
+        final View loginButton = rootView.findViewById(R.id.loginButton);
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 login();
+            }
+        });
+        loginButton.setEnabled(false);
+
+        ((EditText)rootView.findViewById(R.id.email)).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                email = s.toString();
+                emailValid = validateEmail(email);
+                if(emailValid && passwordValid){
+                    loginButton.setEnabled(true);
+                }
+                else{
+                    loginButton.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        ((EditText)rootView.findViewById(R.id.password)).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                password = s.toString();
+                passwordValid = password.length() > 0;
+                if(emailValid && passwordValid){
+                    loginButton.setEnabled(true);
+                }
+                else{
+                    loginButton.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 
@@ -74,9 +130,6 @@ public class LoginFragment extends Fragment {
      * On login failure displays a toast message
      */
     public void login(){
-        String email = ((EditText) getView().findViewById(R.id.email)).getText().toString();
-        String password = ((EditText) getView().findViewById(R.id.password)).getText().toString();
-
         LoginCredentials loginCredentials = new LoginCredentials();
         loginCredentials.setEmail(email);
         loginCredentials.setPassword(password);
@@ -107,38 +160,9 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    /*
-    public void fetchUserData(){
-        if(token == null)
-            return;
-
-        mApiSpotify.profile(token).enqueue(new Callback<ArrayList<userProfile>>() {
-            @Override
-            public void onResponse(Call<ArrayList<userProfile>> call, Response<ArrayList<userProfile>> response) {
-                if(response.isSuccessful()){
-                    user.setToken(token);
-                    user.setName(response.body().get(0).getDisplayName());
-                    user.setEmail(response.body().get(0).getEmail());
-                    user.setDateOfBirth(response.body().get(0).getBirthDate());
-                    user.setGender(response.body().get(0).getGender());
-                    user.setCountry(response.body().get(0).getCountry());
-                    user.setProduct(response.body().get(0).getProduct());
-                    user.setImages(response.body().get(0).getImages());
-                }
-                else {
-                    Toast.makeText(getContext(),"Failed to get profile",Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<userProfile>> call, Throwable t) {
-                Toast.makeText(getContext(),"Failed to connect",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-
-    }*/
+    boolean validateEmail(String email){
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
 
 
 }

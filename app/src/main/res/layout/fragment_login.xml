@@ -21,14 +21,19 @@
         android:textColor="@android:color/white"
         android:textStyle="bold" />
 
+
     <EditText
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="42dp"
-        android:background="#424242"
-        android:textColor="@android:color/white"
+        android:background="@drawable/rounded_rectangle"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&amp;'*+-/=?^_`{|}~(),.:;@[\]"
+        android:fontFamily="@font/roboto_medium"
         android:inputType="textEmailAddress"
-        android:selectAllOnFocus="true" />
+        android:paddingHorizontal="10dp"
+        android:selectAllOnFocus="true"
+        android:textColor="@android:color/white"
+        android:textCursorDrawable="@drawable/color_cursor" />
 
     <TextView
         android:id="@+id/passwordtext"
@@ -45,20 +50,21 @@
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:textColor="@android:color/white"
-        android:background="#424242"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&amp;'*+-/=?^_`{|}~(),.:;@[\]"
+        android:background="@drawable/rounded_rectangle"
         android:imeOptions="actionDone"
         android:inputType="textPassword"
-        android:selectAllOnFocus="true" />
+        android:paddingHorizontal="10dp"
+        android:selectAllOnFocus="true"
+        android:textCursorDrawable="@drawable/color_cursor"/>
 
-    <Button
+
+    <ImageView
         android:id="@+id/loginButton"
         android:layout_width="160dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="22dp"
-        android:enabled="true"
-        android:text="Log in"
-        android:textSize="24sp" />
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/login_button_states" />
 
 
 </LinearLayout>
