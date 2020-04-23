@@ -50,7 +50,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:onClick="showSignUpFragment"
-                android:src="@drawable/sign_up_free" />
+                android:src="@drawable/signup_free_states" />
 
             <ImageView
                 android:id="@+id/login_facebook_button"
@@ -61,18 +61,18 @@
                 android:layout_marginRight="20dp"
                 android:adjustViewBounds="true"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/continue_with_facebook" />
+                android:src="@drawable/facebook_button_states" />
 
             <ImageView
-                android:layout_width="100dp"
-                android:id="@+id/introya"
+                android:layout_width="90dp"
+                android:id="@+id/intro_login_button"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="40dp"
                 android:adjustViewBounds="true"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:onClick="showLoginFragment"
-                android:src="@drawable/log_in" />
+                android:src="@drawable/intro_login_button_states" />
         </LinearLayout>
     </LinearLayout>
 
