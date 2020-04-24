@@ -4,6 +4,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -21,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.Observer;
+import androidx.palette.graphics.Palette;
 
 import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.Interfaces.EndPointAPI;
@@ -75,7 +79,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
     private TextView setting_artist_id;
     private ImageView favorite;
     private ImageView favorite2;
+    private LinearLayout activity_views_container;
     private RelativeLayout settings_upper_relative_layout;
+    private LinearLayout setting_container;
     BottomSheetBehavior sleepTimer;
     BottomSheetBehavior sheetBehavior;
 
@@ -88,6 +94,12 @@ public class MediaPlayerActivity extends AppCompatActivity {
     private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();
     Toast toast;
 
+    private Palette.Swatch vibrantSwatch;
+    private Palette.Swatch lightVibrantSwatch;
+    private Palette.Swatch darkVibrantSwatch;
+    private Palette.Swatch mutedSwatch;
+    private Palette.Swatch lightMutedSwatch;
+    private Palette.Swatch darkMutedSwatch;
 
     /**
      * Binding this Client to the AudioPlayer Service
@@ -497,6 +509,58 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
     }
 
+    void getPaletteAndSetBackgroundColor(ImageView v , final LinearLayout put){
+        Bitmap bitmap = ((BitmapDrawable) v.getDrawable()).getBitmap();
+
+        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+            @Override
+            public void onGenerated(Palette palette) {
+                if(palette.getMutedSwatch() != null){
+                    GradientDrawable gd = new GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+                            new int[] {palette.getMutedSwatch().getRgb(),0xFF000000});
+                    gd.setCornerRadius(0f);
+                    put.setBackgroundDrawable( gd);
+                }
+                else if( palette.getDarkVibrantSwatch() != null){
+                    GradientDrawable gd = new GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+                            new int[] {palette.getDarkVibrantSwatch().getRgb(),0xFF000000});
+                    gd.setCornerRadius(0f);
+                    put.setBackgroundDrawable( gd);
+                }
+                else if(palette.getLightMutedSwatch() != null) {
+                    GradientDrawable gd = new GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+                            new int[] {palette.getLightMutedSwatch().getRgb(),0xFF000000});
+                    gd.setCornerRadius(0f);
+                    put.setBackgroundDrawable( gd);
+                }
+                else if(palette.getDarkMutedSwatch() != null){
+                    GradientDrawable gd = new GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+                            new int[] {palette.getDarkMutedSwatch().getRgb(),0xFF000000});
+                    gd.setCornerRadius(0f);
+                    put.setBackgroundDrawable( gd);
+                }
+                else if(palette.getLightVibrantSwatch() != null){
+                    GradientDrawable gd = new GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+                            new int[] {palette.getLightVibrantSwatch().getRgb(),0xFF000000});
+                    gd.setCornerRadius(0f);
+                    put.setBackgroundDrawable( gd);
+                }
+                else if(palette.getVibrantSwatch()!=null){
+                    GradientDrawable gd = new GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+                            new int[] {palette.getVibrantSwatch().getRgb(),0xFF000000});
+                    gd.setCornerRadius(0f);
+                    put.setBackgroundDrawable( gd);
+                }
+            }
+        });
+    }
+
     /**
      * updates the media player activity's UI
      */
@@ -523,16 +587,38 @@ public class MediaPlayerActivity extends AppCompatActivity {
         List<Object> images= track.getTrack().getValue().getTrack().getImages();
         if(images !=null&& images.size() !=0){
             String imageID = images.get(0).toString();
-            imageID = "5e9c9790fc69ad92e0a7eda5?belongs";
+            imageID = "5e9c9790fc69ad92e0a7eda5";
             String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=artist";
-            Picasso.get().load(Imageurl).into(song_image);
-            Picasso.get().load(Imageurl).into(setting_image);
+            Picasso.get().load(Imageurl).into(song_image, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    //song_image.setImageResource(R.drawable.testimage2);
+                    getPaletteAndSetBackgroundColor(song_image , activity_views_container);
+                }
+
+                @Override
+                public void onError(Exception e) {
+
+                }
+            });
+            Picasso.get().load(Imageurl).into(setting_image, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    getPaletteAndSetBackgroundColor(setting_image , setting_container);
+                }
+
+                @Override
+                public void onError(Exception e) {
+
+                }
+            });
         }
 
-        
-//        String Imageurl = "http://192.168.1.6:3000/api/images/5e9c9790fc69ad92e0a7eda5?belongs_to=artist";
-//        Picasso.get().load(Imageurl).into(song_image);
-//        Picasso.get().load(Imageurl).into(setting_image);
+//        song_image.setImageResource(R.drawable.testimage1);
+//        setting_image.setImageResource(R.drawable.testimage2);
+//        getPaletteAndSetBackgroundColor(song_image , activity_views_container);
+//        getPaletteAndSetBackgroundColor(setting_image , setting_container);
+
 
         if(track.getTrack().getValue().getIsLiked()){
             favorite.setImageResource(R.drawable.like);
@@ -670,6 +756,8 @@ public class MediaPlayerActivity extends AppCompatActivity {
         settings_upper_relative_layout = (RelativeLayout)findViewById(R.id.settings_upper_relative_layout);
         favorite = (ImageView)findViewById(R.id.favorite);
         favorite2 = (ImageView)findViewById(R.id.favorite2);
+        activity_views_container = (LinearLayout)findViewById(R.id.activity_views_container);
+        setting_container = (LinearLayout)findViewById(R.id.setting_container);
 
     }
 

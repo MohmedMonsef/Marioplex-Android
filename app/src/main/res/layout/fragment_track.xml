@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:background="@drawable/playlist_background"
+    android:id="@+id/track_container"
     android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -182,4 +183,4 @@
 
         </LinearLayout>
     </RelativeLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

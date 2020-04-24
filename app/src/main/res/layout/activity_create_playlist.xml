@@ -26,6 +26,8 @@
             android:layout_height="85dp"
             android:id="@+id/playlist_name_edit_text"
             android:gravity="center"
+            android:hint="Playlist Name"
+            android:textColor="@color/cardview_light_background"
             android:inputType="text" />
 
         <Button

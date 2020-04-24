@@ -282,8 +282,7 @@ public class BottomSheetFragment extends Fragment {
         List<Object> images= track.getTrack().getValue().getTrack().getImages();
         if(images !=null&& images.size()!=0){
             String imageID = images.get(0).toString();
-            imageID = "5e9c9790fc69ad92e0a7eda5?belongs";
-            String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=artist";
+            String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=track";
             Picasso.get().load(Imageurl).into(bottom_image_id);
         }
 

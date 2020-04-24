@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/activity_views_container"
         android:orientation="vertical"
         android:clickable="true"
         android:layout_width="match_parent"

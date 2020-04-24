@@ -321,9 +321,23 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
 
             List<Object> images= mplaylistTracks.getImages();
             if(images != null && images.size()!=0) {
-                String Imageurl = images.get(0).toString();
-                Picasso.get().load(Imageurl).into(preview_playlist_image);
+                String imageID = images.get(0).toString();
+                //imageID = "5e9c9790fc69ad92e0a7eda5";
+                String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=artist";
+                Picasso.get().load(Imageurl).into(preview_playlist_image, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        preview_playlist_image.setBackgroundResource(R.drawable.curved_image_layout);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                    }
+                });
             }
+
+
 
             String song = "";
             String artist = "";
