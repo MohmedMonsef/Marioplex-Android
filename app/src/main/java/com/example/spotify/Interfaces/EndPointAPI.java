@@ -53,6 +53,11 @@ public interface EndPointAPI {
 
     @POST("api/auth/facebookAndroid")
     Call<LoginResponse> facebookLogin(@Body FacebookLoginData facebookLoginData);
+
+    @POST("api/login/forgetpassword")
+    Call<ResponseBody> forgetPassword(@Body String email);
+
+
     ////////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////home requests//////////////////////////////////////////

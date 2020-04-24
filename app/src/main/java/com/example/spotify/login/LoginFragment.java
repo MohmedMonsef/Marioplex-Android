@@ -64,7 +64,7 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_login, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
         final View loginButton = rootView.findViewById(R.id.loginButton);
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -123,6 +123,13 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        rootView.findViewById(R.id.forgot_password_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.intro_fragment,new forgotPasswordFragment()).addToBackStack(null).commit();
+            }
+        });
+
         return rootView;
     }
 
@@ -176,7 +183,5 @@ public class LoginFragment extends Fragment {
             editor.apply();
         }
     }
-
-
 
 }
