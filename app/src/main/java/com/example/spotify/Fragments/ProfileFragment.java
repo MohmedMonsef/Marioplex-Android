@@ -1,6 +1,8 @@
 package com.example.spotify.Fragments;
 
 import androidx.fragment.app.Fragment;
+
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -8,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,6 +24,7 @@ import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.example.spotify.login.apiClasses.updateProfile;
 import com.example.spotify.login.user;
+import com.example.spotify.pojo.playlist;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -62,6 +66,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if(keyCode == 66) {
+                    hideSoftKeyboard();
                     userName.clearFocus();
                     updateProfile data = new updateProfile();
                     data.setDisplay_Name(userName.getText().toString());
@@ -75,6 +80,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(userName.isFocused()) {
+                    hideSoftKeyboard();
                     userName.clearFocus();
                     updateProfile data = new updateProfile();
                     data.setDisplay_Name(userName.getText().toString());
@@ -83,7 +89,12 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        ((TextView)rootView.findViewById(R.id.no_of_playlists)).setText(""+user.getPlaylists().length);
+        playlist[] playlists = user.getPlaylists();
+        int no_of_playlists = 0;
+        if(playlists != null){
+            no_of_playlists = playlists.length;
+        }
+        ((TextView)rootView.findViewById(R.id.no_of_playlists)).setText(String.valueOf(no_of_playlists));
 
         return rootView;
     }
@@ -109,5 +120,14 @@ public class ProfileFragment extends Fragment {
         });
 
 
+    }
+
+    void hideSoftKeyboard(){
+        // Check if no view has focus:
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

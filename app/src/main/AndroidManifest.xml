@@ -27,6 +27,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                    android:host="52.205.254.29"
+                    android:pathPrefix="/login/reset_password" />
+            </intent-filter>
         </activity>
         <activity android:name=".Activities.MainActivity" />
         <activity android:name=".media.MediaPlayerActivity" />

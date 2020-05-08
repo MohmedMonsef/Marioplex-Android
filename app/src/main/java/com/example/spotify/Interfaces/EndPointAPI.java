@@ -45,7 +45,7 @@ public interface EndPointAPI {
     Call<LoginResponse> login(@Body LoginCredentials loginCredentials);
 
     @POST("api/sign_up")
-    Call<ResponseBody> signUp(@Body SignUpData signUpData);
+    Call<LoginResponse> signUp(@Body SignUpData signUpData);
 
     @GET("api/me")
     Call<ArrayList<userProfile>> profile(@Header("x-auth-token") String token);

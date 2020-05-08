@@ -1,5 +1,7 @@
 package com.example.spotify.Interfaces;
 
+import com.example.spotify.media.TrackInfo;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;

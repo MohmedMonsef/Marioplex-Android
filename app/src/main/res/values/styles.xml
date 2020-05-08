@@ -10,7 +10,13 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowContentOverlay">@null</item>
-</style>
+    </style>
+
+    <style name="MyDatePicker" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlActivated">@android:color/white</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+    </style>
 
 
 </resources>

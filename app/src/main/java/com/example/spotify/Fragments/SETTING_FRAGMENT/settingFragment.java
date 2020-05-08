@@ -1,6 +1,9 @@
 package com.example.spotify.Fragments.SETTING_FRAGMENT;
 
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,6 +25,7 @@ import android.widget.TextView;
 import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.Fragments.ProfileFragment;
 import com.example.spotify.R;
+import com.example.spotify.login.IntroActivity;
 import com.example.spotify.login.user;
 
 import static android.widget.Toast.makeText;
@@ -53,13 +57,35 @@ public class settingFragment extends Fragment implements LifecycleOwner {
             @Override
             public void onClick(View v) {
                 Fragment fragment = new ProfileFragment();
-                getFragmentManager().beginTransaction().replace(R.id.frame_fragment,fragment).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment,fragment).commit();
             }
         });
+
+        ((TextView)view.findViewById(R.id.logout_text)).append(user.getName());
+
+        view.findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+            }
+        });
+
         return view;
     }
 
+    void logout(){
+        deleteToken();
+        startActivity(new Intent(getActivity(),IntroActivity.class));
+        getActivity().finish();
+        return;
+    }
 
+    void deleteToken(){
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("token", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove("token");
+        editor.commit();
+    }
 
 
     /*
