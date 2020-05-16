@@ -3,7 +3,6 @@ package com.example.spotify.login;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -27,6 +26,8 @@ import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.R;
 import com.example.spotify.login.apiClasses.LoginResponse;
 import com.example.spotify.login.apiClasses.SignUpData;
+
+import java.util.Calendar;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
