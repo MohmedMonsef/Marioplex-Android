@@ -1,26 +1,23 @@
 package com.example.spotify.Adapters;
 
-import androidx.fragment.app.Fragment;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify.BackClasses.Backclasses.backpopularartist.Artist;
 import com.example.spotify.Fragments.NEW_RELEASE_FRAHMENT.newReleaseFragment;
+import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 public class adapterPopularArtist extends RecyclerView.Adapter<adapterPopularArtist.MyviewHolder>
 {
@@ -67,11 +64,13 @@ public class adapterPopularArtist extends RecyclerView.Adapter<adapterPopularArt
         holder.ImageName.setText(item.getName());
       //  Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
         /// check if the image not null
+        String imageID = "12D";
         if(item.getImages()!= null & item.getImages().size()!=0)
         {
-            // load the image
-            Picasso.get().load(item.getImages().get(0).toString()).into(holder.image);
+           imageID = item.getImages().get(0).getID();
         }
+        String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=artist";
+        Picasso.get().load(Imageurl).into(holder.image);
         /**
          * a click listener handel the item view
          */

@@ -16,6 +16,8 @@ import com.example.spotify.login.apiClasses.SignUpData;
 import com.example.spotify.login.apiClasses.updateProfile;
 import com.example.spotify.login.apiClasses.userProfile;
 import com.example.spotify.pojo.BasicPlaylist;
+import com.example.spotify.pojo.ImageID;
+import com.example.spotify.pojo.LibraryArtists;
 import com.example.spotify.pojo.PlaylistTracks;
 import com.example.spotify.pojo.addTrackToPlaylistBody;
 import com.example.spotify.pojo.createPlaylistBody;
@@ -121,12 +123,20 @@ public interface EndPointAPI {
     Call<Void> LikePlaylist(@Path("playlist_id") String playlistID ,
                             @Header("x-auth-token")String token1);
 
+    @GET("api/me/followingArtist")
+    Call<LibraryArtists> getArtists(@Header("x-auth-token")String token1);
 
 
     @GET("api/browse/categories?country=SE&locale=sv_SE&limit=10&offset=5")
     @Headers("Authorization: Bearer "+token)
     public Call<Category> getCategories();
-//////*******************************Home Requests*************************/////////
+
+    @GET("api/images/get_id/{source_id}")
+    Call<ImageID> GetImageId(@Path("source_id") String sourceID ,
+                             @Query("belongs_to") String belongsTo ,
+                             @Header("x-auth-token")String token1);
+
+    //////*******************************Home Requests*************************/////////
     @GET("api/browse/new-releases?country=SE&limit=10&offset=0")
     public Call<Newreleases> getNewRelease();
 

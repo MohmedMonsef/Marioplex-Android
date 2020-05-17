@@ -4,6 +4,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.LayoutInflater;
@@ -20,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.palette.graphics.Palette;
 
 import com.example.spotify.Activities.PlaylistPreviewActivity;
 import com.example.spotify.Fragments.HOME_FRAGMENT.backhome;
@@ -31,6 +35,7 @@ import com.example.spotify.login.user;
 import com.example.spotify.media.MediaPlayerService;
 import com.example.spotify.media.TrackInfo;
 import com.example.spotify.pojo.BasicTrack;
+import com.example.spotify.pojo.ImageInfo;
 import com.example.spotify.pojo.PlaylistTracks;
 import com.example.spotify.pojo.currentTrack;
 import com.squareup.picasso.Picasso;
@@ -394,16 +399,79 @@ public class PlaylistFragment extends Fragment {
         });
     }
 
+
+    void getPaletteAndSetBackgroundColor(ImageView v, final LinearLayout put) {
+        Bitmap bitmap = ((BitmapDrawable) v.getDrawable()).getBitmap();
+
+        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+            @Override
+            public void onGenerated(Palette palette) {
+                if (palette.getMutedSwatch() != null) {
+                    GradientDrawable gd = new GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+                            new int[]{palette.getMutedSwatch().getRgb(), 0xFF000000});
+                    gd.setCornerRadius(0f);
+                    put.setBackgroundDrawable(gd);
+                } else if (palette.getDarkVibrantSwatch() != null) {
+                    GradientDrawable gd = new GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+                            new int[]{palette.getDarkVibrantSwatch().getRgb(), 0xFF000000});
+                    gd.setCornerRadius(0f);
+                    put.setBackgroundDrawable(gd);
+                } else if (palette.getLightMutedSwatch() != null) {
+                    GradientDrawable gd = new GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+                            new int[]{palette.getLightMutedSwatch().getRgb(), 0xFF000000});
+                    gd.setCornerRadius(0f);
+                    put.setBackgroundDrawable(gd);
+                } else if (palette.getDarkMutedSwatch() != null) {
+                    GradientDrawable gd = new GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+                            new int[]{palette.getDarkMutedSwatch().getRgb(), 0xFF000000});
+                    gd.setCornerRadius(0f);
+                    put.setBackgroundDrawable(gd);
+                } else if (palette.getLightVibrantSwatch() != null) {
+                    GradientDrawable gd = new GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+                            new int[]{palette.getLightVibrantSwatch().getRgb(), 0xFF000000});
+                    gd.setCornerRadius(0f);
+                    put.setBackgroundDrawable(gd);
+                } else if (palette.getVibrantSwatch() != null) {
+                    GradientDrawable gd = new GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+                            new int[]{palette.getVibrantSwatch().getRgb(), 0xFF000000});
+                    gd.setCornerRadius(0f);
+                    put.setBackgroundDrawable(gd);
+                }
+            }
+        });
+    }
+
     /**
      * updates the UI with the playlist and tracks info
      */
 
     void updateUI(){
-        List<Object> images= playlistTracks.getImages();
+        List<ImageInfo> images= playlistTracks.getImages();
+        String imageID ="12d";
         if(images != null && images.size()!=0) {
-            String Imageurl = images.get(0).toString();
-            Picasso.get().load(Imageurl).into(playlist_image_playlist_fragment);
+            imageID = images.get(0).getID();
         }
+        String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=playlist";
+        Picasso.get().load(Imageurl).into(playlist_image_playlist_fragment, new com.squareup.picasso.Callback() {
+            @Override
+            public void onSuccess() {
+                getPaletteAndSetBackgroundColor(playlist_image_playlist_fragment, playlist_contents_layout);
+            }
+
+            @Override
+            public void onError(Exception e) {
+            }
+        });
+
+
+
+
         playlist_name_middle.setText(playlistTracks.getName());
         playlist_owner.setText("BY " + playlistOwner);
         String songsNames = "";

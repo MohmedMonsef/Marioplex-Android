@@ -32,6 +32,7 @@ import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.example.spotify.SpotifyClasses.Track;
 import com.example.spotify.login.user;
+import com.example.spotify.pojo.ImageInfo;
 import com.example.spotify.pojo.currentTrack;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.squareup.picasso.Picasso;
@@ -584,35 +585,58 @@ public class MediaPlayerActivity extends AppCompatActivity {
         header.setText("PLAYING SONG");
 
 
-        List<Object> images= track.getTrack().getValue().getTrack().getImages();
+        List<ImageInfo> images= track.getTrack().getValue().getTrack().getImages();
+        String imageID = "12d";
         if(images !=null&& images.size() !=0){
-            String imageID = images.get(0).toString();
-            imageID = "5e9c9790fc69ad92e0a7eda5";
-            String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=artist";
-            Picasso.get().load(Imageurl).into(song_image, new com.squareup.picasso.Callback() {
-                @Override
-                public void onSuccess() {
-                    //song_image.setImageResource(R.drawable.testimage2);
-                    getPaletteAndSetBackgroundColor(song_image , activity_views_container);
-                }
-
-                @Override
-                public void onError(Exception e) {
-
-                }
-            });
-            Picasso.get().load(Imageurl).into(setting_image, new com.squareup.picasso.Callback() {
-                @Override
-                public void onSuccess() {
-                    getPaletteAndSetBackgroundColor(setting_image , setting_container);
-                }
-
-                @Override
-                public void onError(Exception e) {
-
-                }
-            });
+             imageID = images.get(0).getID();
         }
+        final String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=track";
+        Picasso.get().load(Imageurl).into(song_image, new com.squareup.picasso.Callback() {
+            @Override
+            public void onSuccess() {
+                //song_image.setImageResource(R.drawable.testimage2);
+                getPaletteAndSetBackgroundColor(song_image , activity_views_container);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Picasso.get().load(Imageurl).into(song_image, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        //song_image.setImageResource(R.drawable.testimage2);
+                        getPaletteAndSetBackgroundColor(song_image , activity_views_container);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        song_image.setImageResource(R.drawable.ic_smile1);
+                    }
+                });
+            }
+        });
+
+
+        Picasso.get().load(Imageurl).into(setting_image, new com.squareup.picasso.Callback() {
+            @Override
+            public void onSuccess() {
+                getPaletteAndSetBackgroundColor(setting_image , setting_container);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Picasso.get().load(Imageurl).into(setting_image, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        getPaletteAndSetBackgroundColor(setting_image , setting_container);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        setting_image.setImageResource(R.drawable.ic_smile1);
+                    }
+                });
+            }
+        });
 
 //        song_image.setImageResource(R.drawable.testimage1);
 //        setting_image.setImageResource(R.drawable.testimage2);

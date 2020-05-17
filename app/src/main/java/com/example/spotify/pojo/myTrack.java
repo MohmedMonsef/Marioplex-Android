@@ -8,7 +8,7 @@ import java.util.List;
 public class myTrack {
     @SerializedName("images")
     @Expose
-    private List<Object> images = null;
+    private List<ImageInfo> images = null;
 
     @SerializedName("availableMarkets")
     @Expose
@@ -264,11 +264,11 @@ public class myTrack {
         this.v = v;
     }
 
-    public List<Object> getImages() {
+    public List<ImageInfo> getImages() {
         return images;
     }
 
-    public void setImages(List<Object> images) {
+    public void setImages(List<ImageInfo> images) {
         this.images = images;
     }
 }

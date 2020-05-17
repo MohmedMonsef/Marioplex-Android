@@ -1,7 +1,6 @@
 package com.example.spotify.Adapters;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify.BackClasses.Backclasses.albumTrack.AlbumTracks;
@@ -17,17 +15,9 @@ import com.example.spotify.BackClasses.Backclasses.albumTrack.Track;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
-import com.example.spotify.login.user;
-import com.example.spotify.media.TrackInfo;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 
 public class adapterAlbumTracks extends RecyclerView.Adapter<adapterAlbumTracks.MyviewHolder> {
     private Context context;
@@ -77,11 +67,14 @@ public class adapterAlbumTracks extends RecyclerView.Adapter<adapterAlbumTracks.
         holder.preview_song_name_album.setText(item.getName());
         Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
         /// check if the image not null
+
+        String imageID = "12D";
         if(item.getImages().size()!=0)
         {
-            // load the image
-            Picasso.get().load(item.getImages().get(0).toString()).into(holder.preview_song_image_album);
+            imageID = item.getImages().get(0).getID();
         }
+        String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=track";
+        Picasso.get().load(Imageurl).into(holder.preview_song_image_album);
         /**
          * a click listener handel the item view
          */

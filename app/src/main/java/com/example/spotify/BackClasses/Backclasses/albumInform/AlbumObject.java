@@ -1,9 +1,11 @@
 
 package com.example.spotify.BackClasses.Backclasses.albumInform;
 
-import java.util.List;
+import com.example.spotify.pojo.ImageInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class AlbumObject
 {
@@ -19,7 +21,7 @@ public class AlbumObject
     private String name;
     @SerializedName("images")
     @Expose
-    private List<Object> images = null;
+    private List<ImageInfo> images = null;
     @SerializedName("artistId")
     @Expose
     private String artistId;
@@ -54,11 +56,11 @@ public class AlbumObject
         this.name = name;
     }
 
-    public List<Object> getImages() {
+    public List<ImageInfo> getImages() {
         return images;
     }
 
-    public void setImages(List<Object> images) {
+    public void setImages(List<ImageInfo> images) {
         this.images = images;
     }
 

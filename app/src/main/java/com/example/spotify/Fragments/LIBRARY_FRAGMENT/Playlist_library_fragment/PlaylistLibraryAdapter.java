@@ -14,8 +14,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
+import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.example.spotify.pojo.BasicPlaylist;
+import com.example.spotify.pojo.ImageInfo;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -47,11 +49,13 @@ public class PlaylistLibraryAdapter extends RecyclerView.Adapter<PlaylistLibrary
         else{
             holder.playlist_user_name.setText("by Spotify");
         }
-        List<Object> images= playlists.get(position).getImages();
+        List<ImageInfo> images= playlists.get(position).getImages();
+        String imageID ="12d";
         if(images != null && images.size()!=0) {
-            String Imageurl = images.get(0).toString();
-            Picasso.get().load(Imageurl).into(holder.user_playlist_image);
+            imageID = images.get(0).getID();
         }
+        String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=playlist";
+        Picasso.get().load(Imageurl).into(holder.user_playlist_image);
         holder.playlist_list_view_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

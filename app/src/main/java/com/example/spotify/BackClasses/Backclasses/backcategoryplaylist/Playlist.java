@@ -1,9 +1,11 @@
 
 package com.example.spotify.BackClasses.Backclasses.backcategoryplaylist;
 
-import java.util.List;
+import com.example.spotify.pojo.ImageInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class Playlist {
 
@@ -15,7 +17,7 @@ public class Playlist {
     private String name;
     @SerializedName("images")
     @Expose
-    private List<Object> images = null;
+    private List<ImageInfo> images = null;
     @SerializedName("ownerId")
     @Expose
     private String ownerId;
@@ -27,7 +29,7 @@ public class Playlist {
         return id;
     }
 
-    public Playlist(String id, String name, List<Object> images, String ownerId, String ownerName)
+    public Playlist(String id, String name, List<ImageInfo> images, String ownerId, String ownerName)
     {
         this.id = id;
         this.name = name;
@@ -48,11 +50,11 @@ public class Playlist {
         this.name = name;
     }
 
-    public List<Object> getImages() {
+    public List<ImageInfo> getImages() {
         return images;
     }
 
-    public void setImages(List<Object> images) {
+    public void setImages(List<ImageInfo> images) {
         this.images = images;
     }
 

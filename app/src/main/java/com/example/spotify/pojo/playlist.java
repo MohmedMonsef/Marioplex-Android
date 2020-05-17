@@ -30,7 +30,7 @@ public class playlist {
     private String ownerId;
     @SerializedName("images")
     @Expose
-    private List<Object> images = null;
+    private List<ImageInfo> images = null;
     @SerializedName("snapshot")
     @Expose
     private List<snapshot> snapshot = null;
@@ -94,11 +94,11 @@ public class playlist {
         this.ownerId = ownerId;
     }
 
-    public List<Object> getImages() {
+    public List<ImageInfo> getImages() {
         return images;
     }
 
-    public void setImages(List<Object> images) {
+    public void setImages(List<ImageInfo> images) {
         this.images = images;
     }
 

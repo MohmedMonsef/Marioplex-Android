@@ -1,6 +1,7 @@
 
 package com.example.spotify.BackClasses.Backclasses.albumInform;
 
+import com.example.spotify.pojo.ImageInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -16,14 +17,14 @@ public class Track {
     private String name;
     @SerializedName("images")
     @Expose
-    private List<Object> images = null;
+    private List<ImageInfo> images = null;
     @SerializedName("isLiked")
     @Expose
-    private Integer  isLiked = null;
+    private Boolean isLiked ;
 
-    public Integer  getLiked() { return isLiked; }
+    public Boolean  getLiked() { return isLiked; }
 
-    public void setLiked(Integer  liked) { isLiked = liked; }
+    public void setLiked(Boolean liked) { isLiked = liked; }
 
     public String getId() {
         return id;
@@ -41,11 +42,11 @@ public class Track {
         this.name = name;
     }
 
-    public List<Object> getImages() {
+    public List<ImageInfo> getImages() {
         return images;
     }
 
-    public void setImages(List<Object> images) {
+    public void setImages(List<ImageInfo> images) {
         this.images = images;
     }
 

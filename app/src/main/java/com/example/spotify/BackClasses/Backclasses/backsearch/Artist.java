@@ -1,6 +1,7 @@
 
 package com.example.spotify.BackClasses.Backclasses.backsearch;
 
+import com.example.spotify.pojo.ImageInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -16,7 +17,7 @@ public class Artist {
     private String name;
     @SerializedName("images1")
     @Expose
-    private List<Object> images = null;
+    private List<ImageInfo> images = null;
     @SerializedName("info")
     @Expose
     private String info;
@@ -43,11 +44,11 @@ public class Artist {
         this.name = name;
     }
 
-    public List<Object> getImages() {
+    public List<ImageInfo> getImages() {
         return images;
     }
 
-    public void setImages(List<Object> images) {
+    public void setImages(List<ImageInfo> images) {
         this.images = images;
     }
 

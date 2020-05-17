@@ -23,6 +23,7 @@ import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.example.spotify.login.user;
+import com.example.spotify.pojo.ImageInfo;
 import com.example.spotify.pojo.currentTrack;
 import com.squareup.picasso.Picasso;
 
@@ -279,12 +280,13 @@ public class BottomSheetFragment extends Fragment {
         song_artist_name.setText(songName+" . "+artistName);
 
 
-        List<Object> images= track.getTrack().getValue().getTrack().getImages();
+        List<ImageInfo> images= track.getTrack().getValue().getTrack().getImages();
+        String imageID = "12d";
         if(images !=null&& images.size()!=0){
-            String imageID = images.get(0).toString();
-            String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=track";
-            Picasso.get().load(Imageurl).into(bottom_image_id);
+             imageID = images.get(0).getID();
         }
+        String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=track";
+        Picasso.get().load(Imageurl).into(bottom_image_id);
 
         if(track.getTrack().getValue().getIsLiked()){
             bottom_favorite.setImageResource(R.drawable.like);

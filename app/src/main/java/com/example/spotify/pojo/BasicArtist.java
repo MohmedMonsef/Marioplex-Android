@@ -1,20 +1,20 @@
+package com.example.spotify.pojo;
 
-package com.example.spotify.BackClasses.Backclasses.albumTrack;
-
-import com.example.spotify.pojo.ImageInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class Track {
-
+public class BasicArtist {
     @SerializedName("_id")
     @Expose
     private String id;
-    @SerializedName("name")
+    @SerializedName("Name")
     @Expose
     private String name;
+    @SerializedName("type")
+    @Expose
+    private String type;
     @SerializedName("images")
     @Expose
     private List<ImageInfo> images = null;
@@ -33,6 +33,14 @@ public class Track {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public List<ImageInfo> getImages() {

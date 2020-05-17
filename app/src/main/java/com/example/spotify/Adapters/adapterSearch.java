@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +16,7 @@ import com.example.spotify.BackClasses.Backclasses.aclass;
 import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
 import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
 import com.example.spotify.Fragments.TrackFragment;
+import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.squareup.picasso.Picasso;
 
@@ -42,7 +42,7 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
                 String image = "";
                 if (LIST.getArtist().get(i).getImages() != null && LIST.getArtist().get(i).getImages().size() != 0)
                 {
-                    image = LIST.getArtist().get(i).getImages().get(0).toString();
+                    image = LIST.getArtist().get(i).getImages().get(0).getID();
                 }
                 list1.add(new aclass(LIST.getArtist().get(i).getType(),
                         LIST.getArtist().get(i).getName(),
@@ -58,7 +58,7 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
                 String image = "";
                 if (LIST.getTrack().get(i).getImages() != null && LIST.getTrack().get(i).getImages().size() != 0)
                 {
-                    image = LIST.getTrack().get(i).getImages().get(0).toString();
+                    image = LIST.getTrack().get(i).getImages().get(0).getID();
                 }
                 list1.add(new aclass(LIST.getTrack().get(i).getType(),
                         LIST.getTrack().get(i).getName(),
@@ -74,7 +74,7 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
                 String image = "";
                 if (LIST.getAlbum().get(i).getImages() != null && LIST.getAlbum().get(i).getImages().size() != 0)
                 {
-                    image = LIST.getAlbum().get(i).getImages().get(0).toString();
+                    image = LIST.getAlbum().get(i).getImages().get(0).getID();
                 }
                 list1.add(new aclass(LIST.getAlbum().get(i).getType(),
                         LIST.getAlbum().get(i).getName(),
@@ -90,7 +90,7 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
                 String image = "";
                 if (LIST.getPlaylist().get(i).getImages() != null && LIST.getPlaylist().get(i).getImages().size() != 0)
                 {
-                    image = LIST.getPlaylist().get(i).getImages().get(0).toString();
+                    image = LIST.getPlaylist().get(i).getImages().get(0).getID();
                 }
                 list1.add(new aclass(LIST.getPlaylist().get(i).getType(),
                         LIST.getPlaylist().get(i).getName(),
@@ -118,12 +118,28 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
     {
         holder.itemName.setText(list1.get(position).getName());
         holder.itemType.setText(list1.get(position).getType());
-        Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
 
+        String imageID = "12D";
         if(list1.get(position).getImage() !="")
         {
-            Picasso.get().load(list1.get(position).getImage()).into(holder.itemImage);
+             imageID = list1.get(position).getImage();
         }
+        String Imageurl ;
+        if(list1.get(position).getType().equals("playlist")) {
+            Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=playlist";
+        }
+        else if(list1.get(position).getType().equals("Track")){
+            Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=track";
+        }
+        else if(list1.get(position).getType().equals("Album")){
+            Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=album";
+        }
+        else{
+            Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=artist";
+        }
+
+        Picasso.get().load(Imageurl).into(holder.itemImage);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

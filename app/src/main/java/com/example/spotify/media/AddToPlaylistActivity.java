@@ -23,6 +23,7 @@ import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.example.spotify.login.user;
 import com.example.spotify.pojo.BasicPlaylist;
+import com.example.spotify.pojo.ImageInfo;
 import com.example.spotify.pojo.addTrackToPlaylistBody;
 import com.squareup.picasso.Picasso;
 
@@ -279,11 +280,13 @@ public class AddToPlaylistActivity extends AppCompatActivity {
 
             if(userPlaylists!=null) {
 
-                List<Object> images= userPlaylists.get(position).getImages();
+                List<ImageInfo> images= userPlaylists.get(position).getImages();
+                String imageID ="12d";
                 if(images !=null && images.size()!=0){
-                    String Imageurl = images.get(0).toString();
-                    Picasso.get().load(Imageurl).into(user_playlist_image);
+                    imageID = images.get(0).getID();
                 }
+                String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=playlist";
+                Picasso.get().load(Imageurl).into(user_playlist_image);
 
                 user_playlist_name.setText(userPlaylists.get(position).getName());
 

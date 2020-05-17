@@ -2,7 +2,6 @@ package com.example.spotify.Adapters;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +12,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.spotify.BackClasses.Backclasses.aclass;
 import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
 import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
+import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
-import com.example.spotify.BackClasses.Backclasses.aclass;
 import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
-import static android.content.ContentValues.TAG;
 public class adapterSearch1 extends RecyclerView.Adapter<adapterSearch1.MyviewHolder> {
 
     private Context context;
@@ -42,7 +43,7 @@ public class adapterSearch1 extends RecyclerView.Adapter<adapterSearch1.MyviewHo
                 String image = "";
                 if (LIST.getPlaylist().get(i).getImages() != null && LIST.getPlaylist().get(i).getImages().size() != 0)
                 {
-                    image = LIST.getPlaylist().get(i).getImages().get(0).toString();
+                    image = LIST.getPlaylist().get(i).getImages().get(0).getID();
                 }
                 list1.add(new aclass(LIST.getPlaylist().get(i).getType(),
                         LIST.getPlaylist().get(i).getName(),
@@ -71,10 +72,13 @@ public class adapterSearch1 extends RecyclerView.Adapter<adapterSearch1.MyviewHo
         holder.itemName.setText(list1.get(position).getName());
         Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
 
+        String imageID ="12D";
         if(list1.get(position).getImage() !="")
         {
-            Picasso.get().load(list1.get(position).getImage()).into(holder.itemImage);
+             imageID = list1.get(position).getImage();
         }
+        final String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=playlist";
+        Picasso.get().load(Imageurl).into(holder.itemImage);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

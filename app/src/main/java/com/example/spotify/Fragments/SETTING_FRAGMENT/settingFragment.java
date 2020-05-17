@@ -5,22 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-
-import androidx.fragment.app.Fragment;
-
-//import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.Fragments.ProfileFragment;
@@ -28,7 +21,7 @@ import com.example.spotify.R;
 import com.example.spotify.login.IntroActivity;
 import com.example.spotify.login.user;
 
-import static android.widget.Toast.makeText;
+//import androidx.fragment.app.Fragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,7 +54,7 @@ public class settingFragment extends Fragment implements LifecycleOwner {
             }
         });
 
-        ((TextView)view.findViewById(R.id.logout_text)).append(user.getName());
+        ((TextView)view.findViewById(R.id.logout_text1)).setText(user.getName());
 
         view.findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
             @Override

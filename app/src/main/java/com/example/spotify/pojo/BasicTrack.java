@@ -30,7 +30,7 @@ public class BasicTrack
     private Boolean isLiked;
     @SerializedName("images")
     @Expose
-    private List<Object> images = null;
+    private List<ImageInfo> images = null;
 
     public String getTrackid() {
         return trackid;
@@ -88,11 +88,11 @@ public class BasicTrack
         this.isLiked = isLiked;
     }
 
-    public List<Object> getImages() {
+    public List<ImageInfo> getImages() {
         return images;
     }
 
-    public void setImages(List<Object> images) {
+    public void setImages(List<ImageInfo> images) {
         this.images = images;
     }
 }

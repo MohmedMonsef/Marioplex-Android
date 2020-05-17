@@ -36,6 +36,7 @@ import com.example.spotify.media.AddToPlaylistActivity;
 import com.example.spotify.media.MediaPlayerService;
 import com.example.spotify.media.TrackInfo;
 import com.example.spotify.pojo.BasicTrack;
+import com.example.spotify.pojo.ImageInfo;
 import com.example.spotify.pojo.PlaylistTracks;
 import com.example.spotify.pojo.currentTrack;
 import com.example.spotify.pojo.myTrack;
@@ -101,8 +102,8 @@ public class TrackFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_track, container, false);
         ////////////////////get playlist id from the bundle\\\\\\\\\\\\\\\\\\\\\\\\
-        //TrackID = getArguments().getString("TrackID");
-        TrackID = "5e9b5e2de9c8d87fdc2eca81";
+        TrackID = getArguments().getString("TrackID");
+        //TrackID = "5e9b5e2de9c8d87fdc2eca81";
         TrackName = getArguments().getString("TrackName");
         TrackImage = getArguments().getString("TrackImage");
 
@@ -431,34 +432,26 @@ public class TrackFragment extends Fragment {
 
     void updateUI() {
 
-        List<Object> images = songTracks.get(0).getTrack().getImages();
+        List<ImageInfo> images = songTracks.get(0).getTrack().getImages();
+        String imageID = "12D";
         if (images != null && images.size() != 0) {
-            //String Imageurl = images.get(0).toString();
-            //Picasso.get().load(Imageurl).into(track_image_track_fragment);
-
-            String imageID = images.get(0).toString();
-            //imageID = "5e9c9790fc69ad92e0a7eda5";
-            String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=track";
-            Picasso.get().load(Imageurl).into(track_image_track_fragment, new com.squareup.picasso.Callback() {
-                @Override
-                public void onSuccess() {
-                    // track_image_track_fragment.setImageResource(R.drawable.testimage2);
-                    getPaletteAndSetBackgroundColor(track_image_track_fragment, track_container);
-                }
-
-                @Override
-                public void onError(Exception e) {
-                }
-            });
+            imageID = images.get(0).getID();
         }
+        String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=track";
+        Picasso.get().load(Imageurl).into(track_image_track_fragment, new com.squareup.picasso.Callback() {
+            @Override
+            public void onSuccess() {
+                // track_image_track_fragment.setImageResource(R.drawable.testimage2);
+                getPaletteAndSetBackgroundColor(track_image_track_fragment, track_container);
+            }
+
+            @Override
+            public void onError(Exception e) {
+            }
+        });
 
 
         track_name_middle.setText(songTracks.get(0).getTrack().getName());
-
-//        if(!TrackImage.isEmpty()){
-//            Picasso.get().load(TrackImage).into(track_image_track_fragment);
-//        }
-//        track_name_middle.setText(TrackName);
 
         track_singer.setText("Song by " + songTracks.get(0).getAlbum().getArtist().getName());
 

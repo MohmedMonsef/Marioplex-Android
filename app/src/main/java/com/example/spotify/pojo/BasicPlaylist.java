@@ -26,7 +26,7 @@ public class BasicPlaylist {
     private Boolean isPublic;
     @SerializedName("images")
     @Expose
-    private List<Object> images = null;
+    private List<ImageInfo> images = null;
     @SerializedName("type")
     @Expose
     private String type;
@@ -83,11 +83,11 @@ public class BasicPlaylist {
         this.isPublic = isPublic;
     }
 
-    public List<Object> getImages() {
+    public List<ImageInfo> getImages() {
         return images;
     }
 
-    public void setImages(List<Object> images) {
+    public void setImages(List<ImageInfo> images) {
         this.images = images;
     }
 }

@@ -9,13 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify.BackClasses.Backclasses.backcategoryplaylist.CategoryPlaylist;
 import com.example.spotify.BackClasses.Backclasses.backcategoryplaylist.Playlist;
-import com.example.spotify.Fragments.NEW_RELEASE_FRAHMENT.newReleaseFragment;
 import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
+import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.squareup.picasso.Picasso;
 
@@ -65,11 +64,13 @@ public class adapterCategoryPlaylists extends RecyclerView.Adapter<adapterCatego
 
         holder.ImageName.setText(Categoryplaylist.get(position).getName());
         /// check if the image not null
+        String imageID = "12D";
         if(Categoryplaylist.get(position).getImages()!= null & Categoryplaylist.get(position).getImages().size()!=0)
         {
-            // load the image
-            Picasso.get().load(Categoryplaylist.get(position).getImages().get(0).toString()).into(holder.image);
+            imageID = Categoryplaylist.get(position).getImages().get(0).getID();
         }
+        String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=playlist";
+        Picasso.get().load(Imageurl).into(holder.image);
         /**
          * a click listener handel the item view
          */
