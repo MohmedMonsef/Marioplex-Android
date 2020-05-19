@@ -87,7 +87,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
     BottomSheetBehavior sheetBehavior;
 
     private TrackInfo track;
-    private Track t; //TODO here
+    private Track t;
     private String nametest;
     private MediaPlayerService player;
     private Handler mHandler = new Handler();
@@ -112,8 +112,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
             MediaPlayerService.LocalBinder binder = (MediaPlayerService.LocalBinder) service;
             player = binder.getservice();
             serviceBound = true;
-
-            //Toast.makeText(MediaPlayerActivity.this, "Service Bound", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -181,17 +179,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
             }
         });
 
-        //till yoy fix the next and previous problems
-//        end_of_track.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                player.setStopInTrackEnd(true);
-//                track.setTimerSet(true);
-//                sleepTimer.setState(BottomSheetBehavior.STATE_HIDDEN);
-//                toast = Toast.makeText(getApplicationContext(),"Your sleep timer is set",Toast.LENGTH_SHORT);
-//                toast.show();
-//            }
-//        });
 
         /**
          * on press the sleep timer bottom sheet expands
@@ -215,7 +202,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MediaPlayerActivity.this, AddToPlaylistActivity.class);
                 if(TrackInfo.getInstance().getTrack()!=null && TrackInfo.getInstance().getTrack().getValue()!=null &&TrackInfo.getInstance().getTrack().getValue().getTrack()!=null){
-                    intent.putExtra("track_id", TrackInfo.getInstance().getTrack().getValue().getTrack().getId());//TODO here
+                    intent.putExtra("track_id", TrackInfo.getInstance().getTrack().getValue().getTrack().getId());
                 }
                 else{
                     intent.putExtra("track_id", "");
@@ -230,7 +217,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
         header.setText(track.getName());
 
-        //Observers
+        /////////////////////////////////////Observers//////////////////////////////////
         /**
          * observes for any changes in the current track info to update the UI
          */
@@ -285,7 +272,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
             }
         });
 
-        //Click Listeners
+        ////////////////////////////////Click Listeners/////////////////////////////////////
         /**
          * listener for the back arrow button to close the media player activity
          */
@@ -295,7 +282,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
-                //finish();
             }
         });
         /**
@@ -371,7 +357,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
 
         /**
-         * UPDATE THE SEEK BAR AND THE START AND END TIME EVERY SECOND
+         * UPDATE THE SEEK BAR AND THE START AND END TIME EVERY 100 MILLISECOND
          */
         MediaPlayerActivity.this.runOnUiThread(new Runnable() {
             @Override
@@ -383,7 +369,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
                     start_time.setText(getTimeString(mCurrentPosition));
                     end_time.setText(getTimeString(duration-mCurrentPosition));
                 }
-                mHandler.postDelayed(this, 200);
+                mHandler.postDelayed(this, 100);
                 //mHandler.post(this);
             }
         });
@@ -505,11 +491,15 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
     private void bindService(){
         Intent serviceIntent1 = new Intent(this , MediaPlayerService.class);
-        // serviceIntent1.putExtra("media" , media);
         bindService(serviceIntent1 , serviceConnection , Context.BIND_AUTO_CREATE);
 
     }
 
+    /**
+     * get a color that from the image and set the background with that color
+     * @param v  the image view
+     * @param put  the background's layout
+     */
     void getPaletteAndSetBackgroundColor(ImageView v , final LinearLayout put){
         Bitmap bitmap = ((BitmapDrawable) v.getDrawable()).getBitmap();
 
@@ -603,7 +593,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 Picasso.get().load(Imageurl).into(song_image, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
-                        //song_image.setImageResource(R.drawable.testimage2);
                         getPaletteAndSetBackgroundColor(song_image , activity_views_container);
                     }
 
@@ -637,12 +626,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 });
             }
         });
-
-//        song_image.setImageResource(R.drawable.testimage1);
-//        setting_image.setImageResource(R.drawable.testimage2);
-//        getPaletteAndSetBackgroundColor(song_image , activity_views_container);
-//        getPaletteAndSetBackgroundColor(setting_image , setting_container);
-
 
         if(track.getTrack().getValue().getIsLiked()){
             favorite.setImageResource(R.drawable.like);

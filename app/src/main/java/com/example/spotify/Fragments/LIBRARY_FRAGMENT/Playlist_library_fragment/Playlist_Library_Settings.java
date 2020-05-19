@@ -42,6 +42,11 @@ public class Playlist_Library_Settings extends AppCompatActivity {
         imageID = getIntent().getStringExtra("ImageID");
         playlistName = getIntent().getStringExtra("playlistName");
         updateUI();
+
+        /////////////////////////listeners///////////////////////////////
+        /**
+         * listener for the delete view to send a request to delete the playlist
+         */
         settings_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,23 +57,22 @@ public class Playlist_Library_Settings extends AppCompatActivity {
             }
         });
 
+        /**
+         * listener for the upload image view to go to  the upload image activity
+         */
         settings_upload_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), Upload_Image.class);
                 intent.putExtra("SourceID" , SourceId);
-                intent.putExtra("from" , "user");
+                intent.putExtra("from" , "playlist");
                 startActivity(intent);
             }
         });
 
-        playlist_name_settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
+        /**
+         * listener for the click on the back arrow to go back the playlist fragment
+         */
         settings_playlist_library_arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,18 +83,26 @@ public class Playlist_Library_Settings extends AppCompatActivity {
         });
     }
 
+    /**
+     * updates the image and the name of the playlist
+     */
+
     void updateUI(){
         playlist_name_settings.setText(playlistName);
         String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=playlist";
         Picasso.get().load(Imageurl).into(setting_playlist_image);
     }
+
+    /**
+     * sends a request to delete the playlist
+     */
     void DeletePlaylist(){
         Call<UploadImageResponse> call = endPointAPI.deletePlaylist(SourceId , user.getToken());
         call.enqueue(new Callback<UploadImageResponse>() {
             @Override
             public void onResponse(Call<UploadImageResponse> call, Response<UploadImageResponse> response) {
                 if (!response.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), "Code: " + response.code(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "something went wrong .try again", Toast.LENGTH_SHORT).show();
                     return;}
                 else{
                     Toast.makeText(getApplicationContext() , "playlist is deleted successfully" , Toast.LENGTH_SHORT).show();
@@ -105,6 +117,10 @@ public class Playlist_Library_Settings extends AppCompatActivity {
 
 
     }
+
+    /**
+     * gets all the views I will use in the fragment
+     */
 
     void getViews(){
         settings_delete = findViewById(R.id.settings_delete);

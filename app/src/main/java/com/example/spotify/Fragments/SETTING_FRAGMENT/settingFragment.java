@@ -48,6 +48,9 @@ public class settingFragment extends Fragment implements LifecycleOwner {
         //user related
         ((ImageView)view.findViewById(R.id.profile_picture)).setImageResource(R.drawable.logo);
 
+        /**
+         * updates the profile image view with the user's image if the user has an image
+         */
         if(user.getImages()!=null&&user.getImages().size()!=0){
             String imageId = user.getImages().get(0).getID();
             String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageId + "?belongs_to=user";

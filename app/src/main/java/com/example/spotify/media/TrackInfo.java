@@ -7,7 +7,7 @@ import com.example.spotify.pojo.currentTrack;
 
 public class TrackInfo {
     private static TrackInfo instance;
-    private MutableLiveData<currentTrack> track = new MutableLiveData<>();//TODO here
+    private MutableLiveData<currentTrack> track = new MutableLiveData<>();
     private String name;
     private MutableLiveData<Boolean> isPlaying = new MutableLiveData<>();
     private MutableLiveData<Boolean> timerSet = new MutableLiveData<>();
@@ -15,7 +15,6 @@ public class TrackInfo {
     private MutableLiveData<Boolean> isQueue = new MutableLiveData<>();
     private MutableLiveData<Boolean> isLiked = new MutableLiveData<>();
     private MutableLiveData<Boolean> tryAgain = new MutableLiveData<>();
-    // private MutableLiveData<Integer> currentPosition = new MutableLiveData<>();
 
 
 
@@ -24,12 +23,11 @@ public class TrackInfo {
             instance = new TrackInfo();
         return instance;
     }
-    //TODO here
+
     public void setTrack(currentTrack trackv) {
         track.setValue(trackv);
-        String s ="";
     }
-    //TODO here
+
     public MutableLiveData<currentTrack> getTrack(){
         return track;
     }

@@ -43,6 +43,8 @@ public class PlaylistLibraryAdapter extends RecyclerView.Adapter<PlaylistLibrary
 
     @Override
     public void onBindViewHolder(@NonNull PlaylistLibraryAdapter.MyviewHolder holder, final int position) {
+
+        //enables the settings button only for the created playlists//
         if(!(playlists.get(position).getType().equals("created"))){
             holder.settings_library.setEnabled(false);
             holder.settings_library.setImageResource(R.drawable.more_options_notenabled);
@@ -51,6 +53,8 @@ public class PlaylistLibraryAdapter extends RecyclerView.Adapter<PlaylistLibrary
             holder.settings_library.setEnabled(true);
             holder.settings_library.setImageResource(R.drawable.more_options);
         }
+        ///////////////////////////////////////////////////////////////
+
         holder.user_playlist_name.setText(playlists.get(position).getName());
         if(!playlists.get(position).getOwner().isEmpty()){
             holder.playlist_user_name.setText("by " + playlists.get(position).getOwner());
@@ -58,6 +62,8 @@ public class PlaylistLibraryAdapter extends RecyclerView.Adapter<PlaylistLibrary
         else{
             holder.playlist_user_name.setText("by Spotify");
         }
+
+        ///////////////updates the UI with the image//////////////////////
         List<ImageInfo> images= playlists.get(position).getImages();
         String imageID ="12d";
         if(images != null && images.size()!=0) {
@@ -65,6 +71,11 @@ public class PlaylistLibraryAdapter extends RecyclerView.Adapter<PlaylistLibrary
         }
         String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=playlist";
         Picasso.get().load(Imageurl).into(holder.user_playlist_image);
+        /////////////////////////////////////////////////////////////////
+
+        /**
+         * listener for the click on the playlist to go to the playlist fragment
+         */
         holder.playlist_list_view_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,6 +92,10 @@ public class PlaylistLibraryAdapter extends RecyclerView.Adapter<PlaylistLibrary
                         .addToBackStack(null).commit();
             }
         });
+
+        /**
+         * listener for the click on the settings button to go to the settings activity
+         */
 
         holder.settings_library.setOnClickListener(new View.OnClickListener() {
             @Override

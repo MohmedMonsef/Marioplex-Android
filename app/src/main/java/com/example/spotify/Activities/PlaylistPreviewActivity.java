@@ -69,8 +69,6 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
             MediaPlayerService.LocalBinder binder = (MediaPlayerService.LocalBinder) service;
             player = binder.getservice();
             serviceBound = true;
-
-            //Toast.makeText(MediaPlayerActivity.this, "Service Bound", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -101,38 +99,6 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
             }
         });
 
-//        playlist_list_view_preview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                if(mediaPlayer.isPlaying()){
-//                    mediaPlayer.pause();
-//                    mediaPlayer.stop();
-//                    mediaPlayer.reset();
-//                }
-//                if(!mediaPlayer.isPlaying()){
-//                    Map<String,String> headers = new HashMap<String, String>();
-//                    headers.put("x-auth-token" , user.getToken());
-//                    try{
-//                        mediaPlayer.setDataSource(PlaylistPreviewActivity.this , Uri.parse("http://192.168.1.6:3000/api/tracks/android/5e9841144b29c2d6f0cfb3dd?type=medium") , headers);
-//                        mediaPlayer.prepare();
-//                        mediaPlayer.start();
-//                    }
-//                    catch (IOException e){
-//                        Toast.makeText( getApplicationContext(),"something is wrong" , Toast.LENGTH_SHORT);
-//                    }
-//                }
-//            }
-//        });
-
-
-//        playlist_list_view_preview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-//                ImageView like = view.findViewById(R.id.preview_like);
-//
-//            }
-//        });
-
         ///////////////////////observers\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         /**
          * observes for the response of the get playlists requests and updates the UI
@@ -149,7 +115,9 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
                 }
             });
         }
-
+        /**
+         * observer for the preparation of the preview to update the UI
+         */
         prepare.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -162,9 +130,7 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
 
     private void bindService() {
         Intent serviceIntent1 = new Intent(this, MediaPlayerService.class);
-        // serviceIntent1.putExtra("media" , media);
         bindService(serviceIntent1, serviceConnection, Context.BIND_AUTO_CREATE);
-
     }
 
     @Override
@@ -293,6 +259,9 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * initializes the media player to bind an audio to it
+     */
     void initMediaPlayer() {
         mediaPlayer = new MediaPlayer();
         mediaPlayer.reset();
@@ -317,7 +286,8 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
             final ImageView tran_play = convertView.findViewById(R.id.tran_play);
             final ProgressBar loadingProgressbar1 = convertView.findViewById(R.id.loadingProgressbar);
 
-            //List<Object> images= mplaylistTracks.getImages();
+
+            //updating the UI with the tracks's images
             List<ImageInfo> images = mplaylistTracks.getTracks().get(position).getImages();
 
             String imageID = "12D";
@@ -326,6 +296,7 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
             }
             String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=track";
             Picasso.get().load(Imageurl).into(preview_playlist_image);
+            ////////////////////////////////////////////
 
             String song = "";
             String artist = "";
@@ -341,6 +312,9 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
                 preview_like.setImageResource(R.drawable.favorite_border);
             }
 
+            /**
+             * listener for the click on the like button to like/unlike the track
+             */
             preview_like.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -352,6 +326,9 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
                     }
                 }
             });
+            /**
+             * a click listener for the click on the image or the name of the track to play the track preview
+             */
             preview_container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -384,6 +361,9 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
                 }
             });
 
+            /**
+             * listener for the audio preparation to remove the progress bar and start playing the preview
+             */
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
@@ -393,7 +373,6 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
                         TrackInfo.getInstance().setIsPlaying(false);
                     }
                     loadingProgressbar1.setVisibility(View.INVISIBLE);
-                    //preview_playlist_image.setImageResource(R.drawable.ic_smile1);
                     preview_playlist_image.setVisibility(View.VISIBLE);
                     prepare.setValue(false);
 

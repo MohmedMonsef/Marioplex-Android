@@ -47,12 +47,6 @@ public class AddToPlaylistActivity extends AppCompatActivity {
     private Button try_again;
     private LinearLayout something_wrong_layout2;
     private TextView something_wrong_text2;
-
-
-//    private Retrofit retrofit = new Retrofit.Builder()
-//            .baseUrl("http://192.168.1.7:3000/")
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build();
     private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();
 
     @Override
@@ -64,7 +58,6 @@ public class AddToPlaylistActivity extends AppCompatActivity {
 
         trackID = getIntent().getStringExtra("track_id");
         from = getIntent().getStringExtra("from");
-
 
 
         /////////////////////////List view attaching will be made in the on response callback///////
@@ -84,10 +77,9 @@ public class AddToPlaylistActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = null;
-                if(from.equals("MediaPlayerActivity")) {
-                   intent = new Intent(AddToPlaylistActivity.this, MediaPlayerActivity.class);
-                }
-                else if (from.equals("TrackFragment")) {
+                if (from.equals("MediaPlayerActivity")) {
+                    intent = new Intent(AddToPlaylistActivity.this, MediaPlayerActivity.class);
+                } else if (from.equals("TrackFragment")) {
                     intent = new Intent(getBaseContext(), MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 }
@@ -102,38 +94,33 @@ public class AddToPlaylistActivity extends AppCompatActivity {
         new_playlist_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddToPlaylistActivity.this , CreatePlaylistActivity.class);
+                Intent intent = new Intent(AddToPlaylistActivity.this, CreatePlaylistActivity.class);
                 intent.putExtra("track_id", trackID);
-                intent.putExtra("from" , from);
+                intent.putExtra("from", from);
                 startActivity(intent);
             }
         });
 
         /**
-         * listenes for the view pressed in the playlist views and sends request to add the current track to it
+         * listener for the view pressed in the playlist views and sends request to add the current track to it
          */
         playlists_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //take the playlist id and add the song to it
-                //TODO uncomment the below block in integeration
-
-                if(userPlaylists !=null && userPlaylists.size()!=0){
+                if (userPlaylists != null && userPlaylists.size() != 0) {
                     String playlist_id = userPlaylists.get(position).getId();
-                    if(trackID ==""){
-                        Toast.makeText(getApplicationContext(),"track isn't loaded yet check your internet connection",Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        addTrackToPlaylist(playlist_id , trackID);
+                    if (trackID == "") {
+                        Toast.makeText(getApplicationContext(), "track isn't loaded yet check your internet connection", Toast.LENGTH_SHORT).show();
+                    } else {
+                        addTrackToPlaylist(playlist_id, trackID);
                     }
 
                 }
-                //Intent intent = new Intent(AddToPlaylistActivity.this , MediaPlayerActivity.class);
                 Intent intent = null;
-                if(from.equals("MediaPlayerActivity")) {
+                if (from.equals("MediaPlayerActivity")) {
                     intent = new Intent(AddToPlaylistActivity.this, MediaPlayerActivity.class);
-                }
-                else if (from.equals("TrackFragment")) {
+                } else if (from.equals("TrackFragment")) {
                     intent = new Intent(getBaseContext(), MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 }
@@ -165,69 +152,63 @@ public class AddToPlaylistActivity extends AppCompatActivity {
 
     /**
      * takes the current track id and adds the track to the playlist the user pressed on
+     *
      * @param pid playlist id
      * @param tid track id
      */
-    void addTrackToPlaylist(String pid , String tid){
+    void addTrackToPlaylist(String pid, String tid) {
         addTrackToPlaylistBody t = new addTrackToPlaylistBody();
         t.setTrackID(tid);
-        Call<Object> call = endPointAPI.AddTrackToAPlaylist(pid , t, user.getToken());
+        Call<Object> call = endPointAPI.AddTrackToAPlaylist(pid, t, user.getToken());
 
         call.enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
-                if(!response.isSuccessful()){
-                    Toast.makeText(getApplicationContext(),"something wrong happened try again",Toast.LENGTH_SHORT).show();
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), "something wrong happened try again", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else {
-                    Toast.makeText(getApplicationContext(),"track is added to playlist",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "track is added to playlist", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<Object> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"something wrong happened check internet connection",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "something wrong happened check internet connection", Toast.LENGTH_SHORT).show();
 
             }
         });
     }
 
     /**
-     * get all th viewa  i will use
+     * get all th views i will use
      */
 
-    void getviews(){
-        back_button_to_mediaplayer = (ImageView)findViewById(R.id.back_button_to_mediaplayer);
-        new_playlist_button = (Button)findViewById(R.id.new_playlist_button);
-        playlists_list_view = (ListView)findViewById(R.id.playlists_list_view);
-        playlists_progress_bar = (ProgressBar)findViewById(R.id.playlists_progress_bar);
-        try_again = (Button)findViewById(R.id.try_again);
+    void getviews() {
+        back_button_to_mediaplayer = (ImageView) findViewById(R.id.back_button_to_mediaplayer);
+        new_playlist_button = (Button) findViewById(R.id.new_playlist_button);
+        playlists_list_view = (ListView) findViewById(R.id.playlists_list_view);
+        playlists_progress_bar = (ProgressBar) findViewById(R.id.playlists_progress_bar);
+        try_again = (Button) findViewById(R.id.try_again);
         something_wrong_layout2 = findViewById(R.id.something_wrong_layout2);
         something_wrong_text2 = findViewById(R.id.something_wrong_text);
     }
 
     /**
-     * get current user's playlists and updates the UI on response
+     * gets current user's playlists and updates the UI on response
      */
-    void getPlaylists(){
-        Call<List<BasicPlaylist>> call = endPointAPI.getCurrentUserPlaylists( user.getToken());
+    void getPlaylists() {
+        Call<List<BasicPlaylist>> call = endPointAPI.getCurrentUserPlaylists(user.getToken());
         call.enqueue(new Callback<List<BasicPlaylist>>() {
             @Override
             public void onResponse(Call<List<BasicPlaylist>> call, Response<List<BasicPlaylist>> response) {
-                if(!response.isSuccessful()){
-                    toast = Toast.makeText(getApplicationContext(),"Code: "+response.code(),Toast.LENGTH_SHORT);
-                    toast.show();
+                if (!response.isSuccessful()) {
                     something_wrong_layout2.setVisibility(View.VISIBLE);
                     playlists_progress_bar.setVisibility(View.GONE);
                     playlists_list_view.setVisibility(View.GONE);
 
                     return;
-                }
-                else if(response.body()==null){
-                    toast = Toast.makeText(getApplicationContext(),"response body = null",Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-                else {
+                }else {
                     userPlaylists = response.body();
                     filterPlaylists();
                     CustomAdapter customAdapter = new CustomAdapter();
@@ -235,29 +216,26 @@ public class AddToPlaylistActivity extends AppCompatActivity {
                     something_wrong_layout2.setVisibility(View.GONE);
                     playlists_list_view.setVisibility(View.VISIBLE);
                     playlists_progress_bar.setVisibility(View.GONE);
-//                    toast = Toast.makeText(getApplicationContext(),"response came and is being parsed",Toast.LENGTH_SHORT);
-//                    toast.show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<BasicPlaylist>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),t.getMessage()+" ' failed '",Toast.LENGTH_SHORT).show();
-
                 something_wrong_layout2.setVisibility(View.VISIBLE);
                 playlists_progress_bar.setVisibility(View.GONE);
                 playlists_list_view.setVisibility(View.GONE);
-
-
             }
         });
 
     }
 
-    void filterPlaylists(){
+    /**
+     * view only the created playlists because the user can't add track to a followed playlist
+     */
+    void filterPlaylists() {
         List<BasicPlaylist> temp = new ArrayList<>();
-        for (int i =0 ; i <userPlaylists.size() ; i ++){
-            if(userPlaylists.get(i).getType().equals("created")){
+        for (int i = 0; i < userPlaylists.size(); i++) {
+            if (userPlaylists.get(i).getType().equals("created")) {
                 temp.add(userPlaylists.get(i));
             }
         }
@@ -265,7 +243,7 @@ public class AddToPlaylistActivity extends AppCompatActivity {
     }
 
 
-    private class CustomAdapter extends BaseAdapter{
+    private class CustomAdapter extends BaseAdapter {
 
         @Override
         /**
@@ -273,16 +251,16 @@ public class AddToPlaylistActivity extends AppCompatActivity {
          */
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = getLayoutInflater().inflate(R.layout.playlist_list_view_layout, parent, false);
-            ImageView user_playlist_image = (ImageView)convertView.findViewById(R.id.user_playlist_image);
-            TextView user_playlist_name = (TextView)convertView.findViewById(R.id.user_playlist_name);
-            TextView playlist_user_name = (TextView)convertView.findViewById(R.id.playlist_user_name);
+            ImageView user_playlist_image = (ImageView) convertView.findViewById(R.id.user_playlist_image);
+            TextView user_playlist_name = (TextView) convertView.findViewById(R.id.user_playlist_name);
+            TextView playlist_user_name = (TextView) convertView.findViewById(R.id.playlist_user_name);
 
 
-            if(userPlaylists!=null) {
+            if (userPlaylists != null) {
 
-                List<ImageInfo> images= userPlaylists.get(position).getImages();
-                String imageID ="12d";
-                if(images !=null && images.size()!=0){
+                List<ImageInfo> images = userPlaylists.get(position).getImages();
+                String imageID = "12d";
+                if (images != null && images.size() != 0) {
                     imageID = images.get(0).getID();
                 }
                 String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=playlist";
@@ -294,12 +272,12 @@ public class AddToPlaylistActivity extends AppCompatActivity {
             }
             return convertView;
         }
+
         @Override
         public int getCount() {
-            if(userPlaylists != null){
+            if (userPlaylists != null) {
                 return userPlaylists.size();
-            }
-            else{
+            } else {
                 return 0;
             }
         }

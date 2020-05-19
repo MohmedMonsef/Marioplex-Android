@@ -83,8 +83,6 @@ public class PlaylistFragment extends Fragment {
             MediaPlayerService.LocalBinder binder = (MediaPlayerService.LocalBinder) service;
             player = binder.getservice();
             serviceBound = true;
-
-            //   Toast.makeText(getContext(), "Service Bound", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -173,18 +171,14 @@ public class PlaylistFragment extends Fragment {
                     }
                 }
                 else if(playlistTracks !=null && playlistTracks.getTracks()!=null && playlistTracks.getTracks().size()!=0){
-//                    if(TrackInfo.getInstance().getIsQueue()!=null&& TrackInfo.getInstance().getIsQueue().getValue()){
-//                        shuffleTracks();
-//                    }
-//                    else{
                         CreateQueue(playlistTracks.getTracks().get(0).getTrackid());
-                    //}
                 }
             }
         });
 
-        //TODO till the make makes it
-
+        /**
+         * listener for the like button to follow/unfollow the playlist
+         */
         like_playlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -254,12 +248,9 @@ public class PlaylistFragment extends Fragment {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if(!response.isSuccessful()){
-                    Toast.makeText(getContext(),"Code: "+response.code(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"something went wrong while creating the queue. try again.",Toast.LENGTH_SHORT).show();
                     return;
                 }
-//                else if(response.body()==null){
-//                    Toast.makeText(getContext(),"response body = null",Toast.LENGTH_SHORT).show();
-//                }
                 else {
                     shuffleTracks();
                 }
@@ -267,7 +258,7 @@ public class PlaylistFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getContext(),t.getMessage()+" ' failed '",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"something went wrong while creating the queue.check your internet connection.",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -282,12 +273,9 @@ public class PlaylistFragment extends Fragment {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if(!response.isSuccessful()){
-                    Toast.makeText(getContext(),"Code: "+response.code(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"something went wrong . try again.",Toast.LENGTH_SHORT).show();
                     return;
                 }
-//                else if(response.body()==null){
-//                    Toast.makeText(getContext(),"response body = null",Toast.LENGTH_SHORT).show();
-//                }
                 else {
                     ///////call mediaplayer get current playing \\\\\\\\\\
                     Call<currentTrack> call1 = endPointAPI.getNext(user.getToken());
@@ -297,7 +285,7 @@ public class PlaylistFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getContext(),t.getMessage()+" ' failed '",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"something went wrong.check your internet connection.",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -313,16 +301,12 @@ public class PlaylistFragment extends Fragment {
             @Override
             public void onResponse(Call<List<PlaylistTracks>> call, Response<List<PlaylistTracks>> response) {
                 if(!response.isSuccessful() ||response.body() == null){
-                    //Toast.makeText(getContext(),"Code: "+response.code(),Toast.LENGTH_SHORT).show();
                     progress_bar_playlist.setVisibility(View.GONE);
                     playlist_contents_layout.setVisibility(View.GONE);
                     something_wrong_text.setText("something went wrong .try again");
                     something_wrong_layout.setVisibility(View.VISIBLE);
                     return;
                 }
-//                else if(response.body()==null){
-//                    Toast.makeText(getContext(),"response body = null",Toast.LENGTH_SHORT).show();
-//                }
                 else
                     {
                     playlistTracks = response.body().get(0);
@@ -330,14 +314,12 @@ public class PlaylistFragment extends Fragment {
                     playlist_contents_layout.setVisibility(View.VISIBLE);
                     something_wrong_layout.setVisibility(View.GONE);
                     progress_bar_playlist.setVisibility(View.GONE);
-                    //playlistTracks.setIsLiked(true);
                     updateUI();
                 }
             }
 
             @Override
             public void onFailure(Call<List<PlaylistTracks>> call, Throwable t) {
-                //Toast.makeText(getContext(),t.getMessage()+" ' failed '",Toast.LENGTH_SHORT).show();
                 progress_bar_playlist.setVisibility(View.GONE);
                 playlist_contents_layout.setVisibility(View.GONE);
                 something_wrong_text.setText("something went wrong .check your internet connection");
@@ -399,6 +381,11 @@ public class PlaylistFragment extends Fragment {
         });
     }
 
+    /**
+     * get a color that from the image and set the background with that color
+     * @param v  the image view
+     * @param put  the background's layout
+     */
 
     void getPaletteAndSetBackgroundColor(ImageView v, final LinearLayout put) {
         Bitmap bitmap = ((BitmapDrawable) v.getDrawable()).getBitmap();
@@ -468,8 +455,6 @@ public class PlaylistFragment extends Fragment {
             public void onError(Exception e) {
             }
         });
-
-
 
 
         playlist_name_middle.setText(playlistTracks.getName());

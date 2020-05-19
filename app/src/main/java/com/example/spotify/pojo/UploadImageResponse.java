@@ -15,8 +15,8 @@ public class UploadImageResponse {
         return success;
     }
 
-    public UploadImageResponse(String imageID) {
-        this.imageID = imageID;
+    public String getImageID() {
+        return imageID;
     }
 
     public void setSuccess(String success) {

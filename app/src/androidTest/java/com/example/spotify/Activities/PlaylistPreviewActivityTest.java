@@ -52,7 +52,6 @@ public class PlaylistPreviewActivityTest {
     public void greeterSaysHello()
     {
         //startActivity(new Intent(introact.getBaseContext(), IntroActivity.class));
-        onView(withId(R.id.introya)).perform(click());
         onView(withId(R.id.email)).perform(typeText("hager7@gmail.com"));
         onView(withId(R.id.password)).perform(typeText("hager"));
         onView(withId(R.id.loginButton)).perform(click());

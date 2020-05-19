@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
@@ -89,23 +88,22 @@ public class Playlist_library extends Fragment implements LifecycleOwner {
 
     }
 
+    /**
+     * sends a request to get the current user's followed and created playlists
+     */
+
     void getPlaylists(){
         Call<List<BasicPlaylist>> call = endPointAPI.getCurrentUserPlaylists( user.getToken());
         call.enqueue(new Callback<List<BasicPlaylist>>() {
             @Override
             public void onResponse(Call<List<BasicPlaylist>> call, Response<List<BasicPlaylist>> response) {
                 if(!response.isSuccessful()){
-                    Toast.makeText(getContext(),"Code: "+response.code(),Toast.LENGTH_SHORT).show();
                     something_wrong_layout3.setVisibility(View.VISIBLE);
                     library_playlist_progress_bar.setVisibility(View.GONE);
                     library_playlist_recycleview.setVisibility(View.GONE);
 
                     return;
-                }
-                else if(response.body()==null){
-                    Toast.makeText(getContext(),"response body = null",Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     userPlaylists = response.body();
 
                     playlistLibraryAdapter = new PlaylistLibraryAdapter(getActivity(), userPlaylists);
@@ -120,18 +118,18 @@ public class Playlist_library extends Fragment implements LifecycleOwner {
 
             @Override
             public void onFailure(Call<List<BasicPlaylist>> call, Throwable t) {
-                Toast.makeText(getContext(),t.getMessage()+" ' failed '",Toast.LENGTH_SHORT).show();
-
                 something_wrong_layout3.setVisibility(View.VISIBLE);
                 library_playlist_progress_bar.setVisibility(View.GONE);
                 library_playlist_recycleview.setVisibility(View.GONE);
-
-
             }
         });
 
     }
 
+    /**
+     * gets all the views I will use in the fragment
+     * @param root
+     */
     void getViews(View root){
         library_playlist_recycleview = root.findViewById(R.id.library_playlist_recycleview);
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);

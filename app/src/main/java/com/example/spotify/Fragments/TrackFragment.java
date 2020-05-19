@@ -87,8 +87,6 @@ public class TrackFragment extends Fragment {
             MediaPlayerService.LocalBinder binder = (MediaPlayerService.LocalBinder) service;
             player = binder.getservice();
             serviceBound = true;
-
-            //   Toast.makeText(getContext(), "Service Bound", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -130,6 +128,9 @@ public class TrackFragment extends Fragment {
             }
         });
 
+        /**
+         * listener for the click on the like/unlike button
+         */
         like_track.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,7 +142,9 @@ public class TrackFragment extends Fragment {
             }
         });
 
-        //TODO don't forget to implement it
+        /**
+         * listener for the click on the add to playlist button to go to the add to playlist activity
+         */
         add_to_playlist_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -197,6 +200,7 @@ public class TrackFragment extends Fragment {
         });
 
 
+
         //////////////////////////show progress bar\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         track_contents_layout.setVisibility(View.GONE);
         something_wrong_layout_track.setVisibility(View.GONE);
@@ -219,12 +223,9 @@ public class TrackFragment extends Fragment {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (!response.isSuccessful()) {
-                    Toast.makeText(getContext(), "Code: " + response.code(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "something went wrong while creating the queue. try again." , Toast.LENGTH_SHORT).show();
                     return;
                 }
-//                else if(response.body()==null){
-//                    Toast.makeText(getContext(),"response body = null",Toast.LENGTH_SHORT).show();
-//                }
                 else {
                     shuffleTracks();
                 }
@@ -232,7 +233,7 @@ public class TrackFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getContext(), t.getMessage() + " ' failed '", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "something went wrong while creating the queue.check your internet connection.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -247,12 +248,9 @@ public class TrackFragment extends Fragment {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (!response.isSuccessful()) {
-                    Toast.makeText(getContext(), "Code: " + response.code(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "something went wrong . try again.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-//                else if(response.body()==null){
-//                    Toast.makeText(getContext(),"response body = null",Toast.LENGTH_SHORT).show();
-//                }
                 else {
                     ///////call mediaplayer get current playing \\\\\\\\\\
                     Call<currentTrack> call1 = endPointAPI.getNext(user.getToken());
@@ -262,18 +260,21 @@ public class TrackFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getContext(), t.getMessage() + " ' failed '", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "something went wrong.check your internet connection.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    /**
+     * send a request to get the relates songs to the current song
+     * @param TrackID
+     */
     void GetSongTracksInfo(String TrackID) {
         Call<List<currentTrack>> call = endPointAPI.getSongTracks(TrackID, user.getToken());
         call.enqueue(new Callback<List<currentTrack>>() {
             @Override
             public void onResponse(Call<List<currentTrack>> call, Response<List<currentTrack>> response) {
                 if (!response.isSuccessful() || response.body() == null) {
-                    //Toast.makeText(getContext(),"Code: "+response.code(),Toast.LENGTH_SHORT).show();
                     progress_bar_track.setVisibility(View.GONE);
                     track_contents_layout.setVisibility(View.GONE);
                     something_wrong_text_track.setText("something went wrong .try again");
@@ -292,7 +293,6 @@ public class TrackFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<currentTrack>> call, Throwable t) {
-                //Toast.makeText(getContext(),t.getMessage()+" ' failed '",Toast.LENGTH_SHORT).show();
                 progress_bar_track.setVisibility(View.GONE);
                 track_contents_layout.setVisibility(View.GONE);
                 something_wrong_text_track.setText("something went wrong .check your internet connection");
@@ -302,6 +302,10 @@ public class TrackFragment extends Fragment {
         });
     }
 
+    /**
+     * put the data int a singleton class to update the UI in the preview activity
+     * @param SongTracks
+     */
     void FillPlaylistTracks(List<currentTrack> SongTracks) {
 
         PlaylistTracks p = new PlaylistTracks();
@@ -371,7 +375,6 @@ public class TrackFragment extends Fragment {
                 } else {
                     like_track.setImageResource(R.drawable.favorite_border);
                     PlaylistInfo.getinstance().getplaylistTracks().getValue().getTracks().get(0).setIsLiked(false);
-                    //SongTracks.setIsLiked(false);
                 }
             }
 
@@ -382,6 +385,11 @@ public class TrackFragment extends Fragment {
         });
     }
 
+    /**
+     * get a color that from the image and set the background with that color
+     * @param v  the image view
+     * @param put  the background's layout
+     */
     void getPaletteAndSetBackgroundColor(ImageView v, final LinearLayout put) {
         Bitmap bitmap = ((BitmapDrawable) v.getDrawable()).getBitmap();
 
@@ -429,7 +437,9 @@ public class TrackFragment extends Fragment {
         });
     }
 
-
+    /**
+     * update the UI with the data
+     */
     void updateUI() {
 
         List<ImageInfo> images = songTracks.get(0).getTrack().getImages();
@@ -441,7 +451,6 @@ public class TrackFragment extends Fragment {
         Picasso.get().load(Imageurl).into(track_image_track_fragment, new com.squareup.picasso.Callback() {
             @Override
             public void onSuccess() {
-                // track_image_track_fragment.setImageResource(R.drawable.testimage2);
                 getPaletteAndSetBackgroundColor(track_image_track_fragment, track_container);
             }
 
@@ -505,6 +514,11 @@ public class TrackFragment extends Fragment {
         }
         return false;
     }
+
+    /**
+     * gets all the views i will use
+     * @param root
+     */
 
     void getViews(View root) {
         back_arrow_track = root.findViewById(R.id.back_arrow_track);

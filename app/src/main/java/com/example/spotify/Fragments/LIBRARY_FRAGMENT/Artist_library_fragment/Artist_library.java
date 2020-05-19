@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
@@ -75,7 +74,9 @@ public class Artist_library extends Fragment implements LifecycleOwner {
 
     }
 
-
+    /**
+     * sends request to get the current user followed artists and updates the UI with their information
+     */
 
     void getArtists(){
         Call<LibraryArtists> call = endPointAPI.getArtists( user.getToken());
@@ -83,17 +84,12 @@ public class Artist_library extends Fragment implements LifecycleOwner {
             @Override
             public void onResponse(Call<LibraryArtists> call, Response<LibraryArtists> response) {
                 if(!response.isSuccessful()){
-                    Toast.makeText(getContext(),"Code: "+response.code(),Toast.LENGTH_SHORT).show();
                     something_wrong_layout4.setVisibility(View.VISIBLE);
                     library_artist_progress_bar.setVisibility(View.GONE);
                     library_artist_recycleview.setVisibility(View.GONE);
 
                     return;
-                }
-                else if(response.body()==null){
-                    Toast.makeText(getContext(),"response body = null",Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     userartists = response.body();
 
                     artistLibraryAdapter = new ArtistiLibraryAdapter(getActivity(), userartists.getArtists());
@@ -108,8 +104,6 @@ public class Artist_library extends Fragment implements LifecycleOwner {
 
             @Override
             public void onFailure(Call<LibraryArtists> call, Throwable t) {
-                Toast.makeText(getContext(),t.getMessage()+" ' failed '",Toast.LENGTH_SHORT).show();
-
                 something_wrong_layout4.setVisibility(View.VISIBLE);
                 library_artist_progress_bar.setVisibility(View.GONE);
                 library_artist_recycleview.setVisibility(View.GONE);
@@ -119,6 +113,11 @@ public class Artist_library extends Fragment implements LifecycleOwner {
         });
 
     }
+
+    /**
+     * gets all the views i will use in the fragment
+     * @param root
+     */
 
     void getViews(View root){
         library_artist_recycleview = root.findViewById(R.id.library_artist_recycleview);

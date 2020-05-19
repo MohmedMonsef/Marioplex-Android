@@ -28,10 +28,6 @@ public class CreatePlaylistActivity extends AppCompatActivity {
 
     private Button cancel_create_playlist;
     private EditText playlist_name_edit_text;
-    //    private Retrofit retrofit = new Retrofit.Builder()
-//            .baseUrl("http://192.168.1.7:3000/")
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build();
     private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();
     private String trackID;
     private String from;
@@ -55,16 +51,11 @@ public class CreatePlaylistActivity extends AppCompatActivity {
         cancel_create_playlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(CreatePlaylistActivity.this , MediaPlayerActivity.class);
                 Intent intent = null;
                 if(from.equals("MediaPlayerActivity")) {
                     intent = new Intent(CreatePlaylistActivity.this, MediaPlayerActivity.class);
                 }
-                else if (from.equals("TrackFragment")) {
-                    intent = new Intent(getBaseContext(), MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                }
-                else if (from.equals("Playlist_library")){
+                else if ((from.equals("TrackFragment"))||(from.equals("Playlist_library"))) {
                     intent = new Intent(getBaseContext(), MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 }
@@ -82,21 +73,13 @@ public class CreatePlaylistActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext() , "Enter the playlist's name" , Toast.LENGTH_SHORT).show();
                     }
                     else{
-                        //TODO uncomment the block to create and add the playlist
-
                         creatPlaylist(playlist_name_edit_text.getText().toString());
 
-//                        Intent intent = new Intent(CreatePlaylistActivity.this , MediaPlayerActivity.class);
-//                        startActivity(intent);
                         Intent intent = null;
                         if(from.equals("MediaPlayerActivity")) {
                             intent = new Intent(CreatePlaylistActivity.this, MediaPlayerActivity.class);
                         }
-                        else if (from.equals("TrackFragment")) {
-                            intent = new Intent(getBaseContext(), MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                        }
-                        else if (from.equals("Playlist_library")){
+                        else if ((from.equals("TrackFragment"))||(from.equals("Playlist_library"))) {
                             intent = new Intent(getBaseContext(), MainActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                         }
@@ -127,11 +110,8 @@ public class CreatePlaylistActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<playlist> call, Response<playlist> response) {
                 if(!response.isSuccessful()){
-                    Toast.makeText(getApplicationContext(),"Code: "+response.code(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"something went wrong.try again.",Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else if(response.body()==null){
-                    Toast.makeText(getApplicationContext(),"response body = null",Toast.LENGTH_SHORT).show();
                 }
                 else {
                     Toast.makeText(getApplicationContext(),"playlist is created",Toast.LENGTH_SHORT).show();
@@ -143,7 +123,7 @@ public class CreatePlaylistActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<playlist> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),t.getMessage()+" ' failed '",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"something went wrong .check your internet connection.",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -155,7 +135,6 @@ public class CreatePlaylistActivity extends AppCompatActivity {
      */
 
     void addToPlaylist(String playlistID){
-        //TODO uncomment the below block in integeration
 
         if(trackID ==""){
             Toast.makeText(getApplicationContext(),"track isn't loaded yet check your internet connection",Toast.LENGTH_SHORT).show();
