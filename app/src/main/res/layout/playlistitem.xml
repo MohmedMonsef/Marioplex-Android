@@ -19,7 +19,7 @@
         <ImageView
             android:id="@+id/play_image"
             android:layout_width="160dp"
-            android:background="@drawable/ic_smile2"
+            android:background="@drawable/default_image"
             android:layout_height="160dp"
             android:scaleType="centerCrop"/>
 

@@ -45,6 +45,7 @@ public class settingFragment extends Fragment implements LifecycleOwner {
 
         //user related
         ((ImageView)view.findViewById(R.id.profile_picture)).setImageResource(R.drawable.logo);
+
         ((TextView)view.findViewById(R.id.user_name)).setText(user.getName());
         view.findViewById(R.id.view_profile).setOnClickListener(new View.OnClickListener() {
             @Override

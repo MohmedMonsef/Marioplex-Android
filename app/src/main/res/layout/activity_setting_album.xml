@@ -17,7 +17,8 @@
             android:layout_height="150dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="150dp"
-            android:src = "@drawable/ic_smile1"
+            android:scaleType="centerCrop"
+            android:src = "@drawable/default_image"
             android:layout_marginBottom="20dp"/>
 
         <TextView

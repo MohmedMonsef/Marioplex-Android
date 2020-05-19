@@ -10,7 +10,7 @@
         android:scaleType="centerCrop"
         android:layout_width="0dp"
         android:layout_weight="0.3"
-        android:src="@drawable/ic_smile1"
+        android:src="@drawable/default_image"
         android:layout_height="match_parent"
         android:background="@android:color/background_dark"/>
     <LinearLayout

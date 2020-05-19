@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -65,7 +64,6 @@ public class adapterAlbumTracks extends RecyclerView.Adapter<adapterAlbumTracks.
         final Track item=Track.get(position);
         holder.preview_song_artist_album.setText(artistName);
         holder.preview_song_name_album.setText(item.getName());
-        Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
         /// check if the image not null
 
         String imageID = "12D";

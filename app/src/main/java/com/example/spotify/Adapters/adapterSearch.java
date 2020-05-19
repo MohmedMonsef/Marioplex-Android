@@ -118,7 +118,6 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
     {
         holder.itemName.setText(list1.get(position).getName());
         holder.itemType.setText(list1.get(position).getType());
-        //Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
 
         String imageID = "12D";
         if(list1.get(position).getImage() !="")

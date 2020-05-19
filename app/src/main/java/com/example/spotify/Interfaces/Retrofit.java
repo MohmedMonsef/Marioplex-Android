@@ -8,9 +8,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Retrofit {
     private static Retrofit instance;
     private OkHttpClient client = new OkHttpClient.Builder()
-            .connectTimeout(20, TimeUnit.SECONDS)
-            .writeTimeout(20, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(200, TimeUnit.SECONDS)
+            .writeTimeout(200, TimeUnit.SECONDS)
+            .readTimeout(200, TimeUnit.SECONDS)
             .build();
     //http://52.205.254.29/
     private retrofit2.Retrofit retrofit = new retrofit2.Retrofit.Builder()

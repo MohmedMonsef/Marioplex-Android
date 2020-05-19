@@ -18,7 +18,7 @@
         <ImageView
             android:id="@+id/entity_image"
             android:layout_width="160dp"
-            android:background="@drawable/ic_smile2"
+            android:background="@drawable/default_image"
             android:layout_height="140dp"
             android:scaleType="centerCrop"/>
 

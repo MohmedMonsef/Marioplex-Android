@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -66,7 +65,6 @@ public class adapterCategories extends RecyclerView.Adapter<adapterCategories.My
 
         Category_ item=Categorylist.get(position);
         holder.ImageName.setText(item.getName());
-        Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
         /// check if the image not null
         String imageID = "12D";
         if(item.getImages().size()!=0)

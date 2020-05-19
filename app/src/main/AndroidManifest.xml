@@ -5,11 +5,12 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:largeHeap="true"
         android:allowBackup="true"
         android:icon="@mipmap/launcher_icon"
         android:label="@string/app_name"
@@ -68,6 +69,8 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+        <activity android:name=".Fragments.LIBRARY_FRAGMENT.Playlist_library_fragment.Playlist_Library_Settings" />
+        <activity android:name=".Fragments.LIBRARY_FRAGMENT.Playlist_library_fragment.Upload_Image" />
     </application>
 
 </manifest>

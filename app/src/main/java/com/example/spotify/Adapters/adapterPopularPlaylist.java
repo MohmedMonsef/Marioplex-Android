@@ -61,7 +61,6 @@ public class adapterPopularPlaylist extends RecyclerView.Adapter<adapterPopularP
 
         final Playlist item=PopularPlaylistList.get(position);
         holder.ImageName.setText(item.getName());
-        //Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
         /// check if the image not null
         String imageID = "12D";
         if(item.getImages()!= null & item.getImages().size()!=0)

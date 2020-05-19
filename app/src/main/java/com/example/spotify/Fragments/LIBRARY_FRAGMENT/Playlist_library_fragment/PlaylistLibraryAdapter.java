@@ -1,6 +1,7 @@
 package com.example.spotify.Fragments.LIBRARY_FRAGMENT.Playlist_library_fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,14 @@ public class PlaylistLibraryAdapter extends RecyclerView.Adapter<PlaylistLibrary
 
     @Override
     public void onBindViewHolder(@NonNull PlaylistLibraryAdapter.MyviewHolder holder, final int position) {
+        if(!(playlists.get(position).getType().equals("created"))){
+            holder.settings_library.setEnabled(false);
+            holder.settings_library.setImageResource(R.drawable.more_options_notenabled);
+        }
+        else{
+            holder.settings_library.setEnabled(true);
+            holder.settings_library.setImageResource(R.drawable.more_options);
+        }
         holder.user_playlist_name.setText(playlists.get(position).getName());
         if(!playlists.get(position).getOwner().isEmpty()){
             holder.playlist_user_name.setText("by " + playlists.get(position).getOwner());
@@ -72,6 +81,23 @@ public class PlaylistLibraryAdapter extends RecyclerView.Adapter<PlaylistLibrary
                         .addToBackStack(null).commit();
             }
         });
+
+        holder.settings_library.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<ImageInfo> images= playlists.get(position).getImages();
+                String imageID ="12d";
+                if(images != null && images.size()!=0) {
+                    imageID = images.get(0).getID();
+                }
+
+                Intent intent = new Intent(context, Playlist_Library_Settings.class);
+                intent.putExtra("SourceID" , playlists.get(position).getId());
+                intent.putExtra("playlistName" , playlists.get(position).getName());
+                intent.putExtra("ImageID" , imageID);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -83,6 +109,7 @@ public class PlaylistLibraryAdapter extends RecyclerView.Adapter<PlaylistLibrary
         TextView user_playlist_name, playlist_user_name;
         ImageView user_playlist_image;
         LinearLayout playlist_list_view_layout;
+        ImageView settings_library;
 
         public MyviewHolder(View itemView) {
             super(itemView);
@@ -90,6 +117,7 @@ public class PlaylistLibraryAdapter extends RecyclerView.Adapter<PlaylistLibrary
             playlist_user_name = (TextView) itemView.findViewById(R.id.playlist_user_name);
             user_playlist_image = (ImageView)itemView.findViewById(R.id.user_playlist_image);
             playlist_list_view_layout = (LinearLayout)itemView.findViewById(R.id.playlist_list_view_layout);
+            settings_library = itemView.findViewById(R.id.settings_library);
 
         }
     }

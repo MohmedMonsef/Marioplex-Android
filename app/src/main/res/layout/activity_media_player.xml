@@ -60,7 +60,7 @@
             android:layout_weight="0.55"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:src="@drawable/ic_smile1"
+            android:src="@drawable/default_image"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
             android:layout_marginTop="8dp"

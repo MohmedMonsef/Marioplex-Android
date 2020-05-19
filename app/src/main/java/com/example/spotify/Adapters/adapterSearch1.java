@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -70,7 +69,6 @@ public class adapterSearch1 extends RecyclerView.Adapter<adapterSearch1.MyviewHo
     public void onBindViewHolder(@NonNull adapterSearch1.MyviewHolder holder, final int position)
     {
         holder.itemName.setText(list1.get(position).getName());
-        Toast.makeText(context.getApplicationContext(),"Image Loading",Toast.LENGTH_SHORT).show();
 
         String imageID ="12D";
         if(list1.get(position).getImage() !="")

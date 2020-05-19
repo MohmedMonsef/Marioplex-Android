@@ -90,7 +90,7 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="20dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/ic_smile1" />
+                            android:src="@drawable/default_image" />
 
                         <TextView
                             android:id="@+id/album_name_middle"
@@ -183,7 +183,8 @@
                                         android:layout_alignParentLeft="true"
                                         android:layout_alignParentTop="true"
                                         android:layout_centerVertical="true"
-                                        android:src="@drawable/ic_smile2"></ImageView>
+                                        android:scaleType="centerCrop"
+                                        android:src="@drawable/default_image"></ImageView>
                                 </androidx.cardview.widget.CardView>
 
                                 <TextView

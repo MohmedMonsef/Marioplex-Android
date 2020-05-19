@@ -23,7 +23,8 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="8dp"
-                android:src="@drawable/ic_smile1"
+                android:src="@drawable/default_image"
+                android:scaleType="centerCrop"
                 android:layout_centerHorizontal="true"/>
             <TextView
                 android:layout_width="wrap_content"

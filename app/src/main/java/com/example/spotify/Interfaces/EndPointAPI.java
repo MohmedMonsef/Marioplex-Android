@@ -19,6 +19,7 @@ import com.example.spotify.pojo.BasicPlaylist;
 import com.example.spotify.pojo.ImageID;
 import com.example.spotify.pojo.LibraryArtists;
 import com.example.spotify.pojo.PlaylistTracks;
+import com.example.spotify.pojo.UploadImageResponse;
 import com.example.spotify.pojo.addTrackToPlaylistBody;
 import com.example.spotify.pojo.createPlaylistBody;
 import com.example.spotify.pojo.currentTrack;
@@ -27,6 +28,8 @@ import com.example.spotify.pojo.playlist;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -34,8 +37,10 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -53,7 +58,7 @@ public interface EndPointAPI {
     Call<ArrayList<userProfile>> profile(@Header("x-auth-token") String token);
 
     @PUT("api/me/update")
-    Call<ResponseBody> updateProfile(@Header("x-auth-token") String token,@Body updateProfile data);
+    Call<ResponseBody> updateProfile(@Header("x-auth-token") String token, @Body updateProfile data);
 
     @GET("api/me/playlists")
     Call<playlist[]> myPlaylists(@Header("x-auth-token") String token);
@@ -64,77 +69,107 @@ public interface EndPointAPI {
     //////////////////////////////home requests/////////////////////////////////////////
 
 
-
     ////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////our api requests//////////////////////////////////
     @POST("api/me/player/next-playing")
-    Call<currentTrack> getNext(@Header("x-auth-token")String token1);
+    Call<currentTrack> getNext(@Header("x-auth-token") String token1);
 
     @POST("api/me/player/prev-playing")
-    Call<currentTrack> getPrevious(@Header("x-auth-token")String token1);
+    Call<currentTrack> getPrevious(@Header("x-auth-token") String token1);
 
     @GET("api/me/player/currently-playing")
-    Call<currentTrack> getCurrentlyPlaying(@Header("x-auth-token")String token1);
+    Call<currentTrack> getCurrentlyPlaying(@Header("x-auth-token") String token1);
 
     @GET("api/me/playlists")
-    Call<List<BasicPlaylist>> getCurrentUserPlaylists(@Header("x-auth-token")String token1);
+    Call<List<BasicPlaylist>> getCurrentUserPlaylists(@Header("x-auth-token") String token1);
 
     @GET("api/tracks/related/full-track/{track_id}")
-    Call<List<currentTrack>> getSongTracks(@Path("track_id") String TrackID , @Header("x-auth-token")String token1);
+    Call<List<currentTrack>> getSongTracks(@Path("track_id") String TrackID, @Header("x-auth-token") String token1);
 
     @POST("api/playlists/{playlist_id}/tracks")
     Call<Object> AddTrackToAPlaylist(@Path("playlist_id") String playlistID
-                                      ,@Body addTrackToPlaylistBody t
-                                      ,@Header("x-auth-token")String token1);
+            , @Body addTrackToPlaylistBody t
+            , @Header("x-auth-token") String token1);
 
     @POST("api/users/playlists")
     Call<playlist> CreatePlaylist(@Body createPlaylistBody c
-                                 ,@Header("x-auth-token")String token1); //check if fiels of Query
+            , @Header("x-auth-token") String token1); //check if fiels of Query
 
 
     @PUT("api/me/player/shuffle")
-    Call<Void> toggleShuffle(@Query("state") Boolean state , @Header("x-auth-token")String token1);
+    Call<Void> toggleShuffle(@Query("state") Boolean state, @Header("x-auth-token") String token1);
 
     @POST("api/createQueue/{playlist_id}/{trackid}")
-    Call<Void> CreateQueue(@Path("playlist_id") String playlist_id ,
-                             @Path("trackid") String track_id ,
-                             @Query("isPlaylist") Boolean isPlaylist ,
-                             @Header("x-auth-token")String token1);
+    Call<Void> CreateQueue(@Path("playlist_id") String playlist_id,
+                           @Path("trackid") String track_id,
+                           @Query("isPlaylist") Boolean isPlaylist,
+                           @Header("x-auth-token") String token1);
 
 
     @GET("api/playlists/{playlist_id}/tracks")
     Call<List<PlaylistTracks>> getPlaylistTracks(@Path("playlist_id") String playlist_id,
-                                                @Header("x-auth-token")String token1);
+                                                 @Header("x-auth-token") String token1);
 
     @PUT("api/me/like/{track_id}")
-    Call<Void> LikeTrack(@Path("track_id") String track_id ,
-                         @Header("x-auth-token")String token1);
+    Call<Void> LikeTrack(@Path("track_id") String track_id,
+                         @Header("x-auth-token") String token1);
 
     @DELETE("api/me/unlike/{track_id}")
-    Call<Void> UNLikeTrack(@Path("track_id") String track_id ,
-                           @Header("x-auth-token")String token1);
+    Call<Void> UNLikeTrack(@Path("track_id") String track_id,
+                           @Header("x-auth-token") String token1);
 
 
     @DELETE("api/playlists/{playlist_id}/followers")
-    Call<Void> UNLikePlaylist(@Path("playlist_id") String playlistID ,
-                              @Header("x-auth-token")String token1);
+    Call<Void> UNLikePlaylist(@Path("playlist_id") String playlistID,
+                              @Header("x-auth-token") String token1);
 
     @PUT("api/playlists/{playlist_id}/followers")
-    Call<Void> LikePlaylist(@Path("playlist_id") String playlistID ,
-                            @Header("x-auth-token")String token1);
+    Call<Void> LikePlaylist(@Path("playlist_id") String playlistID,
+                            @Header("x-auth-token") String token1);
 
     @GET("api/me/followingArtist")
-    Call<LibraryArtists> getArtists(@Header("x-auth-token")String token1);
+    Call<LibraryArtists> getArtists(@Header("x-auth-token") String token1);
 
 
     @GET("api/browse/categories?country=SE&locale=sv_SE&limit=10&offset=5")
-    @Headers("Authorization: Bearer "+token)
+    @Headers("Authorization: Bearer " + token)
     public Call<Category> getCategories();
 
     @GET("api/images/get_id/{source_id}")
-    Call<ImageID> GetImageId(@Path("source_id") String sourceID ,
-                             @Query("belongs_to") String belongsTo ,
-                             @Header("x-auth-token")String token1);
+    Call<ImageID> GetImageId(@Path("source_id") String sourceID,
+                             @Query("belongs_to") String belongsTo,
+                             @Header("x-auth-token") String token1);
+
+    //    @Multipart
+//    @POST("api/images/upload/{source_id}")
+//    Call<UploadImageResponse> uploadImage(@Path("source_id") String sourceID ,
+//                                          @Query("belongs_to") String belongsTo,
+//                                          @Query("height") int height ,
+//                                          @Query("width") int width,
+//                                          @Part MultipartBody.Part file ,
+//                                          @Header("x-auth-token") String token);
+    @Multipart
+    @POST("api/images/upload/{source_id}")
+    Call<UploadImageResponse> uploadImage(@Path("source_id") String sourceID,
+                                          @Query("belongs_to") String belongsTo,
+                                          @Query("height") int height,
+                                          @Query("width") int width,
+                                          @Part("image") RequestBody file,
+                                          @Header("x-auth-token") String token);
+
+    @Multipart
+    @POST("api/images/update/{source_id}")
+    Call<UploadImageResponse> updateImage(@Path("source_id") String sourceID,
+                                          @Query("belongs_to") String belongsTo,
+                                          @Query("height") int height,
+                                          @Query("width") int width,
+                                          @Part MultipartBody.Part file,
+                                          @Header("x-auth-token") String token);
+
+
+    @DELETE("api/me/delete/playlists/{playlist_id}")
+    Call<UploadImageResponse> deletePlaylist(@Path("playlist_id") String playlistID ,
+                                             @Header("x-auth-token") String token);
 
     //////*******************************Home Requests*************************/////////
     @GET("api/browse/new-releases?country=SE&limit=10&offset=0")
@@ -161,7 +196,8 @@ public interface EndPointAPI {
 
     @GET("api/browse/categories/:category_id/playlists")
     public Call<CategoryPlaylist> getCategoryPlaylist(@Path("category_id") String category_id, @Header("x-auth-token") String token);
-//////*******************************Albums Requests*************************/////////
+
+    //////*******************************Albums Requests*************************/////////
     @GET("api/albums/{album_id}")
     public Call<AlbumObject> getAlbumObject(@Path("album_id") String album_id, @Header("x-auth-token") String token);
 
@@ -169,9 +205,9 @@ public interface EndPointAPI {
     public Call<AlbumTracks> getAlbumTracks(@Path("id") String album_id, @Header("x-auth-token") String token);
 
     @PUT("api/me/Albums")
-    public Call<Void> LIKE_ALBUM(@Body String ids,@Header("x-auth-token") String token);
+    public Call<Void> LIKE_ALBUM(@Body String ids, @Header("x-auth-token") String token);
     //api/me/Albums
     //@DELETE("api/me/albums")
-  //  public Call<Void> UN_LIKE_ALBUM(@Body String id,@Header("x-auth-token") String token);
+    //  public Call<Void> UN_LIKE_ALBUM(@Body String id,@Header("x-auth-token") String token);
 
 }
