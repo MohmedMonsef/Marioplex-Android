@@ -57,6 +57,7 @@ public class Playlist_Library_Settings extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), Upload_Image.class);
                 intent.putExtra("SourceID" , SourceId);
+                intent.putExtra("from" , "user");
                 startActivity(intent);
             }
         });

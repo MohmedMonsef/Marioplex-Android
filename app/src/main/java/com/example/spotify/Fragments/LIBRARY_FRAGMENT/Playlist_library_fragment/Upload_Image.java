@@ -38,6 +38,8 @@ public class Upload_Image extends AppCompatActivity {
     private Button pick_from_gallery;
     private String filePath = "";
     private String SourceID = "";
+    private String From ="";
+    private String belongsTo = "playlist";
     private static final int GALLERY_REQUEST_CODE = 100;
     private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();
 
@@ -48,6 +50,8 @@ public class Upload_Image extends AppCompatActivity {
         getViews();
 
         SourceID = getIntent().getStringExtra("SourceID");
+        From = getIntent().getStringExtra("from");
+        if(From!=null&&From.equals("user")){belongsTo = "user";}
         cancel_upload_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,12 +106,12 @@ public class Upload_Image extends AppCompatActivity {
         int imageHeight = options.outHeight;
         int imageWidth = options.outWidth;
 
-        Call<UploadImageResponse> call = endPointAPI.updateImage(SourceID, "playlist", imageHeight, imageWidth, part, user.getToken());
+        Call<UploadImageResponse> call = endPointAPI.updateImage(SourceID, belongsTo, imageHeight, imageWidth, part, user.getToken());
         call.enqueue(new Callback<UploadImageResponse>() {
             @Override
             public void onResponse(Call<UploadImageResponse> call, Response<UploadImageResponse> response) {
                 if (!response.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), "Code: " + response.code(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Some thing went wrong while uploading the image .check your internet connection", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
                     Toast.makeText(getApplicationContext(), "Image is uploaded successfully", Toast.LENGTH_SHORT).show();
@@ -116,7 +120,7 @@ public class Upload_Image extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<UploadImageResponse> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), t.getMessage() + " ' failed '", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Some thing went wrong while uploading the image .check your internet connection", Toast.LENGTH_SHORT).show();
             }
         });
 

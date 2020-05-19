@@ -4,73 +4,92 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.SETTING_FRAGMENT.settingFragment">
 
     <LinearLayout
         android:id="@+id/view_profile"
-        android:gravity="center_vertical"
         android:layout_width="match_parent"
-        android:layout_margin="22dp"
         android:layout_height="wrap_content"
+        android:layout_margin="22dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
-        <ImageView
-            android:id="@+id/profile_picture"
+
+        <androidx.cardview.widget.CardView
+            app:cardCornerRadius="40dp"
             android:layout_width="80dp"
-            android:layout_height="80dp"/>
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
+            android:elevation="12dp"
+            android:innerRadius="0dp"
+            android:shape="ring"
+            android:thicknessRatio="1.9">
+
+            <ImageView
+                android:id="@+id/profile_picture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
+        </androidx.cardview.widget.CardView>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:layout_margin="10dp"
             android:gravity="center_vertical"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/user_name"
-                android:textColor="@android:color/white"
-                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="user name"/>
+                android:text="user name"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:text="View Profile"/>
+                android:text="View Profile"
+                android:textColor="@android:color/white" />
         </LinearLayout>
 
     </LinearLayout>
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:id="@+id/logout"
-        android:layout_marginVertical="10dp"
-        android:layout_marginHorizontal="15dp"
         android:layout_width="match_parent"
         android:layout_height="70dp"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginVertical="10dp"
         android:orientation="vertical">
+
         <TextView
-            android:fontFamily="@font/roboto_medium"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:text="Log out"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_medium"
+            android:text="Log out"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
         <TextView
             android:id="@+id/logout_text1"
-            android:textSize="16sp"
-            android:fontFamily="@font/roboto_medium"
-            android:textColor="@android:color/darker_gray"
-            android:text="You are logged in as "
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_medium"
+            android:text="You are logged in as "
+            android:textColor="@android:color/darker_gray"
+            android:textSize="16sp" />
     </LinearLayout>
+
     <TextView
-        android:visibility="gone"
-        android:layout_marginTop="300dp"
+        android:id="@+id/text_setting"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="300dp"
         android:text="hello_setting_fragment"
-        android:id="@+id/text_setting"
         android:textColor="@color/TextColor"
         android:textSize="24sp"
-        />
+        android:visibility="gone" />
 
 </LinearLayout>

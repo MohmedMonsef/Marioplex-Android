@@ -17,9 +17,11 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.Fragments.ProfileFragment;
+import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.example.spotify.login.IntroActivity;
 import com.example.spotify.login.user;
+import com.squareup.picasso.Picasso;
 
 //import androidx.fragment.app.Fragment;
 
@@ -45,6 +47,12 @@ public class settingFragment extends Fragment implements LifecycleOwner {
 
         //user related
         ((ImageView)view.findViewById(R.id.profile_picture)).setImageResource(R.drawable.logo);
+
+        if(user.getImages()!=null&&user.getImages().size()!=0){
+            String imageId = user.getImages().get(0).getID();
+            String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageId + "?belongs_to=user";
+            Picasso.get().load(Imageurl).into((ImageView)view.findViewById(R.id.profile_picture));
+        }
 
         ((TextView)view.findViewById(R.id.user_name)).setText(user.getName());
         view.findViewById(R.id.view_profile).setOnClickListener(new View.OnClickListener() {

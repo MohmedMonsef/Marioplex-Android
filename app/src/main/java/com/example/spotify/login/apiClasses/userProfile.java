@@ -1,6 +1,9 @@
 package com.example.spotify.login.apiClasses;
 
+import com.example.spotify.pojo.ImageInfo;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class userProfile {
     @SerializedName("_id")
@@ -18,7 +21,7 @@ public class userProfile {
     @SerializedName("product")
     String product;
     @SerializedName("images")
-    String [] images;
+    List<ImageInfo> images = null;
 
     public String getId() {
         return id;
@@ -76,11 +79,11 @@ public class userProfile {
         this.product = product;
     }
 
-    public String[] getImages() {
+    public List<ImageInfo> getImages() {
         return images;
     }
 
-    public void setImages(String[] images) {
+    public void setImages(List<ImageInfo> images) {
         this.images = images;
     }
 }

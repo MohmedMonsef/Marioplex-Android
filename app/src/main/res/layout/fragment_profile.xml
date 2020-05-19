@@ -1,59 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:id="@+id/profile_layout"
+    android:orientation="vertical"
     tools:context=".Fragments.ProfileFragment">
 
-    <ImageView
-        android:id="@+id/profile_picture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_centerHorizontal="true"
+        android:elevation="12dp"
+        android:innerRadius="0dp"
+        android:shape="ring"
+        android:thicknessRatio="1.9"
         android:layout_margin="16dp"
-        android:src="@drawable/logo"/>
+        app:cardCornerRadius="65dp">
+
+        <ImageView
+            android:id="@+id/profile_picture"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/logo" />
+    </androidx.cardview.widget.CardView>
 
     <EditText
-        android:textColor="@android:color/white"
-        android:layout_margin="16dp"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:lines="1"
+        android:id="@+id/user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:focusable="true"
-        android:focusableInTouchMode ="true"
-        android:id="@+id/user_name"/>
+        android:focusableInTouchMode="true"
+        android:lines="1"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@android:color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="wrap_content"
-            android:orientation="vertical"
+            android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:layout_height="wrap_content">
+            android:orientation="vertical">
+
             <TextView
-                android:layout_gravity="center_horizontal"
                 android:id="@+id/no_of_playlists"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
                 android:textColor="@android:color/white" />
+
             <TextView
-                android:layout_margin="8dp"
-                android:text="PLAYLISTS"
-                android:textAllCaps="true"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
+                android:layout_margin="8dp"
                 android:layout_weight="1"
-                android:textColor="@android:color/white"/>
+                android:text="PLAYLISTS"
+                android:textAllCaps="true"
+                android:textColor="@android:color/white" />
 
         </LinearLayout>
     </LinearLayout>
-
 
 
 </LinearLayout>

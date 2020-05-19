@@ -1,24 +1,18 @@
 package com.example.spotify.login;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.login.apiClasses.userProfile;
+import com.example.spotify.pojo.ImageInfo;
 import com.example.spotify.pojo.playlist;
-import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Holds current user data
@@ -32,7 +26,7 @@ public class user {
     private static String country = null;
     private static String product = null;
     private static String password = null;
-    private static String [] images = null;
+    private static List<ImageInfo> images = null;
     static playlist[] playlists = null;
 
     static String token = null;
@@ -105,11 +99,11 @@ public class user {
         user.product = product;
     }
 
-    public static String[] getImages() {
+    public static List<ImageInfo> getImages() {
         return images;
     }
 
-    public static void setImages(String[] images) {
+    public static void setImages(List<ImageInfo> images) {
         user.images = images;
     }
 
@@ -150,6 +144,7 @@ public class user {
                     user.setCountry(response.body().get(0).getCountry());
                     user.setProduct(response.body().get(0).getProduct());
                     user.setImages(response.body().get(0).getImages());
+                    user.setId(response.body().get(0).getId());
                 }
                 else {
                     Log.v("usrftch",response.message());

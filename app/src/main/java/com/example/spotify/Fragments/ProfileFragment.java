@@ -1,11 +1,9 @@
 package com.example.spotify.Fragments;
 
-import androidx.fragment.app.Fragment;
-
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,14 +15,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
 
-import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Fragments.LIBRARY_FRAGMENT.Playlist_library_fragment.Upload_Image;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.example.spotify.login.apiClasses.updateProfile;
 import com.example.spotify.login.user;
 import com.example.spotify.pojo.playlist;
+import com.squareup.picasso.Picasso;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -59,6 +59,22 @@ public class ProfileFragment extends Fragment {
         final View rootView =  inflater.inflate(R.layout.fragment_profile, container, false);
 
         ((ImageView)rootView.findViewById(R.id.profile_picture)).setImageResource(R.drawable.logo);
+
+        if(user.getImages()!=null&&user.getImages().size()!=0){
+            String imageId = user.getImages().get(0).getID();
+            String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageId + "?belongs_to=user";
+            Picasso.get().load(Imageurl).into((ImageView)rootView.findViewById(R.id.profile_picture));
+        }
+
+        (rootView.findViewById(R.id.profile_picture)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), Upload_Image.class);
+                intent.putExtra("SourceID" , user.getId());
+                intent.putExtra("from" , "user");
+                getContext().startActivity(intent);
+            }
+        });
 
         final EditText userName = (EditText)rootView.findViewById(R.id.user_name);
         userName.setText(user.getName());

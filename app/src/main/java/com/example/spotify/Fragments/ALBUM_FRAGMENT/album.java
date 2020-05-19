@@ -354,11 +354,6 @@ public class album extends Fragment {
         for (int i = 0; i < albumTracks.getTrack().size(); i++) {
             t = albumTracks.getTrack().get(i);
             BasicTrack basict = new BasicTrack();
-//            if (t.getLiked() == 1) {
-//                basict.setIsLiked(true);
-//            } else {
-//                basict.setIsLiked(false);
-//            }
             basict.setIsLiked(t.getLiked());
             basict.setAlbumId(albumTracks.getId());
             basict.setAlbumName(albumTracks.getName());

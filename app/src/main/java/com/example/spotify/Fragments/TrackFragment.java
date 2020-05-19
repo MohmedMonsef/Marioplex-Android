@@ -525,6 +525,9 @@ public class TrackFragment extends Fragment {
         track_container = root.findViewById(R.id.track_container);
     }
 
+    /**
+     * binding the fragment to the media player service to stop the shuffle play
+     */
     private void bindService() {
         Intent serviceIntent1 = new Intent(getContext(), MediaPlayerService.class);
         getActivity().bindService(serviceIntent1, serviceConnection, Context.BIND_AUTO_CREATE);
