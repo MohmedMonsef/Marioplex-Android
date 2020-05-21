@@ -324,6 +324,7 @@ public class TrackFragment extends Fragment {
             basict.setAlbumName(SongTracks.get(i).getAlbum().getName());
             basict.setArtistId(SongTracks.get(i).getAlbum().getArtist().getId());
             basict.setArtistName(SongTracks.get(i).getAlbum().getArtist().getName());
+
             basict.setTrackid(t.getId());
             basict.setName(t.getName());
             basict.setImages(t.getImages());

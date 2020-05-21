@@ -1,5 +1,4 @@
 package com.example.spotify.Activities;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -306,12 +305,13 @@ public class PlaylistPreviewActivity extends AppCompatActivity {
             preview_song_name.setText(song);
             preview_artist_name.setText(artist);
 
-            if (mplaylistTracks.getTracks().get(position).getIsLiked()) {
-                preview_like.setImageResource(R.drawable.like);
-            } else {
-                preview_like.setImageResource(R.drawable.favorite_border);
+            if (mplaylistTracks.getTracks().get(position).getIsLiked() != null)
+            {       if (mplaylistTracks.getTracks().get(position).getIsLiked()) {
+                    preview_like.setImageResource(R.drawable.like);
+                } else {
+                    preview_like.setImageResource(R.drawable.favorite_border);
+                }
             }
-
             /**
              * listener for the click on the like button to like/unlike the track
              */

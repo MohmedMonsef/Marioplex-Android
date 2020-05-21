@@ -1,5 +1,6 @@
 package com.example.spotify.Interfaces;
 
+import com.example.spotify.BackClasses.Backclasses.SavedAlbums.SavedAlbums;
 import com.example.spotify.BackClasses.Backclasses.backcategory.Category;
 import com.example.spotify.BackClasses.Backclasses.backcategoryplaylist.CategoryPlaylist;
 import com.example.spotify.BackClasses.Backclasses.backnewrelease.Newreleases;
@@ -7,10 +8,14 @@ import com.example.spotify.BackClasses.Backclasses.backpopularalbum.PopularAlbum
 import com.example.spotify.BackClasses.Backclasses.backpopularartist.PopularArtist;
 import com.example.spotify.BackClasses.Backclasses.backpopularplaylist.PopularPlaylist;
 import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
+import com.example.spotify.BackClasses.Backclasses.likeAlbum.likealbum;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -42,6 +47,9 @@ public interface backinterfaces
 
     @GET("api/browse/categories/{category_id}/playlists")
     public Call<CategoryPlaylist> getCategoryPlaylist(@Path("category_id") String category_id,@Header("x-auth-token") String token);
-
+    @GET("api/me/albums")
+    public Call<SavedAlbums> getSavedAlbums(@Header("x-auth-token") String token);
+    @DELETE("api/me/Albums")
+    public Call<Void> albumunlike(@Body likealbum ids, @Header("x-auth-token") String token);
 
 }

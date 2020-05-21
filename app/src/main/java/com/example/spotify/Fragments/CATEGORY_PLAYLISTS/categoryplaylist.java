@@ -23,6 +23,7 @@ import com.example.spotify.Adapters.adapterCategoryPlaylists;
 import com.example.spotify.BackClasses.Backclasses.backcategoryplaylist.CategoryPlaylist;
 import com.example.spotify.Interfaces.backinterfaces;
 import com.example.spotify.R;
+import com.example.spotify.login.user;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,7 +37,7 @@ public class categoryplaylist extends Fragment implements LifecycleOwner
     RecyclerView recyclerView;
     adapterCategoryPlaylists recyclerAdapter;
     private TextView textViewResult;
-   String categoryid;
+    String categoryid,categoryname;
     /**
      *
      * @param inflater -->layout for this fragment
@@ -51,9 +52,11 @@ public class categoryplaylist extends Fragment implements LifecycleOwner
     {
 
         categoryid = getArguments().getString("CategoryID");
+        categoryname=getArguments().getString("CategoryName");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_categoryplaylist, container, false);
-            textViewResult = view.findViewById(R.id.textcategorplaylist);
+        textViewResult = view.findViewById(R.id.textcategorplaylist);
+        textViewResult.setText(categoryname);
         ////*******************************RecyclerView***********************////
         Categoryplaylist = new CategoryPlaylist();
         recyclerView = (RecyclerView) view.findViewById(R.id.recycleCategoryPlaylist);
@@ -75,8 +78,8 @@ public class categoryplaylist extends Fragment implements LifecycleOwner
 
         Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
         backinterfaces apiService = retrofit.create(backinterfaces.class);
-        Call<CategoryPlaylist> call = apiService.getCategoryPlaylist(Id,"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTgwYzZhZjE0Yzg1NjZkNmNkOWI0MDAiLCJwcm9kdWN0IjoiZnJlZSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg2MDI2NjAyLCJleHAiOjQ3MzI1MTMwMDJ9.ztEjNCgbkyJ2-9WB6ojwLgDfhWsZ-ZGJVFUB8dYMz8s");
-                call.enqueue(new Callback<CategoryPlaylist>()
+        Call<CategoryPlaylist> call = apiService.getCategoryPlaylist(Id, user.getToken());
+        call.enqueue(new Callback<CategoryPlaylist>()
         {
 
             /**
@@ -130,7 +133,6 @@ public class categoryplaylist extends Fragment implements LifecycleOwner
 
 
     }
-
     /*
     @NonNull
     @Override

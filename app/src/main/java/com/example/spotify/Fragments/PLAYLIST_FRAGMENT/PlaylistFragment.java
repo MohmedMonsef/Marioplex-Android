@@ -455,8 +455,6 @@ public class PlaylistFragment extends Fragment {
             public void onError(Exception e) {
             }
         });
-
-
         playlist_name_middle.setText(playlistTracks.getName());
         playlist_owner.setText("BY " + playlistOwner);
         String songsNames = "";

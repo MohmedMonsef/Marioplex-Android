@@ -80,7 +80,8 @@ public class BasicTrack
         this.albumName = albumName;
     }
 
-    public Boolean getIsLiked() {
+    public Boolean getIsLiked()
+    {
         return isLiked;
     }
 

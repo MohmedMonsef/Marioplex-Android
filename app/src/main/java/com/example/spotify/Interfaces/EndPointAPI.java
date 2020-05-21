@@ -9,6 +9,8 @@ import com.example.spotify.BackClasses.Backclasses.backpopularalbum.PopularAlbum
 import com.example.spotify.BackClasses.Backclasses.backpopularartist.PopularArtist;
 import com.example.spotify.BackClasses.Backclasses.backpopularplaylist.PopularPlaylist;
 import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
+import com.example.spotify.BackClasses.Backclasses.likeAlbum.likealbum;
+import com.example.spotify.BackClasses.Backclasses.likeAlbum.unlikealbum;
 import com.example.spotify.login.apiClasses.FacebookLoginData;
 import com.example.spotify.login.apiClasses.LoginCredentials;
 import com.example.spotify.login.apiClasses.LoginResponse;
@@ -205,9 +207,9 @@ public interface EndPointAPI {
     public Call<AlbumTracks> getAlbumTracks(@Path("id") String album_id, @Header("x-auth-token") String token);
 
     @PUT("api/me/Albums")
-    public Call<Void> LIKE_ALBUM(@Body String ids, @Header("x-auth-token") String token);
+    public Call<Void> LIKE_ALBUM(@Body likealbum ids, @Header("x-auth-token") String token);
     //api/me/Albums
-    //@DELETE("api/me/albums")
-    //  public Call<Void> UN_LIKE_ALBUM(@Body String id,@Header("x-auth-token") String token);
+    @DELETE("api/me/Albums")
+    public Call<Void> UN_LIKE_ALBUM(@Body likealbum ids, @Header("x-auth-token") String token);
 
 }

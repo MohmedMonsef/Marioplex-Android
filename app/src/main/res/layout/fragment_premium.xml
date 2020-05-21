@@ -3,17 +3,86 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bgBottomNavigation"
     tools:context=".Fragments.PREMIUM_FRAGMENT.premiumFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="hello_premium_fragment"
-        android:id="@+id/text_premium"
-        android:textColor="@color/TextColor"
-        android:textSize="24dp"
+        android:orientation="vertical"
 
-        />
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:orientation="vertical"
+            >
+            <!-- TODO: Update blank fragment layout -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Premium"
+                android:id="@+id/text_premium"
+                android:layout_gravity="center_horizontal"
+                android:textStyle="bold"
+                android:textColor="@color/TextColor"
+                android:textSize="70dp"
+                />
 
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal"
+                    >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:src="@drawable/a1"
+                        />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:src="@drawable/a2"
+                        />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/a3"
+                        />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/a4"
+                        />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/a5"
+                        />
+                </LinearLayout>
+            </HorizontalScrollView>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/b1"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/b2"
+                />
+        </LinearLayout>
+    </ScrollView>
 </FrameLayout>

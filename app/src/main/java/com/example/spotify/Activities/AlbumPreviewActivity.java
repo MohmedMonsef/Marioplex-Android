@@ -63,7 +63,7 @@ public class AlbumPreviewActivity extends AppCompatActivity {
 
         reciveDataFromAlbumFragment();
         album_name_preview.setText(AlbumName);
-        SetRetrofitAlbumTrack(AlbumId,ArtistName);
+        ///SetRetrofitAlbumTrack(AlbumId,ArtistName);
 
     }
 

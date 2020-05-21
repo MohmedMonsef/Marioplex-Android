@@ -48,7 +48,7 @@ public class adapterCategoryPlaylists extends RecyclerView.Adapter<adapterCatego
     @Override
     public adapterCategoryPlaylists.MyviewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_recycler,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.playlistcategory,parent,false);
         return new MyviewHolder(view);
     }
 
@@ -62,7 +62,8 @@ public class adapterCategoryPlaylists extends RecyclerView.Adapter<adapterCatego
     public void onBindViewHolder(adapterCategoryPlaylists.MyviewHolder holder, final int position)
     {
 
-        holder.ImageName.setText(Categoryplaylist.get(position).getName());
+        holder.playlisName1.setText(Categoryplaylist.get(position).getName());
+        holder.OwnerName1.setText(Categoryplaylist.get(position).getOwnerName());
         /// check if the image not null
         String imageID = "12D";
         if(Categoryplaylist.get(position).getImages()!= null & Categoryplaylist.get(position).getImages().size()!=0)
@@ -70,7 +71,7 @@ public class adapterCategoryPlaylists extends RecyclerView.Adapter<adapterCatego
             imageID = Categoryplaylist.get(position).getImages().get(0).getID();
         }
         String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=playlist";
-        Picasso.get().load(Imageurl).into(holder.image);
+        Picasso.get().load(Imageurl).into(holder.playlistimage1);
         /**
          * a click listener handel the item view
          */
@@ -121,7 +122,22 @@ public class adapterCategoryPlaylists extends RecyclerView.Adapter<adapterCatego
      */
     public class MyviewHolder extends RecyclerView.ViewHolder
     {
-        TextView ImageName;
+
+
+        TextView playlisName1;
+        TextView OwnerName1;
+        ImageView playlistimage1;
+
+        public MyviewHolder(View itemView)
+        {
+            super(itemView);
+            playlisName1 = (TextView)itemView.findViewById(R.id.NameOfPlaylist1);
+            OwnerName1 = (TextView)itemView.findViewById(R.id.NameOfOwner1);
+            playlistimage1 = (ImageView)itemView.findViewById(R.id.playlist_image1);
+        }
+    }
+        //////////////******************************///
+       /* TextView ImageName;
         ImageView image;
 
         public MyviewHolder(View itemView)
@@ -130,5 +146,5 @@ public class adapterCategoryPlaylists extends RecyclerView.Adapter<adapterCatego
             ImageName = (TextView)itemView.findViewById(R.id.NameOfImage);
             image = (ImageView)itemView.findViewById(R.id.entity_image);
         }
-    }
+    }*/
 }
