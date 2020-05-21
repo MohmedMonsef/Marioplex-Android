@@ -30,7 +30,6 @@ import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
-import com.example.spotify.SpotifyClasses.Track;
 import com.example.spotify.login.user;
 import com.example.spotify.pojo.ImageInfo;
 import com.example.spotify.pojo.currentTrack;
@@ -87,7 +86,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
     BottomSheetBehavior sheetBehavior;
 
     private TrackInfo track;
-    private Track t;
     private String nametest;
     private MediaPlayerService player;
     private Handler mHandler = new Handler();
