@@ -127,7 +127,7 @@ public class Upload_Image extends AppCompatActivity {
                         img.add(newImage);
                         user.setImages(img);
                     }
-                    Toast.makeText(getApplicationContext(), "Image is uploaded successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Image is uploaded", Toast.LENGTH_SHORT).show();
                 }
             }
 

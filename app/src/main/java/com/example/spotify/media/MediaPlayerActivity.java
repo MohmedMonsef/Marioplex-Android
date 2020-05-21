@@ -415,7 +415,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
                     favorite.setImageResource(R.drawable.like);
                     favorite2.setImageResource(R.drawable.like);
                     TrackInfo.getInstance().setIsLiked(true);
-                    Toast.makeText(getApplicationContext(),"Added to Liked Songs",Toast.LENGTH_SHORT).show();
                     track.getTrack().getValue().setIsLiked(true);
                 }
             }
@@ -451,7 +450,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
                     favorite.setImageResource(R.drawable.favorite_border);
                     favorite2.setImageResource(R.drawable.favorite_border);
                     TrackInfo.getInstance().setIsLiked(false);
-                    Toast.makeText(getApplicationContext(),"Removed from Liked Songs",Toast.LENGTH_SHORT).show();
                     track.getTrack().getValue().setIsLiked(false);
                 }
             }
