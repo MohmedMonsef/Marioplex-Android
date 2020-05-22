@@ -3,8 +3,8 @@ package com.example.spotify.media;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
+import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.R;
-import com.example.spotify.login.IntroActivity;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -12,7 +12,6 @@ import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -22,86 +21,55 @@ import static java.lang.Thread.sleep;
 public class BottomSheetFragmentTest {
 
     @Rule
-    public ActivityTestRule<IntroActivity> mact=new ActivityTestRule<>(IntroActivity.class);
+    public ActivityTestRule<MainActivity> mact=new ActivityTestRule<>(MainActivity.class);
 
     @Test
     public void aviews_displayed_test() {
 
-        greeterSaysHello();
 
+        delay(10000);
         onView(withId(R.id.bottom_image_id)).check(matches(isDisplayed()));
         onView(withId(R.id.song_artist_name)).check(matches(isDisplayed()));
         onView(withId(R.id.bottom_favorite)).check(matches(isDisplayed()));
         onView(withId(R.id.bottom_play_pause)).check(matches(isDisplayed()));
 
 
+        play_pause_test();
+
+        like_unlike_test();
 
     }
 
-     @Test
-    public void play_pause_test() {
 
-        greeterSaysHello();
+    public void play_pause_test() {
 
         onView(withId(R.id.bottom_play_pause)).check(matches(isDisplayed()));
 
         onView(withId(R.id.bottom_play_pause)).perform(click());
-         try {
-             sleep(2000);
-         }
-         catch (InterruptedException e)
-         {
-             e.printStackTrace();
-         }
+         delay(5000);
          onView(withId(R.id.bottom_play_pause)).perform(click());
-
+         delay(5000);
 
     }
 
-     @Test
+
      public void like_unlike_test() {
-        greeterSaysHello();
+
 
         onView(withId(R.id.bottom_favorite)).check(matches(isDisplayed()));
 
         onView(withId(R.id.bottom_favorite)).perform(click());
-        try {
-            sleep(10000);
-        }
-        catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
+        delay(1000);
         onView(withId(R.id.bottom_favorite)).perform(click());
-         try {
-             sleep(10000);
-         }
-         catch (InterruptedException e)
-         {
-             e.printStackTrace();
-         }
-
+         delay(10000);
     }
 
-
-
-
-    public void greeterSaysHello()
-    {
-
-
-        //startActivity(new Intent(introact.getBaseContext(), IntroActivity.class));
-        onView(withId(R.id.introya)).perform(click());
-        onView(withId(R.id.email)).perform(typeText("hager7@gmail.com"));
-        onView(withId(R.id.password)).perform(typeText("hager"));
-        onView(withId(R.id.loginButton)).perform(click());
+    private void delay(int milliseconds) {
         try {
-            sleep(10000);
-        }
-        catch (InterruptedException e)
-        {
+            sleep(milliseconds);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        onView(withId(R.id.navigation)).check(matches(isDisplayed()));
     }
+
 }

@@ -30,7 +30,6 @@ import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
-import com.example.spotify.SpotifyClasses.Track;
 import com.example.spotify.login.user;
 import com.example.spotify.pojo.ImageInfo;
 import com.example.spotify.pojo.currentTrack;
@@ -87,7 +86,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
     BottomSheetBehavior sheetBehavior;
 
     private TrackInfo track;
-    private Track t;
     private String nametest;
     private MediaPlayerService player;
     private Handler mHandler = new Handler();
@@ -417,7 +415,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
                     favorite.setImageResource(R.drawable.like);
                     favorite2.setImageResource(R.drawable.like);
                     TrackInfo.getInstance().setIsLiked(true);
-                    Toast.makeText(getApplicationContext(),"Added to Liked Songs",Toast.LENGTH_SHORT).show();
                     track.getTrack().getValue().setIsLiked(true);
                 }
             }
@@ -453,7 +450,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
                     favorite.setImageResource(R.drawable.favorite_border);
                     favorite2.setImageResource(R.drawable.favorite_border);
                     TrackInfo.getInstance().setIsLiked(false);
-                    Toast.makeText(getApplicationContext(),"Removed from Liked Songs",Toast.LENGTH_SHORT).show();
                     track.getTrack().getValue().setIsLiked(false);
                 }
             }

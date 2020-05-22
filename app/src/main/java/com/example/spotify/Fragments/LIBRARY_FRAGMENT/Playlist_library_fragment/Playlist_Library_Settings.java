@@ -105,7 +105,7 @@ public class Playlist_Library_Settings extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "something went wrong .try again", Toast.LENGTH_SHORT).show();
                     return;}
                 else{
-                    Toast.makeText(getApplicationContext() , "playlist is deleted successfully" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext() , "playlist is deleted" , Toast.LENGTH_SHORT).show();
                 }
             }
 
