@@ -24,6 +24,7 @@ import androidx.lifecycle.Observer;
 import androidx.palette.graphics.Palette;
 
 import com.example.spotify.Activities.PlaylistPreviewActivity;
+import com.example.spotify.Activities.SettingAlbumActivity;
 import com.example.spotify.BackClasses.Backclasses.albumInform.AlbumObject;
 import com.example.spotify.BackClasses.Backclasses.albumInform.Track;
 import com.example.spotify.BackClasses.Backclasses.likeAlbum.likealbum;
@@ -71,6 +72,7 @@ public class album extends Fragment {
     private Button something_wrong_button_album;
     String Artist_Name;
     String Album_Name;
+    int liked;
     private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();
     // private AlbumTracks AlbumObject;
     private AlbumObject AlbumObject;
@@ -107,6 +109,7 @@ public class album extends Fragment {
         View view = inflater.inflate(R.layout.fragment_album, container, false);
         ////*******************************RecyclerView***********************////
         albumID = getArguments().getString("albumID");
+
         /////////////////////get all the views i will use/////////////////////////
         back_arrow_album = view.findViewById(R.id.back_arrow_album);
         like_album = view.findViewById(R.id.like_album);
@@ -125,6 +128,7 @@ public class album extends Fragment {
          something_wrong_layout_album=view.findViewById(R.id.something_wrong_layout_album);
          something_wrong_text_album=view.findViewById(R.id.something_wrong_text_album);
          something_wrong_button_album=view.findViewById(R.id.something_wrong_button_album);
+
 
 
         //////////////////////Bind the service\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -166,14 +170,21 @@ public class album extends Fragment {
 
             }
         });
-
-       /* album_settings_button.setOnClickListener(new View.OnClickListener() {
+/*
+        album_settings_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                List<ImageInfo> Img = AlbumObject.getImages();
+                String Img_ID = "12d";
+                if (Img != null && Img.size() != 0) {
+                    Img_ID = Img.get(0).getID();
+                }
                 Intent intent = new Intent(getActivity(), SettingAlbumActivity.class);
                 intent.putExtra("ARTIST_NAME",Artist_Name);
-                intent.putExtra("ALBUM_ID",albumID);
+                intent.putExtra("Img_ID",Img_ID);
+                intent.putExtra("Album_ID",albumID);
                 intent.putExtra("Album_Name",Album_Name);
+                intent.putExtra("Album Like",liked);
                 startActivity(intent);
             }
         });*/
@@ -244,7 +255,17 @@ public class album extends Fragment {
         progress_bar_album.setVisibility(View.VISIBLE);
         /////////////////////////get Plsylist's tracks information\\\\\\\\\\\\\\\\\\\\\\\
         GetAlbumsTracksInfo(albumID);
+  /*      liked=getArguments().getInt("likedalbum");
+        if(liked==1){
+            like_album.setImageResource(R.drawable.like);
+            liked=1;
+        }
+        else{
+            like_album.setImageResource(R.drawable.favorite_border);
+            liked=0;
 
+        }
+*/
 
         return view;
 
@@ -544,9 +565,12 @@ public class album extends Fragment {
 
         if(AlbumObject.isIsSaved()){
             like_album.setImageResource(R.drawable.like);
+            liked=1;
         }
         else{
             like_album.setImageResource(R.drawable.favorite_border);
+            liked=0;
+
         }
 
 
@@ -557,10 +581,7 @@ public class album extends Fragment {
      */
     void UnLikeAlbum(){
         likealbum unlikealbum1 = new likealbum(albumID);
-
-        retrofit2.Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
-        backinterfaces apiService = retrofit.create(backinterfaces.class);
-        Call<Void> call = apiService.albumunlike(unlikealbum1,"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWIwOTAxZTMwYTlhMDFmMTQ0YjcyMzUiLCJwcm9kdWN0IjoicHJlbWl1bSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg5OTczOTMzLCJleHAiOjMxNDY0ODg4NzgwMjYwODk1MDB9.gpPtSyJDhiKYB8Lduhnet3upLiXW23HT7KU5Z7oXE8c");
+        Call<Void> call = endPointAPI.UN_LIKE_ALBUM(unlikealbum1,"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWIwOTAxZTMwYTlhMDFmMTQ0YjcyMzUiLCJwcm9kdWN0IjoicHJlbWl1bSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg5OTczOTMzLCJleHAiOjMxNDY0ODg4NzgwMjYwODk1MDB9.gpPtSyJDhiKYB8Lduhnet3upLiXW23HT7KU5Z7oXE8c");
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -573,6 +594,7 @@ public class album extends Fragment {
                 {
 
                     like_album.setImageResource(R.drawable.favorite_border);
+                    liked=0;
                     AlbumObject.setIsSaved(false);
                 }
             }
@@ -601,6 +623,7 @@ public class album extends Fragment {
                 else
                 {
                     like_album.setImageResource(R.drawable.like);
+                    liked=1;
                     AlbumObject.setIsSaved(true);
                 }
             }

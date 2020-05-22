@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/item"
+    android:background="@drawable/i4"
     tools:context=".Fragments.SEE_ARTISTS_FRAGMENT.see_all_artist_Fragment">
 
     <LinearLayout

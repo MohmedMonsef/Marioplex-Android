@@ -37,6 +37,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
@@ -208,8 +209,7 @@ public interface EndPointAPI {
 
     @PUT("api/me/Albums")
     public Call<Void> LIKE_ALBUM(@Body likealbum ids, @Header("x-auth-token") String token);
-    //api/me/Albums
-    @DELETE("api/me/Albums")
-    public Call<Void> UN_LIKE_ALBUM(@Body likealbum ids, @Header("x-auth-token") String token);
 
+    @HTTP(method = "DELETE", path ="api/me/Albums" ,hasBody = true)
+    Call<Void> UN_LIKE_ALBUM(@Body likealbum ids,@Header("x-auth-token") String token);
 }

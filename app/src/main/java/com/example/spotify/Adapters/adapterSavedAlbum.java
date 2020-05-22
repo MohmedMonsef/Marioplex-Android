@@ -12,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify.Fragments.ALBUM_FRAGMENT.album;
+import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
+import com.example.spotify.pojo.ImageInfo;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -69,6 +71,15 @@ public class adapterSavedAlbum extends RecyclerView.Adapter<adapterSavedAlbum.My
             // load the image
             Picasso.get().load(item.getImages().get(0).toString()).into(holder.image);
         }
+
+        List<ImageInfo> images= item.getImages();
+        String imageID ="12d";
+        if(images != null && images.size()!=0) {
+            imageID = images.get(0).getID();
+        }
+        String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=album";
+        Picasso.get().load(Imageurl).into(holder.image);
+
         /**
          * a click listener handel the item view
          */

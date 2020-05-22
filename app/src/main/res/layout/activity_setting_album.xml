@@ -11,6 +11,20 @@
         android:layout_height="match_parent"
         android:background="@drawable/playlist_background"
         android:orientation="vertical">
+        <RelativeLayout
+            android:id="@+id/top_layout_album"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            >
+
+        <ImageView
+            android:id="@+id/back_arrow_album_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:padding="16dp"
+            android:src="@drawable/back_button" />
+        </RelativeLayout>
         <ImageView
             android:id="@+id/album_image_album_fragment_setting"
             android:layout_width="150dp"
@@ -39,7 +53,7 @@
 
         <TextView
             android:id="@+id/album_name_middle_setting"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="20dp"
@@ -103,34 +117,6 @@
                     android:layout_marginTop="8dp"
                     android:textColor="@android:color/background_light"
                     android:text="View Artist"
-                    ></TextView>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/like_album_all"
-                    android:padding="16dp"
-                    android:layout_toLeftOf="@id/album_settings_button"
-                    android:src="@drawable/favorite_border"
-                    android:layout_centerVertical="true"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:textSize="20sp"
-                    android:id="@+id/like_album_all_setting"
-                    android:textStyle="bold"
-                    android:layout_centerVertical="true"
-                    android:layout_marginTop="8dp"
-                    android:textColor="@android:color/background_light"
-                    android:text="Liked all songs"
                     ></TextView>
             </LinearLayout>
         </LinearLayout>
