@@ -5,6 +5,7 @@ import com.example.spotify.login.apiClasses.FacebookLoginData;
 import com.example.spotify.login.apiClasses.LoginCredentials;
 import com.example.spotify.login.apiClasses.LoginResponse;
 import com.example.spotify.login.apiClasses.SignUpData;
+import com.example.spotify.login.apiClasses.forgotPasswordEmail;
 import com.example.spotify.login.apiClasses.updateProfile;
 import com.example.spotify.login.apiClasses.userProfile;
 import com.example.spotify.login.user;
@@ -55,7 +56,7 @@ public interface EndPointAPI {
     Call<LoginResponse> facebookLogin(@Body FacebookLoginData facebookLoginData);
 
     @POST("api/login/forgetpassword")
-    Call<ResponseBody> forgetPassword(@Body String email);
+    Call<ResponseBody> forgetPassword(@Body forgotPasswordEmail email);
 
 
     ////////////////////////////////////////////////////////////////////////////////////
