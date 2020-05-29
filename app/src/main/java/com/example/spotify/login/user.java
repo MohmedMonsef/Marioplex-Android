@@ -24,6 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Holds current user data
  */
 public class user {
+    public static boolean dataAvailable = false;
     private static String name = null;
     private static String id = null;
     private static String email = null;
@@ -150,6 +151,7 @@ public class user {
                     user.setCountry(response.body().get(0).getCountry());
                     user.setProduct(response.body().get(0).getProduct());
                     user.setImages(response.body().get(0).getImages());
+                    dataAvailable = true;
                 }
                 else {
                     Log.v("usrftch",response.message());
