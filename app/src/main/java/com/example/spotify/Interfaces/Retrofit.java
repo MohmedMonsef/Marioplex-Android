@@ -14,13 +14,14 @@ public class Retrofit {
             .build();
     //http://52.205.254.29/
     private retrofit2.Retrofit retrofit = new retrofit2.Retrofit.Builder()
-            //.baseUrl("http://52.205.254.29/")
-            .baseUrl("http://192.168.43.127:3000/")
+            .baseUrl("http://100.25.194.8/")
+            //.baseUrl("http://192.168.43.127:3000/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build();
     private EndPointAPI endPointAPI = retrofit.create(EndPointAPI.class);
-    private String Baseurl = "http://192.168.43.127:3000/";
+    //private String Baseurl = "http://192.168.43.127:3000/";
+    private String Baseurl = "http://100.25.194.8/";
     //private ApiSpotify apiSpotify = retrofit.create(ApiSpotify .class);
     //private classinterface apiService = retrofit.create(classinterface.class);
 

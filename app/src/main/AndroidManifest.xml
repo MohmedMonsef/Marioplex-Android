@@ -71,6 +71,7 @@
         </activity>
         <activity android:name=".Fragments.LIBRARY_FRAGMENT.Playlist_library_fragment.Playlist_Library_Settings" />
         <activity android:name=".Fragments.LIBRARY_FRAGMENT.Playlist_library_fragment.Upload_Image" />
+        <activity android:name=".Fragments.LIBRARY_FRAGMENT.Playlist_library_fragment.EditPlaylistName" />
     </application>
 
 </manifest>
