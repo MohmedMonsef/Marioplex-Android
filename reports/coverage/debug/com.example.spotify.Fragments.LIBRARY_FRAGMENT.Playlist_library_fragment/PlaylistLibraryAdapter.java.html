@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PlaylistLibraryAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.Fragments.LIBRARY_FRAGMENT.Playlist_library_fragment</a> &gt; <span class="el_source">PlaylistLibraryAdapter.java</span></div><h1>PlaylistLibraryAdapter.java</h1><pre class="source lang-java linenums">package com.example.spotify.Fragments.LIBRARY_FRAGMENT.Playlist_library_fragment;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
+import com.example.spotify.Interfaces.Retrofit;
+import com.example.spotify.R;
+import com.example.spotify.pojo.BasicPlaylist;
+import com.example.spotify.pojo.ImageInfo;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+public class PlaylistLibraryAdapter extends RecyclerView.Adapter&lt;PlaylistLibraryAdapter.MyviewHolder&gt;  {
+
+    private Context context;
+    private List&lt;BasicPlaylist&gt; playlists;
+
+<span class="fc" id="L31">    public PlaylistLibraryAdapter(Context context, List&lt;BasicPlaylist&gt; p){</span>
+<span class="fc" id="L32">        this.context = context;</span>
+<span class="fc" id="L33">        playlists = p;</span>
+
+<span class="fc" id="L35">    }</span>
+
+    @NonNull
+    @Override
+    public PlaylistLibraryAdapter.MyviewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+<span class="fc" id="L40">        View view = LayoutInflater.from(context).inflate(R.layout.playlist_list_view_layout, parent, false);</span>
+<span class="fc" id="L41">        return new PlaylistLibraryAdapter.MyviewHolder(view);</span>
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull PlaylistLibraryAdapter.MyviewHolder holder, final int position) {
+
+        //enables the settings button only for the created playlists//
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        if(!(playlists.get(position).getType().equals(&quot;created&quot;))){</span>
+<span class="fc" id="L49">            holder.settings_library.setEnabled(false);</span>
+<span class="fc" id="L50">            holder.settings_library.setImageResource(R.drawable.more_options_notenabled);</span>
+        }
+        else{
+<span class="fc" id="L53">            holder.settings_library.setEnabled(true);</span>
+<span class="fc" id="L54">            holder.settings_library.setImageResource(R.drawable.more_options);</span>
+        }
+        ///////////////////////////////////////////////////////////////
+
+<span class="fc" id="L58">        holder.user_playlist_name.setText(playlists.get(position).getName());</span>
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">        if(!playlists.get(position).getOwner().isEmpty()){</span>
+<span class="fc" id="L60">            holder.playlist_user_name.setText(&quot;by &quot; + playlists.get(position).getOwner());</span>
+        }
+        else{
+<span class="nc" id="L63">            holder.playlist_user_name.setText(&quot;by Spotify&quot;);</span>
+        }
+
+        ///////////////updates the UI with the image//////////////////////
+<span class="fc" id="L67">        List&lt;ImageInfo&gt; images= playlists.get(position).getImages();</span>
+<span class="fc" id="L68">        String imageID =&quot;12d&quot;;</span>
+<span class="pc bpc" id="L69" title="1 of 4 branches missed.">        if(images != null &amp;&amp; images.size()!=0) {</span>
+<span class="fc" id="L70">            imageID = images.get(0).getID();</span>
+        }
+<span class="fc" id="L72">        String Imageurl = Retrofit.getInstance().getBaseurl() + &quot;api/images/&quot; + imageID + &quot;?belongs_to=playlist&quot;;</span>
+<span class="fc" id="L73">        Picasso.get().load(Imageurl).into(holder.user_playlist_image);</span>
+        /////////////////////////////////////////////////////////////////
+
+        /**
+         * listener for the click on the playlist to go to the playlist fragment
+         */
+<span class="fc" id="L79">        holder.playlist_list_view_layout.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L82">                Bundle bundle = new Bundle();</span>
+<span class="nc" id="L83">                bundle.putString(&quot;playlistID&quot; , playlists.get(position).getId());</span>
+<span class="nc" id="L84">                bundle.putString(&quot;ownerName&quot; , playlists.get(position).getOwner());</span>
+<span class="nc" id="L85">                bundle.putString(&quot;from&quot; , &quot;Playlist_library&quot;);</span>
+<span class="nc" id="L86">                androidx.fragment.app.Fragment f = new PlaylistFragment();</span>
+<span class="nc" id="L87">                f.setArguments(bundle);</span>
+<span class="nc" id="L88">                AppCompatActivity activity = (AppCompatActivity) v.getContext();</span>
+<span class="nc" id="L89">                activity.getSupportFragmentManager()</span>
+<span class="nc" id="L90">                        .beginTransaction()</span>
+<span class="nc" id="L91">                        .replace(R.id.frame_fragment, f)</span>
+<span class="nc" id="L92">                        .addToBackStack(null).commit();</span>
+<span class="nc" id="L93">            }</span>
+        });
+
+        /**
+         * listener for the click on the settings button to go to the settings activity
+         */
+
+<span class="fc" id="L100">        holder.settings_library.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L103">                List&lt;ImageInfo&gt; images= playlists.get(position).getImages();</span>
+<span class="fc" id="L104">                String imageID =&quot;12d&quot;;</span>
+<span class="pc bpc" id="L105" title="2 of 4 branches missed.">                if(images != null &amp;&amp; images.size()!=0) {</span>
+<span class="nc" id="L106">                    imageID = images.get(0).getID();</span>
+                }
+
+<span class="fc" id="L109">                Intent intent = new Intent(context, Playlist_Library_Settings.class);</span>
+<span class="fc" id="L110">                intent.putExtra(&quot;SourceID&quot; , playlists.get(position).getId());</span>
+<span class="fc" id="L111">                intent.putExtra(&quot;playlistName&quot; , playlists.get(position).getName());</span>
+<span class="fc" id="L112">                intent.putExtra(&quot;ImageID&quot; , imageID);</span>
+<span class="fc" id="L113">                context.startActivity(intent);</span>
+<span class="fc" id="L114">            }</span>
+        });
+<span class="fc" id="L116">    }</span>
+
+    @Override
+    public int getItemCount() {
+<span class="fc" id="L120">        return playlists.size();</span>
+    }
+
+    public class MyviewHolder extends RecyclerView.ViewHolder {
+        TextView user_playlist_name, playlist_user_name;
+        ImageView user_playlist_image;
+        LinearLayout playlist_list_view_layout;
+        ImageView settings_library;
+
+<span class="fc" id="L129">        public MyviewHolder(View itemView) {</span>
+<span class="fc" id="L130">            super(itemView);</span>
+<span class="fc" id="L131">            user_playlist_name = (TextView) itemView.findViewById(R.id.user_playlist_name);</span>
+<span class="fc" id="L132">            playlist_user_name = (TextView) itemView.findViewById(R.id.playlist_user_name);</span>
+<span class="fc" id="L133">            user_playlist_image = (ImageView)itemView.findViewById(R.id.user_playlist_image);</span>
+<span class="fc" id="L134">            playlist_list_view_layout = (LinearLayout)itemView.findViewById(R.id.playlist_list_view_layout);</span>
+<span class="fc" id="L135">            settings_library = itemView.findViewById(R.id.settings_library);</span>
+
+<span class="fc" id="L137">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

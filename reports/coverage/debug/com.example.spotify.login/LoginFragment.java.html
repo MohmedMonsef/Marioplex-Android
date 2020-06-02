@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LoginFragment.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.login</a> &gt; <span class="el_source">LoginFragment.java</span></div><h1>LoginFragment.java</h1><pre class="source lang-java linenums">package com.example.spotify.login;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.util.Patterns;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.R;
+import com.example.spotify.login.apiClasses.LoginCredentials;
+import com.example.spotify.login.apiClasses.LoginResponse;
+import com.example.spotify.login.apiClasses.userProfile;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
+
+
+public class LoginFragment extends Fragment {
+
+    private static Retrofit mRetrofit;
+    private static EndPointAPI mEndPointAPI;
+<span class="nc" id="L40">    private static String token = null;</span>
+
+    String email,password;
+
+<span class="nc" id="L44">    boolean emailValid = false;</span>
+<span class="nc" id="L45">    boolean passwordValid = false;</span>
+    /*public LoginFragment() {
+        // Required empty public constructor
+    }*/
+
+<span class="nc" id="L50">    LoginFragment(Retrofit retrofit, EndPointAPI endPointAPI){</span>
+<span class="nc" id="L51">        mRetrofit = retrofit;</span>
+<span class="nc" id="L52">        mEndPointAPI = endPointAPI;</span>
+<span class="nc" id="L53">    }</span>
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+<span class="nc" id="L58">        super.onCreate(savedInstanceState);</span>
+
+
+<span class="nc" id="L61">    }</span>
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+<span class="nc" id="L67">        View rootView = inflater.inflate(R.layout.fragment_login, container, false);</span>
+
+<span class="nc" id="L69">        final View loginButton = rootView.findViewById(R.id.loginButton);</span>
+<span class="nc" id="L70">        loginButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L73">                login();</span>
+<span class="nc" id="L74">            }</span>
+        });
+<span class="nc" id="L76">        loginButton.setEnabled(false);</span>
+
+<span class="nc" id="L78">        ((EditText)rootView.findViewById(R.id.email)).addTextChangedListener(new TextWatcher() {</span>
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+<span class="nc" id="L82">            }</span>
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+<span class="nc" id="L86">                email = s.toString();</span>
+<span class="nc" id="L87">                emailValid = validateEmail(email);</span>
+<span class="nc bnc" id="L88" title="All 4 branches missed.">                if(emailValid &amp;&amp; passwordValid){</span>
+<span class="nc" id="L89">                    loginButton.setEnabled(true);</span>
+                }
+                else{
+<span class="nc" id="L92">                    loginButton.setEnabled(false);</span>
+                }
+<span class="nc" id="L94">            }</span>
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+<span class="nc" id="L99">            }</span>
+        });
+
+<span class="nc" id="L102">        ((EditText)rootView.findViewById(R.id.password)).addTextChangedListener(new TextWatcher() {</span>
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+<span class="nc" id="L106">            }</span>
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+<span class="nc" id="L110">                password = s.toString();</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">                passwordValid = password.length() &gt; 0;</span>
+<span class="nc bnc" id="L112" title="All 4 branches missed.">                if(emailValid &amp;&amp; passwordValid){</span>
+<span class="nc" id="L113">                    loginButton.setEnabled(true);</span>
+                }
+                else{
+<span class="nc" id="L116">                    loginButton.setEnabled(false);</span>
+                }
+<span class="nc" id="L118">            }</span>
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+<span class="nc" id="L123">            }</span>
+        });
+
+<span class="nc" id="L126">        return rootView;</span>
+    }
+
+    /**
+     * Login using provided email and password
+     * On login success launches main app activity
+     * On login failure displays a toast message
+     */
+    public void login(){
+<span class="nc" id="L135">        LoginCredentials loginCredentials = new LoginCredentials();</span>
+<span class="nc" id="L136">        loginCredentials.setEmail(email);</span>
+<span class="nc" id="L137">        loginCredentials.setPassword(password);</span>
+
+<span class="nc" id="L139">        Call&lt;LoginResponse&gt; call = mEndPointAPI.login(loginCredentials);</span>
+
+<span class="nc" id="L141">        call.enqueue(new Callback&lt;LoginResponse&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;LoginResponse&gt; call, Response&lt;LoginResponse&gt; response) {
+<span class="nc bnc" id="L144" title="All 2 branches missed.">                if(response.isSuccessful()){</span>
+<span class="nc" id="L145">                    token = response.body().getToken();</span>
+<span class="nc" id="L146">                    user.setToken(token);</span>
+<span class="nc" id="L147">                    saveToken();</span>
+<span class="nc" id="L148">                    Toast.makeText(getContext(),&quot;Sucess &quot; +response.code(),Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L149">                    user.fetchUserData();</span>
+<span class="nc" id="L150">                    startActivity(new Intent(getActivity(), MainActivity.class));</span>
+<span class="nc" id="L151">                    getActivity().finish();</span>
+                }
+                else {
+<span class="nc" id="L154">                    Toast.makeText(getContext(),&quot;Failed to login &quot; + response.message(),Toast.LENGTH_SHORT).show();</span>
+                }
+<span class="nc" id="L156">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;LoginResponse&gt; call, Throwable t) {
+<span class="nc" id="L160">                Log.e(&quot;Intro Activity&quot;,t.getMessage());</span>
+<span class="nc" id="L161">                Toast.makeText(getContext(),&quot;Failed to connect &quot; + t.getMessage(),Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L162">            }</span>
+        });
+<span class="nc" id="L164">    }</span>
+
+    boolean validateEmail(String email){
+<span class="nc" id="L167">        return Patterns.EMAIL_ADDRESS.matcher(email).matches();</span>
+    }
+
+    void saveToken(){
+<span class="nc" id="L171">        String token = user.getToken();</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">        if(token!=null){</span>
+<span class="nc" id="L173">            SharedPreferences sharedPreferences = getContext().getSharedPreferences(&quot;token&quot;, Context.MODE_PRIVATE);</span>
+<span class="nc" id="L174">            SharedPreferences.Editor editor = sharedPreferences.edit();</span>
+<span class="nc" id="L175">            editor.putString(&quot;token&quot;,token);</span>
+<span class="nc" id="L176">            editor.apply();</span>
+        }
+<span class="nc" id="L178">    }</span>
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

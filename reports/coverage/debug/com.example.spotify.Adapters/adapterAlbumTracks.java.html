@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>adapterAlbumTracks.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.Adapters</a> &gt; <span class="el_source">adapterAlbumTracks.java</span></div><h1>adapterAlbumTracks.java</h1><pre class="source lang-java linenums">package com.example.spotify.Adapters;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.spotify.BackClasses.Backclasses.albumTrack.AlbumTracks;
+import com.example.spotify.BackClasses.Backclasses.albumTrack.Track;
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.Interfaces.Retrofit;
+import com.example.spotify.R;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+public class adapterAlbumTracks extends RecyclerView.Adapter&lt;adapterAlbumTracks.MyviewHolder&gt; {
+    private Context context;
+    private List&lt;Track&gt; Track;
+    private String artistName;
+<span class="nc" id="L25">    private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();</span>
+
+    public adapterAlbumTracks(Context context, AlbumTracks AlbumTracks,String ArtistName)
+<span class="nc" id="L28">    {</span>
+<span class="nc" id="L29">        this.context = context;</span>
+<span class="nc" id="L30">        this.Track = AlbumTracks.getTracks();</span>
+<span class="nc" id="L31">        this.artistName=ArtistName;</span>
+<span class="nc" id="L32">    }</span>
+
+    public void setMovieList(AlbumTracks AlbumTracks)
+    {
+<span class="nc" id="L36">        this.Track = AlbumTracks.getTracks();</span>
+<span class="nc" id="L37">        notifyDataSetChanged();</span>
+<span class="nc" id="L38">    }</span>
+
+    /**
+     * @param parent --&gt; the view that has the recyclerview of this class
+     * @param viewType--&gt;
+     * @return new object of the view holder
+     */
+
+    @Override
+    public adapterAlbumTracks.MyviewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    {
+<span class="nc" id="L49">        View view = LayoutInflater.from(context).inflate(R.layout.album_preview_listview_item,parent,false);</span>
+<span class="nc" id="L50">        return new MyviewHolder(view);</span>
+    }
+
+    /**
+     *
+     * @param holder --&gt;that has the view item (layout)
+     * @param position --&gt;index of the item in the list
+     * set on item of recyclerview with its data
+     */
+    @Override
+    public void onBindViewHolder(final adapterAlbumTracks.MyviewHolder holder, final int position)
+    {
+
+
+<span class="nc" id="L64">        final Track item=Track.get(position);</span>
+<span class="nc" id="L65">        holder.preview_song_artist_album.setText(artistName);</span>
+<span class="nc" id="L66">        holder.preview_song_name_album.setText(item.getName());</span>
+        /// check if the image not null
+
+<span class="nc" id="L69">        String imageID = &quot;12D&quot;;</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        if(item.getImages().size()!=0)</span>
+        {
+<span class="nc" id="L72">            imageID = item.getImages().get(0).getID();</span>
+        }
+<span class="nc" id="L74">        String Imageurl = Retrofit.getInstance().getBaseurl() + &quot;api/images/&quot; + imageID + &quot;?belongs_to=track&quot;;</span>
+<span class="nc" id="L75">        Picasso.get().load(Imageurl).into(holder.preview_song_image_album);</span>
+        /**
+         * a click listener handel the item view
+         */
+<span class="nc" id="L79">        holder.itemView.setOnClickListener(new View.OnClickListener() {</span>
+            /**
+             *
+             * @param v
+             * go to the next fragment from the selected item view
+             */
+            @Override
+            public void onClick(View v)
+            {
+
+               //ToDO on click the tracks will play
+<span class="nc" id="L90">            }</span>
+        });
+<span class="nc" id="L92">holder.preview_like_album.setOnClickListener(new View.OnClickListener() {</span>
+    /**
+     *
+     * @param v
+     * go to the next fragment from the selected item view
+     */
+    @Override
+    public void onClick(final View v)
+    {
+
+        //ToDO on click the tracks will like track
+<span class="nc" id="L103">    }</span>
+});
+<span class="nc" id="L105">holder.preview_settings_image_album.setOnClickListener(new View.OnClickListener() {</span>
+    /**
+     *
+     * @param v
+     * go to the next fragment from the selected item view
+     */
+    @Override
+    public void onClick(View v)
+    {
+
+        //ToDO on click the tracks setting track
+<span class="nc" id="L116">    }</span>
+});
+<span class="nc" id="L118">    }</span>
+
+    /**
+     *
+     * @return --&gt; Categorylist size
+     */
+    @Override
+    public int getItemCount()
+    {
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        if(Track != null)</span>
+        {
+<span class="nc" id="L129">            return Track.size();</span>
+        }
+<span class="nc" id="L131">        return 0;</span>
+
+    }
+
+    /**
+     * a class that handel the parsing of the recyclerview data
+     */
+    public class MyviewHolder extends RecyclerView.ViewHolder
+    {
+        TextView preview_song_name_album,preview_song_artist_album;
+        ImageView preview_song_image_album,preview_settings_image_album,preview_like_album;
+
+<span class="nc" id="L143">        public MyviewHolder(View itemView) {</span>
+<span class="nc" id="L144">            super(itemView);</span>
+<span class="nc" id="L145">            preview_song_name_album = (TextView)itemView.findViewById(R.id.preview_song_name_album);</span>
+<span class="nc" id="L146">            preview_song_artist_album = (TextView)itemView.findViewById(R.id.preview_song_artist_album);</span>
+
+<span class="nc" id="L148">            preview_song_image_album = (ImageView)itemView.findViewById(R.id.preview_song_image_album);</span>
+<span class="nc" id="L149">            preview_settings_image_album = (ImageView)itemView.findViewById(R.id.preview_settings_image_album);</span>
+<span class="nc" id="L150">            preview_like_album = (ImageView)itemView.findViewById(R.id.preview_like_album);</span>
+
+<span class="nc" id="L152">        }</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

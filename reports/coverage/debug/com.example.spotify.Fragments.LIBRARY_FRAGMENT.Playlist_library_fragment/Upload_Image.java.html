@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Upload_Image.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.Fragments.LIBRARY_FRAGMENT.Playlist_library_fragment</a> &gt; <span class="el_source">Upload_Image.java</span></div><h1>Upload_Image.java</h1><pre class="source lang-java linenums">package com.example.spotify.Fragments.LIBRARY_FRAGMENT.Playlist_library_fragment;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.Interfaces.Retrofit;
+import com.example.spotify.R;
+import com.example.spotify.login.user;
+import com.example.spotify.pojo.ImageInfo;
+import com.example.spotify.pojo.UploadImageResponse;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+<span class="fc" id="L37">public class Upload_Image extends AppCompatActivity {</span>
+    private ImageView chosen_image;
+    private Button upload_button;
+    private Button cancel_upload_button;
+    private Button pick_from_gallery;
+<span class="fc" id="L42">    private String filePath = &quot;&quot;;</span>
+<span class="fc" id="L43">    private String SourceID = &quot;&quot;;</span>
+<span class="fc" id="L44">    private String From =&quot;&quot;;</span>
+<span class="fc" id="L45">    private String belongsTo = &quot;playlist&quot;;</span>
+    private static final int GALLERY_REQUEST_CODE = 100;
+<span class="fc" id="L47">    private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();</span>
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+<span class="fc" id="L51">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L52">        setContentView(R.layout.upload_image);</span>
+<span class="fc" id="L53">        getViews();</span>
+
+<span class="fc" id="L55">        SourceID = getIntent().getStringExtra(&quot;SourceID&quot;);</span>
+<span class="fc" id="L56">        From = getIntent().getStringExtra(&quot;from&quot;);</span>
+<span class="pc bpc" id="L57" title="2 of 4 branches missed.">        if(From!=null&amp;&amp;From.equals(&quot;user&quot;)){belongsTo = &quot;user&quot;;}</span>
+
+        /**
+         * listener for the click on the cancel button to go back to the previous page
+         */
+<span class="fc" id="L62">        cancel_upload_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L65">                Intent intent = new Intent(getBaseContext(), MainActivity.class);</span>
+<span class="fc" id="L66">                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);</span>
+<span class="fc" id="L67">                startActivity(intent);</span>
+<span class="fc" id="L68">            }</span>
+        });
+
+        /**
+         * listener for the upload button to send the request to upload the image
+         */
+<span class="fc" id="L74">        upload_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc bnc" id="L77" title="All 2 branches missed.">                if (filePath.isEmpty()) {</span>
+<span class="nc" id="L78">                    Toast.makeText(getApplicationContext(), &quot;choose a photo from the gallery&quot;, Toast.LENGTH_SHORT).show();</span>
+                } else {
+<span class="nc" id="L80">                    uploadImageRequest();</span>
+                }
+<span class="nc" id="L82">            }</span>
+        });
+
+        /**
+         * listener for the clock on the pick from gallery button to send intent to the gallery
+         */
+<span class="fc" id="L88">        pick_from_gallery.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L91">                pickFromGallery();</span>
+<span class="nc" id="L92">            }</span>
+        });
+
+<span class="fc" id="L95">    }</span>
+
+    /**
+     * sends a request to upload the image to the server
+     */
+    void uploadImageRequest() {
+
+        //Create a file object using file path
+<span class="nc" id="L103">        File file = new File(filePath);</span>
+        // Create a request body with file and image media type
+<span class="nc" id="L105">        RequestBody fileReqBody = RequestBody.create(MediaType.parse(&quot;image/*&quot;), file);</span>
+        // Create MultipartBody.Part using file request-body,file name and part name
+<span class="nc" id="L107">        MultipartBody.Part part = MultipartBody.Part.createFormData(&quot;image&quot;, file.getName(), fileReqBody);</span>
+
+<span class="nc" id="L109">        BitmapFactory.Options options = new BitmapFactory.Options();</span>
+<span class="nc" id="L110">        options.inJustDecodeBounds = true;</span>
+<span class="nc" id="L111">        BitmapFactory.decodeFile(filePath, options);</span>
+<span class="nc" id="L112">        int imageHeight = options.outHeight;</span>
+<span class="nc" id="L113">        int imageWidth = options.outWidth;</span>
+
+<span class="nc" id="L115">        Call&lt;UploadImageResponse&gt; call = endPointAPI.updateImage(SourceID, belongsTo, imageHeight, imageWidth, part, user.getToken());</span>
+<span class="nc" id="L116">        call.enqueue(new Callback&lt;UploadImageResponse&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;UploadImageResponse&gt; call, Response&lt;UploadImageResponse&gt; response) {
+<span class="nc bnc" id="L119" title="All 2 branches missed.">                if (!response.isSuccessful()) {</span>
+<span class="nc" id="L120">                    Toast.makeText(getApplicationContext(), &quot;Some thing went wrong while uploading the image .try again&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L121">                    return;</span>
+                } else {
+<span class="nc bnc" id="L123" title="All 2 branches missed.">                    if(belongsTo.equals(&quot;user&quot;)){</span>
+<span class="nc" id="L124">                        List&lt;ImageInfo&gt; img =new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L125">                        ImageInfo newImage = new ImageInfo();</span>
+<span class="nc" id="L126">                        newImage.setID(response.body().getImageID());</span>
+<span class="nc" id="L127">                        img.add(newImage);</span>
+<span class="nc" id="L128">                        user.setImages(img);</span>
+                    }
+<span class="nc" id="L130">                    Toast.makeText(getApplicationContext(), &quot;Image is uploaded&quot;, Toast.LENGTH_SHORT).show();</span>
+                }
+<span class="nc" id="L132">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;UploadImageResponse&gt; call, Throwable t) {
+<span class="nc" id="L136">                Toast.makeText(getApplicationContext(), &quot;Some thing went wrong while uploading the image .check your internet connection&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L137">            }</span>
+        });
+
+<span class="nc" id="L140">        Intent intent = new Intent(getBaseContext(), MainActivity.class);</span>
+<span class="nc" id="L141">        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);</span>
+<span class="nc" id="L142">        startActivity(intent);</span>
+
+<span class="nc" id="L144">    }</span>
+
+    /**
+     * this method is called when the user picks an image from the gallery
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+<span class="nc" id="L154">        super.onActivityResult(requestCode, resultCode, data);</span>
+        // Result code is RESULT_OK only if the user selects an Image
+<span class="nc bnc" id="L156" title="All 2 branches missed.">        if (resultCode == Activity.RESULT_OK)</span>
+<span class="nc bnc" id="L157" title="All 2 branches missed.">            switch (requestCode) {</span>
+                case GALLERY_REQUEST_CODE:
+                    //data.getData return the content URI for the selected Image
+<span class="nc" id="L160">                    Uri selectedImage = data.getData();</span>
+<span class="nc" id="L161">                    String[] filePathColumn = {MediaStore.Images.Media.DATA};</span>
+                    // Get the cursor
+<span class="nc" id="L163">                    Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);</span>
+                    // Move to first row
+<span class="nc" id="L165">                    cursor.moveToFirst();</span>
+                    //Get the column index of MediaStore.Images.Media.DATA
+<span class="nc" id="L167">                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);</span>
+                    //Gets the String value in the column
+<span class="nc" id="L169">                    String imgDecodableString = cursor.getString(columnIndex);</span>
+<span class="nc" id="L170">                    cursor.close();</span>
+<span class="nc" id="L171">                    filePath = imgDecodableString;</span>
+                    // Set the Image in ImageView after decoding the String
+<span class="nc" id="L173">                    chosen_image.setImageBitmap(BitmapFactory.decodeFile(imgDecodableString));</span>
+                    break;
+
+            }
+<span class="nc" id="L177">    }</span>
+
+    /**
+     * sends an intent to the gallery so the user can pick an image
+     */
+    private void pickFromGallery() {
+        //Create an Intent with action as ACTION_PICK
+<span class="nc" id="L184">        Intent intent = new Intent(Intent.ACTION_PICK);</span>
+        // Sets the type as image/*. This ensures only components of type image are selected
+<span class="nc" id="L186">        intent.setType(&quot;image/*&quot;);</span>
+        //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
+<span class="nc" id="L188">        String[] mimeTypes = {&quot;image/jpeg&quot;, &quot;image/png&quot;};</span>
+<span class="nc" id="L189">        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);</span>
+        // Launching the Intent
+<span class="nc" id="L191">        startActivityForResult(intent, GALLERY_REQUEST_CODE);</span>
+<span class="nc" id="L192">    }</span>
+
+    /**
+     * gets all the views I will use in the fragment
+     */
+
+    void getViews() {
+<span class="fc" id="L199">        chosen_image = findViewById(R.id.chosen_image);</span>
+<span class="fc" id="L200">        upload_button = findViewById(R.id.upload_button);</span>
+<span class="fc" id="L201">        cancel_upload_button = findViewById(R.id.cancel_upload_button);</span>
+<span class="fc" id="L202">        pick_from_gallery = findViewById(R.id.pick_from_gallery);</span>
+<span class="fc" id="L203">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>album.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.Fragments.ALBUM_FRAGMENT</a> &gt; <span class="el_source">album.java</span></div><h1>album.java</h1><pre class="source lang-java linenums">package com.example.spotify.Fragments.ALBUM_FRAGMENT;
+
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.palette.graphics.Palette;
+
+import com.example.spotify.Activities.PlaylistPreviewActivity;
+import com.example.spotify.Activities.SettingAlbumActivity;
+import com.example.spotify.BackClasses.Backclasses.albumInform.AlbumObject;
+import com.example.spotify.BackClasses.Backclasses.albumInform.Track;
+import com.example.spotify.BackClasses.Backclasses.likeAlbum.likealbum;
+import com.example.spotify.BackClasses.Backclasses.likeAlbum.unlikealbum;
+import com.example.spotify.Fragments.HOME_FRAGMENT.backhome;
+import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistInfo;
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.Interfaces.Retrofit;
+import com.example.spotify.Interfaces.backinterfaces;
+import com.example.spotify.R;
+import com.example.spotify.login.user;
+import com.example.spotify.media.MediaPlayerService;
+import com.example.spotify.media.TrackInfo;
+import com.example.spotify.pojo.BasicTrack;
+import com.example.spotify.pojo.ImageID;
+import com.example.spotify.pojo.ImageInfo;
+import com.example.spotify.pojo.PlaylistTracks;
+import com.example.spotify.pojo.currentTrack;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+<span class="fc" id="L55">public class album extends Fragment {</span>
+    private ImageView back_arrow_album;
+    private ImageView like_album;
+    private ImageView album_settings_button;
+    private ImageView album_image_album_fragment;
+    private ImageView artist_album_image;
+    private TextView album_name_middle;
+    private TextView album_owner;
+    private Button shuffle_play_button_album;
+    private TextView preview_text_album;
+    private TextView album_name_album_fragment;
+    private TextView date_album;
+    private TextView artist_album_name;
+    private LinearLayout alum_contents_layout;
+    private ProgressBar progress_bar_album;
+    private LinearLayout something_wrong_layout_album;
+    private TextView something_wrong_text_album;
+    private Button something_wrong_button_album;
+    String Artist_Name;
+    String Album_Name;
+    int liked;
+<span class="fc" id="L76">    private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();</span>
+    // private AlbumTracks AlbumObject;
+    private AlbumObject AlbumObject;
+<span class="fc" id="L79">    private String albumID = &quot;5e8a5a444fbd0152f8bd23d3&quot;;</span>
+    private MediaPlayerService player;
+<span class="fc" id="L81">    private String CurrentTrackID = &quot;&quot;;</span>
+    private int CurrentTrackPosInPlaylist;
+<span class="fc" id="L83">    private Boolean serviceBound = false;</span>
+<span class="fc" id="L84">    private Boolean end=false;</span>
+<span class="fc" id="L85">    private ServiceConnection serviceConnection = new ServiceConnection() {</span>
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+<span class="fc" id="L89">            MediaPlayerService.LocalBinder binder = (MediaPlayerService.LocalBinder) service;</span>
+<span class="fc" id="L90">            player = binder.getservice();</span>
+<span class="fc" id="L91">            serviceBound = true;</span>
+
+            //   Toast.makeText(getContext(), &quot;Service Bound&quot;, Toast.LENGTH_SHORT).show();
+<span class="fc" id="L94">        }</span>
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+<span class="nc" id="L98">            serviceBound = false;</span>
+<span class="nc" id="L99">        }</span>
+    };
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+
+        // Inflate the layout for this fragment
+<span class="fc" id="L109">        View view = inflater.inflate(R.layout.fragment_album, container, false);</span>
+        ////*******************************RecyclerView***********************////
+<span class="fc" id="L111">        albumID = getArguments().getString(&quot;albumID&quot;);</span>
+
+        /////////////////////get all the views i will use/////////////////////////
+<span class="fc" id="L114">        back_arrow_album = view.findViewById(R.id.back_arrow_album);</span>
+<span class="fc" id="L115">        like_album = view.findViewById(R.id.like_album);</span>
+<span class="fc" id="L116">        album_settings_button = view.findViewById(R.id.album_settings_button);</span>
+<span class="fc" id="L117">        album_image_album_fragment = view.findViewById(R.id.album_image_album_fragment);</span>
+<span class="fc" id="L118">        artist_album_image = view.findViewById(R.id.artist_album_image);</span>
+<span class="fc" id="L119">        album_name_middle = view.findViewById(R.id.album_name_middle);</span>
+<span class="fc" id="L120">        album_owner = view.findViewById(R.id.album_owner);</span>
+<span class="fc" id="L121">        shuffle_play_button_album = view.findViewById(R.id.shuffle_play_button_album);</span>
+<span class="fc" id="L122">        preview_text_album = view.findViewById(R.id.preview_text_album);</span>
+<span class="fc" id="L123">        album_name_album_fragment = view.findViewById(R.id.album_name_album_fragment);</span>
+<span class="fc" id="L124">        date_album = view.findViewById(R.id.date_album);</span>
+<span class="fc" id="L125">        artist_album_name = view.findViewById(R.id.artist_album_name);</span>
+<span class="fc" id="L126">        alum_contents_layout = view.findViewById(R.id.alum_contents_layout);</span>
+<span class="fc" id="L127">         progress_bar_album =view.findViewById(R.id.progress_bar_album);</span>
+<span class="fc" id="L128">         something_wrong_layout_album=view.findViewById(R.id.something_wrong_layout_album);</span>
+<span class="fc" id="L129">         something_wrong_text_album=view.findViewById(R.id.something_wrong_text_album);</span>
+<span class="fc" id="L130">         something_wrong_button_album=view.findViewById(R.id.something_wrong_button_album);</span>
+
+
+
+        //////////////////////Bind the service\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+<span class="fc" id="L135">        bindService();</span>
+        //GetAlbumsTracksInfo(albumID);
+
+        /////////////////////some listeners\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        /**
+         * when pressed the activity closes
+         */
+<span class="fc" id="L142">        back_arrow_album.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+                ////////////////return to my home fragment\\\\\\\\\\\\\\\\\\\\\
+<span class="nc" id="L146">                getActivity().getSupportFragmentManager().beginTransaction()</span>
+<span class="nc" id="L147">                        .replace(R.id.frame_fragment, new backhome())</span>
+<span class="nc" id="L148">                        .addToBackStack(null)</span>
+<span class="nc" id="L149">                        .commit();</span>
+<span class="nc" id="L150">            }</span>
+        });
+        /**
+         * listener for the preview button
+         * on click the preview activity opens
+         */
+
+<span class="fc" id="L157">        preview_text_album.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+//                Intent intent = new Intent(getActivity(), AlbumPreviewActivity.class);
+//                intent.putExtra(&quot;ARTIST_NAME&quot;,Artist_Name);
+//                intent.putExtra(&quot;ALBUM_ID&quot;,albumID);
+//                intent.putExtra(&quot;Album_Name&quot;,Album_Name);
+//                startActivity(intent);
+<span class="nc bnc" id="L165" title="All 2 branches missed.">                if (end == true)</span>
+<span class="nc" id="L166">                {       Intent intent = new Intent(getActivity(), PlaylistPreviewActivity.class);</span>
+<span class="nc" id="L167">                startActivity(intent);</span>
+<span class="nc" id="L168">                end=false;</span>
+            }
+
+<span class="nc" id="L171">            }</span>
+        });
+/*
+        album_settings_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List&lt;ImageInfo&gt; Img = AlbumObject.getImages();
+                String Img_ID = &quot;12d&quot;;
+                if (Img != null &amp;&amp; Img.size() != 0) {
+                    Img_ID = Img.get(0).getID();
+                }
+                Intent intent = new Intent(getActivity(), SettingAlbumActivity.class);
+                intent.putExtra(&quot;ARTIST_NAME&quot;,Artist_Name);
+                intent.putExtra(&quot;Img_ID&quot;,Img_ID);
+                intent.putExtra(&quot;Album_ID&quot;,albumID);
+                intent.putExtra(&quot;Album_Name&quot;,Album_Name);
+                intent.putExtra(&quot;Album Like&quot;,liked);
+                startActivity(intent);
+            }
+        });*/
+<span class="fc" id="L191">        shuffle_play_button_album.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc bnc" id="L194" title="All 2 branches missed.">                if (CheckTrackInAlbum()) {</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">                    if (player.getIsPlaying()) {</span>
+<span class="nc" id="L196">                        TrackInfo.getInstance().setIsPlaying(false);</span>
+<span class="nc" id="L197">                        player.pauseMedia();</span>
+<span class="nc" id="L198">                        shuffle_play_button_album.setText(&quot;shuffle play&quot;);</span>
+                    } else {
+<span class="nc" id="L200">                        TrackInfo.getInstance().setIsPlaying(true);</span>
+<span class="nc" id="L201">                        player.resumeMedia();</span>
+<span class="nc" id="L202">                        shuffle_play_button_album.setText(&quot;pause&quot;);</span>
+                    }
+                }
+<span class="nc bnc" id="L205" title="All 6 branches missed.">                else if (AlbumObject != null &amp;&amp; AlbumObject.getTrack() != null &amp;&amp; AlbumObject.getTrack().size() != 0) {</span>
+<span class="nc bnc" id="L206" title="All 4 branches missed.">                    if (TrackInfo.getInstance().getIsQueue() != null &amp;&amp; TrackInfo.getInstance().getIsQueue().getValue()) {</span>
+<span class="nc" id="L207">                        shuffleTracks();</span>
+                    } else {
+<span class="nc" id="L209">                        CreateQueue(AlbumObject.getTrack().get(0).getId());</span>
+                    }
+                }
+<span class="nc" id="L212">            }</span>
+        });
+
+<span class="fc" id="L215">        TrackInfo.getInstance().getIsPlaying().observe(getViewLifecycleOwner(), new Observer&lt;Boolean&gt;() {</span>
+            @Override
+            public void onChanged(Boolean aBoolean) {
+<span class="pc bpc" id="L218" title="3 of 4 branches missed.">                if (AlbumObject != null &amp;&amp; CheckTrackInAlbum()) {</span>
+<span class="nc bnc" id="L219" title="All 2 branches missed.">                    if (aBoolean) {</span>
+<span class="nc" id="L220">                        shuffle_play_button_album.setText(&quot;pause&quot;);</span>
+                    } else {
+<span class="nc" id="L222">                        shuffle_play_button_album.setText(&quot;shuffle play&quot;);</span>
+                    }
+                }
+<span class="fc" id="L225">            }</span>
+        });
+
+<span class="fc" id="L228">        like_album.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc bfc" id="L231" title="All 2 branches covered.">                if(AlbumObject.isIsSaved()) {</span>
+<span class="fc" id="L232">                UnLikeAlbum();</span>
+                }
+                else{
+<span class="fc" id="L235">                    LikeAlbum();</span>
+                }
+<span class="fc" id="L237">            }</span>
+      });
+
+<span class="fc" id="L240">        something_wrong_button_album.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+                //////////////////////////show progress bar\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+<span class="nc" id="L244">                alum_contents_layout.setVisibility(View.GONE);</span>
+<span class="nc" id="L245">                something_wrong_layout_album.setVisibility(View.GONE);</span>
+<span class="nc" id="L246">                progress_bar_album.setVisibility(View.VISIBLE);</span>
+                /////////////////////////get Plsylist's tracks information\\\\\\\\\\\\\\\\\\\\\\\
+<span class="nc" id="L248">                GetAlbumsTracksInfo(albumID);</span>
+<span class="nc" id="L249">            }</span>
+        });
+
+        //////////////////////////show progress bar\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+<span class="fc" id="L253">        alum_contents_layout.setVisibility(View.GONE);</span>
+<span class="fc" id="L254">        something_wrong_layout_album.setVisibility(View.GONE);</span>
+<span class="fc" id="L255">        progress_bar_album.setVisibility(View.VISIBLE);</span>
+        /////////////////////////get Plsylist's tracks information\\\\\\\\\\\\\\\\\\\\\\\
+<span class="fc" id="L257">        GetAlbumsTracksInfo(albumID);</span>
+  /*      liked=getArguments().getInt(&quot;likedalbum&quot;);
+        if(liked==1){
+            like_album.setImageResource(R.drawable.like);
+            liked=1;
+        }
+        else{
+            like_album.setImageResource(R.drawable.favorite_border);
+            liked=0;
+
+        }
+*/
+
+<span class="fc" id="L270">        return view;</span>
+
+    }
+
+    private void bindService() {
+<span class="fc" id="L275">        Intent serviceIntent1 = new Intent(getContext(), MediaPlayerService.class);</span>
+<span class="fc" id="L276">        getActivity().bindService(serviceIntent1, serviceConnection, Context.BIND_AUTO_CREATE);</span>
+
+<span class="fc" id="L278">    }</span>
+
+    Boolean CheckTrackInAlbum() {
+<span class="pc bpc" id="L281" title="1 of 2 branches missed.">        if (TrackInfo.getInstance().getIsQueue() != null &amp;&amp;</span>
+<span class="pc bpc" id="L282" title="1 of 2 branches missed.">                TrackInfo.getInstance().getIsQueue().getValue() &amp;&amp;</span>
+<span class="pc bpc" id="L283" title="1 of 2 branches missed.">                TrackInfo.getInstance().getTrack() != null &amp;&amp;</span>
+<span class="pc bpc" id="L284" title="1 of 2 branches missed.">                TrackInfo.getInstance().getTrack().getValue().getTrack() != null) {</span>
+<span class="fc" id="L285">            CurrentTrackID = TrackInfo.getInstance().getTrack().getValue().getTrack().getId();</span>
+
+<span class="fc" id="L287">            List&lt;Track&gt; tracks = AlbumObject.getTrack();</span>
+
+<span class="fc bfc" id="L289" title="All 2 branches covered.">            for (int i = 0; i &lt; tracks.size(); i++) {</span>
+<span class="pc bpc" id="L290" title="1 of 2 branches missed.">                if (tracks.get(i).getId().equals(CurrentTrackID)) {</span>
+<span class="nc" id="L291">                    CurrentTrackPosInPlaylist = i;</span>
+<span class="nc" id="L292">                    return true;</span>
+                }
+            }
+
+        }
+<span class="fc" id="L297">        return false;</span>
+    }
+
+    void shuffleTracks() {
+<span class="nc" id="L301">        Call&lt;Void&gt; call = endPointAPI.toggleShuffle(true, user.getToken());</span>
+<span class="nc" id="L302">        call.enqueue(new Callback&lt;Void&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;Void&gt; call, Response&lt;Void&gt; response) {
+<span class="nc bnc" id="L305" title="All 2 branches missed.">                if (!response.isSuccessful()) {</span>
+<span class="nc" id="L306">                    Toast.makeText(getContext(),&quot;something went wrong . try again.&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L307">                    return;</span>
+                }
+                else {
+                    ///////call mediaplayer get current playing \\\\\\\\\\
+<span class="nc" id="L311">                    Call&lt;currentTrack&gt; call1 = endPointAPI.getNext(user.getToken());</span>
+<span class="nc" id="L312">                    player.playCurrentTrack(call1);</span>
+                }
+<span class="nc" id="L314">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;Void&gt; call, Throwable t) {
+<span class="nc" id="L318">                Toast.makeText(getContext(),&quot;something went wrong.check your internet connection.&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L319">            }</span>
+        });
+<span class="nc" id="L321">    }</span>
+
+    void CreateQueue(String trackID) {
+<span class="nc" id="L324">        Call&lt;Void&gt; call = endPointAPI.CreateQueue(albumID, trackID, true, user.getToken());</span>
+<span class="nc" id="L325">        call.enqueue(new Callback&lt;Void&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;Void&gt; call, Response&lt;Void&gt; response) {
+<span class="nc bnc" id="L328" title="All 2 branches missed.">                if (!response.isSuccessful()) {</span>
+<span class="nc" id="L329">                    Toast.makeText(getContext(),&quot;something went wrong while creating the queue. try again.&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L330">                    return;</span>
+                }
+
+                else {
+<span class="nc" id="L334">                    shuffleTracks();</span>
+                }
+<span class="nc" id="L336">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;Void&gt; call, Throwable t) {
+<span class="nc" id="L340">                Toast.makeText(getContext(),&quot;something went wrong while creating the queue.check your internet connection.&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L341">            }</span>
+        });
+<span class="nc" id="L343">    }</span>
+
+    void GetAlbumsTracksInfo(String albumID) {
+<span class="fc" id="L346">        Call&lt;AlbumObject&gt; call = endPointAPI.getAlbumObject(albumID,&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWIwOTAxZTMwYTlhMDFmMTQ0YjcyMzUiLCJwcm9kdWN0IjoicHJlbWl1bSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg5OTczOTMzLCJleHAiOjMxNDY0ODg4NzgwMjYwODk1MDB9.gpPtSyJDhiKYB8Lduhnet3upLiXW23HT7KU5Z7oXE8c&quot;);</span>
+<span class="fc" id="L347">        call.enqueue(new Callback&lt;AlbumObject&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;AlbumObject&gt; call, Response&lt;AlbumObject&gt; response) {
+<span class="pc bpc" id="L350" title="2 of 4 branches missed.">                if (!response.isSuccessful() || response.body() == null) {</span>
+<span class="nc" id="L351">                    progress_bar_album.setVisibility(View.GONE);</span>
+<span class="nc" id="L352">                    alum_contents_layout.setVisibility(View.GONE);</span>
+<span class="nc" id="L353">                    something_wrong_text_album.setText(&quot;something went wrong .try again&quot;);</span>
+<span class="nc" id="L354">                    something_wrong_layout_album.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L355">                    return;</span>
+                } else {
+<span class="fc" id="L357">                    AlbumObject = response.body();</span>
+<span class="fc" id="L358">                    FillPlaylistTracks(AlbumObject);</span>
+<span class="fc" id="L359">                    alum_contents_layout.setVisibility(View.VISIBLE);</span>
+<span class="fc" id="L360">                    something_wrong_layout_album.setVisibility(View.GONE);</span>
+<span class="fc" id="L361">                    progress_bar_album.setVisibility(View.GONE);</span>
+          //          albumData.getinstance().setalbumObject(AlbumObject);
+                    //AlbumObject.setIsSaved(true);
+<span class="fc" id="L364">                    getArtistImageId(AlbumObject.getArtistId());</span>
+<span class="fc" id="L365">                    updateUI();</span>
+
+                }
+<span class="fc" id="L368">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;AlbumObject&gt; call, Throwable t) {
+<span class="nc" id="L372">                progress_bar_album.setVisibility(View.GONE);</span>
+<span class="nc" id="L373">                alum_contents_layout.setVisibility(View.GONE);</span>
+<span class="nc" id="L374">                something_wrong_text_album.setText(&quot;something went wrong .check your internet connection&quot;);</span>
+<span class="nc" id="L375">                something_wrong_layout_album.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L376">            }</span>
+        });
+<span class="fc" id="L378">    }</span>
+
+    void getArtistImageId(String artistID) {
+<span class="fc" id="L381">        Call&lt;ImageID&gt; call = endPointAPI.GetImageId(artistID, &quot;artist&quot;, user.getToken());</span>
+<span class="fc" id="L382">        call.enqueue(new Callback&lt;ImageID&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;ImageID&gt; call, Response&lt;ImageID&gt; response) {
+<span class="pc bpc" id="L385" title="2 of 4 branches missed.">                if (!response.isSuccessful() || response.body() == null) {</span>
+<span class="nc" id="L386">                    Toast.makeText(getContext(), &quot;Code: &quot; + response.code(), Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L387">                    return;</span>
+                } else {
+<span class="fc" id="L389">                    ImageID imageId = response.body();</span>
+<span class="fc" id="L390">                    String id = &quot;12d&quot;;</span>
+<span class="pc bpc" id="L391" title="1 of 2 branches missed.">                    if (!imageId.getId().isEmpty()) {</span>
+<span class="fc" id="L392">                        id = imageId.getId();</span>
+                    }
+<span class="fc" id="L394">                    String Imageurl = Retrofit.getInstance().getBaseurl() + &quot;api/images/&quot; + id + &quot;?belongs_to=artist&quot;;</span>
+<span class="fc" id="L395">                    Picasso.get().load(Imageurl).into(artist_album_image);</span>
+                }
+<span class="fc" id="L397">            }</span>
+            @Override
+            public void onFailure(Call&lt;ImageID&gt; call, Throwable t) {
+<span class="nc" id="L400">                Toast.makeText(getContext(), t.getMessage() + &quot; ' failed '&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L401">            }</span>
+        });
+
+<span class="fc" id="L404">    }</span>
+
+
+    void FillPlaylistTracks(AlbumObject albumTracks) {
+
+<span class="fc" id="L409">        PlaylistTracks p = new PlaylistTracks();</span>
+<span class="fc" id="L410">        p.setId(albumTracks.getId());</span>
+<span class="fc" id="L411">        p.setIsLiked(albumTracks.isIsSaved());</span>
+<span class="fc" id="L412">        p.setImages(albumTracks.getImages());</span>
+<span class="fc" id="L413">        p.setName(albumTracks.getName());</span>
+<span class="fc" id="L414">        p.setType(&quot;album&quot;);</span>
+<span class="fc" id="L415">        List&lt;BasicTrack&gt; basic = new ArrayList&lt;&gt;();</span>
+        Track t;
+<span class="fc bfc" id="L417" title="All 2 branches covered.">        for (int i = 0; i &lt; albumTracks.getTrack().size(); i++) {</span>
+<span class="fc" id="L418">            t = albumTracks.getTrack().get(i);</span>
+<span class="fc" id="L419">            BasicTrack basict = new BasicTrack();</span>
+<span class="fc" id="L420">            basict.setIsLiked(t.getLiked());</span>
+<span class="fc" id="L421">            basict.setAlbumId(albumTracks.getId());</span>
+<span class="fc" id="L422">            basict.setAlbumName(albumTracks.getName());</span>
+<span class="fc" id="L423">            basict.setArtistId(albumTracks.getArtistId());</span>
+<span class="fc" id="L424">            basict.setArtistName(albumTracks.getArtistName());</span>
+<span class="fc" id="L425">            basict.setTrackid(t.getId());</span>
+<span class="fc" id="L426">            basict.setName(t.getName());</span>
+<span class="fc" id="L427">            basict.setImages(t.getImages());</span>
+<span class="fc" id="L428">            basic.add(basict);</span>
+        }
+<span class="fc" id="L430">        p.setTracks(basic);</span>
+<span class="fc" id="L431">        PlaylistInfo.getinstance().setPlaylistTracks(p);</span>
+<span class="fc" id="L432">        end=true;</span>
+<span class="fc" id="L433">    }</span>
+
+
+    void FillPlaylistTracks1(AlbumObject albumTracks) {
+
+<span class="nc" id="L438">        PlaylistTracks p = new PlaylistTracks();</span>
+<span class="nc" id="L439">        p.setId(albumTracks.getId());</span>
+<span class="nc" id="L440">        p.setIsLiked(albumTracks.isIsSaved());</span>
+<span class="nc" id="L441">        p.setImages(albumTracks.getImages());</span>
+<span class="nc" id="L442">        p.setName(albumTracks.getName());</span>
+<span class="nc" id="L443">        p.setType(&quot;album&quot;);</span>
+<span class="nc" id="L444">        List&lt;BasicTrack&gt; basic = new ArrayList&lt;&gt;();</span>
+        Track t;
+<span class="nc bnc" id="L446" title="All 2 branches missed.">        for (int i = 0; i &lt; albumTracks.getTrack().size(); i++) {</span>
+<span class="nc" id="L447">            t = albumTracks.getTrack().get(i);</span>
+<span class="nc" id="L448">            BasicTrack basict = new BasicTrack();</span>
+<span class="nc" id="L449">            basict.setIsLiked(albumTracks.getTrack().get(i).getLiked());</span>
+<span class="nc" id="L450">            basict.setAlbumId(albumTracks.getId());</span>
+<span class="nc" id="L451">            basict.setAlbumName(albumTracks.getName());</span>
+<span class="nc" id="L452">            basict.setArtistId(albumTracks.getArtistId());</span>
+<span class="nc" id="L453">            basict.setArtistName(albumTracks.getArtistName());</span>
+<span class="nc" id="L454">            basict.setTrackid(albumTracks.getTrack().get(i).getId());</span>
+<span class="nc" id="L455">            basict.setName(albumTracks.getTrack().get(i).getName());</span>
+<span class="nc" id="L456">            basict.setImages(albumTracks.getTrack().get(i).getImages());</span>
+<span class="nc" id="L457">            basic.add(basict);</span>
+        }
+<span class="nc" id="L459">        p.setTracks(basic);</span>
+<span class="nc" id="L460">        PlaylistInfo.getinstance().setPlaylistTracks(p);</span>
+<span class="nc" id="L461">        end=true;</span>
+<span class="nc" id="L462">    }</span>
+
+
+
+
+
+
+
+    void getPaletteAndSetBackgroundColor(ImageView v, final LinearLayout put) {
+<span class="fc" id="L471">        Bitmap bitmap = ((BitmapDrawable) v.getDrawable()).getBitmap();</span>
+
+<span class="fc" id="L473">        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {</span>
+            @Override
+            public void onGenerated(Palette palette) {
+<span class="pc bpc" id="L476" title="1 of 2 branches missed.">                if (palette.getMutedSwatch() != null) {</span>
+<span class="fc" id="L477">                    GradientDrawable gd = new GradientDrawable(</span>
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+<span class="fc" id="L479">                            new int[]{palette.getMutedSwatch().getRgb(), 0xFF000000});</span>
+<span class="fc" id="L480">                    gd.setCornerRadius(0f);</span>
+<span class="fc" id="L481">                    put.setBackgroundDrawable(gd);</span>
+<span class="pc bnc" id="L482" title="All 2 branches missed.">                } else if (palette.getDarkVibrantSwatch() != null) {</span>
+<span class="nc" id="L483">                    GradientDrawable gd = new GradientDrawable(</span>
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+<span class="nc" id="L485">                            new int[]{palette.getDarkVibrantSwatch().getRgb(), 0xFF000000});</span>
+<span class="nc" id="L486">                    gd.setCornerRadius(0f);</span>
+<span class="nc" id="L487">                    put.setBackgroundDrawable(gd);</span>
+<span class="nc bnc" id="L488" title="All 2 branches missed.">                } else if (palette.getLightMutedSwatch() != null) {</span>
+<span class="nc" id="L489">                    GradientDrawable gd = new GradientDrawable(</span>
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+<span class="nc" id="L491">                            new int[]{palette.getLightMutedSwatch().getRgb(), 0xFF000000});</span>
+<span class="nc" id="L492">                    gd.setCornerRadius(0f);</span>
+<span class="nc" id="L493">                    put.setBackgroundDrawable(gd);</span>
+<span class="nc bnc" id="L494" title="All 2 branches missed.">                } else if (palette.getDarkMutedSwatch() != null) {</span>
+<span class="nc" id="L495">                    GradientDrawable gd = new GradientDrawable(</span>
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+<span class="nc" id="L497">                            new int[]{palette.getDarkMutedSwatch().getRgb(), 0xFF000000});</span>
+<span class="nc" id="L498">                    gd.setCornerRadius(0f);</span>
+<span class="nc" id="L499">                    put.setBackgroundDrawable(gd);</span>
+<span class="nc bnc" id="L500" title="All 2 branches missed.">                } else if (palette.getLightVibrantSwatch() != null) {</span>
+<span class="nc" id="L501">                    GradientDrawable gd = new GradientDrawable(</span>
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+<span class="nc" id="L503">                            new int[]{palette.getLightVibrantSwatch().getRgb(), 0xFF000000});</span>
+<span class="nc" id="L504">                    gd.setCornerRadius(0f);</span>
+<span class="nc" id="L505">                    put.setBackgroundDrawable(gd);</span>
+<span class="nc bnc" id="L506" title="All 2 branches missed.">                } else if (palette.getVibrantSwatch() != null) {</span>
+<span class="nc" id="L507">                    GradientDrawable gd = new GradientDrawable(</span>
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+<span class="nc" id="L509">                            new int[]{palette.getVibrantSwatch().getRgb(), 0xFF000000});</span>
+<span class="nc" id="L510">                    gd.setCornerRadius(0f);</span>
+<span class="nc" id="L511">                    put.setBackgroundDrawable(gd);</span>
+                }
+<span class="fc" id="L513">            }</span>
+        });
+<span class="fc" id="L515">    }</span>
+
+    void updateUI() {
+<span class="fc" id="L518">        List&lt;ImageInfo&gt; images = AlbumObject.getImages();</span>
+<span class="fc" id="L519">        String ImageID = &quot;12d&quot;;</span>
+<span class="pc bpc" id="L520" title="2 of 4 branches missed.">        if (images != null &amp;&amp; images.size() != 0) {</span>
+<span class="fc" id="L521">            ImageID = images.get(0).getID();</span>
+        }
+<span class="fc" id="L523">        String Imageurl = Retrofit.getInstance().getBaseurl() + &quot;api/images/&quot; + ImageID + &quot;?belongs_to=album&quot;;</span>
+        //Picasso.get().load(Imageurl).into(album_image_album_fragment);
+<span class="fc" id="L525">        Picasso.get().load(Imageurl).into(album_image_album_fragment, new com.squareup.picasso.Callback() {</span>
+            @Override
+            public void onSuccess() {
+                // track_image_track_fragment.setImageResource(R.drawable.testimage2);
+<span class="fc" id="L529">                getPaletteAndSetBackgroundColor(album_image_album_fragment, alum_contents_layout);</span>
+<span class="fc" id="L530">            }</span>
+
+            @Override
+            public void onError(Exception e) {
+<span class="nc" id="L534">            }</span>
+        });
+<span class="fc" id="L536">        artist_album_name.setText(AlbumObject.getArtistName());</span>
+<span class="fc" id="L537">        album_name_middle.setText(AlbumObject.getName());</span>
+<span class="fc" id="L538">        album_owner.setText(&quot;BY &quot; + AlbumObject.getArtistName());</span>
+<span class="fc" id="L539">        Artist_Name = AlbumObject.getArtistName();</span>
+<span class="fc" id="L540">        Album_Name = AlbumObject.getName();</span>
+<span class="fc" id="L541">        String songsNames = &quot;&quot;;</span>
+<span class="fc" id="L542">        List&lt;com.example.spotify.BackClasses.Backclasses.albumInform.Track&gt; tracks = AlbumObject.getTrack();</span>
+<span class="fc" id="L543">        int n = 7;</span>
+<span class="pc bpc" id="L544" title="1 of 2 branches missed.">        if (AlbumObject.getTrack().size() &lt; 7) {</span>
+<span class="fc" id="L545">            n = AlbumObject.getTrack().size();</span>
+<span class="nc bnc" id="L546" title="All 2 branches missed.">        } else if (AlbumObject.getTrack().size() == 0) {</span>
+<span class="nc" id="L547">            n = 0;</span>
+        }
+<span class="fc bfc" id="L549" title="All 2 branches covered.">        for (int i = 0; i &lt; n; i++) {</span>
+            //songsNames+= tracks.get(i).getName()+&quot; &quot;;
+<span class="fc" id="L551">            songsNames += tracks.get(i).getName() + &quot; . &quot;;</span>
+        }
+<span class="pc bpc" id="L553" title="1 of 2 branches missed.">        if (AlbumObject.getTrack().size() != 0) {</span>
+<span class="fc" id="L554">            songsNames += &quot;and more&quot;;</span>
+        }
+<span class="fc" id="L556">        preview_text_album.setText(songsNames);</span>
+
+<span class="pc bpc" id="L558" title="1 of 2 branches missed.">        if (CheckTrackInAlbum()) {</span>
+<span class="nc bnc" id="L559" title="All 2 branches missed.">            if (player.getIsPlaying()) {</span>
+<span class="nc" id="L560">                shuffle_play_button_album.setText(&quot;pause&quot;);</span>
+            } else {
+<span class="nc" id="L562">                shuffle_play_button_album.setText(&quot;shuffle play&quot;);</span>
+            }
+        }
+
+<span class="fc bfc" id="L566" title="All 2 branches covered.">        if(AlbumObject.isIsSaved()){</span>
+<span class="fc" id="L567">            like_album.setImageResource(R.drawable.like);</span>
+<span class="fc" id="L568">            liked=1;</span>
+        }
+        else{
+<span class="fc" id="L571">            like_album.setImageResource(R.drawable.favorite_border);</span>
+<span class="fc" id="L572">            liked=0;</span>
+
+        }
+
+
+<span class="fc" id="L577">    }</span>
+
+    /**
+     * send a request to UNlike(follow) the ALBUM
+     */
+    void UnLikeAlbum(){
+<span class="fc" id="L583">        likealbum unlikealbum1 = new likealbum(albumID);</span>
+<span class="fc" id="L584">        Call&lt;Void&gt; call = endPointAPI.UN_LIKE_ALBUM(unlikealbum1,&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWIwOTAxZTMwYTlhMDFmMTQ0YjcyMzUiLCJwcm9kdWN0IjoicHJlbWl1bSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg5OTczOTMzLCJleHAiOjMxNDY0ODg4NzgwMjYwODk1MDB9.gpPtSyJDhiKYB8Lduhnet3upLiXW23HT7KU5Z7oXE8c&quot;);</span>
+<span class="fc" id="L585">        call.enqueue(new Callback&lt;Void&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;Void&gt; call, Response&lt;Void&gt; response) {
+
+<span class="pc bpc" id="L589" title="1 of 2 branches missed.">                if(!response.isSuccessful()){</span>
+<span class="nc" id="L590">                    Toast.makeText(getContext(),&quot;something went wrong .try again&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L591">                    return;</span>
+                }
+                else
+                {
+
+<span class="fc" id="L596">                    like_album.setImageResource(R.drawable.favorite_border);</span>
+<span class="fc" id="L597">                    liked=0;</span>
+<span class="fc" id="L598">                    AlbumObject.setIsSaved(false);</span>
+                }
+<span class="fc" id="L600">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;Void&gt; call, Throwable t) {
+<span class="nc" id="L604">                Toast.makeText(getContext(),&quot;something went wrong .check your internet connection&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L605">            }</span>
+        });
+<span class="fc" id="L607">    }</span>
+
+    /**
+     * send a request to like(unfollow) the ALBUM
+     */
+    void LikeAlbum(){
+<span class="fc" id="L613">        likealbum likealbum1 = new likealbum(albumID);</span>
+<span class="fc" id="L614">        Call&lt;Void&gt; call = endPointAPI.LIKE_ALBUM(likealbum1 , &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWIwOTAxZTMwYTlhMDFmMTQ0YjcyMzUiLCJwcm9kdWN0IjoicHJlbWl1bSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg5OTczOTMzLCJleHAiOjMxNDY0ODg4NzgwMjYwODk1MDB9.gpPtSyJDhiKYB8Lduhnet3upLiXW23HT7KU5Z7oXE8c&quot;);</span>
+<span class="fc" id="L615">        call.enqueue(new Callback&lt;Void&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;Void&gt; call, Response&lt;Void&gt; response) {
+
+<span class="pc bpc" id="L619" title="1 of 2 branches missed.">                if(!response.isSuccessful()){</span>
+<span class="nc" id="L620">                    Toast.makeText(getContext(),&quot;something went wrong .try again&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L621">                    return;</span>
+                }
+                else
+                {
+<span class="fc" id="L625">                    like_album.setImageResource(R.drawable.like);</span>
+<span class="fc" id="L626">                    liked=1;</span>
+<span class="fc" id="L627">                    AlbumObject.setIsSaved(true);</span>
+                }
+<span class="fc" id="L629">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;Void&gt; call, Throwable t) {
+<span class="nc" id="L633">                Toast.makeText(getContext(),&quot;something went wrong .check your internet connection&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L634">            }</span>
+        });
+<span class="fc" id="L636">    }</span>
+
+    @Override
+    public void onDestroyView() {
+<span class="fc" id="L640">        super.onDestroyView();</span>
+        //albumData.getinstance().clearinstance();
+
+<span class="fc" id="L643">    }</span>
+
+    @Override
+    public void onDestroy() {
+<span class="fc" id="L647">        super.onDestroy();</span>
+<span class="fc" id="L648">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

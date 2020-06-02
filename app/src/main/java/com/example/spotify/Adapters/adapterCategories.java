@@ -88,7 +88,7 @@ public class adapterCategories extends RecyclerView.Adapter<adapterCategories.My
 
                 Bundle bundle = new Bundle();
                 bundle.putString("CategoryID" ,Categorylist.get(position).getId());
-                //bundle.putString("ownerName" , list1.getOwner().getName());
+                bundle.putString("CategoryName" , Categorylist.get(position).getName());
                 androidx.fragment.app.Fragment f = new categoryplaylist();
                 f.setArguments(bundle);
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();

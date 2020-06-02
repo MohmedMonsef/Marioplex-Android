@@ -61,7 +61,6 @@ public class searchListfragment extends Fragment implements LifecycleOwner
     String word;
     private Retrofit retrofit;
     private backinterfaces apiService;
-    private viewmodelSearchList searchViewModel;
     EditText editText;
 
     @Override
@@ -69,7 +68,6 @@ public class searchListfragment extends Fragment implements LifecycleOwner
                              Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_search_listfragment, container, false);
-        searchViewModel = ViewModelProviders.of((MainActivity) getActivity()).get(viewmodelSearchList.class);
         final TextView textView = view.findViewById(R.id.text_home);
         l1=(LinearLayout) view.findViewById(R.id.searchlistlayout);
         l1.setBackground(getResources().getDrawable(R.drawable.item));

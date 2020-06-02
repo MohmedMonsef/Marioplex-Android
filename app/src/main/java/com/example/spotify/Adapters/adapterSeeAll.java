@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify.BackClasses.Backclasses.aclass;
 import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
+import com.example.spotify.Fragments.ALBUM_FRAGMENT.album;
 import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
+import com.example.spotify.Fragments.TrackFragment;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.squareup.picasso.Picasso;
@@ -122,6 +124,10 @@ public class adapterSeeAll extends RecyclerView.Adapter<adapterSeeAll.MyviewHold
         }
         Picasso.get().load(Imageurl).into(holder.itemImage);
 
+
+
+
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,6 +146,34 @@ public class adapterSeeAll extends RecyclerView.Adapter<adapterSeeAll.MyviewHold
                             .addToBackStack(null).commit();
                 }
 
+                else if(list1.get(position).getType().equals("Album")){
+                    Bundle bundle = new Bundle();
+                    bundle.putString("albumID" , list1.get(position).getid());
+                    //bundle.putString("artistName" , item.getArtist().getName());
+                    androidx.fragment.app.Fragment f = new album();
+                    f.setArguments(bundle);
+                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                    activity.getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.frame_fragment, f)
+                            .addToBackStack(null).commit();
+                }
+
+                else if(list1.get(position).getType().equals("Track")){
+                    Bundle bundle = new Bundle();
+                    bundle.putString("TrackID" , list1.get(position).getid());
+                    bundle.putString("TrackName" , list1.get(position).getName());
+                    bundle.putString("TrackImage" , list1.get(position).getImage());
+                    //bundle.putString("ownerName" , list1.getOwner().getName());
+
+                    androidx.fragment.app.Fragment f = new TrackFragment();
+                    f.setArguments(bundle);
+                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                    activity.getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.frame_fragment, f)
+                            .addToBackStack(null).commit();
+                }
 
             }
         });

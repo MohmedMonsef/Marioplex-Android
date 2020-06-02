@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>see_all_playlist_Fragment.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.Fragments.SEE_PLAYLIST_FRAGMENT</a> &gt; <span class="el_source">see_all_playlist_Fragment.java</span></div><h1>see_all_playlist_Fragment.java</h1><pre class="source lang-java linenums">package com.example.spotify.Fragments.SEE_PLAYLIST_FRAGMENT;
+
+import android.content.Context;
+import android.net.Uri;
+import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Adapters.adapterSearch;
+import com.example.spotify.Adapters.adapterSearch1;
+import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
+import com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT.searchListfragment;
+import com.example.spotify.Interfaces.backinterfaces;
+import com.example.spotify.R;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
+
+<span class="fc" id="L35">public class see_all_playlist_Fragment extends Fragment implements LifecycleOwner {</span>
+    Search searchList;
+    RecyclerView recyclerView,recyclerView1;
+    adapterSearch1 recyclerAdapter,recyclerAdapter1;
+    private TextView textViewResult;
+    private Retrofit retrofit;
+    private backinterfaces apiService;
+    TextView ArtistText;
+    String wordRecieve;
+    ImageView back_button_to_seeAllPlaylist;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+<span class="fc" id="L49">        View view = inflater.inflate(R.layout.fragment_see_all_playlist_, container, false);</span>
+        //searchView.setOnSearchClickListener(View.OnClickListener on);
+<span class="fc" id="L51">        final TextView textView = view.findViewById(R.id.text_home);</span>
+<span class="fc" id="L52">        ArtistText=view.findViewById(R.id.textalbumsearch);</span>
+<span class="fc" id="L53">        retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();</span>
+<span class="fc" id="L54">        apiService = retrofit.create(backinterfaces.class);</span>
+        ////*******************************RecyclerView***********************////
+<span class="fc" id="L56">        searchList = new Search();</span>
+<span class="fc" id="L57">        recyclerView = (RecyclerView) view.findViewById(R.id.recycleSearchSeeAllPlaylist);</span>
+<span class="fc" id="L58">        recyclerView1 = (RecyclerView) view.findViewById(R.id.recycleSearchSeeAllPlaylist1);</span>
+        LinearLayoutManager layoutManager,layoutManager1;
+<span class="fc" id="L60">        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);</span>
+<span class="fc" id="L61">        layoutManager1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);</span>
+<span class="fc" id="L62">        recyclerView.setLayoutManager(layoutManager);</span>
+<span class="fc" id="L63">        recyclerView1.setLayoutManager(layoutManager1);</span>
+<span class="fc" id="L64">        Bundle args=getArguments();</span>
+<span class="fc" id="L65">        wordRecieve = getArguments().getString(&quot;DATA_RECIEVE_Playlist&quot;);</span>
+<span class="fc" id="L66">        ArtistText.setText(&quot;' &quot;+wordRecieve+&quot;'&quot;+&quot;  in Playlist &quot;);</span>
+<span class="fc" id="L67">        back_button_to_seeAllPlaylist=view.findViewById(R.id.back_button_to_seeAllPlaylist);</span>
+<span class="fc" id="L68">        back_button_to_seeAllPlaylist.setOnClickListener(new View.OnClickListener()</span>
+<span class="fc" id="L69">        {</span>
+            @Override
+            public void onClick(View v)
+            {
+<span class="nc" id="L73">                Fragment newFragment = new searchListfragment();</span>
+<span class="nc" id="L74">                FragmentTransaction transaction = getFragmentManager().beginTransaction();</span>
+<span class="nc" id="L75">                transaction.replace(R.id.frame_fragment, newFragment);</span>
+<span class="nc" id="L76">                transaction.addToBackStack(null);</span>
+<span class="nc" id="L77">                transaction.commit();</span>
+<span class="nc" id="L78">            }</span>
+        });
+<span class="fc" id="L80">        SetRetrofitsearchalbum(wordRecieve);</span>
+        ////*******************************To check the state***********************////
+<span class="fc" id="L82">        textViewResult = view.findViewById(R.id.texta);</span>
+<span class="fc" id="L83">        return view;</span>
+    }
+
+    public void SetRetrofitsearchalbum(String s)
+    {
+<span class="fc" id="L88">        Call&lt;Search&gt; call = apiService.getSearch(s, &quot;playlist&quot; , &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTgwYzZhZjE0Yzg1NjZkNmNkOWI0MDAiLCJwcm9kdWN0IjoiZnJlZSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg2MDI2NjAyLCJleHAiOjQ3MzI1MTMwMDJ9.ztEjNCgbkyJ2-9WB6ojwLgDfhWsZ-ZGJVFUB8dYMz8s&quot;);</span>
+<span class="fc" id="L89">        call.enqueue(new Callback&lt;Search&gt;()</span>
+<span class="fc" id="L90">        {</span>
+            /**
+             *
+             * @param call --&gt; interface request
+             * @param response --&gt; interface response
+             * called when every changed requests and set the data
+             */
+            @Override
+            public void onResponse(Call&lt;Search&gt; call, Response&lt;Search&gt; response)
+            {
+                //error in the server
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">                if (response.code() == 401)</span>
+<span class="nc" id="L102">                    textViewResult.setText(response.errorBody().toString() + &quot;401&quot;);</span>
+                    //may internet disconnected
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">                else if (!response.isSuccessful())</span>
+                {
+<span class="nc" id="L106">                    textViewResult.setText(&quot;Code: &quot; + response.code());</span>
+<span class="nc" id="L107">                    return;</span>
+                }
+                //if responcse is successful and the server send response
+<span class="fc" id="L110">                searchList = response.body();</span>
+                //error in GET request url
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">                if (response.body() == null)</span>
+<span class="nc" id="L113">                    textViewResult.setText(&quot;responce body = null&quot;);</span>
+                    //error in binding interface
+<span class="pc bpc" id="L115" title="1 of 2 branches missed.">                else if (searchList == null)</span>
+<span class="nc" id="L116">                    textViewResult.setText(response.body().toString() + &quot; search = null&quot;);</span>
+                    //Successful
+                else
+                {
+<span class="fc" id="L120">                    Log.d(&quot;TAG&quot;, &quot;Response = &quot; + searchList);</span>
+                    //set the search recyclerview
+<span class="fc" id="L122">                    recyclerAdapter = new adapterSearch1(getActivity(), searchList);</span>
+<span class="fc" id="L123">                    recyclerAdapter1 = new adapterSearch1(getActivity(), searchList);</span>
+<span class="fc" id="L124">                    recyclerView.setAdapter(recyclerAdapter);</span>
+<span class="fc" id="L125">                    recyclerView.setHasFixedSize(true);</span>
+<span class="fc" id="L126">                    recyclerView1.setAdapter(recyclerAdapter1);</span>
+<span class="fc" id="L127">                    recyclerView1.setHasFixedSize(true);</span>
+
+                }
+<span class="fc" id="L130">            }</span>
+
+            /**
+             *
+             * @param call --&gt;interface request
+             * @param t --&gt;type of error of the request
+             * called when every errored requests and set its type
+             */
+            @Override
+            public void onFailure(Call&lt;Search&gt; call, Throwable t)
+            {
+<span class="nc" id="L141">                textViewResult.setText(t.getMessage() + &quot;hey there failed&quot;);</span>
+<span class="nc" id="L142">            }</span>
+        });
+<span class="fc" id="L144">    }</span>
+
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

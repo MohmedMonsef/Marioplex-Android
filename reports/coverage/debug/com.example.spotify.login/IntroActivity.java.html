@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IntroActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.login</a> &gt; <span class="el_source">IntroActivity.java</span></div><h1>IntroActivity.java</h1><pre class="source lang-java linenums">package com.example.spotify.login;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.widget.ToolbarWidgetWrapper;
+import androidx.fragment.app.Fragment;
+
+import android.animation.TimeAnimator;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.ViewDebug;
+import android.widget.Toast;
+
+import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.R;
+import com.example.spotify.login.apiClasses.FacebookLoginData;
+import com.example.spotify.login.apiClasses.LoginResponse;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+<span class="fc" id="L45">public class IntroActivity extends AppCompatActivity {</span>
+
+    //final private static int ANIMATION_DURATION = 200;
+
+<span class="fc" id="L49">    private static Retrofit retrofit = null;</span>
+<span class="fc" id="L50">    private static EndPointAPI endPointAPI = null;</span>
+<span class="fc" id="L51">    private static LoginFragment loginFragment = null;</span>
+<span class="fc" id="L52">    private static SignUpFragment signUpFragment= null;</span>
+
+
+    //private static String token = null;
+    private static float displayWidth;
+
+    CallbackManager callbackManager;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L62">        super.onCreate(savedInstanceState);</span>
+
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">        if(loadToken()){</span>
+<span class="fc" id="L65">            user.fetchUserData();</span>
+<span class="fc" id="L66">            startActivity(new Intent(IntroActivity.this, MainActivity.class));</span>
+<span class="fc" id="L67">            finish();</span>
+<span class="fc" id="L68">            return;</span>
+        }
+
+<span class="nc" id="L71">        setContentView(R.layout.activity_intro);</span>
+
+<span class="nc" id="L73">        retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();</span>
+
+<span class="nc" id="L75">        endPointAPI = com.example.spotify.Interfaces.Retrofit.getInstance().getEndPointAPI();</span>
+
+<span class="nc" id="L77">        calculateDisplayWidth();</span>
+
+
+<span class="nc" id="L80">        findViewById(R.id.intro_fragment).setTranslationX(displayWidth);</span>
+
+<span class="nc" id="L82">        findViewById(R.id.login_facebook_button).setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L85">                loginByFacebook();</span>
+<span class="nc" id="L86">            }</span>
+        });
+<span class="nc" id="L88">    }</span>
+
+    /**
+     * Fetch user data from facebook and use to login into the app
+     */
+    private void loginByFacebook(){
+<span class="nc" id="L94">        LoginManager loginManager = LoginManager.getInstance();</span>
+<span class="nc" id="L95">        loginManager.logOut();</span>
+<span class="nc" id="L96">        loginManager.logIn(IntroActivity.this, Arrays.asList(&quot;email&quot;,&quot;user_gender&quot;,&quot;user_birthday&quot;));</span>
+<span class="nc" id="L97">        callbackManager = CallbackManager.Factory.create();</span>
+<span class="nc" id="L98">        loginManager.registerCallback(callbackManager, new FacebookCallback&lt;LoginResult&gt;() {</span>
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+<span class="nc" id="L101">                GraphRequest request = GraphRequest.newMeRequest(</span>
+<span class="nc" id="L102">                        loginResult.getAccessToken(),</span>
+<span class="nc" id="L103">                        new GraphRequest.GraphJSONObjectCallback() {</span>
+                            @Override
+                            public void onCompleted(
+                                    JSONObject object,
+                                    GraphResponse response) {
+                                // Application code
+                                try {
+<span class="nc" id="L110">                                    FacebookLoginData data = new FacebookLoginData();</span>
+<span class="nc" id="L111">                                    data.setName(object.getString(&quot;name&quot;));</span>
+<span class="nc" id="L112">                                    data.setEmail(object.getString(&quot;email&quot;));</span>
+<span class="nc" id="L113">                                    data.setGender(object.getString(&quot;gender&quot;));</span>
+<span class="nc" id="L114">                                    data.setBirthday(object.getString(&quot;birthday&quot;));</span>
+<span class="nc" id="L115">                                    saveAndLaunchMainActivity(data);</span>
+
+<span class="nc" id="L117">                                } catch (JSONException e) {</span>
+<span class="nc" id="L118">                                    e.printStackTrace();</span>
+<span class="nc" id="L119">                                }</span>
+
+<span class="nc" id="L121">                            }</span>
+                        });
+<span class="nc" id="L123">                Bundle parameters = new Bundle();</span>
+<span class="nc" id="L124">                parameters.putString(&quot;fields&quot;, &quot;name,email,gender,birthday&quot;);</span>
+<span class="nc" id="L125">                request.setParameters(parameters);</span>
+<span class="nc" id="L126">                request.executeAsync();</span>
+<span class="nc" id="L127">            }</span>
+
+            @Override
+            public void onCancel() {
+<span class="nc" id="L131">                Toast.makeText(IntroActivity.this,&quot;Cancel&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L132">            }</span>
+
+            @Override
+            public void onError(FacebookException error) {
+<span class="nc" id="L136">                Toast.makeText(IntroActivity.this,&quot;Error&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L137">            }</span>
+        });
+<span class="nc" id="L139">    }</span>
+
+    /**
+     * Send user's facebook data to the database and launche the main app activity
+     * @param data User data received from facebook api
+     */
+    private void saveAndLaunchMainActivity(FacebookLoginData data){
+<span class="nc" id="L146">        endPointAPI.facebookLogin(data).enqueue(new Callback&lt;LoginResponse&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;LoginResponse&gt; call, Response&lt;LoginResponse&gt; response) {
+<span class="nc bnc" id="L149" title="All 2 branches missed.">                if(response.isSuccessful()) {</span>
+<span class="nc" id="L150">                    user.setToken(response.body().getToken());</span>
+<span class="nc" id="L151">                    Toast.makeText(IntroActivity.this, &quot;Sucess &quot; + response.code(), Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L152">                    user.fetchUserData();</span>
+<span class="nc" id="L153">                    startActivity(new Intent(IntroActivity.this, MainActivity.class));</span>
+<span class="nc" id="L154">                    finish();</span>
+                }
+                else {
+<span class="nc" id="L157">                    Toast.makeText(IntroActivity.this,&quot;Failed to login &quot; + response.message(),Toast.LENGTH_SHORT).show();</span>
+                }
+<span class="nc" id="L159">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;LoginResponse&gt; call, Throwable t) {
+
+<span class="nc" id="L164">            }</span>
+        });
+<span class="nc" id="L166">    }</span>
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+<span class="nc" id="L171">        super.onActivityResult(requestCode, resultCode, data);</span>
+<span class="nc" id="L172">        callbackManager.onActivityResult(requestCode, resultCode, data);</span>
+<span class="nc" id="L173">    }</span>
+
+    /**
+     * Display login screen
+     * @param view The calling View
+     */
+    public void showLoginFragment(View view) {
+<span class="nc" id="L180">        loginFragment = new LoginFragment(retrofit,endPointAPI);</span>
+<span class="nc" id="L181">        showFragment(loginFragment);</span>
+<span class="nc" id="L182">    }</span>
+
+
+    /**
+     * Display Sign up screen
+     * @param view The calling View
+     */
+    public void showSignUpFragment(View view){
+<span class="nc" id="L190">        signUpFragment = new SignUpFragment(retrofit,endPointAPI);</span>
+<span class="nc" id="L191">        showFragment(signUpFragment);</span>
+<span class="nc" id="L192">    }</span>
+
+    /**
+     * Called when the activity has detected the user's press of the back key.
+     */
+    @Override
+    public void onBackPressed() {
+<span class="nc bnc" id="L199" title="All 2 branches missed.">        if(loginFragment != null){</span>
+<span class="nc" id="L200">            hideFragment(loginFragment);</span>
+<span class="nc" id="L201">            loginFragment = null;</span>
+        }
+<span class="nc bnc" id="L203" title="All 2 branches missed.">        else if(signUpFragment != null){</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">            if(!signUpFragment.handleOnBackPressed()) {</span>
+<span class="nc" id="L205">                hideFragment(signUpFragment);</span>
+<span class="nc" id="L206">                signUpFragment = null;</span>
+            }
+        }
+        else{
+<span class="nc" id="L210">            super.onBackPressed();</span>
+        }
+<span class="nc" id="L212">    }</span>
+
+
+    /**
+     * Display passed fragment
+     * @param fragment loginFragment or SignUpFragment
+     */
+    public void showFragment(Fragment fragment){
+<span class="nc" id="L220">        getSupportFragmentManager().beginTransaction().replace(R.id.intro_fragment,fragment).commit();</span>
+<span class="nc" id="L221">        findViewById(R.id.intro).animate().translationX(-displayWidth);</span>
+<span class="nc" id="L222">        findViewById(R.id.intro_fragment).animate().translationX(0);</span>
+<span class="nc" id="L223">    }</span>
+
+    /**
+     * Hide passed fragment
+     * @param fragment loginFragment or SignUpFragment
+     */
+    public void hideFragment(final Fragment fragment){
+<span class="nc" id="L230">        findViewById(R.id.intro).animate().translationX(0);</span>
+<span class="nc" id="L231">        findViewById(R.id.intro_fragment).animate().translationX(displayWidth).withEndAction(new Runnable() {</span>
+            @Override
+            public void run() {
+<span class="nc" id="L234">                getSupportFragmentManager().beginTransaction().remove(fragment).commit();</span>
+<span class="nc" id="L235">            }</span>
+        });
+<span class="nc" id="L237">    }</span>
+
+    boolean loadToken(){
+<span class="fc" id="L240">        SharedPreferences sharedPreferences = getSharedPreferences(&quot;token&quot;, Context.MODE_PRIVATE);</span>
+<span class="fc" id="L241">        String token = sharedPreferences.getString(&quot;token&quot;,null);</span>
+<span class="pc bpc" id="L242" title="1 of 2 branches missed.">        if(token == null){</span>
+<span class="nc" id="L243">            return false;</span>
+        }
+        else{
+<span class="fc" id="L246">            user.setToken(token);</span>
+<span class="fc" id="L247">            return true;</span>
+        }
+    }
+
+    /**
+     * Read the device display width
+     */
+    public void calculateDisplayWidth(){
+<span class="nc" id="L255">        DisplayMetrics displayMetrics = new DisplayMetrics();</span>
+<span class="nc" id="L256">        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);</span>
+<span class="nc" id="L257">        displayWidth = displayMetrics.widthPixels;</span>
+<span class="nc" id="L258">    }</span>
+
+    public static float getDisplayWidth() {
+<span class="nc" id="L261">        return displayWidth;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

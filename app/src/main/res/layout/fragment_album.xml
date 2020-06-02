@@ -43,6 +43,15 @@
                 android:textStyle="bold" />
 
             <ImageView
+                android:id="@+id/like_album"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/album_settings_button"
+                android:padding="16dp"
+                android:src="@drawable/favorite_border" />
+
+            <ImageView
                 android:id="@+id/album_settings_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -51,14 +60,6 @@
                 android:padding="16dp"
                 android:src="@drawable/more_options" />
 
-            <ImageView
-                android:id="@+id/like_album"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/album_settings_button"
-                android:padding="16dp"
-                android:src="@drawable/favorite_border" />
 
         </RelativeLayout>
 

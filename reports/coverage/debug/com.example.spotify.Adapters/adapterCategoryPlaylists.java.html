@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>adapterCategoryPlaylists.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.Adapters</a> &gt; <span class="el_source">adapterCategoryPlaylists.java</span></div><h1>adapterCategoryPlaylists.java</h1><pre class="source lang-java linenums">package com.example.spotify.Adapters;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.spotify.BackClasses.Backclasses.backcategoryplaylist.CategoryPlaylist;
+import com.example.spotify.BackClasses.Backclasses.backcategoryplaylist.Playlist;
+import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
+import com.example.spotify.Interfaces.Retrofit;
+import com.example.spotify.R;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+public class adapterCategoryPlaylists extends RecyclerView.Adapter&lt;adapterCategoryPlaylists.MyviewHolder&gt; {
+    private Context context;
+    private List&lt;Playlist&gt; Categoryplaylist;
+    /**
+     * @param context
+     * @param Categoryplaylist
+     * set the adapterPopularArtist with list
+     */
+    public adapterCategoryPlaylists(Context context, CategoryPlaylist Categoryplaylist)
+<span class="fc" id="L32">    {</span>
+<span class="fc" id="L33">        this.context = context;</span>
+<span class="fc" id="L34">        this.Categoryplaylist = Categoryplaylist.getPlaylists();</span>
+<span class="fc" id="L35">    }</span>
+
+    public void setMovieList(CategoryPlaylist movieList)
+    {
+<span class="nc" id="L39">        this.Categoryplaylist = movieList.getPlaylists();</span>
+<span class="nc" id="L40">        notifyDataSetChanged();</span>
+<span class="nc" id="L41">    }</span>
+
+    /**
+     * @param parent --&gt; the view that has the recyclerview of this class
+     * @param viewType--&gt;
+     * @return new object of the view holder
+     */
+    @Override
+    public adapterCategoryPlaylists.MyviewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    {
+<span class="fc" id="L51">        View view = LayoutInflater.from(context).inflate(R.layout.playlistcategory,parent,false);</span>
+<span class="fc" id="L52">        return new MyviewHolder(view);</span>
+    }
+
+    /**
+     *
+     * @param holder --&gt;that has the view item (layout)
+     * @param position --&gt;index of the item in the list
+     * set on item of recyclerview with its data
+     */
+    @Override
+    public void onBindViewHolder(adapterCategoryPlaylists.MyviewHolder holder, final int position)
+    {
+
+<span class="fc" id="L65">        holder.playlisName1.setText(Categoryplaylist.get(position).getName());</span>
+<span class="fc" id="L66">        holder.OwnerName1.setText(Categoryplaylist.get(position).getOwnerName());</span>
+        /// check if the image not null
+<span class="fc" id="L68">        String imageID = &quot;12D&quot;;</span>
+<span class="pc bpc" id="L69" title="3 of 6 branches missed.">        if(Categoryplaylist.get(position).getImages()!= null &amp; Categoryplaylist.get(position).getImages().size()!=0)</span>
+        {
+<span class="fc" id="L71">            imageID = Categoryplaylist.get(position).getImages().get(0).getID();</span>
+        }
+<span class="fc" id="L73">        String Imageurl = Retrofit.getInstance().getBaseurl() + &quot;api/images/&quot; + imageID + &quot;?belongs_to=playlist&quot;;</span>
+<span class="fc" id="L74">        Picasso.get().load(Imageurl).into(holder.playlistimage1);</span>
+        /**
+         * a click listener handel the item view
+         */
+<span class="fc" id="L78">        holder.itemView.setOnClickListener(new View.OnClickListener() {</span>
+            /**
+             *
+             * @param v
+             * go to the next fragment from the selected item view
+             */
+            @Override
+            public void onClick(View v)
+            {
+
+<span class="fc" id="L88">                Bundle bundle = new Bundle();</span>
+<span class="fc" id="L89">                bundle.putString(&quot;playlistID&quot; , Categoryplaylist.get(position).getId());</span>
+                //bundle.putString(&quot;ownerName&quot; , list1.getOwner().getName());
+
+<span class="fc" id="L92">                androidx.fragment.app.Fragment f = new PlaylistFragment();</span>
+<span class="fc" id="L93">                f.setArguments(bundle);</span>
+<span class="fc" id="L94">                AppCompatActivity activity = (AppCompatActivity) v.getContext();</span>
+<span class="fc" id="L95">                activity.getSupportFragmentManager()</span>
+<span class="fc" id="L96">                        .beginTransaction()</span>
+<span class="fc" id="L97">                        .replace(R.id.frame_fragment, f)</span>
+<span class="fc" id="L98">                        .addToBackStack(null).commit();</span>
+<span class="fc" id="L99">            }</span>
+        });
+
+
+
+<span class="fc" id="L104">    }</span>
+
+    /**
+     *
+     * @return --&gt; NewReleaseList size
+     */
+    @Override
+    public int getItemCount()
+    {
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">        if(Categoryplaylist != null)</span>
+        {
+<span class="fc" id="L115">            return Categoryplaylist.size();</span>
+        }
+<span class="nc" id="L117">        return 0;</span>
+    }
+
+    /**
+     * a class that handel the parsing of the recyclerview data
+     */
+    public class MyviewHolder extends RecyclerView.ViewHolder
+    {
+
+
+        TextView playlisName1;
+        TextView OwnerName1;
+        ImageView playlistimage1;
+
+        public MyviewHolder(View itemView)
+<span class="fc" id="L132">        {</span>
+<span class="fc" id="L133">            super(itemView);</span>
+<span class="fc" id="L134">            playlisName1 = (TextView)itemView.findViewById(R.id.NameOfPlaylist1);</span>
+<span class="fc" id="L135">            OwnerName1 = (TextView)itemView.findViewById(R.id.NameOfOwner1);</span>
+<span class="fc" id="L136">            playlistimage1 = (ImageView)itemView.findViewById(R.id.playlist_image1);</span>
+<span class="fc" id="L137">        }</span>
+    }
+        //////////////******************************///
+       /* TextView ImageName;
+        ImageView image;
+
+        public MyviewHolder(View itemView)
+        {
+            super(itemView);
+            ImageName = (TextView)itemView.findViewById(R.id.NameOfImage);
+            image = (ImageView)itemView.findViewById(R.id.entity_image);
+        }
+    }*/
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

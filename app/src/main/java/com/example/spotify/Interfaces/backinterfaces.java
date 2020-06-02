@@ -46,7 +46,7 @@ public interface backinterfaces
     public Call<Category> getCategories(@Header("x-auth-token") String token);
 
     @GET("api/browse/categories/{category_id}/playlists")
-    public Call<CategoryPlaylist> getCategoryPlaylist(@Path("category_id") String category_id,@Header("x-auth-token") String token);
+    public Call<CategoryPlaylist> getCategoryPlaylist(@Path("category_id") String category_id,@Query("limit") int limit,@Query("offset") int offset,@Header("x-auth-token") String token);
     @GET("api/me/albums")
     public Call<SavedAlbums> getSavedAlbums(@Header("x-auth-token") String token);
     @DELETE("api/me/Albums")

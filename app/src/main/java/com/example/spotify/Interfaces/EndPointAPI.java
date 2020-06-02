@@ -212,4 +212,7 @@ public interface EndPointAPI {
 
     @HTTP(method = "DELETE", path ="api/me/Albums" ,hasBody = true)
     Call<Void> UN_LIKE_ALBUM(@Body likealbum ids,@Header("x-auth-token") String token);
+
+    ///////**************//////////////////////////////*********************
+
 }
