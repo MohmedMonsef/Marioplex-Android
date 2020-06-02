@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify.BackClasses.Backclasses.backpopularartist.Artist;
-import com.example.spotify.Fragments.NEW_RELEASE_FRAHMENT.newReleaseFragment;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
 import com.squareup.picasso.Picasso;
@@ -84,14 +83,9 @@ public class adapterPopularArtist extends RecyclerView.Adapter<adapterPopularArt
             public void onClick(View v)
             {
 
-                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                Fragment myFragment = new newReleaseFragment();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, myFragment).addToBackStack(null).commit();
 
             }
         });
-
-
 
     }
     /**

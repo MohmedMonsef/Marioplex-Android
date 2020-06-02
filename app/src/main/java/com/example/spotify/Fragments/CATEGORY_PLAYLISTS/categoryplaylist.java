@@ -33,9 +33,9 @@ import retrofit2.Retrofit;
 
 public class categoryplaylist extends Fragment implements LifecycleOwner
 {
-    CategoryPlaylist Categoryplaylist;
-    RecyclerView recyclerView;
-    adapterCategoryPlaylists recyclerAdapter;
+    CategoryPlaylist Categoryplaylist,Categoryplaylist1;
+    RecyclerView recyclerView,recyclerView1;
+    adapterCategoryPlaylists recyclerAdapter,recyclerAdapter1;
     private TextView textViewResult;
     String categoryid,categoryname;
     /**
@@ -59,16 +59,83 @@ public class categoryplaylist extends Fragment implements LifecycleOwner
         textViewResult.setText(categoryname);
         ////*******************************RecyclerView***********************////
         Categoryplaylist = new CategoryPlaylist();
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycleCategoryPlaylist);
-        LinearLayoutManager layoutManager;
+        Categoryplaylist1 = new CategoryPlaylist();
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycleCategoryPlaylist1);
+        LinearLayoutManager layoutManager,layoutManager1;
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
+        recyclerView1 = (RecyclerView) view.findViewById(R.id.recycleCategoryPlaylist2);
+        layoutManager1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        recyclerView1.setLayoutManager(layoutManager1);
         SetRetrofit(categoryid);
-
+        SetRetrofit1(categoryid);
         return view;
 
     }
+
+    private void SetRetrofit1(String Id)
+    {
+
+        Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
+        backinterfaces apiService = retrofit.create(backinterfaces.class);
+        Call<CategoryPlaylist> call = apiService.getCategoryPlaylist(Id,20,21, user.getToken());
+        call.enqueue(new Callback<CategoryPlaylist>()
+        {
+
+            /**
+             *
+             * @param call --> interface request
+             * @param response --> interface response
+             * called when every changed requests and set the data
+             */
+            @Override
+            public void onResponse(Call<CategoryPlaylist> call, Response<CategoryPlaylist> response)
+            {
+                //error in the server
+                if (response.code() == 401)
+                    textViewResult.setText(response.errorBody().toString() + "401");
+                    //may internet disconnected
+                else if (!response.isSuccessful())
+                {
+                    textViewResult.setText("Code: " + response.code());
+                    return;
+                }
+                //if responcse is successful and the server send response
+                Categoryplaylist1 = response.body();
+                //error in GET request url
+                if (response.body() == null)
+                    textViewResult.setText("responce body = null");
+                    //error in binding interface
+                else if (Categoryplaylist1 == null)
+                    textViewResult.setText(response.body().toString() + " CategoriesList = null");
+                    //Successful
+                else
+                {
+                    Log.d("TAG", "Response = " + Categoryplaylist1);
+                    recyclerAdapter1 = new adapterCategoryPlaylists(getActivity(), Categoryplaylist1);
+                    recyclerView1.setAdapter(recyclerAdapter1);
+                    recyclerView1.setHasFixedSize(true);
+                }
+
+            }
+            /**
+             *
+             * @param call -->interface request
+             * @param t -->type of error of the request
+             * called when every errored requests and set its type
+             */
+            @Override
+            public void onFailure(Call<CategoryPlaylist> call, Throwable t)
+            {
+                textViewResult.setText(t.getMessage() + "failed");
+            }
+        });
+
+
+    }
+
     ////*******************************Retrofit****************************////
     /**
      * Set the retrofit function
@@ -78,7 +145,7 @@ public class categoryplaylist extends Fragment implements LifecycleOwner
 
         Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
         backinterfaces apiService = retrofit.create(backinterfaces.class);
-        Call<CategoryPlaylist> call = apiService.getCategoryPlaylist(Id, user.getToken());
+        Call<CategoryPlaylist> call = apiService.getCategoryPlaylist(Id,20,0, user.getToken());
         call.enqueue(new Callback<CategoryPlaylist>()
         {
 

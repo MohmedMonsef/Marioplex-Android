@@ -63,7 +63,6 @@ public class backhome extends Fragment implements LifecycleOwner
     adapterPopularPlaylist recyclerAdapterPlaylist;
     private TextView textViewResult;
     Toolbar toolbar;
-    private viewmodelHome homeViewModel;
 
     /**
      *
@@ -79,7 +78,6 @@ public class backhome extends Fragment implements LifecycleOwner
     {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_back_home, container, false);
-        homeViewModel =ViewModelProviders.of((MainActivity) getActivity()).get(viewmodelHome.class);
         final TextView textView = view.findViewById(R.id.text_home);
         ////*****************************toolbar************************************////
         toolbar = (Toolbar)view.findViewById(R.id.toolbar); // get the reference of Toolbar

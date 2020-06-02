@@ -45,7 +45,6 @@ public class searchfragment extends Fragment implements LifecycleOwner
     adapterCategories recyclerAdapter;
     private TextView textViewResult;
     ImageView searchimg;
-    private viewmodelSearch searchViewmodel;
 
     /**
      *
@@ -62,7 +61,6 @@ public class searchfragment extends Fragment implements LifecycleOwner
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_searchfragment, container, false);
-        searchViewmodel = ViewModelProviders.of((MainActivity) getActivity()).get(viewmodelSearch.class);
         final TextView textView = view.findViewById(R.id.text_setting);
         searchimg = view.findViewById(R.id.searchImg);
         textViewResult = view.findViewById(R.id.textcategor);

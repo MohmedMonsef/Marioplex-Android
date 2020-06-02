@@ -30,7 +30,6 @@ import static android.widget.Toast.makeText;
  */
 public class premiumFragment extends Fragment implements LifecycleOwner {
 
-    private viewmodelPremium premiumViewModel;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -38,7 +37,6 @@ public class premiumFragment extends Fragment implements LifecycleOwner {
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_premium, container, false);
-        premiumViewModel =ViewModelProviders.of((MainActivity) getActivity()).get(viewmodelPremium.class);
         final TextView textView = view.findViewById(R.id.text_premium);
         ////*******************************RecyclerView***********************////
 

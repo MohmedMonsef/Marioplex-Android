@@ -23,7 +23,6 @@ import com.example.spotify.Adapters.adapterSearch;
 import com.example.spotify.Adapters.adapterSeeAll;
 import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
 import com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT.searchListfragment;
-import com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT.viewmodelSearchList;
 import com.example.spotify.Interfaces.backinterfaces;
 import com.example.spotify.R;
 
@@ -40,7 +39,6 @@ public class see_all_song_Fragment extends Fragment implements LifecycleOwner {
     private TextView textViewResult;
     private Retrofit retrofit;
     private backinterfaces apiService;
-    private viewmodelSearchList searchViewModel;
     public static String DATA_RECIEVE="data_recieve";
     TextView ArtistText;
     String wordRecieve;
@@ -52,7 +50,6 @@ public class see_all_song_Fragment extends Fragment implements LifecycleOwner {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_see_all_song_, container, false);
-        searchViewModel = ViewModelProviders.of((MainActivity) getActivity()).get(viewmodelSearchList.class);
         //searchView.setOnSearchClickListener(View.OnClickListener on);
         final TextView textView = view.findViewById(R.id.text_home);
         ArtistText=view.findViewById(R.id.textalbumsearch);

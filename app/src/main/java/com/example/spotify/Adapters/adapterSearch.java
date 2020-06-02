@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify.BackClasses.Backclasses.aclass;
 import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
+import com.example.spotify.Fragments.ALBUM_FRAGMENT.album;
 import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
 import com.example.spotify.Fragments.TrackFragment;
 import com.example.spotify.Interfaces.Retrofit;
@@ -172,6 +173,25 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
                             .replace(R.id.frame_fragment, f)
                             .addToBackStack(null).commit();
                 }
+
+                else if(list1.get(position).getType().equals("Album"))
+                {
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("albumID" , list1.get(position).getid());
+                    //bundle.putString("artistName" , list1.get(position).getName());
+                    androidx.fragment.app.Fragment f = new album();
+                    f.setArguments(bundle);
+                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                    activity.getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.frame_fragment, f)
+                            .addToBackStack(null).commit();
+
+
+                }
+
+
 
 
             }

@@ -33,7 +33,6 @@ import com.squareup.picasso.Picasso;
  */
 public class settingFragment extends Fragment implements LifecycleOwner {
 
-    private viewmodelSetting settingViewmodel;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -41,7 +40,6 @@ public class settingFragment extends Fragment implements LifecycleOwner {
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
-        settingViewmodel =ViewModelProviders.of((MainActivity) getActivity()).get(viewmodelSetting.class);
         final TextView textView = view.findViewById(R.id.text_search);
         ////*******************************RecyclerView***********************////
 
