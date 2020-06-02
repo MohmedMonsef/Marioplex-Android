@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Track.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.BackClasses.Backclasses.backsearch</a> &gt; <span class="el_source">Track.java</span></div><h1>Track.java</h1><pre class="source lang-java linenums">
+package com.example.spotify.BackClasses.Backclasses.backsearch;
+
+import com.example.spotify.pojo.ImageInfo;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
+<span class="fc" id="L10">public class Track {</span>
+
+    @SerializedName(&quot;artistId&quot;)
+    @Expose
+    private String artistId;
+    @SerializedName(&quot;artistName&quot;)
+    @Expose
+    private String artistName;
+<span class="fc" id="L18">    @SerializedName(&quot;artistimages&quot;)</span>
+    @Expose
+    private List&lt;ImageInfo&gt; artistimages = null;
+    @SerializedName(&quot;artistType&quot;)
+    @Expose
+    private String artistType;
+    @SerializedName(&quot;albumId&quot;)
+    @Expose
+    private String albumId;
+    @SerializedName(&quot;albumName&quot;)
+    @Expose
+    private String albumName;
+<span class="fc" id="L30">    @SerializedName(&quot;albumImages&quot;)</span>
+    @Expose
+    private List&lt;ImageInfo&gt; albumImages = null;
+    @SerializedName(&quot;albumType&quot;)
+    @Expose
+    private String albumType;
+    @SerializedName(&quot;_id&quot;)
+    @Expose
+    private String id;
+    @SerializedName(&quot;name&quot;)
+    @Expose
+    private String name;
+    @SerializedName(&quot;type&quot;)
+    @Expose
+    private String type;
+<span class="fc" id="L45">    @SerializedName(&quot;images&quot;)</span>
+    @Expose
+    private List&lt;ImageInfo&gt; images = null;
+
+    public String getArtistId() {
+<span class="nc" id="L50">        return artistId;</span>
+    }
+
+    public void setArtistId(String artistId) {
+<span class="nc" id="L54">        this.artistId = artistId;</span>
+<span class="nc" id="L55">    }</span>
+
+    public String getArtistName() {
+<span class="nc" id="L58">        return artistName;</span>
+    }
+
+    public void setArtistName(String artistName) {
+<span class="nc" id="L62">        this.artistName = artistName;</span>
+<span class="nc" id="L63">    }</span>
+
+    public List&lt;ImageInfo&gt; getArtistimages() {
+<span class="nc" id="L66">        return artistimages;</span>
+    }
+
+    public void setArtistimages(List&lt;ImageInfo&gt; artistimages) {
+<span class="nc" id="L70">        this.artistimages = artistimages;</span>
+<span class="nc" id="L71">    }</span>
+
+    public String getArtistType() {
+<span class="nc" id="L74">        return artistType;</span>
+    }
+
+    public void setArtistType(String artistType) {
+<span class="nc" id="L78">        this.artistType = artistType;</span>
+<span class="nc" id="L79">    }</span>
+
+    public String getAlbumId() {
+<span class="nc" id="L82">        return albumId;</span>
+    }
+
+    public void setAlbumId(String albumId) {
+<span class="nc" id="L86">        this.albumId = albumId;</span>
+<span class="nc" id="L87">    }</span>
+
+    public String getAlbumName() {
+<span class="nc" id="L90">        return albumName;</span>
+    }
+
+    public void setAlbumName(String albumName) {
+<span class="nc" id="L94">        this.albumName = albumName;</span>
+<span class="nc" id="L95">    }</span>
+
+    public List&lt;ImageInfo&gt; getAlbumImages() {
+<span class="nc" id="L98">        return albumImages;</span>
+    }
+
+    public void setAlbumImages(List&lt;ImageInfo&gt; albumImages) {
+<span class="nc" id="L102">        this.albumImages = albumImages;</span>
+<span class="nc" id="L103">    }</span>
+
+    public String getAlbumType() {
+<span class="nc" id="L106">        return albumType;</span>
+    }
+
+    public void setAlbumType(String albumType) {
+<span class="nc" id="L110">        this.albumType = albumType;</span>
+<span class="nc" id="L111">    }</span>
+
+    public String getId() {
+<span class="fc" id="L114">        return id;</span>
+    }
+
+    public void setId(String id) {
+<span class="nc" id="L118">        this.id = id;</span>
+<span class="nc" id="L119">    }</span>
+
+    public String getName() {
+<span class="fc" id="L122">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="nc" id="L126">        this.name = name;</span>
+<span class="nc" id="L127">    }</span>
+
+    public String getType() {
+<span class="fc" id="L130">        return type;</span>
+    }
+
+    public void setType(String type) {
+<span class="nc" id="L134">        this.type = type;</span>
+<span class="nc" id="L135">    }</span>
+
+    public List&lt;ImageInfo&gt; getImages() {
+<span class="fc" id="L138">        return images;</span>
+    }
+
+    public void setImages(List&lt;ImageInfo&gt; images) {
+<span class="nc" id="L142">        this.images = images;</span>
+<span class="nc" id="L143">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

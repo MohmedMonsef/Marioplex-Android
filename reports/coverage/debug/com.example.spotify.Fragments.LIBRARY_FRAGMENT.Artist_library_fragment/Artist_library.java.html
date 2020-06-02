@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Artist_library.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.Fragments.LIBRARY_FRAGMENT.Artist_library_fragment</a> &gt; <span class="el_source">Artist_library.java</span></div><h1>Artist_library.java</h1><pre class="source lang-java linenums">package com.example.spotify.Fragments.LIBRARY_FRAGMENT.Artist_library_fragment;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.Interfaces.Retrofit;
+import com.example.spotify.R;
+import com.example.spotify.login.user;
+import com.example.spotify.pojo.LibraryArtists;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+
+<span class="fc" id="L27">public class Artist_library extends Fragment implements LifecycleOwner {</span>
+
+
+<span class="fc" id="L30">    private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();</span>
+    private LibraryArtists userartists;
+    private ArtistiLibraryAdapter artistLibraryAdapter;
+    private ProgressBar library_artist_progress_bar;
+    private LinearLayout something_wrong_layout4;
+    private RecyclerView library_artist_recycleview;
+    private Button try_again4;
+    private LinearLayoutManager layoutManager;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+
+        // Inflate the layout for this fragment
+<span class="fc" id="L45">        View view = inflater.inflate(R.layout.fragment_artist_library, container, false);</span>
+
+<span class="fc" id="L47">        getViews(view);</span>
+
+        /////////////////////////List view attaching will be made in the on response callback///////
+        //////make the request then attach it to the listview//////
+<span class="fc" id="L51">        library_artist_progress_bar.setVisibility(View.VISIBLE);</span>
+<span class="fc" id="L52">        something_wrong_layout4.setVisibility(View.GONE);</span>
+<span class="fc" id="L53">        library_artist_recycleview.setVisibility(View.GONE);</span>
+<span class="fc" id="L54">        getArtists();</span>
+
+        /**
+         * listener for the try again button
+         * on press it sends the request to get the artists again
+         */
+
+<span class="fc" id="L61">        try_again4.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L64">                library_artist_progress_bar.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L65">                something_wrong_layout4.setVisibility(View.GONE);</span>
+<span class="nc" id="L66">                library_artist_recycleview.setVisibility(View.GONE);</span>
+<span class="nc" id="L67">                getArtists();</span>
+<span class="nc" id="L68">            }</span>
+        });
+
+
+
+<span class="fc" id="L73">        return view;</span>
+
+    }
+
+    /**
+     * sends request to get the current user followed artists and updates the UI with their information
+     */
+
+    void getArtists(){
+<span class="fc" id="L82">        Call&lt;LibraryArtists&gt; call = endPointAPI.getArtists( user.getToken());</span>
+<span class="fc" id="L83">        call.enqueue(new Callback&lt;LibraryArtists&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;LibraryArtists&gt; call, Response&lt;LibraryArtists&gt; response) {
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">                if(!response.isSuccessful()){</span>
+<span class="nc" id="L87">                    something_wrong_layout4.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L88">                    library_artist_progress_bar.setVisibility(View.GONE);</span>
+<span class="nc" id="L89">                    library_artist_recycleview.setVisibility(View.GONE);</span>
+
+<span class="nc" id="L91">                    return;</span>
+                } else {
+<span class="fc" id="L93">                    userartists = response.body();</span>
+
+<span class="fc" id="L95">                    artistLibraryAdapter = new ArtistiLibraryAdapter(getActivity(), userartists.getArtists());</span>
+<span class="fc" id="L96">                    library_artist_recycleview.setAdapter(artistLibraryAdapter);</span>
+<span class="fc" id="L97">                    library_artist_recycleview.setHasFixedSize(true);</span>
+
+<span class="fc" id="L99">                    something_wrong_layout4.setVisibility(View.GONE);</span>
+<span class="fc" id="L100">                    library_artist_recycleview.setVisibility(View.VISIBLE);</span>
+<span class="fc" id="L101">                    library_artist_progress_bar.setVisibility(View.GONE);</span>
+                }
+<span class="fc" id="L103">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;LibraryArtists&gt; call, Throwable t) {
+<span class="nc" id="L107">                something_wrong_layout4.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L108">                library_artist_progress_bar.setVisibility(View.GONE);</span>
+<span class="nc" id="L109">                library_artist_recycleview.setVisibility(View.GONE);</span>
+
+
+<span class="nc" id="L112">            }</span>
+        });
+
+<span class="fc" id="L115">    }</span>
+
+    /**
+     * gets all the views i will use in the fragment
+     * @param root
+     */
+
+    void getViews(View root){
+<span class="fc" id="L123">        library_artist_recycleview = root.findViewById(R.id.library_artist_recycleview);</span>
+<span class="fc" id="L124">        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);</span>
+<span class="fc" id="L125">        library_artist_recycleview.setLayoutManager(layoutManager);</span>
+<span class="fc" id="L126">        library_artist_progress_bar = root.findViewById(R.id.library_artist_progress_bar);</span>
+<span class="fc" id="L127">        something_wrong_layout4 = root.findViewById(R.id.something_wrong_layout4);</span>
+<span class="fc" id="L128">        try_again4 = root.findViewById(R.id.try_again4);</span>
+<span class="fc" id="L129">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

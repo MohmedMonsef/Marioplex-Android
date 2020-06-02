@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>settingFragment.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.Fragments.SETTING_FRAGMENT</a> &gt; <span class="el_source">settingFragment.java</span></div><h1>settingFragment.java</h1><pre class="source lang-java linenums">package com.example.spotify.Fragments.SETTING_FRAGMENT;
+
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModelProviders;
+
+import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Fragments.ProfileFragment;
+import com.example.spotify.Interfaces.Retrofit;
+import com.example.spotify.R;
+import com.example.spotify.login.IntroActivity;
+import com.example.spotify.login.user;
+import com.squareup.picasso.Picasso;
+
+//import androidx.fragment.app.Fragment;
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * to handle interaction events.
+ * create an instance of this fragment.
+ */
+<span class="nc" id="L34">public class settingFragment extends Fragment implements LifecycleOwner {</span>
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+
+        // Inflate the layout for this fragment
+<span class="nc" id="L42">        View view = inflater.inflate(R.layout.fragment_setting, container, false);</span>
+<span class="nc" id="L43">        final TextView textView = view.findViewById(R.id.text_search);</span>
+        ////*******************************RecyclerView***********************////
+
+        //user related
+<span class="nc" id="L47">        ((ImageView)view.findViewById(R.id.profile_picture)).setImageResource(R.drawable.logo);</span>
+
+        /**
+         * updates the profile image view with the user's image if the user has an image
+         */
+<span class="nc bnc" id="L52" title="All 4 branches missed.">        if(user.getImages()!=null&amp;&amp;user.getImages().size()!=0){</span>
+<span class="nc" id="L53">            String imageId = user.getImages().get(0).getID();</span>
+<span class="nc" id="L54">            String Imageurl = Retrofit.getInstance().getBaseurl() + &quot;api/images/&quot; + imageId + &quot;?belongs_to=user&quot;;</span>
+<span class="nc" id="L55">            Picasso.get().load(Imageurl).into((ImageView)view.findViewById(R.id.profile_picture));</span>
+        }
+
+<span class="nc" id="L58">        ((TextView)view.findViewById(R.id.user_name)).setText(user.getName());</span>
+<span class="nc" id="L59">        view.findViewById(R.id.view_profile).setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L62">                Fragment fragment = new ProfileFragment();</span>
+<span class="nc" id="L63">                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment,fragment).commit();</span>
+<span class="nc" id="L64">            }</span>
+        });
+
+<span class="nc" id="L67">        ((TextView)view.findViewById(R.id.logout_text1)).setText(user.getName());</span>
+
+<span class="nc" id="L69">        view.findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L72">                logout();</span>
+<span class="nc" id="L73">            }</span>
+        });
+
+<span class="nc" id="L76">        return view;</span>
+    }
+
+    void logout(){
+<span class="nc" id="L80">        deleteToken();</span>
+<span class="nc" id="L81">        startActivity(new Intent(getActivity(),IntroActivity.class));</span>
+<span class="nc" id="L82">        getActivity().finish();</span>
+<span class="nc" id="L83">        return;</span>
+    }
+
+    void deleteToken(){
+<span class="nc" id="L87">        SharedPreferences sharedPreferences = getContext().getSharedPreferences(&quot;token&quot;, Context.MODE_PRIVATE);</span>
+<span class="nc" id="L88">        SharedPreferences.Editor editor = sharedPreferences.edit();</span>
+<span class="nc" id="L89">        editor.remove(&quot;token&quot;);</span>
+<span class="nc" id="L90">        editor.commit();</span>
+<span class="nc" id="L91">    }</span>
+
+
+    /*
+    @NonNull
+    @Override
+    public Lifecycle getLifecycle() {
+        return null;
+    }
+
+     */
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

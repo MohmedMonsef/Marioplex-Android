@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PlaylistFragment.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.Fragments.PLAYLIST_FRAGMENT</a> &gt; <span class="el_source">PlaylistFragment.java</span></div><h1>PlaylistFragment.java</h1><pre class="source lang-java linenums">package com.example.spotify.Fragments.PLAYLIST_FRAGMENT;
+
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.palette.graphics.Palette;
+
+import com.example.spotify.Activities.PlaylistPreviewActivity;
+import com.example.spotify.Fragments.HOME_FRAGMENT.backhome;
+import com.example.spotify.Fragments.LIBRARY_FRAGMENT.libraryFragment;
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.Interfaces.Retrofit;
+import com.example.spotify.R;
+import com.example.spotify.login.user;
+import com.example.spotify.media.MediaPlayerService;
+import com.example.spotify.media.TrackInfo;
+import com.example.spotify.pojo.BasicTrack;
+import com.example.spotify.pojo.ImageInfo;
+import com.example.spotify.pojo.PlaylistTracks;
+import com.example.spotify.pojo.currentTrack;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+<span class="fc" id="L49">public class PlaylistFragment extends Fragment {</span>
+
+    private ImageView back_arrow_playlist;
+    private ImageView like_playlist;
+    private ImageView playlist_settings_button;
+    private ImageView playlist_image_playlist_fragment;
+    private TextView playlist_name_middle;
+    private TextView playlist_owner;
+    private Button shuffle_play_button;
+    private Button preview_button;
+    private TextView artist_name_song_name_playlist;
+    private LinearLayout playlist_contents_layout;
+    private ProgressBar progress_bar_playlist;
+    private LinearLayout something_wrong_layout;
+    private TextView something_wrong_text;
+    private Button something_wrong_button;
+
+<span class="fc" id="L66">    private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();</span>
+    private PlaylistTracks playlistTracks;
+<span class="fc" id="L68">    private String playlistID = &quot;5e8a5a444fbd0152f8bd23d3&quot;;</span>
+<span class="fc" id="L69">    private String playlistOwner = &quot;spotify&quot;;</span>
+    private MediaPlayerService player;
+<span class="fc" id="L71">    private String CurrentTrackID = &quot;&quot;;</span>
+    private int CurrentTrackPosInPlaylist;
+<span class="fc" id="L73">    private Boolean serviceBound = false;</span>
+<span class="fc" id="L74">    String from = &quot;&quot;;</span>
+
+
+<span class="fc" id="L77">    private ServiceConnection serviceConnection = new ServiceConnection()</span>
+<span class="fc" id="L78">    {</span>
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service)
+        {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+<span class="fc" id="L83">            MediaPlayerService.LocalBinder binder = (MediaPlayerService.LocalBinder) service;</span>
+<span class="fc" id="L84">            player = binder.getservice();</span>
+<span class="fc" id="L85">            serviceBound = true;</span>
+<span class="fc" id="L86">        }</span>
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+<span class="nc" id="L90">            serviceBound = false;</span>
+<span class="nc" id="L91">        }</span>
+    };
+
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+<span class="fc" id="L98">        View root = inflater.inflate(R.layout.fragment_playlist,container,false);</span>
+        ////////////////////get playlist id from the bundle\\\\\\\\\\\\\\\\\\\\\\\\
+<span class="fc" id="L100">        playlistID = getArguments().getString(&quot;playlistID&quot;);</span>
+<span class="fc" id="L101">        from = getArguments().getString(&quot;from&quot;);</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">        if(from == null ){from = &quot;&quot;;}</span>
+        /////////////////////get all the views i will use/////////////////////////
+<span class="fc" id="L104">        getViews(root);</span>
+        //////////////////////Bind the service\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+<span class="fc" id="L106">        bindService();</span>
+        /////////////////////some listeners\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        /**
+         * when pressed the activity closes
+         */
+<span class="fc" id="L111">        back_arrow_playlist.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+                ////////////////return to my home fragment\\\\\\\\\\\\\\\\\\\\\
+<span class="pc bpc" id="L115" title="1 of 2 branches missed.">                if(from.equals(&quot;Playlist_library&quot;)){</span>
+<span class="nc" id="L116">                    getActivity().getSupportFragmentManager().beginTransaction()</span>
+<span class="nc" id="L117">                            .replace(R.id.frame_fragment,new libraryFragment())</span>
+<span class="nc" id="L118">                            .addToBackStack(null)</span>
+<span class="nc" id="L119">                            .commit();</span>
+                }
+                else {
+<span class="fc" id="L122">                    getActivity().getSupportFragmentManager().beginTransaction()</span>
+<span class="fc" id="L123">                            .replace(R.id.frame_fragment, new backhome())</span>
+<span class="fc" id="L124">                            .addToBackStack(null)</span>
+<span class="fc" id="L125">                            .commit();</span>
+                    }
+
+<span class="fc" id="L128">            }</span>
+        });
+        /**
+         * listener for the preview button
+         * on click the preview activity opens
+         */
+
+<span class="fc" id="L135">        preview_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L138">                Intent intent = new Intent(getActivity(), PlaylistPreviewActivity.class);</span>
+<span class="fc" id="L139">                startActivity(intent);</span>
+<span class="fc" id="L140">            }</span>
+        });
+        /**
+         * listener for the track names text
+         * on press the preview activity opens
+         */
+
+<span class="fc" id="L147">        artist_name_song_name_playlist.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L150">                Intent intent = new Intent(getActivity(), PlaylistPreviewActivity.class);</span>
+<span class="fc" id="L151">                startActivity(intent);</span>
+<span class="fc" id="L152">            }</span>
+        });
+        /**
+         * listener for the shuffle play button and on press it sends a request to turn on the shuffle mode
+         */
+
+<span class="fc" id="L158">        shuffle_play_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="pc bpc" id="L161" title="1 of 2 branches missed.">                if(CheckTrackInPlaylist()){</span>
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">                    if(player.getIsPlaying()){</span>
+<span class="nc" id="L163">                        TrackInfo.getInstance().setIsPlaying(false);</span>
+<span class="nc" id="L164">                        player.pauseMedia();</span>
+<span class="nc" id="L165">                        shuffle_play_button.setText(&quot;shuffle play&quot;);</span>
+                    }
+                    else{
+<span class="fc" id="L168">                        TrackInfo.getInstance().setIsPlaying(true);</span>
+<span class="fc" id="L169">                        player.resumeMedia();</span>
+<span class="fc" id="L170">                        shuffle_play_button.setText(&quot;pause&quot;);</span>
+                    }
+                }
+<span class="nc bnc" id="L173" title="All 6 branches missed.">                else if(playlistTracks !=null &amp;&amp; playlistTracks.getTracks()!=null &amp;&amp; playlistTracks.getTracks().size()!=0){</span>
+<span class="nc" id="L174">                        CreateQueue(playlistTracks.getTracks().get(0).getTrackid());</span>
+                }
+<span class="fc" id="L176">            }</span>
+        });
+
+        /**
+         * listener for the like button to follow/unfollow the playlist
+         */
+<span class="fc" id="L182">        like_playlist.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc bfc" id="L185" title="All 2 branches covered.">                if(playlistTracks.getIsLiked()) {</span>
+<span class="fc" id="L186">                    unLikePlaylist();</span>
+                }
+                else{
+<span class="fc" id="L189">                    LikePlaylist();</span>
+                }
+<span class="fc" id="L191">            }</span>
+        });
+
+        /**
+         * requests the get current playlist info requests if something goes wrong
+         */
+<span class="fc" id="L197">             something_wrong_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+                //////////////////////////show progress bar\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+<span class="nc" id="L201">                playlist_contents_layout.setVisibility(View.GONE);</span>
+<span class="nc" id="L202">                something_wrong_layout.setVisibility(View.GONE);</span>
+<span class="nc" id="L203">                progress_bar_playlist.setVisibility(View.VISIBLE);</span>
+                /////////////////////////get Plsylist's tracks information\\\\\\\\\\\\\\\\\\\\\\\
+<span class="nc" id="L205">                GetPlaylistTracksInfo(playlistID);</span>
+<span class="nc" id="L206">            }</span>
+        });
+
+        ///////////////////////////observers\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        /**
+         * updates the shuffle play button text with pause if the track is playing and with shuffle play if the track is paused
+         */
+<span class="fc" id="L213">        TrackInfo.getInstance().getIsPlaying().observe(this, new Observer&lt;Boolean&gt;() {</span>
+            @Override
+            public void onChanged(Boolean aBoolean) {
+<span class="pc bpc" id="L216" title="1 of 4 branches missed.">                if(playlistTracks!=null &amp;&amp; CheckTrackInPlaylist()){</span>
+<span class="pc bpc" id="L217" title="1 of 2 branches missed.">                    if(aBoolean){</span>
+<span class="fc" id="L218">                        shuffle_play_button.setText(&quot;pause&quot;);</span>
+                    }
+                    else{
+<span class="nc" id="L221">                        shuffle_play_button.setText(&quot;shuffle play&quot;);</span>
+                    }
+                }
+<span class="fc" id="L224">            }</span>
+        });
+
+
+
+        //////////////////////////show progress bar\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+<span class="fc" id="L230">        playlist_contents_layout.setVisibility(View.GONE);</span>
+<span class="fc" id="L231">        something_wrong_layout.setVisibility(View.GONE);</span>
+<span class="fc" id="L232">        progress_bar_playlist.setVisibility(View.VISIBLE);</span>
+        /////////////////////////get Plsylist's tracks information\\\\\\\\\\\\\\\\\\\\\\\
+<span class="fc" id="L234">        GetPlaylistTracksInfo(playlistID);</span>
+
+
+
+<span class="fc" id="L238">        return root;</span>
+    }
+
+    /**
+     * send a request to create queue of the current playlist's tracks and takes a track id and sets it as the current track
+     * @param trackID
+     */
+    void CreateQueue(String trackID){
+<span class="nc" id="L246">        Call&lt;Void&gt; call = endPointAPI.CreateQueue(playlistID , trackID , true , user.getToken());</span>
+<span class="nc" id="L247">        call.enqueue(new Callback&lt;Void&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;Void&gt; call, Response&lt;Void&gt; response) {
+<span class="nc bnc" id="L250" title="All 2 branches missed.">                if(!response.isSuccessful()){</span>
+<span class="nc" id="L251">                    Toast.makeText(getContext(),&quot;something went wrong while creating the queue. try again.&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L252">                    return;</span>
+                }
+                else {
+<span class="nc" id="L255">                    shuffleTracks();</span>
+                }
+<span class="nc" id="L257">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;Void&gt; call, Throwable t) {
+<span class="nc" id="L261">                Toast.makeText(getContext(),&quot;something went wrong while creating the queue.check your internet connection.&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L262">            }</span>
+        });
+<span class="nc" id="L264">    }</span>
+
+    /**
+     * send a request to turn on the shuffle mode and to play a random track from the playlist
+     */
+
+    void shuffleTracks(){
+<span class="nc" id="L271">        Call&lt;Void&gt; call = endPointAPI.toggleShuffle(true , user.getToken());</span>
+<span class="nc" id="L272">        call.enqueue(new Callback&lt;Void&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;Void&gt; call, Response&lt;Void&gt; response) {
+<span class="nc bnc" id="L275" title="All 2 branches missed.">                if(!response.isSuccessful()){</span>
+<span class="nc" id="L276">                    Toast.makeText(getContext(),&quot;something went wrong . try again.&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L277">                    return;</span>
+                }
+                else {
+                    ///////call mediaplayer get current playing \\\\\\\\\\
+<span class="nc" id="L281">                    Call&lt;currentTrack&gt; call1 = endPointAPI.getNext(user.getToken());</span>
+<span class="nc" id="L282">                    player.playCurrentTrack(call1);</span>
+                }
+<span class="nc" id="L284">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;Void&gt; call, Throwable t) {
+<span class="nc" id="L288">                Toast.makeText(getContext(),&quot;something went wrong.check your internet connection.&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L289">            }</span>
+        });
+<span class="nc" id="L291">    }</span>
+
+    /**
+     * sends a request to get the current playlist's tracks
+     * @param playlistID
+     */
+
+    void GetPlaylistTracksInfo(String playlistID){
+<span class="fc" id="L299">        Call&lt;List&lt;PlaylistTracks&gt;&gt; call = endPointAPI.getPlaylistTracks(playlistID , user.getToken());</span>
+<span class="fc" id="L300">        call.enqueue(new Callback&lt;List&lt;PlaylistTracks&gt;&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;List&lt;PlaylistTracks&gt;&gt; call, Response&lt;List&lt;PlaylistTracks&gt;&gt; response) {
+<span class="pc bpc" id="L303" title="2 of 4 branches missed.">                if(!response.isSuccessful() ||response.body() == null){</span>
+<span class="nc" id="L304">                    progress_bar_playlist.setVisibility(View.GONE);</span>
+<span class="nc" id="L305">                    playlist_contents_layout.setVisibility(View.GONE);</span>
+<span class="nc" id="L306">                    something_wrong_text.setText(&quot;something went wrong .try again&quot;);</span>
+<span class="nc" id="L307">                    something_wrong_layout.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L308">                    return;</span>
+                }
+                else
+                    {
+<span class="fc" id="L312">                    playlistTracks = response.body().get(0);</span>
+<span class="fc" id="L313">                    PlaylistInfo.getinstance().setPlaylistTracks(playlistTracks);</span>
+<span class="fc" id="L314">                    playlist_contents_layout.setVisibility(View.VISIBLE);</span>
+<span class="fc" id="L315">                    something_wrong_layout.setVisibility(View.GONE);</span>
+<span class="fc" id="L316">                    progress_bar_playlist.setVisibility(View.GONE);</span>
+<span class="fc" id="L317">                    updateUI();</span>
+                }
+<span class="fc" id="L319">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;List&lt;PlaylistTracks&gt;&gt; call, Throwable t) {
+<span class="nc" id="L323">                progress_bar_playlist.setVisibility(View.GONE);</span>
+<span class="nc" id="L324">                playlist_contents_layout.setVisibility(View.GONE);</span>
+<span class="nc" id="L325">                something_wrong_text.setText(&quot;something went wrong .check your internet connection&quot;);</span>
+<span class="nc" id="L326">                something_wrong_layout.setVisibility(View.VISIBLE);</span>
+
+<span class="nc" id="L328">            }</span>
+        });
+<span class="fc" id="L330">    }</span>
+
+    /**
+     * send a request to like(follow) the playlist
+     */
+    void LikePlaylist(){
+<span class="fc" id="L336">        Call&lt;Void&gt; call = endPointAPI.LikePlaylist(playlistID , user.getToken());</span>
+<span class="fc" id="L337">        call.enqueue(new Callback&lt;Void&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;Void&gt; call, Response&lt;Void&gt; response) {
+
+<span class="pc bpc" id="L341" title="1 of 2 branches missed.">                if(!response.isSuccessful()){</span>
+<span class="nc" id="L342">                    Toast.makeText(getContext(),&quot;something went wrong .try again&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L343">                    return;</span>
+                }
+                else {
+<span class="fc" id="L346">                    like_playlist.setImageResource(R.drawable.like);</span>
+<span class="fc" id="L347">                    playlistTracks.setIsLiked(true);</span>
+                }
+<span class="fc" id="L349">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;Void&gt; call, Throwable t) {
+<span class="nc" id="L353">                Toast.makeText(getContext(),&quot;something went wrong .check your internet connection&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L354">            }</span>
+        });
+<span class="fc" id="L356">    }</span>
+
+    /**
+     * send a request to unlike(unfollow) the playlist
+     */
+    void unLikePlaylist(){
+<span class="fc" id="L362">        Call&lt;Void&gt; call = endPointAPI.UNLikePlaylist(playlistID , user.getToken());</span>
+<span class="fc" id="L363">        call.enqueue(new Callback&lt;Void&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;Void&gt; call, Response&lt;Void&gt; response) {
+
+<span class="pc bpc" id="L367" title="1 of 2 branches missed.">                if(!response.isSuccessful()){</span>
+<span class="nc" id="L368">                    Toast.makeText(getContext(),&quot;something went wrong .try again&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L369">                    return;</span>
+                }
+                else {
+<span class="fc" id="L372">                    like_playlist.setImageResource(R.drawable.favorite_border);</span>
+<span class="fc" id="L373">                    playlistTracks.setIsLiked(false);</span>
+                }
+<span class="fc" id="L375">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;Void&gt; call, Throwable t) {
+<span class="nc" id="L379">                Toast.makeText(getContext(),&quot;something went wrong .check your internet connection&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L380">            }</span>
+        });
+<span class="fc" id="L382">    }</span>
+
+    /**
+     * get a color that from the image and set the background with that color
+     * @param v  the image view
+     * @param put  the background's layout
+     */
+
+    void getPaletteAndSetBackgroundColor(ImageView v, final LinearLayout put) {
+<span class="fc" id="L391">        Bitmap bitmap = ((BitmapDrawable) v.getDrawable()).getBitmap();</span>
+
+<span class="fc" id="L393">        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {</span>
+            @Override
+            public void onGenerated(Palette palette) {
+<span class="pc bpc" id="L396" title="1 of 2 branches missed.">                if (palette.getMutedSwatch() != null) {</span>
+<span class="fc" id="L397">                    GradientDrawable gd = new GradientDrawable(</span>
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+<span class="fc" id="L399">                            new int[]{palette.getMutedSwatch().getRgb(), 0xFF000000});</span>
+<span class="fc" id="L400">                    gd.setCornerRadius(0f);</span>
+<span class="fc" id="L401">                    put.setBackgroundDrawable(gd);</span>
+<span class="pc bnc" id="L402" title="All 2 branches missed.">                } else if (palette.getDarkVibrantSwatch() != null) {</span>
+<span class="nc" id="L403">                    GradientDrawable gd = new GradientDrawable(</span>
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+<span class="nc" id="L405">                            new int[]{palette.getDarkVibrantSwatch().getRgb(), 0xFF000000});</span>
+<span class="nc" id="L406">                    gd.setCornerRadius(0f);</span>
+<span class="nc" id="L407">                    put.setBackgroundDrawable(gd);</span>
+<span class="nc bnc" id="L408" title="All 2 branches missed.">                } else if (palette.getLightMutedSwatch() != null) {</span>
+<span class="nc" id="L409">                    GradientDrawable gd = new GradientDrawable(</span>
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+<span class="nc" id="L411">                            new int[]{palette.getLightMutedSwatch().getRgb(), 0xFF000000});</span>
+<span class="nc" id="L412">                    gd.setCornerRadius(0f);</span>
+<span class="nc" id="L413">                    put.setBackgroundDrawable(gd);</span>
+<span class="nc bnc" id="L414" title="All 2 branches missed.">                } else if (palette.getDarkMutedSwatch() != null) {</span>
+<span class="nc" id="L415">                    GradientDrawable gd = new GradientDrawable(</span>
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+<span class="nc" id="L417">                            new int[]{palette.getDarkMutedSwatch().getRgb(), 0xFF000000});</span>
+<span class="nc" id="L418">                    gd.setCornerRadius(0f);</span>
+<span class="nc" id="L419">                    put.setBackgroundDrawable(gd);</span>
+<span class="nc bnc" id="L420" title="All 2 branches missed.">                } else if (palette.getLightVibrantSwatch() != null) {</span>
+<span class="nc" id="L421">                    GradientDrawable gd = new GradientDrawable(</span>
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+<span class="nc" id="L423">                            new int[]{palette.getLightVibrantSwatch().getRgb(), 0xFF000000});</span>
+<span class="nc" id="L424">                    gd.setCornerRadius(0f);</span>
+<span class="nc" id="L425">                    put.setBackgroundDrawable(gd);</span>
+<span class="nc bnc" id="L426" title="All 2 branches missed.">                } else if (palette.getVibrantSwatch() != null) {</span>
+<span class="nc" id="L427">                    GradientDrawable gd = new GradientDrawable(</span>
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+<span class="nc" id="L429">                            new int[]{palette.getVibrantSwatch().getRgb(), 0xFF000000});</span>
+<span class="nc" id="L430">                    gd.setCornerRadius(0f);</span>
+<span class="nc" id="L431">                    put.setBackgroundDrawable(gd);</span>
+                }
+<span class="fc" id="L433">            }</span>
+        });
+<span class="fc" id="L435">    }</span>
+
+    /**
+     * updates the UI with the playlist and tracks info
+     */
+
+    void updateUI(){
+<span class="fc" id="L442">        List&lt;ImageInfo&gt; images= playlistTracks.getImages();</span>
+<span class="fc" id="L443">        String imageID =&quot;12d&quot;;</span>
+<span class="pc bpc" id="L444" title="2 of 4 branches missed.">        if(images != null &amp;&amp; images.size()!=0) {</span>
+<span class="fc" id="L445">            imageID = images.get(0).getID();</span>
+        }
+<span class="fc" id="L447">        String Imageurl = Retrofit.getInstance().getBaseurl() + &quot;api/images/&quot; + imageID + &quot;?belongs_to=playlist&quot;;</span>
+<span class="fc" id="L448">        Picasso.get().load(Imageurl).into(playlist_image_playlist_fragment, new com.squareup.picasso.Callback() {</span>
+            @Override
+            public void onSuccess() {
+<span class="fc" id="L451">                getPaletteAndSetBackgroundColor(playlist_image_playlist_fragment, playlist_contents_layout);</span>
+<span class="fc" id="L452">            }</span>
+
+            @Override
+            public void onError(Exception e) {
+<span class="nc" id="L456">            }</span>
+        });
+<span class="fc" id="L458">        playlist_name_middle.setText(playlistTracks.getName());</span>
+<span class="fc" id="L459">        playlist_owner.setText(&quot;BY &quot; + playlistOwner);</span>
+<span class="fc" id="L460">        String songsNames = &quot;&quot;;</span>
+<span class="fc" id="L461">        List&lt;BasicTrack&gt; tracks = playlistTracks.getTracks();</span>
+<span class="fc" id="L462">        int n  = 7;</span>
+<span class="pc bpc" id="L463" title="1 of 2 branches missed.">        if(playlistTracks.getTracks().size() &lt; 7){</span>
+<span class="fc" id="L464">            n = playlistTracks.getTracks().size();</span>
+        }
+<span class="nc bnc" id="L466" title="All 2 branches missed.">        else if(playlistTracks.getTracks().size() == 0){</span>
+<span class="nc" id="L467">            n=0;</span>
+        }
+<span class="fc bfc" id="L469" title="All 2 branches covered.">        for(int i =0 ; i&lt;n; i++){</span>
+<span class="fc" id="L470">            songsNames+= tracks.get(i).getArtistName()+&quot; &quot;;</span>
+<span class="fc" id="L471">            songsNames+= tracks.get(i).getName()+&quot; . &quot;;</span>
+        }
+<span class="pc bpc" id="L473" title="1 of 2 branches missed.">        if(playlistTracks.getTracks().size() !=0){</span>
+<span class="fc" id="L474">            songsNames+=&quot;and more&quot;;</span>
+        }
+<span class="fc" id="L476">        artist_name_song_name_playlist.setText(songsNames);</span>
+
+<span class="fc bfc" id="L478" title="All 2 branches covered.">        if(CheckTrackInPlaylist()){</span>
+<span class="pc bpc" id="L479" title="1 of 2 branches missed.">            if(player.getIsPlaying()){</span>
+<span class="nc" id="L480">                shuffle_play_button.setText(&quot;pause&quot;);</span>
+            }
+            else{
+<span class="fc" id="L483">                shuffle_play_button.setText(&quot;shuffle play&quot;);</span>
+            }
+        }
+
+<span class="fc bfc" id="L487" title="All 2 branches covered.">        if(playlistTracks.getIsLiked()){</span>
+<span class="fc" id="L488">            like_playlist.setImageResource(R.drawable.like);</span>
+        }
+        else{
+<span class="fc" id="L491">            like_playlist.setImageResource(R.drawable.favorite_border);</span>
+        }
+<span class="fc" id="L493">    }</span>
+
+
+    /**
+     * checks if the currently playing track is from the current playlist
+     * @return
+     */
+    Boolean CheckTrackInPlaylist(){
+<span class="pc bpc" id="L501" title="1 of 2 branches missed.">        if(TrackInfo.getInstance().getIsQueue()!=null &amp;&amp;</span>
+<span class="pc bpc" id="L502" title="1 of 2 branches missed.">           TrackInfo.getInstance().getIsQueue().getValue() &amp;&amp;</span>
+<span class="pc bpc" id="L503" title="1 of 2 branches missed.">           TrackInfo.getInstance().getTrack()!=null &amp;&amp;</span>
+<span class="pc bpc" id="L504" title="1 of 2 branches missed.">           TrackInfo.getInstance().getTrack().getValue().getTrack()!=null){</span>
+<span class="fc" id="L505">            CurrentTrackID = TrackInfo.getInstance().getTrack().getValue().getTrack().getId();</span>
+
+<span class="fc" id="L507">            List&lt;BasicTrack&gt; tracks = playlistTracks.getTracks();</span>
+
+<span class="fc bfc" id="L509" title="All 2 branches covered.">            for(int i =0 ; i&lt;tracks.size(); i++){</span>
+<span class="fc bfc" id="L510" title="All 2 branches covered.">                if(tracks.get(i).getTrackid().equals(CurrentTrackID)){</span>
+<span class="fc" id="L511">                    CurrentTrackPosInPlaylist = i;</span>
+<span class="fc" id="L512">                    return true;</span>
+                }
+            }
+
+        }
+<span class="fc" id="L517">        return false;</span>
+    }
+
+    /**
+     * gets all the views i will use
+     * @param root
+     */
+
+    void getViews(View root)
+    {
+<span class="fc" id="L527">        back_arrow_playlist = root.findViewById(R.id.back_arrow_playlist);</span>
+<span class="fc" id="L528">        like_playlist = root.findViewById(R.id.like_playlist);</span>
+<span class="fc" id="L529">        playlist_settings_button = root.findViewById(R.id.playlist_settings_button);</span>
+<span class="fc" id="L530">        playlist_image_playlist_fragment = root.findViewById(R.id.playlist_image_playlist_fragment);</span>
+<span class="fc" id="L531">        playlist_name_middle = root.findViewById(R.id.playlist_name_middle);</span>
+<span class="fc" id="L532">        playlist_owner = root.findViewById(R.id.playlist_owner);</span>
+<span class="fc" id="L533">        shuffle_play_button = root.findViewById(R.id.shuffle_play_button);</span>
+<span class="fc" id="L534">        preview_button = root.findViewById(R.id.preview_button);</span>
+<span class="fc" id="L535">        artist_name_song_name_playlist = root.findViewById(R.id.artist_name_song_name_playlist);</span>
+<span class="fc" id="L536">        progress_bar_playlist = root.findViewById(R.id.progress_bar_playlist);</span>
+<span class="fc" id="L537">        playlist_contents_layout = root.findViewById(R.id.playlist_contents_layout);</span>
+<span class="fc" id="L538">        something_wrong_layout = root.findViewById(R.id.something_wrong_layout);</span>
+<span class="fc" id="L539">        something_wrong_text = root.findViewById(R.id.something_wrong_text);</span>
+<span class="fc" id="L540">        something_wrong_button = root.findViewById(R.id.something_wrong_button);</span>
+<span class="fc" id="L541">    }</span>
+    private void bindService(){
+<span class="fc" id="L543">        Intent serviceIntent1 = new Intent(getContext() , MediaPlayerService.class);</span>
+<span class="fc" id="L544">        getActivity().bindService(serviceIntent1 , serviceConnection , Context.BIND_AUTO_CREATE);</span>
+
+<span class="fc" id="L546">    }</span>
+
+    @Override
+    public void onDestroyView()
+    {
+<span class="fc" id="L551">        super.onDestroyView();</span>
+<span class="fc" id="L552">        PlaylistInfo.getinstance().clearinstance();</span>
+<span class="fc" id="L553">    }</span>
+
+    @Override
+    public void onDestroy() {
+<span class="fc" id="L557">        super.onDestroy();</span>
+<span class="fc" id="L558">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

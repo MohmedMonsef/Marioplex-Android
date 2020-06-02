@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Playlist_library.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.Fragments.LIBRARY_FRAGMENT.Playlist_library_fragment</a> &gt; <span class="el_source">Playlist_library.java</span></div><h1>Playlist_library.java</h1><pre class="source lang-java linenums">package com.example.spotify.Fragments.LIBRARY_FRAGMENT.Playlist_library_fragment;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.Interfaces.Retrofit;
+import com.example.spotify.R;
+import com.example.spotify.login.user;
+import com.example.spotify.media.CreatePlaylistActivity;
+import com.example.spotify.pojo.BasicPlaylist;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+<span class="fc" id="L30">public class Playlist_library extends Fragment implements LifecycleOwner {</span>
+<span class="fc" id="L31">    private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();</span>
+    private List&lt;BasicPlaylist&gt; userPlaylists;
+    private PlaylistLibraryAdapter playlistLibraryAdapter;
+    private ProgressBar library_playlist_progress_bar;
+    private LinearLayout something_wrong_layout3;
+    private RecyclerView library_playlist_recycleview;
+    private Button try_again3;
+    private LinearLayoutManager layoutManager;
+    private LinearLayout library_create_playliste_layout;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+<span class="fc" id="L45">        View view = inflater.inflate(R.layout.fragment_playlist_library, container, false);</span>
+
+<span class="fc" id="L47">        getViews(view);</span>
+
+        /////////////////////////List view attaching will be made in the on response callback///////
+        //////make the request then attach it to the listview//////
+<span class="fc" id="L51">        library_playlist_progress_bar.setVisibility(View.VISIBLE);</span>
+<span class="fc" id="L52">        something_wrong_layout3.setVisibility(View.GONE);</span>
+<span class="fc" id="L53">        library_playlist_recycleview.setVisibility(View.GONE);</span>
+<span class="fc" id="L54">        getPlaylists();</span>
+
+        /**
+         * listener for the try again button
+         * on press it sends the request to get the playlists again
+         */
+
+<span class="fc" id="L61">        try_again3.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L64">                library_playlist_progress_bar.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L65">                something_wrong_layout3.setVisibility(View.GONE);</span>
+<span class="nc" id="L66">                library_playlist_recycleview.setVisibility(View.GONE);</span>
+<span class="nc" id="L67">                getPlaylists();</span>
+<span class="nc" id="L68">            }</span>
+        });
+
+        /**
+         * listener for the click on the create playlist layout
+         */
+<span class="fc" id="L74">        library_create_playliste_layout.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L77">                Intent intent = new Intent(getActivity() , CreatePlaylistActivity.class);</span>
+<span class="fc" id="L78">                intent.putExtra(&quot;track_id&quot;, &quot;&quot;);</span>
+<span class="fc" id="L79">                intent.putExtra(&quot;from&quot; , &quot;Playlist_library&quot;);</span>
+<span class="fc" id="L80">                startActivity(intent);</span>
+<span class="fc" id="L81">            }</span>
+        });
+
+
+
+
+<span class="fc" id="L87">        return view;</span>
+
+    }
+
+    /**
+     * sends a request to get the current user's followed and created playlists
+     */
+
+    void getPlaylists(){
+<span class="fc" id="L96">        Call&lt;List&lt;BasicPlaylist&gt;&gt; call = endPointAPI.getCurrentUserPlaylists( user.getToken());</span>
+<span class="fc" id="L97">        call.enqueue(new Callback&lt;List&lt;BasicPlaylist&gt;&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;List&lt;BasicPlaylist&gt;&gt; call, Response&lt;List&lt;BasicPlaylist&gt;&gt; response) {
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">                if(!response.isSuccessful()){</span>
+<span class="nc" id="L101">                    something_wrong_layout3.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L102">                    library_playlist_progress_bar.setVisibility(View.GONE);</span>
+<span class="nc" id="L103">                    library_playlist_recycleview.setVisibility(View.GONE);</span>
+
+<span class="nc" id="L105">                    return;</span>
+                } else {
+<span class="fc" id="L107">                    userPlaylists = response.body();</span>
+
+<span class="fc" id="L109">                    playlistLibraryAdapter = new PlaylistLibraryAdapter(getActivity(), userPlaylists);</span>
+<span class="fc" id="L110">                    library_playlist_recycleview.setAdapter(playlistLibraryAdapter);</span>
+<span class="fc" id="L111">                    library_playlist_recycleview.setHasFixedSize(true);</span>
+
+<span class="fc" id="L113">                    something_wrong_layout3.setVisibility(View.GONE);</span>
+<span class="fc" id="L114">                    library_playlist_recycleview.setVisibility(View.VISIBLE);</span>
+<span class="fc" id="L115">                    library_playlist_progress_bar.setVisibility(View.GONE);</span>
+                }
+<span class="fc" id="L117">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;List&lt;BasicPlaylist&gt;&gt; call, Throwable t) {
+<span class="nc" id="L121">                something_wrong_layout3.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L122">                library_playlist_progress_bar.setVisibility(View.GONE);</span>
+<span class="nc" id="L123">                library_playlist_recycleview.setVisibility(View.GONE);</span>
+<span class="nc" id="L124">            }</span>
+        });
+
+<span class="fc" id="L127">    }</span>
+
+    /**
+     * gets all the views I will use in the fragment
+     * @param root
+     */
+    void getViews(View root){
+<span class="fc" id="L134">        library_playlist_recycleview = root.findViewById(R.id.library_playlist_recycleview);</span>
+<span class="fc" id="L135">        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);</span>
+<span class="fc" id="L136">        library_playlist_recycleview.setLayoutManager(layoutManager);</span>
+<span class="fc" id="L137">        library_playlist_progress_bar = root.findViewById(R.id.library_playlist_progress_bar);</span>
+<span class="fc" id="L138">        something_wrong_layout3 = root.findViewById(R.id.something_wrong_layout3);</span>
+<span class="fc" id="L139">        try_again3 = root.findViewById(R.id.try_again3);</span>
+<span class="fc" id="L140">        library_create_playliste_layout = root.findViewById(R.id.library_create_playliste_layout);</span>
+<span class="fc" id="L141">    }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

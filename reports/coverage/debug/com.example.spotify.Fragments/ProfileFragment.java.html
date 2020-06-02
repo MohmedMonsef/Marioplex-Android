@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProfileFragment.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.Fragments</a> &gt; <span class="el_source">ProfileFragment.java</span></div><h1>ProfileFragment.java</h1><pre class="source lang-java linenums">package com.example.spotify.Fragments;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+
+import com.example.spotify.Fragments.LIBRARY_FRAGMENT.Playlist_library_fragment.Upload_Image;
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.Interfaces.Retrofit;
+import com.example.spotify.R;
+import com.example.spotify.login.apiClasses.updateProfile;
+import com.example.spotify.login.user;
+import com.example.spotify.pojo.playlist;
+import com.squareup.picasso.Picasso;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+
+public class ProfileFragment extends Fragment {
+
+
+    /*public ProfileFragment() {
+        // Required empty public constructor
+    }*/
+
+
+<span class="nc" id="L43">    public ProfileFragment(){</span>
+
+<span class="nc" id="L45">    }</span>
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+<span class="nc" id="L50">        super.onCreate(savedInstanceState);</span>
+
+<span class="nc" id="L52">    }</span>
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+<span class="nc" id="L57">        user.fetchUserData();</span>
+        // Inflate the layout for this fragment
+<span class="nc" id="L59">        final View rootView =  inflater.inflate(R.layout.fragment_profile, container, false);</span>
+
+<span class="nc" id="L61">        ((ImageView)rootView.findViewById(R.id.profile_picture)).setImageResource(R.drawable.logo);</span>
+
+<span class="nc bnc" id="L63" title="All 4 branches missed.">        if(user.getImages()!=null&amp;&amp;user.getImages().size()!=0){</span>
+<span class="nc" id="L64">            String imageId = user.getImages().get(0).getID();</span>
+<span class="nc" id="L65">            String Imageurl = Retrofit.getInstance().getBaseurl() + &quot;api/images/&quot; + imageId + &quot;?belongs_to=user&quot;;</span>
+<span class="nc" id="L66">            Picasso.get().load(Imageurl).into((ImageView)rootView.findViewById(R.id.profile_picture));</span>
+        }
+
+<span class="nc" id="L69">        (rootView.findViewById(R.id.profile_picture)).setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L72">                Intent intent = new Intent(getContext(), Upload_Image.class);</span>
+<span class="nc" id="L73">                intent.putExtra(&quot;SourceID&quot; , user.getId());</span>
+<span class="nc" id="L74">                intent.putExtra(&quot;from&quot; , &quot;user&quot;);</span>
+<span class="nc" id="L75">                getContext().startActivity(intent);</span>
+<span class="nc" id="L76">            }</span>
+        });
+
+<span class="nc" id="L79">        final EditText userName = (EditText)rootView.findViewById(R.id.user_name);</span>
+<span class="nc" id="L80">        userName.setText(user.getName());</span>
+<span class="nc" id="L81">        userName.setOnKeyListener(new View.OnKeyListener() {</span>
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+<span class="nc bnc" id="L84" title="All 2 branches missed.">                if(keyCode == 66) {</span>
+<span class="nc" id="L85">                    hideSoftKeyboard();</span>
+<span class="nc" id="L86">                    userName.clearFocus();</span>
+<span class="nc" id="L87">                    updateProfile data = new updateProfile();</span>
+<span class="nc" id="L88">                    data.setDisplay_Name(userName.getText().toString());</span>
+<span class="nc" id="L89">                    updateProfile(data);</span>
+                }
+<span class="nc" id="L91">                return false;</span>
+            }
+        });
+
+<span class="nc" id="L95">        rootView.findViewById(R.id.profile_layout).setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc bnc" id="L98" title="All 2 branches missed.">                if(userName.isFocused()) {</span>
+<span class="nc" id="L99">                    hideSoftKeyboard();</span>
+<span class="nc" id="L100">                    userName.clearFocus();</span>
+<span class="nc" id="L101">                    updateProfile data = new updateProfile();</span>
+<span class="nc" id="L102">                    data.setDisplay_Name(userName.getText().toString());</span>
+<span class="nc" id="L103">                    updateProfile(data);</span>
+                }
+<span class="nc" id="L105">            }</span>
+        });
+
+<span class="nc" id="L108">        playlist[] playlists = user.getPlaylists();</span>
+<span class="nc" id="L109">        int no_of_playlists = 0;</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if(playlists != null){</span>
+<span class="nc" id="L111">            no_of_playlists = playlists.length;</span>
+        }
+<span class="nc" id="L113">        ((TextView)rootView.findViewById(R.id.no_of_playlists)).setText(String.valueOf(no_of_playlists));</span>
+
+<span class="nc" id="L115">        return rootView;</span>
+    }
+
+    /**
+     * updates user data with passed new data
+     * @param data user new data
+     */
+    private void updateProfile(updateProfile data){
+<span class="nc" id="L123">        EndPointAPI api = Retrofit.getInstance().getEndPointAPI();</span>
+<span class="nc" id="L124">        api.updateProfile(user.getToken(),data).enqueue(new Callback&lt;ResponseBody&gt;() {</span>
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onResponse(Call&lt;ResponseBody&gt; call, Response&lt;ResponseBody&gt; response) {
+<span class="nc" id="L128">                Toast.makeText(getContext(),&quot;Saved&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L129">            }</span>
+
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onFailure(Call&lt;ResponseBody&gt; call, Throwable t) {
+<span class="nc" id="L134">                Toast.makeText(getContext(),&quot;Failure&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L135">            }</span>
+        });
+
+
+<span class="nc" id="L139">    }</span>
+
+    void hideSoftKeyboard(){
+        // Check if no view has focus:
+<span class="nc" id="L143">        View view = getActivity().getCurrentFocus();</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        if (view != null) {</span>
+<span class="nc" id="L145">            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);</span>
+<span class="nc" id="L146">            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);</span>
+        }
+<span class="nc" id="L148">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

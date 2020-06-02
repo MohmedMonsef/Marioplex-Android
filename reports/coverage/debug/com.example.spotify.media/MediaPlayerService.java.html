@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MediaPlayerService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.media</a> &gt; <span class="el_source">MediaPlayerService.java</span></div><h1>MediaPlayerService.java</h1><pre class="source lang-java linenums">package com.example.spotify.media;
+
+import android.app.Service;
+import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Binder;
+import android.os.CountDownTimer;
+import android.os.IBinder;
+import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+
+import com.example.spotify.Interfaces.Retrofit;
+import com.example.spotify.login.user;
+import com.example.spotify.pojo.currentTrack;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+<span class="fc" id="L28">public class MediaPlayerService extends Service implements MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener,</span>
+        MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener {
+
+<span class="fc" id="L31">    private final IBinder iBinder = new LocalBinder();</span>
+    private MediaPlayer mediaPlayer;
+<span class="fc" id="L33">    private Boolean isPlaying = false;</span>
+    private int playFlag;
+    private int resumePosition;
+    private boolean stopInTrackEnd;
+<span class="fc" id="L37">    private Map&lt;String, String&gt; headers = new HashMap&lt;String, String&gt;();</span>
+
+
+    private boolean prepared;
+    private Toast toast;
+<span class="fc" id="L42">    private TrackInfo track = TrackInfo.getInstance();</span>
+<span class="fc" id="L43">    private CountDownTimer sleepTimer = null;</span>
+
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+<span class="fc" id="L48">        return super.onStartCommand(intent, flags, startId);</span>
+    }
+
+    /**
+     * initializes some variables when the service is created
+     */
+    @Override
+    public void onCreate() {
+<span class="fc" id="L56">        headers.put(&quot;x-auth-token&quot;, user.getToken());</span>
+<span class="fc" id="L57">        super.onCreate();</span>
+<span class="fc" id="L58">        initMediaPlayer();</span>
+<span class="fc" id="L59">        playFlag = 0;</span>
+<span class="fc" id="L60">        track.setTimerSet(false);</span>
+<span class="fc" id="L61">        track.setIsQueue(false);</span>
+<span class="fc" id="L62">        track.setTryAgain(false);</span>
+<span class="fc" id="L63">        stopInTrackEnd = false;</span>
+
+<span class="fc" id="L65">    }</span>
+
+    /**
+     * initializes the media player and sends request to get the current track then plays it
+     */
+
+    private void initMediaPlayer() {
+<span class="fc" id="L72">        mediaPlayer = new MediaPlayer();</span>
+        //Set up MediaPlayer event listeners
+<span class="fc" id="L74">        mediaPlayer.setOnCompletionListener(this);</span>
+<span class="fc" id="L75">        mediaPlayer.setOnErrorListener(this);</span>
+<span class="fc" id="L76">        mediaPlayer.setOnPreparedListener(this);</span>
+<span class="fc" id="L77">        mediaPlayer.setOnBufferingUpdateListener(this);</span>
+<span class="fc" id="L78">        mediaPlayer.setOnSeekCompleteListener(this);</span>
+        //Reset so that the MediaPlayer is not pointing to another data source
+<span class="fc" id="L80">        mediaPlayer.reset();</span>
+<span class="fc" id="L81">        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);</span>
+        ///////////////////request the current track//////////////////////////
+<span class="fc" id="L83">        Call&lt;currentTrack&gt; call = Retrofit.getInstance().getEndPointAPI().getCurrentlyPlaying(user.getToken());</span>
+<span class="fc" id="L84">        getCurrentlyPlaying(call);</span>
+
+<span class="fc" id="L86">    }</span>
+
+    public void playCurrentTrack(Call&lt;currentTrack&gt; call) {
+<span class="nc" id="L89">        getCurrentlyPlaying(call);</span>
+<span class="nc" id="L90">    }</span>
+
+    /**
+     * sends request to get the current track
+     *
+     * @param call
+     */
+
+    void getCurrentlyPlaying(Call&lt;currentTrack&gt; call) {
+<span class="fc" id="L99">        call.enqueue(new Callback&lt;currentTrack&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;currentTrack&gt; call, Response&lt;currentTrack&gt; response) {
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">                if (!response.isSuccessful()) {</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">                    if (response.code() == 404) {</span>
+<span class="nc" id="L104">                        track.setIsQueue(false);</span>
+                    }
+<span class="nc" id="L106">                    return;</span>
+                } else {
+<span class="fc" id="L108">                    track.setTrack(response.body());</span>
+<span class="fc" id="L109">                    track.setIsQueue(true);</span>
+<span class="fc" id="L110">                    track.setIsLiked(response.body().getIsLiked());</span>
+<span class="fc" id="L111">                    mediaPlayer.reset();</span>
+                    try {
+                        // Set the data source to the mediaFile location
+<span class="fc" id="L114">                        String TID = response.body().getTrack().getId();</span>
+<span class="fc" id="L115">                        String s = Retrofit.getInstance().getBaseurl() + &quot;api/tracks/android/&quot; + TID + &quot;?type=medium&quot;;</span>
+<span class="fc" id="L116">                        mediaPlayer.setDataSource(MediaPlayerService.this, Uri.parse(s), headers);</span>
+<span class="fc" id="L117">                        prepared = false;</span>
+<span class="fc" id="L118">                        mediaPlayer.prepareAsync();</span>
+<span class="nc" id="L119">                    } catch (IOException e) {</span>
+<span class="nc" id="L120">                        e.printStackTrace();</span>
+<span class="nc" id="L121">                        stopSelf();</span>
+<span class="fc" id="L122">                    }</span>
+                }
+<span class="fc" id="L124">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;currentTrack&gt; call, Throwable t) {
+<span class="nc" id="L128">                Toast.makeText(getApplicationContext(), &quot;something went wrong .check your internet connection&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L129">                track.setTryAgain(true);</span>
+
+<span class="nc" id="L131">            }</span>
+        });
+<span class="fc" id="L133">    }</span>
+
+
+    /**
+     * sends request to get the next track
+     */
+    public void next() {
+        ///////////////////request the current track//////////////////////////
+<span class="nc" id="L141">        Call&lt;currentTrack&gt; call = Retrofit.getInstance().getEndPointAPI().getNext(user.getToken());</span>
+<span class="nc" id="L142">        getCurrentlyPlaying(call);</span>
+<span class="nc" id="L143">        pauseMedia();</span>
+
+<span class="nc" id="L145">    }</span>
+
+    /**
+     * sends request to get the previous track
+     */
+
+    public void previous() {
+        ///////////////////request the current track//////////////////////////
+<span class="nc" id="L153">        Call&lt;currentTrack&gt; call = Retrofit.getInstance().getEndPointAPI().getPrevious(user.getToken());</span>
+<span class="nc" id="L154">        getCurrentlyPlaying(call);</span>
+<span class="nc" id="L155">        pauseMedia();</span>
+<span class="nc" id="L156">    }</span>
+
+    public Boolean getIsPlaying() {
+<span class="fc" id="L159">        return isPlaying;</span>
+    }
+
+    public Boolean getStopInTrackEnd() {
+<span class="nc" id="L163">        return stopInTrackEnd;</span>
+    }
+
+    public void setStopInTrackEnd(boolean b) {
+<span class="nc" id="L167">        stopInTrackEnd = b;</span>
+<span class="nc" id="L168">    }</span>
+
+    /**
+     * plays the song
+     */
+    public void playMedia() {
+<span class="pc bpc" id="L174" title="1 of 2 branches missed.">        if (!mediaPlayer.isPlaying()) {</span>
+<span class="fc" id="L175">            mediaPlayer.start();</span>
+<span class="fc" id="L176">            isPlaying = true;</span>
+<span class="fc" id="L177">            TrackInfo.getInstance().setIsPlaying(true);</span>
+        }
+<span class="fc" id="L179">    }</span>
+
+    /**
+     * stops the media player
+     */
+    public void stopMedia() {
+<span class="pc bpc" id="L185" title="1 of 2 branches missed.">        if (mediaPlayer == null) return;</span>
+<span class="pc bpc" id="L186" title="1 of 2 branches missed.">        if (mediaPlayer.isPlaying()) {</span>
+<span class="nc" id="L187">            mediaPlayer.stop();</span>
+<span class="nc" id="L188">            isPlaying = false;</span>
+<span class="nc" id="L189">            TrackInfo.getInstance().setIsPlaying(false);</span>
+        }
+<span class="fc" id="L191">    }</span>
+
+    /**
+     * pauses the media player
+     */
+
+    public void pauseMedia() {
+<span class="fc bfc" id="L198" title="All 2 branches covered.">        if (mediaPlayer.isPlaying()) {</span>
+<span class="fc" id="L199">            mediaPlayer.pause();</span>
+<span class="fc" id="L200">            isPlaying = false;</span>
+<span class="fc" id="L201">            TrackInfo.getInstance().setIsPlaying(false);</span>
+<span class="fc" id="L202">            resumePosition = mediaPlayer.getCurrentPosition();</span>
+        }
+<span class="fc" id="L204">    }</span>
+
+    /**
+     * @return the current position of the song to update the progress bar
+     */
+    public int getCurrentPosition() {
+<span class="pc bpc" id="L210" title="2 of 4 branches missed.">        if (mediaPlayer != null &amp;&amp; prepared) {</span>
+<span class="fc" id="L211">            return mediaPlayer.getCurrentPosition();</span>
+        } else {
+<span class="nc" id="L213">            return 0;</span>
+        }
+    }
+
+    /**
+     * @return the duration of the song
+     */
+    public int getDuration() {
+<span class="pc bpc" id="L221" title="2 of 4 branches missed.">        if (mediaPlayer != null &amp;&amp; prepared) {</span>
+<span class="fc" id="L222">            return mediaPlayer.getDuration();</span>
+        } else {
+<span class="nc" id="L224">            return 1;</span>
+        }
+    }
+
+    /**
+     * navigates the media player to the given position and starts playing the song
+     *
+     * @param s
+     */
+    public void seekTo(int s) {
+<span class="nc bnc" id="L234" title="All 2 branches missed.">        if (mediaPlayer != null) {</span>
+<span class="nc" id="L235">            mediaPlayer.seekTo(s * 1000);</span>
+<span class="nc" id="L236">            mediaPlayer.start();</span>
+<span class="nc" id="L237">            isPlaying = true;</span>
+<span class="nc" id="L238">            TrackInfo.getInstance().setIsPlaying(true);</span>
+        }
+<span class="nc" id="L240">    }</span>
+
+    /**
+     * resume the song
+     */
+
+    public void resumeMedia() {
+<span class="pc bpc" id="L247" title="1 of 2 branches missed.">        if (!mediaPlayer.isPlaying()) {</span>
+            //mediaPlayer.seekTo(resumePosition);
+<span class="fc" id="L249">            mediaPlayer.start();</span>
+<span class="fc" id="L250">            isPlaying = true;</span>
+<span class="fc" id="L251">            TrackInfo.getInstance().setIsPlaying(true);</span>
+        }
+<span class="fc" id="L253">    }</span>
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+<span class="fc" id="L258">        return iBinder;</span>
+    }
+
+    /**
+     * when the song is completed it stops
+     *
+     * @param mp
+     */
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+<span class="fc" id="L268">        stopMedia();</span>
+<span class="fc" id="L269">    }</span>
+
+    @Override
+    public void onSeekComplete(MediaPlayer mp) {
+
+<span class="nc" id="L274">    }</span>
+
+    /**
+     * when the media player is prepared it starts the song
+     * @param mp
+     */
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+
+<span class="fc" id="L283">        playMedia();</span>
+<span class="fc" id="L284">        prepared = true;</span>
+<span class="fc" id="L285">        TrackInfo.getInstance().setDuration(mediaPlayer.getDuration());</span>
+<span class="pc bpc" id="L286" title="1 of 2 branches missed.">        if (playFlag == 0) {</span>
+<span class="fc" id="L287">            pauseMedia();</span>
+        }
+<span class="fc" id="L289">        playFlag = 1;</span>
+<span class="fc" id="L290">    }</span>
+
+    @Override
+    public void onBufferingUpdate(MediaPlayer mp, int percent) {
+
+<span class="fc" id="L295">    }</span>
+
+    @Override
+    public boolean onError(MediaPlayer mp, int what, int extra) {
+        //Invoked when there has been an error during an asynchronous operation
+<span class="nc bnc" id="L300" title="All 4 branches missed.">        switch (what) {</span>
+            case MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK:
+<span class="nc" id="L302">                Log.d(&quot;MediaPlayer Error&quot;, &quot;MEDIA ERROR NOT VALID FOR PROGRESSIVE PLAYBACK &quot; + extra);</span>
+<span class="nc" id="L303">                break;</span>
+            case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
+<span class="nc" id="L305">                Log.d(&quot;MediaPlayer Error&quot;, &quot;MEDIA ERROR SERVER DIED &quot; + extra);</span>
+<span class="nc" id="L306">                break;</span>
+            case MediaPlayer.MEDIA_ERROR_UNKNOWN:
+<span class="nc" id="L308">                Log.d(&quot;MediaPlayer Error&quot;, &quot;MEDIA ERROR UNKNOWN &quot; + extra);</span>
+                break;
+        }
+<span class="nc" id="L311">        return false;</span>
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+<span class="nc" id="L316">        super.onTaskRemoved(rootIntent);</span>
+<span class="nc" id="L317">        stopSelf();</span>
+<span class="nc" id="L318">    }</span>
+
+    @Override
+    public void onDestroy() {
+<span class="nc" id="L322">        super.onDestroy();</span>
+<span class="nc bnc" id="L323" title="All 2 branches missed.">        if (mediaPlayer != null) {</span>
+<span class="nc" id="L324">            stopMedia();</span>
+<span class="nc" id="L325">            mediaPlayer.release();</span>
+        }
+<span class="nc" id="L327">        cancelTimer();</span>
+<span class="nc" id="L328">    }</span>
+
+<span class="fc" id="L330">    public class LocalBinder extends Binder {</span>
+        public MediaPlayerService getservice() {
+<span class="fc" id="L332">            return MediaPlayerService.this;</span>
+        }
+    }
+
+    /**
+     * starts the sleep timer and on finish pauses the media player
+     * takes time in millisecond
+     *
+     * @param milliSeconds
+     */
+
+    public void startTimer(long milliSeconds) {
+<span class="pc bpc" id="L344" title="1 of 2 branches missed.">        if (mediaPlayer != null) {</span>
+<span class="fc" id="L345">            sleepTimer = new CountDownTimer(milliSeconds, 60000) {</span>
+                @Override
+                public void onTick(long millisUntilFinished) {
+<span class="fc" id="L348">                }</span>
+
+                @Override
+                public void onFinish() {
+<span class="nc bnc" id="L352" title="All 2 branches missed.">                    if (mediaPlayer != null) {</span>
+<span class="nc" id="L353">                        pauseMedia();</span>
+<span class="nc" id="L354">                        track.setTimerSet(false);</span>
+<span class="nc" id="L355">                        toast = Toast.makeText(getApplicationContext(), &quot;sleep timer ended&quot;, Toast.LENGTH_SHORT);</span>
+<span class="nc" id="L356">                        toast.show();</span>
+                    }
+<span class="nc" id="L358">                }</span>
+<span class="fc" id="L359">            }.start();</span>
+        }
+<span class="fc" id="L361">        track.setTimerSet(true);</span>
+<span class="fc" id="L362">    }</span>
+
+    /**
+     * cancels the sleep timer
+     */
+    public void cancelTimer() {
+<span class="pc bpc" id="L368" title="1 of 2 branches missed.">        if (sleepTimer != null) {</span>
+<span class="fc" id="L369">            sleepTimer.cancel();</span>
+<span class="fc" id="L370">            track.setTimerSet(false);</span>
+        }
+<span class="pc bpc" id="L372" title="1 of 2 branches missed.">        if (stopInTrackEnd) {</span>
+<span class="nc" id="L373">            setStopInTrackEnd(false);</span>
+        }
+<span class="fc" id="L375">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>
