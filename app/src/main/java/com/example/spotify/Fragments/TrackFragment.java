@@ -194,11 +194,14 @@ public class TrackFragment extends Fragment {
                     TrackInfo.getInstance().setIsPlaying(true);
                     player.resumeMedia();
                 } else if (songTracks != null && songTracks.size() != 0) {
-                    CreateQueue(songTracks.get(0).getTrack().getId());
+                    if (songTracks.get(0).getTrack().getIsplayable()) {
+                        CreateQueue(songTracks.get(0).getTrack().getId());
+                    } else {
+                        Toast.makeText(getContext(), "migrate to premium to be able to listen to this track", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
-
 
 
         //////////////////////////show progress bar\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -223,10 +226,9 @@ public class TrackFragment extends Fragment {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (!response.isSuccessful()) {
-                    Toast.makeText(getContext(), "something went wrong while creating the queue. try again." , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "something went wrong while creating the queue. try again.", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else {
+                } else {
                     shuffleTracks();
                 }
             }
@@ -250,9 +252,8 @@ public class TrackFragment extends Fragment {
                 if (!response.isSuccessful()) {
                     Toast.makeText(getContext(), "something went wrong . try again.", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else {
-                    ///////call mediaplayer get current playing \\\\\\\\\\
+                } else {
+                    ///////call media player get currently playing \\\\\\\\\\
                     Call<currentTrack> call1 = endPointAPI.getNext(user.getToken());
                     player.playCurrentTrack(call1);
                 }
@@ -267,6 +268,7 @@ public class TrackFragment extends Fragment {
 
     /**
      * send a request to get the relates songs to the current song
+     *
      * @param TrackID
      */
     void GetSongTracksInfo(String TrackID) {
@@ -304,6 +306,7 @@ public class TrackFragment extends Fragment {
 
     /**
      * put the data int a singleton class to update the UI in the preview activity
+     *
      * @param SongTracks
      */
     void FillPlaylistTracks(List<currentTrack> SongTracks) {
@@ -318,6 +321,7 @@ public class TrackFragment extends Fragment {
         List<BasicTrack> basic = new ArrayList<>();
         for (int i = 0; i < SongTracks.size(); i++) {
             t = SongTracks.get(i).getTrack();
+
             BasicTrack basict = new BasicTrack();
             basict.setIsLiked(SongTracks.get(i).getIsLiked());
             basict.setAlbumId(SongTracks.get(i).getAlbum().getId());
@@ -388,8 +392,9 @@ public class TrackFragment extends Fragment {
 
     /**
      * get a color that from the image and set the background with that color
-     * @param v  the image view
-     * @param put  the background's layout
+     *
+     * @param v   the image view
+     * @param put the background's layout
      */
     void getPaletteAndSetBackgroundColor(ImageView v, final LinearLayout put) {
         Bitmap bitmap = ((BitmapDrawable) v.getDrawable()).getBitmap();
@@ -518,6 +523,7 @@ public class TrackFragment extends Fragment {
 
     /**
      * gets all the views i will use
+     *
      * @param root
      */
 

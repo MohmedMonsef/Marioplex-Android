@@ -9,7 +9,9 @@ public class myTrack {
     @SerializedName("images")
     @Expose
     private List<ImageInfo> images = null;
-
+    @SerializedName("playable")
+    @Expose
+    private Boolean isplayable;
     @SerializedName("availableMarkets")
     @Expose
     private List<String> availableMarkets = null;
@@ -118,6 +120,14 @@ public class myTrack {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getIsplayable() {
+        return isplayable;
+    }
+
+    public void setIsplayable(Boolean isplayable) {
+        this.isplayable = isplayable;
     }
 
     public String getArtistId() {

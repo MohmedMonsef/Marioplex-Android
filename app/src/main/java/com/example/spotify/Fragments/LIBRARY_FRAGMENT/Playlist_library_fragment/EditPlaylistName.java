@@ -1,6 +1,107 @@
 package com.example.spotify.Fragments.LIBRARY_FRAGMENT.Playlist_library_fragment;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.Interfaces.Retrofit;
+import com.example.spotify.R;
+import com.example.spotify.login.user;
+import com.example.spotify.pojo.editPlaylistNameBody;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class EditPlaylistName extends AppCompatActivity {
+    private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();
+    private EditText playlist_new_name_edit_text;
+    private Button cancel_edit_playlist_name;
+    private String playlist_ID = "";
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_edit_playlist);
+        getViews();
+
+        playlist_ID = getIntent().getStringExtra("SourceID");
+        cancel_edit_playlist_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+            }
+        });
+
+        playlist_new_name_edit_text.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    if(playlist_new_name_edit_text.getText().toString().matches("")){
+                        Toast.makeText(getApplicationContext() , "Enter the playlist's new name" , Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        editPlaylistName(playlist_new_name_edit_text.getText().toString() , playlist_ID);
+
+                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        startActivity(intent);
+
+                    }
+
+                    return true;
+                }
+                return false;
+            }
+        });
+
+    }
+
+    /**
+     * sends a request to edit the playlist name
+     * @param newName
+     * @param playlistID
+     */
+    void editPlaylistName(String newName , String playlistID){
+        editPlaylistNameBody editplaylistNameBody = new editPlaylistNameBody();
+        editplaylistNameBody.setNewName(newName);
+        Call<Void> call = endPointAPI.editPlaylisttName(playlistID , user.getToken() , editplaylistNameBody);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(!response.isSuccessful()){
+                    Toast.makeText(getApplicationContext(),"something went wrong.try again.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),"playlist name is updated",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),"something went wrong .check your internet connection.",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * gets all the views I will use in the fragment
+     */
+
+    void getViews(){
+        playlist_new_name_edit_text = findViewById(R.id.playlist_new_name_edit_text);
+        cancel_edit_playlist_name = findViewById(R.id.cancel_edit_playlist_name);
+    }
 }

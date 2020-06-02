@@ -10,6 +10,9 @@ public class BasicTrack
     @SerializedName("trackid")
     @Expose
     private String trackid;
+    @SerializedName("playable")
+    @Expose
+    private Boolean Playable;
     @SerializedName("name")
     @Expose
     private String name;
@@ -31,6 +34,14 @@ public class BasicTrack
     @SerializedName("images")
     @Expose
     private List<ImageInfo> images = null;
+
+    public Boolean getPlayable() {
+        return Playable;
+    }
+
+    public void setPlayable(Boolean playable) {
+        Playable = playable;
+    }
 
     public String getTrackid() {
         return trackid;

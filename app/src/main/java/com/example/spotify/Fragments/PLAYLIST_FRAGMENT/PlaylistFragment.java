@@ -171,8 +171,14 @@ public class PlaylistFragment extends Fragment {
                     }
                 }
                 else if(playlistTracks !=null && playlistTracks.getTracks()!=null && playlistTracks.getTracks().size()!=0){
+                    if( playlistTracks.getTracks().get(0).getPlayable()){
                         CreateQueue(playlistTracks.getTracks().get(0).getTrackid());
+                    }
+                    else{
+                        Toast.makeText(getContext() , "migrate to premium to be able to listen to this track" , Toast.LENGTH_SHORT).show();
+                    }
                 }
+
             }
         });
 

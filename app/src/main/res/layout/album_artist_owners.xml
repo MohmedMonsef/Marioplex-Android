@@ -20,6 +20,7 @@
             android:innerRadius="0dp"
             android:shape="ring"
             android:thicknessRatio="1.9"
+            android:layout_marginLeft="8dp"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
 

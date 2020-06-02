@@ -9,9 +9,6 @@ public class PlaylistTracks {
     @SerializedName("id")
     @Expose
     private String id;
-//    @SerializedName("isfollowed")
-//    @Expose
-//    private Boolean isfollowed;
     @SerializedName("type")
     @Expose
     private String type;

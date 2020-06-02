@@ -86,8 +86,8 @@ public class Playlist_Library_Settings extends AppCompatActivity {
         settings_edit_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                Intent intent = new Intent(getBaseContext(), EditPlaylistName.class);
+                intent.putExtra("SourceID" , SourceId);
                 startActivity(intent);
             }
         });
@@ -140,5 +140,6 @@ public class Playlist_Library_Settings extends AppCompatActivity {
         setting_playlist_image = findViewById(R.id.setting_playlist_image);
         playlist_name_settings = findViewById(R.id.playlist_name_settings);
         settings_playlist_library_arrow = findViewById(R.id.settings_playlist_library_arrow);
+        settings_edit_name = findViewById(R.id.settings_edit_name);
     }
 }

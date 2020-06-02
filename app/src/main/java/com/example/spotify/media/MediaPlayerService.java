@@ -99,26 +99,31 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         call.enqueue(new Callback<currentTrack>() {
             @Override
             public void onResponse(Call<currentTrack> call, Response<currentTrack> response) {
-                if (!response.isSuccessful()) {
-                    if (response.code() == 404) {
-                        track.setIsQueue(false);
-                    }
-                    return;
-                } else {
-                    track.setTrack(response.body());
-                    track.setIsQueue(true);
-                    track.setIsLiked(response.body().getIsLiked());
-                    mediaPlayer.reset();
-                    try {
-                        // Set the data source to the mediaFile location
-                        String TID = response.body().getTrack().getId();
-                        String s = Retrofit.getInstance().getBaseurl() + "api/tracks/android/" + TID + "?type=medium";
-                        mediaPlayer.setDataSource(MediaPlayerService.this, Uri.parse(s), headers);
-                        prepared = false;
-                        mediaPlayer.prepareAsync();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        stopSelf();
+                if(response.code()==429){
+                    Toast.makeText(getApplicationContext() , "you exceeded the skip limit" , Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    if (!response.isSuccessful()) {
+                        if (response.code() == 404) {
+                            track.setIsQueue(false);
+                        }
+                        return;
+                    } else {
+                        track.setTrack(response.body());
+                        track.setIsQueue(true);
+                        track.setIsLiked(response.body().getIsLiked());
+                        mediaPlayer.reset();
+                        try {
+                            // Set the data source to the mediaFile location
+                            String TID = response.body().getTrack().getId();
+                            String s = Retrofit.getInstance().getBaseurl() + "api/tracks/android/" + TID + "?type=medium";
+                            mediaPlayer.setDataSource(MediaPlayerService.this, Uri.parse(s), headers);
+                            prepared = false;
+                            mediaPlayer.prepareAsync();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            stopSelf();
+                        }
                     }
                 }
             }
