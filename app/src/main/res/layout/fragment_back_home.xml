@@ -9,7 +9,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/backg"
     android:orientation="vertical"
-    android:layout_margin="10dp"
     android:padding="15dp"
     tools:context=".Fragments.HOME_FRAGMENT.backhome">
 

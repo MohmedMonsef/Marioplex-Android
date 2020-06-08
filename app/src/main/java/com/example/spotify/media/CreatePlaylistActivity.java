@@ -2,7 +2,8 @@ package com.example.spotify.media;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +28,7 @@ import retrofit2.Response;
 public class CreatePlaylistActivity extends AppCompatActivity {
 
     private Button cancel_create_playlist;
+    private Button create_playlist_button;
     private EditText playlist_name_edit_text;
     private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();
     private String trackID;
@@ -62,14 +64,14 @@ public class CreatePlaylistActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        /**
-         * takes the playlist name and it ti's not empty it sends the request to create the playlist
-         */
 
-        playlist_name_edit_text.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    if(playlist_name_edit_text.getText().toString().matches("")){
+        /**
+         * listener for create playlist button
+         */
+        create_playlist_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    if(playlist_name_edit_text.getText().toString().isEmpty()){
                         Toast.makeText(getApplicationContext() , "Enter the playlist's name" , Toast.LENGTH_SHORT).show();
                     }
                     else{
@@ -86,14 +88,35 @@ public class CreatePlaylistActivity extends AppCompatActivity {
                         startActivity(intent);
 
                     }
-
-                    return true;
-                }
-                return false;
             }
         });
-        ////////////////////////////////////////////////////////////////
+
+
+        playlist_name_edit_text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length()==0){
+                    create_playlist_button.setBackgroundResource(R.drawable.rounded_button_grey);
+                }
+                else{
+                    create_playlist_button.setBackgroundResource(R.drawable.rounded_button);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        //////////////////////////////////////////////////////////////
     }
+
+
 
     /**
      * takes the playlist name and sends request to create the playlist
@@ -179,5 +202,6 @@ public class CreatePlaylistActivity extends AppCompatActivity {
     void getViews(){
         cancel_create_playlist = (Button)findViewById(R.id.cancel_create_playlist);
         playlist_name_edit_text = (EditText)findViewById(R.id.playlist_name_edit_text);
+        create_playlist_button = (Button)findViewById(R.id.create_playlist_button);
     }
 }
