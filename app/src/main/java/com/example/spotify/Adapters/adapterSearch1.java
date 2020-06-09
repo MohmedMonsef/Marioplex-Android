@@ -85,6 +85,7 @@ public class adapterSearch1 extends RecyclerView.Adapter<adapterSearch1.MyviewHo
                 if(list1.get(position).getType().equals("playlist")){
                     Bundle bundle = new Bundle();
                     bundle.putString("playlistID" , list1.get(position).getid());
+                    bundle.putString("from" , "search");
                     //bundle.putString("ownerName" , list1.getOwner().getName());
 
                     androidx.fragment.app.Fragment f = new PlaylistFragment();

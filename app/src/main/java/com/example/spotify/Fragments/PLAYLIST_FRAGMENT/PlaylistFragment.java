@@ -28,6 +28,8 @@ import androidx.palette.graphics.Palette;
 import com.example.spotify.Activities.PlaylistPreviewActivity;
 import com.example.spotify.Fragments.HOME_FRAGMENT.backhome;
 import com.example.spotify.Fragments.LIBRARY_FRAGMENT.libraryFragment;
+import com.example.spotify.Fragments.SEARCH_FRAGMENT.searchfragment;
+import com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT.searchListfragment;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
@@ -115,6 +117,18 @@ public class PlaylistFragment extends Fragment {
                 if(from.equals("Playlist_library")){
                     getActivity().getSupportFragmentManager().beginTransaction()
                             .replace(R.id.frame_fragment,new libraryFragment())
+                            .addToBackStack(null)
+                            .commit();
+                }
+                else if(from.equals("search")){
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.frame_fragment,new searchListfragment())
+                            .addToBackStack(null)
+                            .commit();
+                }
+                else if(from.equals("searchfrag1")){
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.frame_fragment,new searchfragment())
                             .addToBackStack(null)
                             .commit();
                 }
