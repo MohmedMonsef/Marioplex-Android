@@ -135,7 +135,7 @@ public class adapterSeeAll extends RecyclerView.Adapter<adapterSeeAll.MyviewHold
                 if(list1.get(position).getType().equals("playlist")){
                     Bundle bundle = new Bundle();
                     bundle.putString("playlistID" , list1.get(position).getid());
-                    //bundle.putString("ownerName" , list1.getOwner().getName());
+                    bundle.putString("from" , "searchfrag1");
 
                     androidx.fragment.app.Fragment f = new PlaylistFragment();
                     f.setArguments(bundle);

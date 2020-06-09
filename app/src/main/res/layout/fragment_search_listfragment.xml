@@ -36,6 +36,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/TextColor"
         android:textSize="24dp"
+        android:visibility="gone"
         tools:ignore="MissingConstraints" />
     <ScrollView
         android:layout_width="match_parent"

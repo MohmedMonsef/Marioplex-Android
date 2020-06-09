@@ -87,7 +87,7 @@ public class adapterCategoryPlaylists extends RecyclerView.Adapter<adapterCatego
 
                 Bundle bundle = new Bundle();
                 bundle.putString("playlistID" , Categoryplaylist.get(position).getId());
-                //bundle.putString("ownerName" , list1.getOwner().getName());
+                bundle.putString("from" , "searchfrag1");
 
                 androidx.fragment.app.Fragment f = new PlaylistFragment();
                 f.setArguments(bundle);
