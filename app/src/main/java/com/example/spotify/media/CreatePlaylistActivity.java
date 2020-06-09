@@ -91,7 +91,9 @@ public class CreatePlaylistActivity extends AppCompatActivity {
             }
         });
 
-
+        /**
+         * listener for the typing in the edittext to change enable and disable the create button
+         */
         playlist_name_edit_text.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
