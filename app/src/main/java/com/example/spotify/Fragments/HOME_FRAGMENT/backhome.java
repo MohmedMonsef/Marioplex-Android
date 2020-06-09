@@ -410,7 +410,7 @@ public class backhome extends Fragment implements LifecycleOwner
     public void loadFragmentSetting(Fragment fragment)
     {
         // create a FragmentManager
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
         // create a FragmentTransaction to begin the transaction and replace the Fragment
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         // replace the FrameLayout with new Fragment

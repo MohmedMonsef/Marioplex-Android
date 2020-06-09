@@ -28,7 +28,6 @@ import com.example.spotify.Activities.SettingAlbumActivity;
 import com.example.spotify.BackClasses.Backclasses.albumInform.AlbumObject;
 import com.example.spotify.BackClasses.Backclasses.albumInform.Track;
 import com.example.spotify.BackClasses.Backclasses.likeAlbum.likealbum;
-import com.example.spotify.BackClasses.Backclasses.likeAlbum.unlikealbum;
 import com.example.spotify.Fragments.HOME_FRAGMENT.backhome;
 import com.example.spotify.Fragments.LIBRARY_FRAGMENT.Album_library_fragment.Album_Library;
 import com.example.spotify.Fragments.LIBRARY_FRAGMENT.libraryFragment;
@@ -37,7 +36,6 @@ import com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT.searchListfragment;
 import com.example.spotify.Fragments.SEE_ALBUMS_FRAGMENT.see_all_albums_Fragment;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
-import com.example.spotify.Interfaces.backinterfaces;
 import com.example.spotify.R;
 import com.example.spotify.login.user;
 import com.example.spotify.media.MediaPlayerService;
@@ -87,7 +85,7 @@ public class album extends Fragment {
     private String CurrentTrackID = "";
     private int CurrentTrackPosInPlaylist;
     private Boolean serviceBound = false;
-    private Boolean end=false;
+    private Boolean end = false;
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -131,11 +129,10 @@ public class album extends Fragment {
         date_album = view.findViewById(R.id.date_album);
         artist_album_name = view.findViewById(R.id.artist_album_name);
         alum_contents_layout = view.findViewById(R.id.alum_contents_layout);
-         progress_bar_album =view.findViewById(R.id.progress_bar_album);
-         something_wrong_layout_album=view.findViewById(R.id.something_wrong_layout_album);
-         something_wrong_text_album=view.findViewById(R.id.something_wrong_text_album);
-         something_wrong_button_album=view.findViewById(R.id.something_wrong_button_album);
-
+        progress_bar_album = view.findViewById(R.id.progress_bar_album);
+        something_wrong_layout_album = view.findViewById(R.id.something_wrong_layout_album);
+        something_wrong_text_album = view.findViewById(R.id.something_wrong_text_album);
+        something_wrong_button_album = view.findViewById(R.id.something_wrong_button_album);
 
 
         //////////////////////Bind the service\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -201,11 +198,11 @@ public class album extends Fragment {
 //                intent.putExtra("ALBUM_ID",albumID);
 //                intent.putExtra("Album_Name",Album_Name);
 //                startActivity(intent);
-                if (end == true)
-                {       Intent intent = new Intent(getActivity(), PlaylistPreviewActivity.class);
-                startActivity(intent);
-                end=false;
-            }
+                if (end == true) {
+                    Intent intent = new Intent(getActivity(), PlaylistPreviewActivity.class);
+                    startActivity(intent);
+                    end = false;
+                }
 
             }
         });
@@ -240,12 +237,17 @@ public class album extends Fragment {
                         player.resumeMedia();
                         shuffle_play_button_album.setText("pause");
                     }
-                }
-                else if (AlbumObject != null && AlbumObject.getTrack() != null && AlbumObject.getTrack().size() != 0) {
+                } else if (AlbumObject != null && AlbumObject.getTrack() != null && AlbumObject.getTrack().size() != 0) {
+
                     if (TrackInfo.getInstance().getIsQueue() != null && TrackInfo.getInstance().getIsQueue().getValue()) {
                         shuffleTracks();
                     } else {
-                        CreateQueue(AlbumObject.getTrack().get(0).getId());
+                        if (AlbumObject.getTrack().get(0).getPlayable()) {
+                            CreateQueue(AlbumObject.getTrack().get(0).getId());
+                        } else {
+                            Toast.makeText(getContext(), "migrate to premium to be able to listen to this track", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 }
             }
@@ -267,14 +269,13 @@ public class album extends Fragment {
         like_album.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(AlbumObject.isIsSaved()) {
-                UnLikeAlbum();
-                }
-                else{
+                if (AlbumObject.isIsSaved()) {
+                    UnLikeAlbum();
+                } else {
                     LikeAlbum();
                     }
             }
-      });
+        });
 
         something_wrong_button_album.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -342,10 +343,9 @@ public class album extends Fragment {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (!response.isSuccessful()) {
-                    Toast.makeText(getContext(),"something went wrong . try again.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "something went wrong . try again.", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else {
+                } else {
                     ///////call mediaplayer get current playing \\\\\\\\\\
                     Call<currentTrack> call1 = endPointAPI.getNext(user.getToken());
                     player.playCurrentTrack(call1);
@@ -354,7 +354,7 @@ public class album extends Fragment {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getContext(),"something went wrong.check your internet connection.",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "something went wrong.check your internet connection.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -365,18 +365,16 @@ public class album extends Fragment {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (!response.isSuccessful()) {
-                    Toast.makeText(getContext(),"something went wrong while creating the queue. try again.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "something went wrong while creating the queue. try again.", Toast.LENGTH_SHORT).show();
                     return;
-                }
-
-                else {
+                } else {
                     shuffleTracks();
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getContext(),"something went wrong while creating the queue.check your internet connection.",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "something went wrong while creating the queue.check your internet connection.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -404,7 +402,7 @@ public class album extends Fragment {
                     alum_contents_layout.setVisibility(View.VISIBLE);
                     something_wrong_layout_album.setVisibility(View.GONE);
                     progress_bar_album.setVisibility(View.GONE);
-          //          albumData.getinstance().setalbumObject(AlbumObject);
+                    //          albumData.getinstance().setalbumObject(AlbumObject);
                     //AlbumObject.setIsSaved(true);
                     getArtistImageId(AlbumObject.getArtistId());
                     updateUI();
@@ -446,6 +444,7 @@ public class album extends Fragment {
                     Picasso.get().load(Imageurl).into(artist_album_image);
                 }
             }
+
             @Override
             public void onFailure(Call<ImageID> call, Throwable t) {
                 Toast.makeText(getContext(), t.getMessage() + " ' failed '", Toast.LENGTH_SHORT).show();
@@ -484,7 +483,7 @@ public class album extends Fragment {
         }
         p.setTracks(basic);
         PlaylistInfo.getinstance().setPlaylistTracks(p);
-        end=true;
+        end = true;
     }
 
 
@@ -513,13 +512,8 @@ public class album extends Fragment {
         }
         p.setTracks(basic);
         PlaylistInfo.getinstance().setPlaylistTracks(p);
-        end=true;
+        end = true;
     }
-
-
-
-
-
 
 
     void getPaletteAndSetBackgroundColor(ImageView v, final LinearLayout put) {
@@ -621,13 +615,12 @@ public class album extends Fragment {
             }
         }
 
-        if(AlbumObject.isIsSaved()){
+        if (AlbumObject.isIsSaved()) {
             like_album.setImageResource(R.drawable.like);
-            liked=1;
-        }
-        else{
+            liked = 1;
+        } else {
             like_album.setImageResource(R.drawable.favorite_border);
-            liked=0;
+            liked = 0;
 
         }
 
@@ -637,29 +630,27 @@ public class album extends Fragment {
     /**
      * send a request to UNlike the ALBUM
      */
-    void UnLikeAlbum(){
+    void UnLikeAlbum() {
         likealbum unlikealbum1 = new likealbum(albumID);
         Call<Void> call = endPointAPI.UN_LIKE_ALBUM(unlikealbum1,user.getToken());
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
 
-                if(!response.isSuccessful()){
-                    Toast.makeText(getContext(),"something went wrong .try again",Toast.LENGTH_SHORT).show();
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getContext(), "something went wrong .try again", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else
-                {
+                } else {
 
                     like_album.setImageResource(R.drawable.favorite_border);
-                    liked=0;
+                    liked = 0;
                     AlbumObject.setIsSaved(false);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getContext(),"something went wrong .check your internet connection",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "something went wrong .check your internet connection", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -667,28 +658,26 @@ public class album extends Fragment {
     /**
      * send a request to like the ALBUM
      */
-    void LikeAlbum(){
+    void LikeAlbum() {
         likealbum likealbum1 = new likealbum(albumID);
         Call<Void> call = endPointAPI.LIKE_ALBUM(likealbum1 , user.getToken());
-        call.enqueue(new Callback<Void>() {
+       call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
 
-                if(!response.isSuccessful()){
-                    Toast.makeText(getContext(),"something went wrong .try again",Toast.LENGTH_SHORT).show();
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getContext(), "something went wrong .try again", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else
-                {
+                } else {
                     like_album.setImageResource(R.drawable.like);
-                    liked=1;
+                    liked = 1;
                     AlbumObject.setIsSaved(true);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getContext(),"something went wrong .check your internet connection",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "something went wrong .check your internet connection", Toast.LENGTH_SHORT).show();
             }
         });
     }

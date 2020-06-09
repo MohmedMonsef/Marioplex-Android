@@ -26,6 +26,7 @@ import retrofit2.Response;
 public class Playlist_Library_Settings extends AppCompatActivity {
     private LinearLayout settings_delete;
     private LinearLayout settings_upload_photo;
+    private LinearLayout settings_edit_name;
     private ImageView setting_playlist_image;
     private TextView playlist_name_settings;
     private ImageView settings_playlist_library_arrow;
@@ -81,6 +82,17 @@ public class Playlist_Library_Settings extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        settings_edit_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), EditPlaylistName.class);
+                intent.putExtra("SourceID" , SourceId);
+                startActivity(intent);
+            }
+        });
+
+
     }
 
     /**
@@ -128,5 +140,6 @@ public class Playlist_Library_Settings extends AppCompatActivity {
         setting_playlist_image = findViewById(R.id.setting_playlist_image);
         playlist_name_settings = findViewById(R.id.playlist_name_settings);
         settings_playlist_library_arrow = findViewById(R.id.settings_playlist_library_arrow);
+        settings_edit_name = findViewById(R.id.settings_edit_name);
     }
 }

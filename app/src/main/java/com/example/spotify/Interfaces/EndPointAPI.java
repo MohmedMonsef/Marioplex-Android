@@ -10,11 +10,12 @@ import com.example.spotify.BackClasses.Backclasses.backpopularartist.PopularArti
 import com.example.spotify.BackClasses.Backclasses.backpopularplaylist.PopularPlaylist;
 import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
 import com.example.spotify.BackClasses.Backclasses.likeAlbum.likealbum;
-import com.example.spotify.BackClasses.Backclasses.likeAlbum.unlikealbum;
 import com.example.spotify.login.apiClasses.FacebookLoginData;
 import com.example.spotify.login.apiClasses.LoginCredentials;
 import com.example.spotify.login.apiClasses.LoginResponse;
+import com.example.spotify.login.apiClasses.Password;
 import com.example.spotify.login.apiClasses.SignUpData;
+import com.example.spotify.login.apiClasses.forgotPasswordEmail;
 import com.example.spotify.login.apiClasses.updateProfile;
 import com.example.spotify.login.apiClasses.userProfile;
 import com.example.spotify.pojo.BasicPlaylist;
@@ -25,6 +26,7 @@ import com.example.spotify.pojo.UploadImageResponse;
 import com.example.spotify.pojo.addTrackToPlaylistBody;
 import com.example.spotify.pojo.createPlaylistBody;
 import com.example.spotify.pojo.currentTrack;
+import com.example.spotify.pojo.editPlaylistNameBody;
 import com.example.spotify.pojo.playlist;
 
 import java.util.ArrayList;
@@ -68,6 +70,14 @@ public interface EndPointAPI {
 
     @POST("api/auth/facebookAndroid")
     Call<LoginResponse> facebookLogin(@Body FacebookLoginData facebookLoginData);
+
+    @POST("api/login/forgetpassword")
+    Call<ResponseBody> forgetPassword(@Body forgotPasswordEmail email);
+
+    @POST("api/login/reset_password")
+    Call<ResponseBody> resetPasword(@Header("x-auth-token") String token, @Body Password password);
+
+
     ////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////home requests/////////////////////////////////////////
 
@@ -130,6 +140,9 @@ public interface EndPointAPI {
     Call<Void> LikePlaylist(@Path("playlist_id") String playlistID,
                             @Header("x-auth-token") String token1);
 
+    @PUT("api/playlists/{playlist_id}")
+    Call<Void> editPlaylisttName(@Path("playlist_id") String playlistID , @Header("x-auth-token") String token1 , @Body editPlaylistNameBody editPlaylistNameBody);
+
     @GET("api/me/followingArtist")
     Call<LibraryArtists> getArtists(@Header("x-auth-token") String token1);
 
@@ -143,14 +156,7 @@ public interface EndPointAPI {
                              @Query("belongs_to") String belongsTo,
                              @Header("x-auth-token") String token1);
 
-    //    @Multipart
-//    @POST("api/images/upload/{source_id}")
-//    Call<UploadImageResponse> uploadImage(@Path("source_id") String sourceID ,
-//                                          @Query("belongs_to") String belongsTo,
-//                                          @Query("height") int height ,
-//                                          @Query("width") int width,
-//                                          @Part MultipartBody.Part file ,
-//                                          @Header("x-auth-token") String token);
+
     @Multipart
     @POST("api/images/upload/{source_id}")
     Call<UploadImageResponse> uploadImage(@Path("source_id") String sourceID,

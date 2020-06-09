@@ -15,6 +15,9 @@ public class Track {
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("playable")
+    @Expose
+    private Boolean Playable;
     @SerializedName("images")
     @Expose
     private List<ImageInfo> images = null;
@@ -50,4 +53,11 @@ public class Track {
         this.images = images;
     }
 
+    public Boolean getPlayable() {
+        return Playable;
+    }
+
+    public void setPlayable(Boolean playable) {
+        Playable = playable;
+    }
 }

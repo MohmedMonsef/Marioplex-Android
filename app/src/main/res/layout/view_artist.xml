@@ -32,6 +32,7 @@
             app:cardCornerRadius="40dp"
             android:layout_centerHorizontal="true"
             android:innerRadius="0dp"
+            android:layout_marginLeft="8dp"
             android:shape="ring"
             android:thicknessRatio="1.9"
             android:layout_centerVertical="true"

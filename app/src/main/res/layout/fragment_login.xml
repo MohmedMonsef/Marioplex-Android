@@ -4,67 +4,86 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#121212"
+    android:orientation="vertical"
     android:paddingHorizontal="30dp"
     android:paddingTop="30dp"
-    android:orientation="vertical"
     android:windowActionBar="true"
-    android:background="#121212"
     tools:context=".login.IntroActivity">
 
-
-    <TextView
-        android:id="@+id/emailtext"
+    <LinearLayout
+        android:id="@+id/loginForm"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Email"
-        android:textSize="24sp"
-        android:textColor="@android:color/white"
-        android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/emailtext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
 
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="match_parent"
-        android:layout_height="42dp"
-        android:background="@drawable/rounded_rectangle"
-        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&amp;'*+-/=?^_`{|}~(),.:;@[\]"
-        android:fontFamily="@font/roboto_medium"
-        android:inputType="textEmailAddress"
-        android:paddingHorizontal="10dp"
-        android:selectAllOnFocus="true"
-        android:textColor="@android:color/white"
-        android:textCursorDrawable="@drawable/color_cursor" />
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:background="@drawable/rounded_rectangle"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&amp;'*+-/=?^_`{|}~(),.:;@[\]"
+            android:fontFamily="@font/roboto_medium"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="10dp"
+            android:selectAllOnFocus="true"
+            android:textColor="@android:color/white"
+            android:textCursorDrawable="@drawable/color_cursor" />
 
-    <TextView
-        android:id="@+id/passwordtext"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:textColor="@android:color/white"
-        android:text="Password"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/passwordtext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:text="Password"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:layout_height="42dp"
-        android:textColor="@android:color/white"
-        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&amp;'*+-/=?^_`{|}~(),.:;@[\]"
-        android:background="@drawable/rounded_rectangle"
-        android:imeOptions="actionDone"
-        android:inputType="textPassword"
-        android:paddingHorizontal="10dp"
-        android:selectAllOnFocus="true"
-        android:textCursorDrawable="@drawable/color_cursor"/>
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:background="@drawable/rounded_rectangle"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&amp;'*+-/=?^_`{|}~(),.:;@[\]"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:paddingHorizontal="10dp"
+            android:selectAllOnFocus="true"
+            android:textColor="@android:color/white"
+            android:textCursorDrawable="@drawable/color_cursor" />
 
 
-    <ImageView
-        android:id="@+id/loginButton"
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/login_button_states" />
+        <ImageView
+            android:id="@+id/loginButton"
+            android:layout_width="160dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
+            android:src="@drawable/login_button_states" />
+
+        <ImageView
+            android:id="@+id/forgot_password_button"
+            android:layout_width="262dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:src="@drawable/forgot_password_states" />
+
+    </LinearLayout>
+
+
 
 
 </LinearLayout>
