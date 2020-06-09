@@ -158,9 +158,7 @@ public class adapterSearch extends RecyclerView.Adapter<adapterSearch.MyviewHold
                             .replace(R.id.frame_fragment, f)
                             .addToBackStack(null).commit();
                 }
-
-                else if(list1.get(position).getType().equals("track"))
-                {
+               else if(list1.get(position).getType().equals("track")){
                     Bundle bundle = new Bundle();
                     bundle.putString("TrackID" , list1.get(position).getid());
                     bundle.putString("TrackName" , list1.get(position).getName());
