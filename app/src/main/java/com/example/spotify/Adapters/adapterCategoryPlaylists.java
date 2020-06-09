@@ -26,7 +26,7 @@ public class adapterCategoryPlaylists extends RecyclerView.Adapter<adapterCatego
     /**
      * @param context
      * @param Categoryplaylist
-     * set the adapterPopularArtist with list
+     * set the adapterCategoryPlaylists with list
      */
     public adapterCategoryPlaylists(Context context, CategoryPlaylist Categoryplaylist)
     {
@@ -105,7 +105,7 @@ public class adapterCategoryPlaylists extends RecyclerView.Adapter<adapterCatego
 
     /**
      *
-     * @return --> NewReleaseList size
+     * @return --> Categoryplaylist size
      */
     @Override
     public int getItemCount()

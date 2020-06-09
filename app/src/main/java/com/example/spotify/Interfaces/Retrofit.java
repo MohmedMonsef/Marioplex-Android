@@ -18,14 +18,16 @@ public class Retrofit {
             //.baseUrl("http://52.205.254.29/")
             //.baseUrl("http://192.168.43.127:3000/")
             .baseUrl("http://100.25.194.8/")
-            //.baseUrl("http://52.87.106.56/")
+            //.baseUrl("http://52.70.203.73/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build();
     private EndPointAPI endPointAPI = retrofit.create(EndPointAPI.class);
     //private String Baseurl = "http://52.87.106.56/";
+    //private String Baseurl = "http://52.70.203.73/";
     private String Baseurl = "http://100.25.194.8/";
-//    private String Baseurl = "http://192.168.1.3:3000/";
+
+    //    private String Baseurl = "http://192.168.1.3:3000/";
 
     //private String Baseurl = "http://192.168.43.127:3000/";
     //private ApiSpotify apiSpotify = retrofit.create(ApiSpotify .class);

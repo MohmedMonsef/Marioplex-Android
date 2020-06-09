@@ -82,6 +82,7 @@ public class adapterPopularAlbum extends RecyclerView.Adapter<adapterPopularAlbu
 
                 Bundle bundle = new Bundle();
                 bundle.putString("albumID" , item.getId());
+                bundle.putInt("backID",3);
                 //bundle.putString("artistName" , item.getArtist().getName());
                 androidx.fragment.app.Fragment f = new album();
                 f.setArguments(bundle);

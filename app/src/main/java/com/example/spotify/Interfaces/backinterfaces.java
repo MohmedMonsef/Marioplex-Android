@@ -25,26 +25,17 @@ public interface backinterfaces
 
     //get list of new backhome
     @GET("api/browse/new-releases?country=SE&limit=10&offset=0")
-
     public Call<Newreleases> getNewRelease();
-
     @GET("api/browse/popular-albums")
     public Call<PopularAlbum> getPopularAlbum();
-
-
     @GET("api/browse/popular-playlists")
     public Call<PopularPlaylist> getPopularPlaylist();
-
     @GET("api/browse/popular-artists")
     public Call<PopularArtist> getPopularArtist();
-
-
     @GET("api/search")
     public Call<Search> getSearch(@Query("name") String name, @Query("type") String type, @Header("x-auth-token") String token);
-
     @GET("api/browse/categories")
     public Call<Category> getCategories(@Header("x-auth-token") String token);
-
     @GET("api/browse/categories/{category_id}/playlists")
     public Call<CategoryPlaylist> getCategoryPlaylist(@Path("category_id") String category_id,@Query("limit") int limit,@Query("offset") int offset,@Header("x-auth-token") String token);
     @GET("api/me/albums")

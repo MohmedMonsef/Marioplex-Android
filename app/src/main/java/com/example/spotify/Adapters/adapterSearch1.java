@@ -27,7 +27,7 @@ public class adapterSearch1 extends RecyclerView.Adapter<adapterSearch1.MyviewHo
     /**
      * @param context
      * @param LIST
-     * set the adapterSearch with list
+     * set the adapterSearch1 with list
      */
     public adapterSearch1(Context context, Search LIST)
     {

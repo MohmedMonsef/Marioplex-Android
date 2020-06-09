@@ -30,7 +30,11 @@ import com.example.spotify.BackClasses.Backclasses.albumInform.Track;
 import com.example.spotify.BackClasses.Backclasses.likeAlbum.likealbum;
 import com.example.spotify.BackClasses.Backclasses.likeAlbum.unlikealbum;
 import com.example.spotify.Fragments.HOME_FRAGMENT.backhome;
+import com.example.spotify.Fragments.LIBRARY_FRAGMENT.Album_library_fragment.Album_Library;
+import com.example.spotify.Fragments.LIBRARY_FRAGMENT.libraryFragment;
 import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistInfo;
+import com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT.searchListfragment;
+import com.example.spotify.Fragments.SEE_ALBUMS_FRAGMENT.see_all_albums_Fragment;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.Interfaces.backinterfaces;
@@ -72,7 +76,9 @@ public class album extends Fragment {
     private Button something_wrong_button_album;
     String Artist_Name;
     String Album_Name;
+    int backID=3;
     int liked;
+    String wordRecieve1;
     private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();
     // private AlbumTracks AlbumObject;
     private AlbumObject AlbumObject;
@@ -109,6 +115,7 @@ public class album extends Fragment {
         View view = inflater.inflate(R.layout.fragment_album, container, false);
         ////*******************************RecyclerView***********************////
         albumID = getArguments().getString("albumID");
+        backID = getArguments().getInt("backID");
 
         /////////////////////get all the views i will use/////////////////////////
         back_arrow_album = view.findViewById(R.id.back_arrow_album);
@@ -143,10 +150,42 @@ public class album extends Fragment {
             @Override
             public void onClick(View v) {
                 ////////////////return to my home fragment\\\\\\\\\\\\\\\\\\\\\
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_fragment, new backhome())
-                        .addToBackStack(null)
-                        .commit();
+
+               if(backID==0)//searchListfragment
+               {
+                   getActivity().getSupportFragmentManager().beginTransaction()
+                           .replace(R.id.frame_fragment, new searchListfragment())
+                           .addToBackStack(null)
+                           .commit();
+               }
+               else if(backID==1)//Album_Library
+               {
+                       getActivity().getSupportFragmentManager().beginTransaction()
+                           .replace(R.id.frame_fragment, new libraryFragment())
+                           .addToBackStack(null)
+                           .commit();
+
+
+               }
+               else if(backID==2)//see_all_albums_Fragment
+               {
+
+
+                   getActivity().getSupportFragmentManager().beginTransaction()
+                           .replace(R.id.frame_fragment, new searchListfragment())
+                           .addToBackStack(null)
+                           .commit();
+               }
+               else if (backID==3)// Home page
+                   {
+                       getActivity().getSupportFragmentManager().beginTransaction()
+                               .replace(R.id.frame_fragment, new backhome())
+                               .addToBackStack(null)
+                               .commit();
+
+                   }
+
+
             }
         });
         /**
@@ -170,7 +209,7 @@ public class album extends Fragment {
 
             }
         });
-/*
+
         album_settings_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,7 +226,7 @@ public class album extends Fragment {
                 intent.putExtra("Album Like",liked);
                 startActivity(intent);
             }
-        });*/
+        });
         shuffle_play_button_album.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -233,7 +272,7 @@ public class album extends Fragment {
                 }
                 else{
                     LikeAlbum();
-                }
+                    }
             }
       });
 
@@ -341,9 +380,15 @@ public class album extends Fragment {
             }
         });
     }
+//"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWIwOTAxZTMwYTlhMDFmMTQ0YjcyMzUiLCJwcm9kdWN0IjoicHJlbWl1bSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg5OTczOTMzLCJleHAiOjMxNDY0ODg4NzgwMjYwODk1MDB9.gpPtSyJDhiKYB8Lduhnet3upLiXW23HT7KU5Z7oXE8c"
 
+    /**
+     *
+     * @param albumID
+     *  function to set album's tracks information
+     */
     void GetAlbumsTracksInfo(String albumID) {
-        Call<AlbumObject> call = endPointAPI.getAlbumObject(albumID,"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWIwOTAxZTMwYTlhMDFmMTQ0YjcyMzUiLCJwcm9kdWN0IjoicHJlbWl1bSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg5OTczOTMzLCJleHAiOjMxNDY0ODg4NzgwMjYwODk1MDB9.gpPtSyJDhiKYB8Lduhnet3upLiXW23HT7KU5Z7oXE8c");
+        Call<AlbumObject> call = endPointAPI.getAlbumObject(albumID,user.getToken());
         call.enqueue(new Callback<AlbumObject>() {
             @Override
             public void onResponse(Call<AlbumObject> call, Response<AlbumObject> response) {
@@ -377,6 +422,12 @@ public class album extends Fragment {
         });
     }
 
+    /**
+     *
+     * @param artistID
+     *
+     * function to get Artist image id
+     */
     void getArtistImageId(String artistID) {
         Call<ImageID> call = endPointAPI.GetImageId(artistID, "artist", user.getToken());
         call.enqueue(new Callback<ImageID>() {
@@ -403,7 +454,11 @@ public class album extends Fragment {
 
     }
 
-
+    /**
+     *
+     * @param albumTracks
+     * to fill albums track
+     */
     void FillPlaylistTracks(AlbumObject albumTracks) {
 
         PlaylistTracks p = new PlaylistTracks();
@@ -514,6 +569,9 @@ public class album extends Fragment {
         });
     }
 
+    /**
+     * update the album information
+     */
     void updateUI() {
         List<ImageInfo> images = AlbumObject.getImages();
         String ImageID = "12d";
@@ -577,11 +635,11 @@ public class album extends Fragment {
     }
 
     /**
-     * send a request to UNlike(follow) the ALBUM
+     * send a request to UNlike the ALBUM
      */
     void UnLikeAlbum(){
         likealbum unlikealbum1 = new likealbum(albumID);
-        Call<Void> call = endPointAPI.UN_LIKE_ALBUM(unlikealbum1,"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWIwOTAxZTMwYTlhMDFmMTQ0YjcyMzUiLCJwcm9kdWN0IjoicHJlbWl1bSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg5OTczOTMzLCJleHAiOjMxNDY0ODg4NzgwMjYwODk1MDB9.gpPtSyJDhiKYB8Lduhnet3upLiXW23HT7KU5Z7oXE8c");
+        Call<Void> call = endPointAPI.UN_LIKE_ALBUM(unlikealbum1,user.getToken());
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -607,11 +665,11 @@ public class album extends Fragment {
     }
 
     /**
-     * send a request to like(unfollow) the ALBUM
+     * send a request to like the ALBUM
      */
     void LikeAlbum(){
         likealbum likealbum1 = new likealbum(albumID);
-        Call<Void> call = endPointAPI.LIKE_ALBUM(likealbum1 , "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWIwOTAxZTMwYTlhMDFmMTQ0YjcyMzUiLCJwcm9kdWN0IjoicHJlbWl1bSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg5OTczOTMzLCJleHAiOjMxNDY0ODg4NzgwMjYwODk1MDB9.gpPtSyJDhiKYB8Lduhnet3upLiXW23HT7KU5Z7oXE8c");
+        Call<Void> call = endPointAPI.LIKE_ALBUM(likealbum1 , user.getToken());
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {

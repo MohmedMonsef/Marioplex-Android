@@ -73,33 +73,6 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/like_album_setting"
-                    android:padding="16dp"
-                    android:layout_toLeftOf="@id/album_settings_button"
-                    android:src="@drawable/favorite_border"
-                    android:layout_centerVertical="true"
-                    />
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:textSize="20sp"
-    android:textStyle="bold"
-    android:layout_centerVertical="true"
-    android:id="@+id/like_album_setting_text"
-    android:layout_marginTop="8dp"
-    android:textColor="@android:color/background_light"
-    android:text="Like"
-></TextView>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:id="@+id/view_artist"
                     android:padding="16dp"
                     android:layout_toLeftOf="@id/album_settings_button"

@@ -25,6 +25,7 @@ import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
 import com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT.searchListfragment;
 import com.example.spotify.Interfaces.backinterfaces;
 import com.example.spotify.R;
+import com.example.spotify.login.user;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -62,7 +63,31 @@ public class see_all_artist_Fragment extends Fragment implements LifecycleOwner 
         recyclerView.setLayoutManager(layoutManager);
         Bundle args = getArguments();
         wordRecieve = getArguments().getString("DATA_RECIEVE_Artist");
-        ArtistText.setText("' "+wordRecieve+"'"+"  in Artist ");
+        //ArtistText.setText("' " + wordRecieve + "'" + "  in Artist ");
+
+     if (wordRecieve!=null)
+        {
+
+         //   int i=wordRecieve.indexOf(" ");
+         wordRecieve=wordRecieve.trim();
+         if(wordRecieve.length()==0)
+         {
+             ArtistText.setText("' " + wordRecieve + "'" + "  in Artist ");
+             recyclerView.setAdapter(null);
+         }
+         else
+          {
+             ArtistText.setText("' " + wordRecieve + "'" + "  in Artist ");
+             SetRetrofitsearchalbum(wordRecieve);
+          }
+        }
+        else
+            {
+                wordRecieve="";
+                ArtistText.setText("' " + wordRecieve + "'" + "  in Artist ");
+                recyclerView.setAdapter(null);
+             }
+        //ArtistText.setText("' "+wordRecieve+"'"+"  in Artist ");
         //if(args!=null)
         // {
         //   ArtistText.setText(args.getString(DATA_RECIEVE)+" In Artist");
@@ -81,14 +106,20 @@ public class see_all_artist_Fragment extends Fragment implements LifecycleOwner 
                 transaction.commit();
             }
         });
-        SetRetrofitsearchalbum(wordRecieve);
         ////*******************************To check the state***********************////
+       // SetRetrofitsearchalbum(wordRecieve);
         textViewResult = view.findViewById(R.id.texta);
         return view;
     }
 
+    /**
+     *
+     * @param s
+     *
+     * Set the retrofit function depend on string
+     */
     public void SetRetrofitsearchalbum(String s) {
-        Call<Search> call = apiService.getSearch(s, "artist", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTgwYzZhZjE0Yzg1NjZkNmNkOWI0MDAiLCJwcm9kdWN0IjoiZnJlZSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg2MDI2NjAyLCJleHAiOjQ3MzI1MTMwMDJ9.ztEjNCgbkyJ2-9WB6ojwLgDfhWsZ-ZGJVFUB8dYMz8s");
+        Call<Search> call = apiService.getSearch(s, "artist", user.getToken());
         call.enqueue(new Callback<Search>() {
             /**
              *
@@ -102,8 +133,10 @@ public class see_all_artist_Fragment extends Fragment implements LifecycleOwner 
                 if (response.code() == 401)
                     textViewResult.setText(response.errorBody().toString() + "401");
                     //may internet disconnected
-                else if (!response.isSuccessful()) {
+                else if (!response.isSuccessful())
+                {
                     textViewResult.setText("Code: " + response.code());
+
                     return;
                 }
                 //if responcse is successful and the server send response
@@ -132,7 +165,7 @@ public class see_all_artist_Fragment extends Fragment implements LifecycleOwner 
              */
             @Override
             public void onFailure(Call<Search> call, Throwable t) {
-                textViewResult.setText(t.getMessage() + "hey there failed");
+                textViewResult.setText("Failed to connect to server");
             }
         });
     }

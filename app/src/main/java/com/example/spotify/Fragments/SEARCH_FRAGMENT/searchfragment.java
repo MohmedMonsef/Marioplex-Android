@@ -24,6 +24,7 @@ import com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT.searchListfragment;
 import com.example.spotify.Interfaces.backinterfaces;
 import com.example.spotify.BackClasses.Backclasses.backcategory.Category;
 import com.example.spotify.R;
+import com.example.spotify.login.user;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -109,7 +110,7 @@ public class searchfragment extends Fragment implements LifecycleOwner
 
         Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
         backinterfaces apiService = retrofit.create(backinterfaces.class);
-        Call<Category> call = apiService.getCategories("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTgwYzZhZjE0Yzg1NjZkNmNkOWI0MDAiLCJwcm9kdWN0IjoiZnJlZSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg2MDI2NjAyLCJleHAiOjQ3MzI1MTMwMDJ9.ztEjNCgbkyJ2-9WB6ojwLgDfhWsZ-ZGJVFUB8dYMz8s");
+        Call<Category> call = apiService.getCategories(user.getToken());
         call.enqueue(new Callback<Category>()
         {
 
@@ -158,21 +159,14 @@ public class searchfragment extends Fragment implements LifecycleOwner
             @Override
             public void onFailure(Call<Category> call, Throwable t)
             {
-                textViewResult.setText(t.getMessage() + "failed");
+                textViewResult.setText("Failed to connect to server");
             }
         });
 
 
     }
 
-    /*
-    @NonNull
-    @Override
-    public Lifecycle getLifecycle() {
-        return null;
-    }
 
-     */
 
 
 }

@@ -25,6 +25,7 @@ import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
 import com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT.searchListfragment;
 import com.example.spotify.Interfaces.backinterfaces;
 import com.example.spotify.R;
+import com.example.spotify.login.user;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -63,7 +64,34 @@ public class see_all_song_Fragment extends Fragment implements LifecycleOwner {
         recyclerView.setLayoutManager(layoutManager);
         Bundle args=getArguments();
         wordRecieve = getArguments().getString("DATA_RECIEVE_Song");
-        ArtistText.setText("'"+wordRecieve+"'"+"  in Songs ");
+        //ArtistText.setText("' " + wordRecieve + "'" + "  in Songs ");
+        if (wordRecieve!=null)
+        {
+            wordRecieve=wordRecieve.trim();
+            if(wordRecieve.length()==0)
+            {
+                ArtistText.setText("' " + wordRecieve + "'" + "  in Songs ");
+                recyclerView.setAdapter(null);
+            }
+          else {
+                ArtistText.setText("' " + wordRecieve + "'" + "  in Songs ");
+                SetRetrofitsearchalbum(wordRecieve);
+            }
+        }
+        else
+        {
+            wordRecieve="";
+            ArtistText.setText("' " + wordRecieve + "'" + "  in Songs ");
+            recyclerView.setAdapter(null);
+        }
+
+  /*      if (wordRecieve != null)
+        {
+            ArtistText.setText("' " + wordRecieve + "'" + "  in Songs ");
+        }
+        else{wordRecieve="";}
+*/
+        //ArtistText.setText("'"+wordRecieve+"'"+"  in Songs ");
         back_button_to_seeAllSong=view.findViewById(R.id.back_button_to_seeAllSong);
         back_button_to_seeAllSong.setOnClickListener(new View.OnClickListener()
         {
@@ -77,15 +105,21 @@ public class see_all_song_Fragment extends Fragment implements LifecycleOwner {
                 transaction.commit();
             }
         });
-        SetRetrofitsearchalbum(wordRecieve);
+        //SetRetrofitsearchalbum(wordRecieve);
         ////*******************************To check the state***********************////
         textViewResult = view.findViewById(R.id.texta);
         return view;
     }
 
+    /**
+     *
+     * @param s
+     *
+     * Set the retrofit function depend on string
+     */
     public void SetRetrofitsearchalbum(String s)
     {
-        Call<Search> call = apiService.getSearch(s, "track" , "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTgwYzZhZjE0Yzg1NjZkNmNkOWI0MDAiLCJwcm9kdWN0IjoiZnJlZSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg2MDI2NjAyLCJleHAiOjQ3MzI1MTMwMDJ9.ztEjNCgbkyJ2-9WB6ojwLgDfhWsZ-ZGJVFUB8dYMz8s");
+        Call<Search> call = apiService.getSearch(s, "track" , user.getToken());
         call.enqueue(new Callback<Search>()
         {
             /**
@@ -134,7 +168,7 @@ public class see_all_song_Fragment extends Fragment implements LifecycleOwner {
             @Override
             public void onFailure(Call<Search> call, Throwable t)
             {
-                textViewResult.setText(t.getMessage() + "hey there failed");
+                textViewResult.setText("Failed to connect to server");
             }
         });
     }

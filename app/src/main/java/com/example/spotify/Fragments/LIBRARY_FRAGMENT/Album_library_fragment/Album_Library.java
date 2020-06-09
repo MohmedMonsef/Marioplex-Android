@@ -60,7 +60,7 @@ public class Album_Library extends Fragment implements LifecycleOwner {
 
         Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
         backinterfaces apiService = retrofit.create(backinterfaces.class);
-        Call<SavedAlbums> call = apiService.getSavedAlbums("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWIwOTAxZTMwYTlhMDFmMTQ0YjcyMzUiLCJwcm9kdWN0IjoicHJlbWl1bSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg5OTczOTMzLCJleHAiOjMxNDY0ODg4NzgwMjYwODk1MDB9.gpPtSyJDhiKYB8Lduhnet3upLiXW23HT7KU5Z7oXE8c");
+        Call<SavedAlbums> call = apiService.getSavedAlbums(user.getToken());
         call.enqueue(new Callback<SavedAlbums>()
         {
             /**
@@ -109,7 +109,7 @@ public class Album_Library extends Fragment implements LifecycleOwner {
             @Override
             public void onFailure(Call<SavedAlbums> call, Throwable t)
             {
-                textViewResult.setText(t.getMessage() + "failed");
+                textViewResult.setText("Failed to connect to server");
             }
         });
     }

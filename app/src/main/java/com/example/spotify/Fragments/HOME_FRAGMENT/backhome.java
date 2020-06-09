@@ -137,7 +137,7 @@ public class backhome extends Fragment implements LifecycleOwner
         setRetrofitartist();
         setRetrofitplaylist();
         ////*******************************To check the state***********************////
-        textViewResult = view.findViewById(R.id.Popular_new_releases);
+        textViewResult = view.findViewById(R.id.text_home);
         return view;
 
     }
@@ -198,7 +198,7 @@ public class backhome extends Fragment implements LifecycleOwner
             @Override
             public void onFailure(Call<Newreleases> call, Throwable t)
             {
-                textViewResult.setText(t.getMessage() + "failed");
+                textViewResult.setText("Failed to connect to server");
             }
         });
     }

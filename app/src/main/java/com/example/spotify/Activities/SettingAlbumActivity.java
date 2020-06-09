@@ -41,24 +41,25 @@ TextView album_owner_setting,album_name_middle_setting,like_album_setting_text,v
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_album);
         album_image_album_fragment_setting=findViewById(R.id.album_image_album_fragment_setting);
-        like_album_setting=findViewById(R.id.like_album_setting);
+        //like_album_setting=findViewById(R.id.like_album_setting);
         view_artist=findViewById(R.id.view_artist);
         album_owner_setting=findViewById(R.id.album_owner_setting);
         album_name_middle_setting=findViewById(R.id.album_name_middle_setting);
         back_arrow_album_setting=findViewById(R.id.back_arrow_album_setting);
         reciveDataFromAlbumFragment();
         GetAlbumsTracksInfo(Album_ID);
-        if(liked==1){
+        /*if(liked==1){
             like_album_setting.setImageResource(R.drawable.like);
         }
         else{
             like_album_setting.setImageResource(R.drawable.favorite_border);
         }
+        */
         album_owner_setting.setText(AlbumName);
         album_name_middle_setting.setText(AlbumName);
         String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + Img_ID + "?belongs_to=album";
         Picasso.get().load(Imageurl).into(album_image_album_fragment_setting);
-        like_album_setting.setOnClickListener(new View.OnClickListener() {
+  /*      like_album_setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(liked==1) {
@@ -69,12 +70,12 @@ TextView album_owner_setting,album_name_middle_setting,like_album_setting_text,v
                 }
             }
         });
-
+*/
         back_arrow_album_setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                back();
-
+               // back();
+                finish();
             }
 
 
@@ -171,6 +172,9 @@ TextView album_owner_setting,album_name_middle_setting,like_album_setting_text,v
         });
     }
 
+    /**
+     * return back to album page
+     */
     void back()
     {
   /*    Bundle bundle = new Bundle();
@@ -205,6 +209,11 @@ TextView album_owner_setting,album_name_middle_setting,like_album_setting_text,v
 //        finish();
 
     }
+
+    /**
+     * go to album fragment
+     * @param fragment
+     */
     public void loadFragment(Fragment fragment)
     {
         // create a FragmentManager

@@ -15,6 +15,7 @@
         <ImageView
             android:id="@+id/categroy_imageview"
             android:background="@android:color/background_dark"
+            android:scaleType="centerCrop"
             android:layout_width="220dp"
             android:layout_height="130dp" />
 

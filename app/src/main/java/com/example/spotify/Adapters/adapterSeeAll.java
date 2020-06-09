@@ -29,7 +29,7 @@ public class adapterSeeAll extends RecyclerView.Adapter<adapterSeeAll.MyviewHold
     /**
      * @param context
      * @param LIST
-     * set the adapterSearch with list
+     * set the adapterSeeAll with list
      */
     public adapterSeeAll(Context context, Search LIST)
     {
@@ -146,9 +146,10 @@ public class adapterSeeAll extends RecyclerView.Adapter<adapterSeeAll.MyviewHold
                             .addToBackStack(null).commit();
                 }
 
-                else if(list1.get(position).getType().equals("Album")){
+                else if(list1.get(position).getType().equals("album")){
                     Bundle bundle = new Bundle();
                     bundle.putString("albumID" , list1.get(position).getid());
+                    bundle.putInt("backID",2);
                     //bundle.putString("artistName" , item.getArtist().getName());
                     androidx.fragment.app.Fragment f = new album();
                     f.setArguments(bundle);
@@ -159,13 +160,12 @@ public class adapterSeeAll extends RecyclerView.Adapter<adapterSeeAll.MyviewHold
                             .addToBackStack(null).commit();
                 }
 
-                else if(list1.get(position).getType().equals("Track")){
+                else if(list1.get(position).getType().equals("track")){
                     Bundle bundle = new Bundle();
                     bundle.putString("TrackID" , list1.get(position).getid());
                     bundle.putString("TrackName" , list1.get(position).getName());
                     bundle.putString("TrackImage" , list1.get(position).getImage());
                     //bundle.putString("ownerName" , list1.getOwner().getName());
-
                     androidx.fragment.app.Fragment f = new TrackFragment();
                     f.setArguments(bundle);
                     AppCompatActivity activity = (AppCompatActivity) v.getContext();

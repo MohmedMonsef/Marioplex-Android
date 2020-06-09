@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.Adapters.adapterCategoryPlaylists;
 import com.example.spotify.BackClasses.Backclasses.backcategoryplaylist.CategoryPlaylist;
+import com.example.spotify.Fragments.SEARCH_FRAGMENT.searchfragment;
 import com.example.spotify.Interfaces.backinterfaces;
 import com.example.spotify.R;
 import com.example.spotify.login.user;
@@ -38,6 +39,8 @@ public class categoryplaylist extends Fragment implements LifecycleOwner
     adapterCategoryPlaylists recyclerAdapter,recyclerAdapter1;
     private TextView textViewResult;
     String categoryid,categoryname;
+    ImageView back_button_to_category_playlist;
+
     /**
      *
      * @param inflater -->layout for this fragment
@@ -69,6 +72,20 @@ public class categoryplaylist extends Fragment implements LifecycleOwner
         recyclerView1 = (RecyclerView) view.findViewById(R.id.recycleCategoryPlaylist2);
         layoutManager1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView1.setLayoutManager(layoutManager1);
+        back_button_to_category_playlist=view.findViewById(R.id.back_button_to_category_playlist);
+        back_button_to_category_playlist.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Fragment newFragment = new searchfragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_fragment, newFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
         SetRetrofit(categoryid);
         SetRetrofit1(categoryid);
         return view;
@@ -129,7 +146,7 @@ public class categoryplaylist extends Fragment implements LifecycleOwner
             @Override
             public void onFailure(Call<CategoryPlaylist> call, Throwable t)
             {
-                textViewResult.setText(t.getMessage() + "failed");
+                textViewResult.setText("Failed to connect to server");
             }
         });
 
@@ -200,14 +217,5 @@ public class categoryplaylist extends Fragment implements LifecycleOwner
 
 
     }
-    /*
-    @NonNull
-    @Override
-    public Lifecycle getLifecycle() {
-        return null;
-    }
-
-     */
-
 
 }

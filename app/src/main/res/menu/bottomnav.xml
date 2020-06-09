@@ -17,6 +17,6 @@
 
     <item
         android:id="@+id/navigation_premium"
-        android:icon="@drawable/gear"
+        android:icon="@drawable/ic_premium1_foreground"
         android:title="@string/title_premium" />
 </menu>

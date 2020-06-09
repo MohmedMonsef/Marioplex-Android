@@ -26,7 +26,7 @@ public class adapterSavedAlbum extends RecyclerView.Adapter<adapterSavedAlbum.My
     /**
      * @param context
      * @param SavedAlbum
-     * set the adapterPopularAlbum with list
+     * set the adapterSavedAlbum with list
      */
     public adapterSavedAlbum(Context context, List<com.example.spotify.BackClasses.Backclasses.SavedAlbums.SavedAlbum> SavedAlbum) {
         this.context = context;
@@ -90,6 +90,7 @@ public class adapterSavedAlbum extends RecyclerView.Adapter<adapterSavedAlbum.My
 
                 Bundle bundle = new Bundle();
                 bundle.putString("albumID" , item.getId());
+                bundle.putInt("backID",1);
                 bundle.putString("artistName" , item.getArtistName());
                 androidx.fragment.app.Fragment f = new album();
                 f.setArguments(bundle);
@@ -108,7 +109,7 @@ public class adapterSavedAlbum extends RecyclerView.Adapter<adapterSavedAlbum.My
 
     /**
      *
-     * @return --> PopularAlbumList size
+     * @return --> SavedAlbum size
      */
     @Override
     public int getItemCount() {

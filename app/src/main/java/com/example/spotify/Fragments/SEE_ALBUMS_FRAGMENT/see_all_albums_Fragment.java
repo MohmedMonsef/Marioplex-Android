@@ -25,6 +25,7 @@ import com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT.searchListfragment;
 import com.example.spotify.Interfaces.backinterfaces;
 import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
 import com.example.spotify.R;
+import com.example.spotify.login.user;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,7 +51,7 @@ public class see_all_albums_Fragment extends Fragment implements LifecycleOwner 
         View view = inflater.inflate(R.layout.fragment_see_all_albums_, container, false);
         //searchView.setOnSearchClickListener(View.OnClickListener on);
         final TextView textView = view.findViewById(R.id.text_home);
-        ArtistText=view.findViewById(R.id.textalbumsearch);
+        ArtistText = view.findViewById(R.id.textalbumsearch);
         retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
         apiService = retrofit.create(backinterfaces.class);
         ////*******************************RecyclerView***********************////
@@ -59,9 +60,30 @@ public class see_all_albums_Fragment extends Fragment implements LifecycleOwner 
         LinearLayoutManager layoutManager;
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        Bundle args=getArguments();
+        Bundle args = getArguments();
         wordRecieve = getArguments().getString("DATA_RECIEVE_Album");
-        ArtistText.setText("' "+wordRecieve+"'"+"  in Album ");
+        //ArtistText.setText("' " + wordRecieve + "'" + "  in Album ");
+
+        if (wordRecieve!=null)
+        {
+            wordRecieve=wordRecieve.trim();
+            if(wordRecieve.length()==0)
+            {
+                ArtistText.setText("' " + wordRecieve + "'" + "  in Album ");
+                recyclerView.setAdapter(null);
+            }
+            else
+             {
+                ArtistText.setText("' " + wordRecieve + "'" + "  in Album ");
+                SetRetrofitsearchalbum(wordRecieve);
+            }
+        }
+        else
+        {
+            wordRecieve="";
+            ArtistText.setText("' " + wordRecieve + "'" + "  in Album ");
+            recyclerView.setAdapter(null);
+        }
         //if(args!=null)
        // {
          //   ArtistText.setText(args.getString(DATA_RECIEVE)+" In Artist");
@@ -81,15 +103,22 @@ public class see_all_albums_Fragment extends Fragment implements LifecycleOwner 
             }
         });
 
-        SetRetrofitsearchalbum(wordRecieve);
         ////*******************************To check the state***********************////
+        //SetRetrofitsearchalbum(wordRecieve);
         textViewResult = view.findViewById(R.id.texta);
         return view;
     }
 
+    /**
+     *
+     * @param s
+     *
+     * Set the retrofit function depend on string
+     */
     public void SetRetrofitsearchalbum(String s)
     {
-        Call<Search> call = apiService.getSearch(s, "album" , "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTgwYzZhZjE0Yzg1NjZkNmNkOWI0MDAiLCJwcm9kdWN0IjoiZnJlZSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg2MDI2NjAyLCJleHAiOjQ3MzI1MTMwMDJ9.ztEjNCgbkyJ2-9WB6ojwLgDfhWsZ-ZGJVFUB8dYMz8s");
+
+        Call<Search> call = apiService.getSearch(s, "album" , user.getToken());
         call.enqueue(new Callback<Search>()
         {
             /**
@@ -138,7 +167,7 @@ public class see_all_albums_Fragment extends Fragment implements LifecycleOwner 
             @Override
             public void onFailure(Call<Search> call, Throwable t)
             {
-                textViewResult.setText(t.getMessage() + "hey there failed");
+                textViewResult.setText("Failed to connect to server");
             }
         });
     }

@@ -5,6 +5,18 @@
     android:layout_height="match_parent"
     android:background="@drawable/p0"
     tools:context=".Fragments.CATEGORY_PLAYLISTS.categoryplaylist">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/back_button_to_category_playlist"
+            android:src="@drawable/back_button"
+            android:padding="8dp"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout

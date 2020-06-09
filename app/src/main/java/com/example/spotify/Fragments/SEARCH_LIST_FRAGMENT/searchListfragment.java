@@ -34,6 +34,7 @@ import com.example.spotify.Fragments.SEE_SONG_FRAGMENT.see_all_song_Fragment;
 import com.example.spotify.Interfaces.backinterfaces;
 import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
 import com.example.spotify.R;
+import com.example.spotify.login.user;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -150,6 +151,8 @@ public class searchListfragment extends Fragment implements LifecycleOwner
             {
                 if(s.length()==0)
                     searchList=null;
+
+
             }
 
             /**
@@ -166,28 +169,32 @@ public class searchListfragment extends Fragment implements LifecycleOwner
                 //flag to change the background color
             dochange=s.length();
             word=s.toString();
-                if(s.length()!=0)
+                if (s.length() == 0)
                 {
+                    searchList = null;
+                    recyclerView.setAdapter(null);
+
+                }
+                else {
+
                     Log.i("onQueryTextChange", s.toString());
-                    Call<Search> call = apiService.getSearch(s.toString(), "artist,album,playlist,track" , "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTgwYzZhZjE0Yzg1NjZkNmNkOWI0MDAiLCJwcm9kdWN0IjoiZnJlZSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg2MDI2NjAyLCJleHAiOjQ3MzI1MTMwMDJ9.ztEjNCgbkyJ2-9WB6ojwLgDfhWsZ-ZGJVFUB8dYMz8s");
-                    call.enqueue(new Callback<Search>()
-                    {
+                    Call<Search> call = apiService.getSearch(s.toString(), "artist,album,playlist,track", user.getToken());
+                    call.enqueue(new Callback<Search>() {
                         /**
-                         *
-                         * @param call --> interface request
+                         * @param call     --> interface request
                          * @param response --> interface response
-                         * called when every changed requests and set the data
+                         *                 called when every changed requests and set the data
                          */
                         @Override
-                        public void onResponse(Call<Search> call, Response<Search> response)
-                        {
+                        public void onResponse(Call<Search> call, Response<Search> response) {
                             //error in the server
                             if (response.code() == 401)
                                 textViewResult.setText(response.errorBody().toString() + "401");
-                            //may internet disconnected
+                                //may internet disconnected
                             else if (!response.isSuccessful())
                             {
                                 textViewResult.setText("Code: " + response.code());
+                                recyclerView.setAdapter(null);
                                 return;
                             }
                             //if responcse is successful and the server send response
@@ -195,44 +202,44 @@ public class searchListfragment extends Fragment implements LifecycleOwner
                             //error in GET request url
                             if (response.body() == null)
                                 textViewResult.setText("responce body = null");
-                            //error in binding interface
+                                //error in binding interface
                             else if (searchList == null)
                                 textViewResult.setText(response.body().toString() + " search = null");
-                            //Successful
-                            else
-                                {
+                                //Successful
+                            else {
                                 Log.d("TAG", "Response = " + searchList);
                                 //set the search recyclerview
                                 recyclerAdapter = new adapterSearch(getActivity(), searchList);
                                 //change the background
-                                if(dochange==1)
-                                {l1.setBackground(getResources().getDrawable(R.drawable.searchb2));}
-                                if(dochange==2)
-                                {l1.setBackground(getResources().getDrawable(R.drawable.searchb3));}
-                                if(dochange==3)
-                                {l1.setBackground(getResources().getDrawable(R.drawable.searchb4));}
-                                if(dochange==4)
-                                {l1.setBackground(getResources().getDrawable(R.drawable.searchb1));}
+                                if (dochange == 1) {
+                                    l1.setBackground(getResources().getDrawable(R.drawable.searchb2));
+                                }
+                                if (dochange == 2) {
+                                    l1.setBackground(getResources().getDrawable(R.drawable.searchb3));
+                                }
+                                if (dochange == 3) {
+                                    l1.setBackground(getResources().getDrawable(R.drawable.searchb4));
+                                }
+                                if (dochange == 4) {
+                                    l1.setBackground(getResources().getDrawable(R.drawable.searchb1));
+                                }
                                 recyclerView.setAdapter(recyclerAdapter);
                                 recyclerView.setHasFixedSize(true);
-                                }
+                            }
                         }
 
                         /**
-                         *
                          * @param call -->interface request
-                         * @param t -->type of error of the request
-                         * called when every errored requests and set its type
+                         * @param t    -->type of error of the request
+                         *             called when every errored requests and set its type
                          */
                         @Override
-                        public void onFailure(Call<Search> call, Throwable t)
-                        {
-                            textViewResult.setText(t.getMessage() + "hey there failed");
+                        public void onFailure(Call<Search> call, Throwable t) {
+                            textViewResult.setText("Failed to connect to server");
                         }
                     });
+                    searchList = null;
                 }
-                searchList=null;
-
             }
 
             /**
@@ -240,19 +247,92 @@ public class searchListfragment extends Fragment implements LifecycleOwner
              * @param s --> current Editable in edit text
              */
             @Override
-            public void afterTextChanged(Editable s)
-            {
+            public void afterTextChanged(Editable s) {
                 //auto complete with first album index
-               // s.append(searchList.getAlbum().get(0).getName());
-                if(s.length()==0)
-                    searchList=null;
+                // s.append(searchList.getAlbum().get(0).getName());
+                String set = s.toString();
+                if (s.length() == 0)
+                {
+                    s.clear();
+                    searchList = null;
+                    recyclerView.setAdapter(null);
+                }
+              else
+              {
+                Log.i("onQueryTextChange", s.toString());
+                Call<Search> call = apiService.getSearch(s.toString(), "artist,album,playlist,track", user.getToken());
+                call.enqueue(new Callback<Search>() {
+                    /**
+                     * @param call     --> interface request
+                     * @param response --> interface response
+                     *                 called when every changed requests and set the data
+                     */
+                    @Override
+                    public void onResponse(Call<Search> call, Response<Search> response) {
+                        //error in the server
+                        if (response.code() == 401)
+                            textViewResult.setText(response.errorBody().toString() + "401");
+                            //may internet disconnected
+                        else if (!response.isSuccessful())
+                        {
+                            textViewResult.setText("Code: " + response.code());
+                            recyclerView.setAdapter(null);
+                            return;
+                        }
+                        //if responcse is successful and the server send response
+                        searchList = response.body();
+                        //error in GET request url
+                        if (response.body() == null)
+                            textViewResult.setText("responce body = null");
+                            //error in binding interface
+                        else if (searchList == null)
+                            textViewResult.setText(response.body().toString() + " search = null");
+                            //Successful
+                        else
+                            {
+                            Log.d("TAG", "Response = " + searchList);
+                            //set the search recyclerview
+                            recyclerAdapter = new adapterSearch(getActivity(), searchList);
+                            //change the background
+                            if (dochange == 1) {
+                                l1.setBackground(getResources().getDrawable(R.drawable.searchb2));
+                            }
+                            if (dochange == 2) {
+                                l1.setBackground(getResources().getDrawable(R.drawable.searchb3));
+                            }
+                            if (dochange == 3) {
+                                l1.setBackground(getResources().getDrawable(R.drawable.searchb4));
+                            }
+                            if (dochange == 4) {
+                                l1.setBackground(getResources().getDrawable(R.drawable.searchb1));
+                            }
+                            recyclerView.setAdapter(recyclerAdapter);
+                            recyclerView.setHasFixedSize(true);
+                        }
+                    }
 
+                    /**
+                     * @param call -->interface request
+                     * @param t    -->type of error of the request
+                     *             called when every errored requests and set its type
+                     */
+                    @Override
+                    public void onFailure(Call<Search> call, Throwable t) {
+                        textViewResult.setText("Failed to connect to server");
+                    }
+                });
+            }
             }
         });
                 return view;
 
     }
 
+    /**
+     *
+     * @param type
+     * a function to go to search only by --> artist,album,song,playlist depend on type
+     */
     public void loadSearchFragment(String type)
     {
         Fragment newFragment;
