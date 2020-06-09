@@ -13,7 +13,9 @@ import com.example.spotify.BackClasses.Backclasses.likeAlbum.likealbum;
 import com.example.spotify.login.apiClasses.FacebookLoginData;
 import com.example.spotify.login.apiClasses.LoginCredentials;
 import com.example.spotify.login.apiClasses.LoginResponse;
+import com.example.spotify.login.apiClasses.Password;
 import com.example.spotify.login.apiClasses.SignUpData;
+import com.example.spotify.login.apiClasses.forgotPasswordEmail;
 import com.example.spotify.login.apiClasses.updateProfile;
 import com.example.spotify.login.apiClasses.userProfile;
 import com.example.spotify.pojo.BasicPlaylist;
@@ -68,6 +70,14 @@ public interface EndPointAPI {
 
     @POST("api/auth/facebookAndroid")
     Call<LoginResponse> facebookLogin(@Body FacebookLoginData facebookLoginData);
+
+    @POST("api/login/forgetpassword")
+    Call<ResponseBody> forgetPassword(@Body forgotPasswordEmail email);
+
+    @POST("api/login/reset_password")
+    Call<ResponseBody> resetPasword(@Header("x-auth-token") String token, @Body Password password);
+
+
     ////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////home requests/////////////////////////////////////////
 

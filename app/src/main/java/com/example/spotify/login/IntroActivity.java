@@ -42,6 +42,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.content.Intent.ACTION_VIEW;
+
 public class IntroActivity extends AppCompatActivity {
 
     //final private static int ANIMATION_DURATION = 200;
@@ -61,12 +63,7 @@ public class IntroActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(loadToken()){
-            user.fetchUserData();
-            startActivity(new Intent(IntroActivity.this, MainActivity.class));
-            finish();
-            return;
-        }
+
 
         setContentView(R.layout.activity_intro);
 
@@ -85,6 +82,28 @@ public class IntroActivity extends AppCompatActivity {
                 loginByFacebook();
             }
         });
+
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        Uri data = intent.getData();
+        if(action == ACTION_VIEW && data.toString().contains("/login/reset_password")){
+            String url = data.toString();
+            String token = url.split("token=")[1];
+            user.setToken(token);
+            saveToken();
+            forgotPasswordFragment fragment = new forgotPasswordFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt("currentView", 3);
+            fragment.setArguments(bundle);
+            showFragment(fragment);
+        }
+
+        else if(loadToken()){
+            user.fetchUserData();
+            startActivity(new Intent(IntroActivity.this, MainActivity.class));
+            finish();
+            return;
+        }
     }
 
     /**
@@ -234,6 +253,16 @@ public class IntroActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().remove(fragment).commit();
             }
         });
+    }
+
+    public void saveToken(){
+        String token = user.getToken();
+        if(token!=null){
+            SharedPreferences sharedPreferences = getSharedPreferences("token", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("token",token);
+            editor.apply();
+        }
     }
 
     boolean loadToken(){
