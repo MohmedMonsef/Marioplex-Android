@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -81,9 +82,18 @@ public class Playlist_library extends Fragment implements LifecycleOwner {
             }
         });
 
+        if(RefreshPlaylistLibrary.getInstance().getRefreshFlag()!=null){
+            RefreshPlaylistLibrary.getInstance().getRefreshFlag().observe(this, new Observer<Boolean>() {
+                @Override
+                public void onChanged(Boolean aBoolean) {
+                    if(aBoolean){
+                        getPlaylists();
+                        RefreshPlaylistLibrary.getInstance().setRefreshFlag(false);
+                    }
 
-
-
+                }
+            });
+        }
         return view;
 
     }

@@ -128,6 +128,7 @@ public class Upload_Image extends AppCompatActivity {
                         user.setImages(img);
                     }
                     Toast.makeText(getApplicationContext(), "Image is uploaded", Toast.LENGTH_SHORT).show();
+                    RefreshPlaylistLibrary.getInstance().setRefreshFlag(true);
                 }
             }
 

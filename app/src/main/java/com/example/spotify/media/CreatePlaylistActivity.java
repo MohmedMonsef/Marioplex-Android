@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Fragments.LIBRARY_FRAGMENT.Playlist_library_fragment.RefreshPlaylistLibrary;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
@@ -140,6 +141,7 @@ public class CreatePlaylistActivity extends AppCompatActivity {
                 }
                 else {
                     Toast.makeText(getApplicationContext(),"playlist is created",Toast.LENGTH_SHORT).show();
+                    RefreshPlaylistLibrary.getInstance().setRefreshFlag(true);
                     createdPlaylist = response.body();
                     if(!from.equals("Playlist_library")){
                         addToPlaylist(createdPlaylist.getId());

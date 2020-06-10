@@ -108,6 +108,7 @@ public class EditPlaylistName extends AppCompatActivity {
                 }
                 else {
                     Toast.makeText(getApplicationContext(),"playlist name is updated",Toast.LENGTH_SHORT).show();
+                    RefreshPlaylistLibrary.getInstance().setRefreshFlag(true);
                 }
             }
 

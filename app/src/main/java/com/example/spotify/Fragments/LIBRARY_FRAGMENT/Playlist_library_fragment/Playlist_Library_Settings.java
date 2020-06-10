@@ -118,6 +118,7 @@ public class Playlist_Library_Settings extends AppCompatActivity {
                     return;}
                 else{
                     Toast.makeText(getApplicationContext() , "playlist is deleted" , Toast.LENGTH_SHORT).show();
+                    RefreshPlaylistLibrary.getInstance().setRefreshFlag(true);
                 }
             }
 
