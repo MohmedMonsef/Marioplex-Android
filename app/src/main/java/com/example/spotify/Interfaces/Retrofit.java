@@ -1,5 +1,7 @@
 package com.example.spotify.Interfaces;
 
+import com.example.spotify.Constants;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -14,7 +16,7 @@ public class Retrofit {
             .build();
 
     private retrofit2.Retrofit retrofit = new retrofit2.Retrofit.Builder()
-            .baseUrl("http://100.25.194.8/")
+            .baseUrl(Constants.BACKEND_BASE_URL)
             //.baseUrl("http://192.168.1.6:3000/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
@@ -22,7 +24,7 @@ public class Retrofit {
 
     private EndPointAPI endPointAPI = retrofit.create(EndPointAPI.class);
     //private String Baseurl = "http://192.168.1.6:3000/";
-    private String Baseurl = "http://100.25.194.8/";
+    private String Baseurl = Constants.BACKEND_BASE_URL;
     //private ApiSpotify apiSpotify = retrofit.create(ApiSpotify .class);
     //private classinterface apiService = retrofit.create(classinterface.class);
 

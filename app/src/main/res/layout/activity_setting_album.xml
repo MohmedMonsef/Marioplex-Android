@@ -92,6 +92,34 @@
                     android:text="View Artist"
                     ></TextView>
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/share_button"
+                android:layout_marginTop="10dp"
+                android:gravity="left"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="56dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/album_settings_button"
+                    android:padding="7dp"
+                    android:src="@drawable/share_icon" />
+
+                <TextView
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:text="Share"
+                    android:textColor="@android:color/background_light"
+                    android:textSize="20sp"
+                    android:textStyle="bold"></TextView>
+            </LinearLayout>
         </LinearLayout>
 
 

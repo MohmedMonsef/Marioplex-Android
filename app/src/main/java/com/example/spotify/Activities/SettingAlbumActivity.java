@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.spotify.BackClasses.Backclasses.albumInform.AlbumObject;
 import com.example.spotify.BackClasses.Backclasses.likeAlbum.likealbum;
+import com.example.spotify.Constants;
 import com.example.spotify.Fragments.ALBUM_FRAGMENT.album;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
@@ -35,6 +36,7 @@ private AlbumObject AlbumObject;
 ImageView album_image_album_fragment_setting,like_album_setting,view_artist,back_arrow_album_setting;
 private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();
 TextView album_owner_setting,album_name_middle_setting,like_album_setting_text,view_artist_text;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,20 @@ TextView album_owner_setting,album_name_middle_setting,like_album_setting_text,v
 
         });
 
+
+        findViewById(R.id.share_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = Constants.FRONTEND_BASE_URL + "HomeWebPlayer/album/" + Album_ID;
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, url);
+                sendIntent.setType("text/plain");
+
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(shareIntent);
+            }
+        });
     }
     void reciveDataFromAlbumFragment()
     {

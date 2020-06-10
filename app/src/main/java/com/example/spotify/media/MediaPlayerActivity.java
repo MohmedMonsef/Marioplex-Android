@@ -27,6 +27,7 @@ import androidx.lifecycle.Observer;
 import androidx.palette.graphics.Palette;
 
 import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Constants;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
@@ -129,7 +130,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
         //get Views
         getViews();
 
-        sheetBehavior  = BottomSheetBehavior.from(song_settings);
+        sheetBehavior = BottomSheetBehavior.from(song_settings);
         sleepTimer = BottomSheetBehavior.from(sleep_timer);
         setSheetBehavior();
         setSleepTimerBehaviour();
@@ -186,7 +187,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
             public void onClick(View v) {
                 player.cancelTimer();
                 sleepTimer.setState(BottomSheetBehavior.STATE_HIDDEN);
-                toast = Toast.makeText(getApplicationContext(),"Sleep timer is turned off",Toast.LENGTH_SHORT);
+                toast = Toast.makeText(getApplicationContext(), "Sleep timer is turned off", Toast.LENGTH_SHORT);
                 toast.show();
             }
         });
@@ -199,13 +200,12 @@ public class MediaPlayerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MediaPlayerActivity.this, AddToPlaylistActivity.class);
-                if(TrackInfo.getInstance().getTrack()!=null && TrackInfo.getInstance().getTrack().getValue()!=null &&TrackInfo.getInstance().getTrack().getValue().getTrack()!=null){
+                if (TrackInfo.getInstance().getTrack() != null && TrackInfo.getInstance().getTrack().getValue() != null && TrackInfo.getInstance().getTrack().getValue().getTrack() != null) {
                     intent.putExtra("track_id", TrackInfo.getInstance().getTrack().getValue().getTrack().getId());
-                }
-                else{
+                } else {
                     intent.putExtra("track_id", "");
                 }
-                intent.putExtra("from" , "MediaPlayerActivity");
+                intent.putExtra("from", "MediaPlayerActivity");
                 startActivity(intent);
             }
         });
@@ -219,7 +219,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
         /**
          * observes for any changes in the current track info to update the UI
          */
-        if(track.getTrack()!=null) {
+        if (track.getTrack() != null) {
             track.getTrack().observe(this, new Observer<currentTrack>() {
                 @Override
                 public void onChanged(currentTrack track) {
@@ -234,10 +234,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
         track.getIsPlaying().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
+                if (aBoolean) {
                     play_pause.setImageResource(R.drawable.pause);
-                }
-                else {
+                } else {
                     play_pause.setImageResource(R.drawable.play);
                 }
             }
@@ -249,7 +248,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
         track.getDuration().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                seek_bar.setMax(integer/1000);
+                seek_bar.setMax(integer / 1000);
             }
         });
 
@@ -259,11 +258,10 @@ public class MediaPlayerActivity extends AppCompatActivity {
         track.getTimerSet().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
+                if (aBoolean) {
                     timer_image.setImageResource(R.drawable.sleep_timer_activiated);
                     turn_of_timer.setVisibility(View.VISIBLE);
-                }
-                else{
+                } else {
                     timer_image.setImageResource(R.drawable.sleep_timer);
                     turn_of_timer.setVisibility(View.GONE);
                 }
@@ -288,12 +286,11 @@ public class MediaPlayerActivity extends AppCompatActivity {
         play_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(player.getIsPlaying()){
+                if (player.getIsPlaying()) {
                     track.setIsPlaying(false);
                     player.pauseMedia();
                     play_pause.setImageResource(R.drawable.play);
-                }
-                else{
+                } else {
                     track.setIsPlaying(true);
                     player.resumeMedia();
                     play_pause.setImageResource(R.drawable.pause);
@@ -329,10 +326,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
         favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(track.getTrack().getValue().getIsLiked()){
+                if (track.getTrack().getValue().getIsLiked()) {
                     UnLikeTrack(track.getTrack().getValue().getTrack().getId());
-                }
-                else {
+                } else {
                     LikeTrack(track.getTrack().getValue().getTrack().getId());
                 }
             }
@@ -344,10 +340,9 @@ public class MediaPlayerActivity extends AppCompatActivity {
         favorite2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(track.getTrack().getValue().getIsLiked()){
+                if (track.getTrack().getValue().getIsLiked()) {
                     UnLikeTrack(track.getTrack().getValue().getTrack().getId());
-                }
-                else {
+                } else {
                     LikeTrack(track.getTrack().getValue().getTrack().getId());
                 }
             }
@@ -360,12 +355,12 @@ public class MediaPlayerActivity extends AppCompatActivity {
         MediaPlayerActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(player != null){
+                if (player != null) {
                     int mCurrentPosition = player.getCurrentPosition();
                     int duration = player.getDuration();
-                    seek_bar.setProgress((mCurrentPosition/1000));
+                    seek_bar.setProgress((mCurrentPosition / 1000));
                     start_time.setText(getTimeString(mCurrentPosition));
-                    end_time.setText(getTimeString(duration-mCurrentPosition));
+                    end_time.setText(getTimeString(duration - mCurrentPosition));
                 }
                 mHandler.postDelayed(this, 100);
                 //mHandler.post(this);
@@ -379,39 +374,55 @@ public class MediaPlayerActivity extends AppCompatActivity {
         seek_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(player!=null && fromUser) {
+                if (player != null && fromUser) {
                     player.seekTo(progress);
                 }
             }
+
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
+
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
 
+        findViewById(R.id.share_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = Constants.FRONTEND_BASE_URL + "HomeWebPlayer/album/" + track.getTrack().getValue().getAlbum().getId();
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, url);
+                sendIntent.setType("text/plain");
+
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(shareIntent);
+            }
+        });
 
     }
+
     /**
      * sends request to like the current track and on response it updates the heart image
+     *
      * @param trackID
      */
 
-    private void LikeTrack(String trackID){
+    private void LikeTrack(String trackID) {
         favorite.setEnabled(false);
         favorite2.setEnabled(false);
-        Call<Void> call = endPointAPI.LikeTrack(trackID , user.getToken());
+        Call<Void> call = endPointAPI.LikeTrack(trackID, user.getToken());
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 favorite.setEnabled(true);
                 favorite2.setEnabled(true);
-                if(!response.isSuccessful()){
-                    Toast.makeText(getApplicationContext(),"something went wrong .try again",Toast.LENGTH_SHORT).show();
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), "something went wrong .try again", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else {
+                } else {
                     favorite.setImageResource(R.drawable.like);
                     favorite2.setImageResource(R.drawable.like);
                     TrackInfo.getInstance().setIsLiked(true);
@@ -421,7 +432,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"something went wrong .check your internet connection",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "something went wrong .check your internet connection", Toast.LENGTH_SHORT).show();
                 favorite.setEnabled(true);
                 favorite2.setEnabled(true);
             }
@@ -430,23 +441,23 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
     /**
      * sends request to unlike the current track and on response it updates the heart image
+     *
      * @param trackID
      */
 
-    private void UnLikeTrack(String trackID){
+    private void UnLikeTrack(String trackID) {
         favorite.setEnabled(false);
         favorite2.setEnabled(false);
-        Call<Void> call = endPointAPI.UNLikeTrack(trackID , user.getToken());
+        Call<Void> call = endPointAPI.UNLikeTrack(trackID, user.getToken());
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 favorite.setEnabled(true);
                 favorite2.setEnabled(true);
-                if(!response.isSuccessful()){
-                    Toast.makeText(getApplicationContext(),"something went wrong .try again",Toast.LENGTH_SHORT).show();
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), "something went wrong .try again", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else {
+                } else {
                     favorite.setImageResource(R.drawable.favorite_border);
                     favorite2.setImageResource(R.drawable.favorite_border);
                     TrackInfo.getInstance().setIsLiked(false);
@@ -456,7 +467,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"something went wrong .check your internet connection",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "something went wrong .check your internet connection", Toast.LENGTH_SHORT).show();
                 favorite.setEnabled(true);
                 favorite2.setEnabled(true);
             }
@@ -465,6 +476,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
     /**
      * CONVERTS THE TIME FORMAT FROM MILLISECONDS TO MM:SS
+     *
      * @param millis
      * @return
      */
@@ -485,64 +497,60 @@ public class MediaPlayerActivity extends AppCompatActivity {
      * bindes the media player service to the activity
      */
 
-    private void bindService(){
-        Intent serviceIntent1 = new Intent(this , MediaPlayerService.class);
-        bindService(serviceIntent1 , serviceConnection , Context.BIND_AUTO_CREATE);
+    private void bindService() {
+        Intent serviceIntent1 = new Intent(this, MediaPlayerService.class);
+        bindService(serviceIntent1, serviceConnection, Context.BIND_AUTO_CREATE);
 
     }
 
     /**
      * get a color that from the image and set the background with that color
-     * @param v  the image view
-     * @param put  the background's layout
+     *
+     * @param v   the image view
+     * @param put the background's layout
      */
-    void getPaletteAndSetBackgroundColor(ImageView v , final LinearLayout put){
+    void getPaletteAndSetBackgroundColor(ImageView v, final LinearLayout put) {
         Bitmap bitmap = ((BitmapDrawable) v.getDrawable()).getBitmap();
 
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {
-                if(palette.getMutedSwatch() != null){
+                if (palette.getMutedSwatch() != null) {
                     GradientDrawable gd = new GradientDrawable(
                             GradientDrawable.Orientation.TOP_BOTTOM,
-                            new int[] {palette.getMutedSwatch().getRgb(),0xFF000000});
+                            new int[]{palette.getMutedSwatch().getRgb(), 0xFF000000});
                     gd.setCornerRadius(0f);
-                    put.setBackgroundDrawable( gd);
-                }
-                else if( palette.getDarkVibrantSwatch() != null){
+                    put.setBackgroundDrawable(gd);
+                } else if (palette.getDarkVibrantSwatch() != null) {
                     GradientDrawable gd = new GradientDrawable(
                             GradientDrawable.Orientation.TOP_BOTTOM,
-                            new int[] {palette.getDarkVibrantSwatch().getRgb(),0xFF000000});
+                            new int[]{palette.getDarkVibrantSwatch().getRgb(), 0xFF000000});
                     gd.setCornerRadius(0f);
-                    put.setBackgroundDrawable( gd);
-                }
-                else if(palette.getLightMutedSwatch() != null) {
+                    put.setBackgroundDrawable(gd);
+                } else if (palette.getLightMutedSwatch() != null) {
                     GradientDrawable gd = new GradientDrawable(
                             GradientDrawable.Orientation.TOP_BOTTOM,
-                            new int[] {palette.getLightMutedSwatch().getRgb(),0xFF000000});
+                            new int[]{palette.getLightMutedSwatch().getRgb(), 0xFF000000});
                     gd.setCornerRadius(0f);
-                    put.setBackgroundDrawable( gd);
-                }
-                else if(palette.getDarkMutedSwatch() != null){
+                    put.setBackgroundDrawable(gd);
+                } else if (palette.getDarkMutedSwatch() != null) {
                     GradientDrawable gd = new GradientDrawable(
                             GradientDrawable.Orientation.TOP_BOTTOM,
-                            new int[] {palette.getDarkMutedSwatch().getRgb(),0xFF000000});
+                            new int[]{palette.getDarkMutedSwatch().getRgb(), 0xFF000000});
                     gd.setCornerRadius(0f);
-                    put.setBackgroundDrawable( gd);
-                }
-                else if(palette.getLightVibrantSwatch() != null){
+                    put.setBackgroundDrawable(gd);
+                } else if (palette.getLightVibrantSwatch() != null) {
                     GradientDrawable gd = new GradientDrawable(
                             GradientDrawable.Orientation.TOP_BOTTOM,
-                            new int[] {palette.getLightVibrantSwatch().getRgb(),0xFF000000});
+                            new int[]{palette.getLightVibrantSwatch().getRgb(), 0xFF000000});
                     gd.setCornerRadius(0f);
-                    put.setBackgroundDrawable( gd);
-                }
-                else if(palette.getVibrantSwatch()!=null){
+                    put.setBackgroundDrawable(gd);
+                } else if (palette.getVibrantSwatch() != null) {
                     GradientDrawable gd = new GradientDrawable(
                             GradientDrawable.Orientation.TOP_BOTTOM,
-                            new int[] {palette.getVibrantSwatch().getRgb(),0xFF000000});
+                            new int[]{palette.getVibrantSwatch().getRgb(), 0xFF000000});
                     gd.setCornerRadius(0f);
-                    put.setBackgroundDrawable( gd);
+                    put.setBackgroundDrawable(gd);
                 }
             }
         });
@@ -551,16 +559,16 @@ public class MediaPlayerActivity extends AppCompatActivity {
     /**
      * updates the media player activity's UI
      */
-    void UpdateUI(){
+    void UpdateUI() {
         String trackName = "";
-        if(track.getTrack().getValue().getTrack()!=null) {
+        if (track.getTrack().getValue().getTrack() != null) {
             trackName = track.getTrack().getValue().getTrack().getName();
         }
         song_name.setText(trackName);
         setting_song_name.setText(trackName);
 
         String artistName = "";
-        if(track.getTrack().getValue().getAlbum()!=null && track.getTrack().getValue().getAlbum().getArtist()!=null && track.getTrack().getValue().getTrack()!=null){
+        if (track.getTrack().getValue().getAlbum() != null && track.getTrack().getValue().getAlbum().getArtist() != null && track.getTrack().getValue().getTrack() != null) {
             artistName = track.getTrack().getValue().getAlbum().getArtist().getName();
         }
         song_artist.setText(artistName);
@@ -571,17 +579,17 @@ public class MediaPlayerActivity extends AppCompatActivity {
         header.setText("PLAYING SONG");
 
 
-        List<ImageInfo> images= track.getTrack().getValue().getTrack().getImages();
+        List<ImageInfo> images = track.getTrack().getValue().getTrack().getImages();
         String imageID = "12d";
-        if(images !=null&& images.size() !=0){
-             imageID = images.get(0).getID();
+        if (images != null && images.size() != 0) {
+            imageID = images.get(0).getID();
         }
         final String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=track";
         Picasso.get().load(Imageurl).into(song_image, new com.squareup.picasso.Callback() {
             @Override
             public void onSuccess() {
                 //song_image.setImageResource(R.drawable.testimage2);
-                getPaletteAndSetBackgroundColor(song_image , activity_views_container);
+                getPaletteAndSetBackgroundColor(song_image, activity_views_container);
             }
 
             @Override
@@ -589,7 +597,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 Picasso.get().load(Imageurl).into(song_image, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
-                        getPaletteAndSetBackgroundColor(song_image , activity_views_container);
+                        getPaletteAndSetBackgroundColor(song_image, activity_views_container);
                     }
 
                     @Override
@@ -604,7 +612,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
         Picasso.get().load(Imageurl).into(setting_image, new com.squareup.picasso.Callback() {
             @Override
             public void onSuccess() {
-                getPaletteAndSetBackgroundColor(setting_image , setting_container);
+                getPaletteAndSetBackgroundColor(setting_image, setting_container);
             }
 
             @Override
@@ -612,7 +620,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
                 Picasso.get().load(Imageurl).into(setting_image, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
-                        getPaletteAndSetBackgroundColor(setting_image , setting_container);
+                        getPaletteAndSetBackgroundColor(setting_image, setting_container);
                     }
 
                     @Override
@@ -623,11 +631,10 @@ public class MediaPlayerActivity extends AppCompatActivity {
             }
         });
 
-        if(track.getTrack().getValue().getIsLiked()){
+        if (track.getTrack().getValue().getIsLiked()) {
             favorite.setImageResource(R.drawable.like);
             favorite2.setImageResource(R.drawable.like);
-        }
-        else{
+        } else {
             favorite.setImageResource(R.drawable.favorite_border);
             favorite2.setImageResource(R.drawable.favorite_border);
         }
@@ -636,7 +643,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
     /**
      * sets the expand and collapse behavior of the song settings fragment
      */
-    void setSheetBehavior(){
+    void setSheetBehavior() {
         sheetBehavior.setHideable(true);
         sheetBehavior.setPeekHeight(0);
         sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -680,7 +687,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
     /**
      * sets the expand and collapse behavior of the sleep timer fragment
      */
-    void setSleepTimerBehaviour(){
+    void setSleepTimerBehaviour() {
         sleepTimer.setHideable(true);
         sleepTimer.setPeekHeight(0);
         sleepTimer.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -722,58 +729,59 @@ public class MediaPlayerActivity extends AppCompatActivity {
     /**
      * gets all the views i will use
      */
-    private void getViews(){
-        top_layout = (RelativeLayout)findViewById(R.id.top_layout);
-        song_name = (TextView)findViewById(R.id.song_name);
-        song_artist = (TextView)findViewById(R.id.song_artist);
+    private void getViews() {
+        top_layout = (RelativeLayout) findViewById(R.id.top_layout);
+        song_name = (TextView) findViewById(R.id.song_name);
+        song_artist = (TextView) findViewById(R.id.song_artist);
         song_image = (ImageView) findViewById(R.id.song_image);
-        playlist_name = (TextView)findViewById(R.id.playlist_name);
-        header = (TextView)findViewById(R.id.header);
-        play_pause=(ImageView) findViewById(R.id.play);
-        seek_bar = (SeekBar)findViewById(R.id.seek_bar);
-        start_time = (TextView)findViewById(R.id.start_time);
-        end_time = (TextView)findViewById(R.id.end_time);
-        next = (ImageView)findViewById(R.id.next);
-        previous = (ImageView)findViewById(R.id.previous);
+        playlist_name = (TextView) findViewById(R.id.playlist_name);
+        header = (TextView) findViewById(R.id.header);
+        play_pause = (ImageView) findViewById(R.id.play);
+        seek_bar = (SeekBar) findViewById(R.id.seek_bar);
+        start_time = (TextView) findViewById(R.id.start_time);
+        end_time = (TextView) findViewById(R.id.end_time);
+        next = (ImageView) findViewById(R.id.next);
+        previous = (ImageView) findViewById(R.id.previous);
         arrow = (ImageView) findViewById(R.id.arrow);
-        song_settings = (ConstraintLayout)findViewById(R.id.song_settings);
-        sleep_timer = (ConstraintLayout)findViewById(R.id.sleep_timer);
-        song_settings_button = (ImageView)findViewById(R.id.song_settings_button);
-        sleep = (LinearLayout)findViewById(R.id.sleep);
-        settings_like = (LinearLayout)findViewById(R.id.settings_like);
-        settings_add_to_playlist = (LinearLayout)findViewById(R.id.settings_add_to_playlist);
-        view_artist = (LinearLayout)findViewById(R.id.view_artist);
-        sleep_sheet_hider = (RelativeLayout)findViewById(R.id.sleep_sheet_hider);
-        timer_image = (ImageView)findViewById(R.id.timer_image);
-        five = (Button)findViewById(R.id.five);
-        ten = (LinearLayout)findViewById(R.id.ten_minutes);
-        fifteen = (LinearLayout)findViewById(R.id.fifteen_minutes);
-        thirty = (LinearLayout)findViewById(R.id.thirty_minutes);
-        fortyfive = (LinearLayout)findViewById(R.id.fortyfive_inutes);
-        hour = (LinearLayout)findViewById(R.id.hour);
-        end_of_track = (LinearLayout)findViewById(R.id.end_of_track);
-        turn_of_timer = (LinearLayout)findViewById(R.id.turn_of_timer);
-        setting_image = (ImageView)findViewById(R.id.setting_image);
-        setting_song_name = (TextView)findViewById(R.id.setting_song_name);
-        setting_artist_id = (TextView)findViewById(R.id.setting_artist_id);
-        settings_upper_relative_layout = (RelativeLayout)findViewById(R.id.settings_upper_relative_layout);
-        favorite = (ImageView)findViewById(R.id.favorite);
-        favorite2 = (ImageView)findViewById(R.id.favorite2);
-        activity_views_container = (LinearLayout)findViewById(R.id.activity_views_container);
-        setting_container = (LinearLayout)findViewById(R.id.setting_container);
+        song_settings = (ConstraintLayout) findViewById(R.id.song_settings);
+        sleep_timer = (ConstraintLayout) findViewById(R.id.sleep_timer);
+        song_settings_button = (ImageView) findViewById(R.id.song_settings_button);
+        sleep = (LinearLayout) findViewById(R.id.sleep);
+        settings_like = (LinearLayout) findViewById(R.id.settings_like);
+        settings_add_to_playlist = (LinearLayout) findViewById(R.id.settings_add_to_playlist);
+        view_artist = (LinearLayout) findViewById(R.id.view_artist);
+        sleep_sheet_hider = (RelativeLayout) findViewById(R.id.sleep_sheet_hider);
+        timer_image = (ImageView) findViewById(R.id.timer_image);
+        five = (Button) findViewById(R.id.five);
+        ten = (LinearLayout) findViewById(R.id.ten_minutes);
+        fifteen = (LinearLayout) findViewById(R.id.fifteen_minutes);
+        thirty = (LinearLayout) findViewById(R.id.thirty_minutes);
+        fortyfive = (LinearLayout) findViewById(R.id.fortyfive_inutes);
+        hour = (LinearLayout) findViewById(R.id.hour);
+        end_of_track = (LinearLayout) findViewById(R.id.end_of_track);
+        turn_of_timer = (LinearLayout) findViewById(R.id.turn_of_timer);
+        setting_image = (ImageView) findViewById(R.id.setting_image);
+        setting_song_name = (TextView) findViewById(R.id.setting_song_name);
+        setting_artist_id = (TextView) findViewById(R.id.setting_artist_id);
+        settings_upper_relative_layout = (RelativeLayout) findViewById(R.id.settings_upper_relative_layout);
+        favorite = (ImageView) findViewById(R.id.favorite);
+        favorite2 = (ImageView) findViewById(R.id.favorite2);
+        activity_views_container = (LinearLayout) findViewById(R.id.activity_views_container);
+        setting_container = (LinearLayout) findViewById(R.id.setting_container);
 
     }
 
     /**
      * starts the sleep timer
      * takes the time in milliseconds
+     *
      * @param milliSeconds
      */
 
-    void startTimer(long milliSeconds){
+    void startTimer(long milliSeconds) {
         player.startTimer(milliSeconds);   //3 seconds
         sleepTimer.setState(BottomSheetBehavior.STATE_HIDDEN);
-        toast = Toast.makeText(getApplicationContext(),"Your sleep timer is set",Toast.LENGTH_SHORT);
+        toast = Toast.makeText(getApplicationContext(), "Your sleep timer is set", Toast.LENGTH_SHORT);
         toast.show();
     }
 

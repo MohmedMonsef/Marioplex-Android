@@ -136,6 +136,30 @@
                 android:textSize="16dp"/>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/share_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="8dp"
+                android:src="@drawable/share_icon" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:textColor="@android:color/background_light"
+                android:text="Share"
+                android:textStyle="bold"
+                android:layout_marginLeft="16dp"
+                android:textSize="16dp"/>
+        </LinearLayout>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout >
