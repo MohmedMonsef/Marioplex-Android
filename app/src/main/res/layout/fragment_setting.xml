@@ -58,6 +58,9 @@
     </LinearLayout>
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground"
         android:id="@+id/logout"
         android:layout_width="match_parent"
         android:layout_height="70dp"
