@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1067598382118",
+    "firebase_url": "https://notif-android-f24bd.firebaseio.com",
+    "project_id": "notif-android-f24bd",
+    "storage_bucket": "notif-android-f24bd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1067598382118:android:1c28b14d114358c73412e7",
+        "android_client_info": {
+          "package_name": "com.example.spotify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1067598382118-tgjkpttu3lif0u564kd79ju5bplc7ip5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTpX3uVyyKYYn4P2bdIaz3W9SDX51009M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1067598382118-tgjkpttu3lif0u564kd79ju5bplc7ip5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
