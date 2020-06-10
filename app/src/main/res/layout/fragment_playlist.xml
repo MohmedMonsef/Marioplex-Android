@@ -46,6 +46,9 @@
                     android:layout_alignParentRight="true"/>
 
                 <ImageView
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground"
                     android:id="@+id/share_button"
                     android:layout_width="34dp"
                     android:layout_height="31dp"
