@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -154,8 +156,13 @@ public class LoginFragment extends Fragment {
                     saveToken();
                     Toast.makeText(getContext(),"Sucess " +response.code(),Toast.LENGTH_SHORT).show();
                     user.fetchUserData();
-                    startActivity(new Intent(getActivity(), MainActivity.class));
-                    getActivity().finish();
+                    user.getUserDataReadyFlag().observe(getActivity(), new Observer<Boolean>() {
+                        @Override
+                        public void onChanged(Boolean aBoolean) {
+                            startActivity(new Intent(getActivity(), MainActivity.class));
+                            getActivity().finish();
+                        }
+                    });
                 }
                 else {
                     Toast.makeText(getContext(),"Failed to login " + response.message(),Toast.LENGTH_SHORT).show();

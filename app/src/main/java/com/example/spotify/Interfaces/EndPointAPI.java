@@ -10,6 +10,7 @@ import com.example.spotify.BackClasses.Backclasses.backpopularartist.PopularArti
 import com.example.spotify.BackClasses.Backclasses.backpopularplaylist.PopularPlaylist;
 import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
 import com.example.spotify.BackClasses.Backclasses.likeAlbum.likealbum;
+import com.example.spotify.login.apiClasses.FCMToken;
 import com.example.spotify.login.apiClasses.FacebookLoginData;
 import com.example.spotify.login.apiClasses.LoginCredentials;
 import com.example.spotify.login.apiClasses.LoginResponse;
@@ -76,6 +77,9 @@ public interface EndPointAPI {
 
     @POST("api/login/reset_password")
     Call<ResponseBody> resetPasword(@Header("x-auth-token") String token, @Body Password password);
+
+    @POST("api/notification/token")
+    Call<ResponseBody> sendFCMToken(@Header("x-auth-token") String token, @Body FCMToken fcmToken);
 
 
     ////////////////////////////////////////////////////////////////////////////////////

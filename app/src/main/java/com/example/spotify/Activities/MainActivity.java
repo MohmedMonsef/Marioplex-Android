@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ////*******************************BottomNavigation***********************////
         LoadToken();
-
+        loadFCMToken();
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         loadFragment(new backhome());// start the main activity with home fragment
@@ -157,5 +157,12 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("token", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("token", null);
         user.setToken(token);
+    }
+
+    void loadFCMToken() {
+        String FCMToken = getSharedPreferences("fcmtoken", Context.MODE_PRIVATE).getString("fcmtoken", null);
+        if (FCMToken != null) {
+            user.setFCMToken(FCMToken);
+        }
     }
 }

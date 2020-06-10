@@ -5,8 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.ToolbarWidgetWrapper;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 
 import android.animation.TimeAnimator;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -51,7 +54,7 @@ public class IntroActivity extends AppCompatActivity {
     private static Retrofit retrofit = null;
     private static EndPointAPI endPointAPI = null;
     private static LoginFragment loginFragment = null;
-    private static SignUpFragment signUpFragment= null;
+    private static SignUpFragment signUpFragment = null;
 
 
     //private static String token = null;
@@ -63,9 +66,9 @@ public class IntroActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         setContentView(R.layout.activity_intro);
+
+        createNotificationChannel();
 
         retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
 
@@ -86,7 +89,7 @@ public class IntroActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String action = intent.getAction();
         Uri data = intent.getData();
-        if(action == ACTION_VIEW && data.toString().contains("/login/reset_password")){
+        if (action == ACTION_VIEW && data.toString().contains("/login/reset_password")) {
             String url = data.toString();
             String token = url.split("token=")[1];
             user.setToken(token);
@@ -96,23 +99,28 @@ public class IntroActivity extends AppCompatActivity {
             bundle.putInt("currentView", 3);
             fragment.setArguments(bundle);
             showFragment(fragment);
-        }
 
-        else if(loadToken()){
+        } else if (loadToken()) {
             user.fetchUserData();
-            startActivity(new Intent(IntroActivity.this, MainActivity.class));
-            finish();
-            return;
+            user.getUserDataReadyFlag().observe(this, new Observer<Boolean>() {
+                @Override
+                public void onChanged(Boolean s) {
+                    if (s) {
+                        startActivity(new Intent(IntroActivity.this, MainActivity.class));
+                        finish();
+                    }
+                }
+            });
         }
     }
 
     /**
      * Fetch user data from facebook and use to login into the app
      */
-    private void loginByFacebook(){
+    private void loginByFacebook() {
         LoginManager loginManager = LoginManager.getInstance();
         loginManager.logOut();
-        loginManager.logIn(IntroActivity.this, Arrays.asList("email","user_gender","user_birthday"));
+        loginManager.logIn(IntroActivity.this, Arrays.asList("email", "user_gender", "user_birthday"));
         callbackManager = CallbackManager.Factory.create();
         loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -147,33 +155,33 @@ public class IntroActivity extends AppCompatActivity {
 
             @Override
             public void onCancel() {
-                Toast.makeText(IntroActivity.this,"Cancel",Toast.LENGTH_SHORT).show();
+                Toast.makeText(IntroActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(IntroActivity.this,"Error",Toast.LENGTH_SHORT).show();
+                Toast.makeText(IntroActivity.this, "Error", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     /**
      * Send user's facebook data to the database and launche the main app activity
+     *
      * @param data User data received from facebook api
      */
-    private void saveAndLaunchMainActivity(FacebookLoginData data){
+    private void saveAndLaunchMainActivity(FacebookLoginData data) {
         endPointAPI.facebookLogin(data).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     user.setToken(response.body().getToken());
                     Toast.makeText(IntroActivity.this, "Sucess " + response.code(), Toast.LENGTH_SHORT).show();
                     user.fetchUserData();
                     startActivity(new Intent(IntroActivity.this, MainActivity.class));
                     finish();
-                }
-                else {
-                    Toast.makeText(IntroActivity.this,"Failed to login " + response.message(),Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(IntroActivity.this, "Failed to login " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -193,20 +201,22 @@ public class IntroActivity extends AppCompatActivity {
 
     /**
      * Display login screen
+     *
      * @param view The calling View
      */
     public void showLoginFragment(View view) {
-        loginFragment = new LoginFragment(retrofit,endPointAPI);
+        loginFragment = new LoginFragment(retrofit, endPointAPI);
         showFragment(loginFragment);
     }
 
 
     /**
      * Display Sign up screen
+     *
      * @param view The calling View
      */
-    public void showSignUpFragment(View view){
-        signUpFragment = new SignUpFragment(retrofit,endPointAPI);
+    public void showSignUpFragment(View view) {
+        signUpFragment = new SignUpFragment(retrofit, endPointAPI);
         showFragment(signUpFragment);
     }
 
@@ -215,17 +225,15 @@ public class IntroActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        if(loginFragment != null){
+        if (loginFragment != null) {
             hideFragment(loginFragment);
             loginFragment = null;
-        }
-        else if(signUpFragment != null){
-            if(!signUpFragment.handleOnBackPressed()) {
+        } else if (signUpFragment != null) {
+            if (!signUpFragment.handleOnBackPressed()) {
                 hideFragment(signUpFragment);
                 signUpFragment = null;
             }
-        }
-        else{
+        } else {
             super.onBackPressed();
         }
     }
@@ -233,19 +241,21 @@ public class IntroActivity extends AppCompatActivity {
 
     /**
      * Display passed fragment
+     *
      * @param fragment loginFragment or SignUpFragment
      */
-    public void showFragment(Fragment fragment){
-        getSupportFragmentManager().beginTransaction().replace(R.id.intro_fragment,fragment).commit();
+    public void showFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.intro_fragment, fragment).commit();
         findViewById(R.id.intro).animate().translationX(-displayWidth);
         findViewById(R.id.intro_fragment).animate().translationX(0);
     }
 
     /**
      * Hide passed fragment
+     *
      * @param fragment loginFragment or SignUpFragment
      */
-    public void hideFragment(final Fragment fragment){
+    public void hideFragment(final Fragment fragment) {
         findViewById(R.id.intro).animate().translationX(0);
         findViewById(R.id.intro_fragment).animate().translationX(displayWidth).withEndAction(new Runnable() {
             @Override
@@ -255,32 +265,47 @@ public class IntroActivity extends AppCompatActivity {
         });
     }
 
-    public void saveToken(){
+    public void saveToken() {
         String token = user.getToken();
-        if(token!=null){
-            SharedPreferences sharedPreferences = getSharedPreferences("token", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("token",token);
-            editor.apply();
+        if (token != null) {
+            getSharedPreferences("token", Context.MODE_PRIVATE).edit().putString("token", token).apply();
+        }
+        else{
+            //user.getTokenAsLiveData().observe(this,);
         }
     }
 
-    boolean loadToken(){
+    boolean loadToken() {
         SharedPreferences sharedPreferences = getSharedPreferences("token", Context.MODE_PRIVATE);
-        String token = sharedPreferences.getString("token",null);
-        if(token == null){
+        String token = sharedPreferences.getString("token", null);
+        if (token == null) {
             return false;
-        }
-        else{
+        } else {
             user.setToken(token);
             return true;
+        }
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "spotify";
+            //String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("spotify_channel", name, importance);
+            //channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
         }
     }
 
     /**
      * Read the device display width
      */
-    public void calculateDisplayWidth(){
+    public void calculateDisplayWidth() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         displayWidth = displayMetrics.widthPixels;
