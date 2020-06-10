@@ -29,11 +29,9 @@ import com.example.spotify.BackClasses.Backclasses.albumInform.AlbumObject;
 import com.example.spotify.BackClasses.Backclasses.albumInform.Track;
 import com.example.spotify.BackClasses.Backclasses.likeAlbum.likealbum;
 import com.example.spotify.Fragments.HOME_FRAGMENT.backhome;
-import com.example.spotify.Fragments.LIBRARY_FRAGMENT.Album_library_fragment.Album_Library;
 import com.example.spotify.Fragments.LIBRARY_FRAGMENT.libraryFragment;
 import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistInfo;
 import com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT.searchListfragment;
-import com.example.spotify.Fragments.SEE_ALBUMS_FRAGMENT.see_all_albums_Fragment;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
@@ -85,7 +83,6 @@ public class album extends Fragment {
     private String CurrentTrackID = "";
     private int CurrentTrackPosInPlaylist;
     private Boolean serviceBound = false;
-    private Boolean end = false;
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -198,11 +195,10 @@ public class album extends Fragment {
 //                intent.putExtra("ALBUM_ID",albumID);
 //                intent.putExtra("Album_Name",Album_Name);
 //                startActivity(intent);
-                if (end == true) {
+
                     Intent intent = new Intent(getActivity(), PlaylistPreviewActivity.class);
                     startActivity(intent);
-                    end = false;
-                }
+
 
             }
         });
@@ -483,7 +479,6 @@ public class album extends Fragment {
         }
         p.setTracks(basic);
         PlaylistInfo.getinstance().setPlaylistTracks(p);
-        end = true;
     }
 
 
@@ -512,7 +507,6 @@ public class album extends Fragment {
         }
         p.setTracks(basic);
         PlaylistInfo.getinstance().setPlaylistTracks(p);
-        end = true;
     }
 
 
