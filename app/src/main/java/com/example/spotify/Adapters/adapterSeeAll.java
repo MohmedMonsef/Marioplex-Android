@@ -116,7 +116,7 @@ public class adapterSeeAll extends RecyclerView.Adapter<adapterSeeAll.MyviewHold
         else if(list1.get(position).getType().equals("Track")){
             Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=track";
         }
-        else if(list1.get(position).getType().equals("album")){
+        else if(list1.get(position).getType().equals("Album")){
             Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=album";
         }
         else{
@@ -146,7 +146,7 @@ public class adapterSeeAll extends RecyclerView.Adapter<adapterSeeAll.MyviewHold
                             .addToBackStack(null).commit();
                 }
 
-                else if(list1.get(position).getType().equals("album")){
+                else if(list1.get(position).getType().equals("Album")){
                     Bundle bundle = new Bundle();
                     bundle.putString("albumID" , list1.get(position).getid());
                     bundle.putInt("backID",2);
@@ -160,7 +160,7 @@ public class adapterSeeAll extends RecyclerView.Adapter<adapterSeeAll.MyviewHold
                             .addToBackStack(null).commit();
                 }
 
-                else if(list1.get(position).getType().equals("track")){
+                else if(list1.get(position).getType().equals("Track")){
                     Bundle bundle = new Bundle();
                     bundle.putString("TrackID" , list1.get(position).getid());
                     bundle.putString("TrackName" , list1.get(position).getName());
