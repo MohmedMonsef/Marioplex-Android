@@ -2,7 +2,8 @@ package com.example.spotify.Fragments.LIBRARY_FRAGMENT.Playlist_library_fragment
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +27,7 @@ public class EditPlaylistName extends AppCompatActivity {
     private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();
     private EditText playlist_new_name_edit_text;
     private Button cancel_edit_playlist_name;
+    private Button rename_playlist_button;
     private String playlist_ID = "";
 
     @Override
@@ -44,25 +46,45 @@ public class EditPlaylistName extends AppCompatActivity {
             }
         });
 
-        playlist_new_name_edit_text.setOnKeyListener(new View.OnKeyListener() {
+        /**
+         * listener for the typing in the edit text view to change enable and disable the edit button
+         */
+        playlist_new_name_edit_text.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    if(playlist_new_name_edit_text.getText().toString().matches("")){
-                        Toast.makeText(getApplicationContext() , "Enter the playlist's new name" , Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        editPlaylistName(playlist_new_name_edit_text.getText().toString() , playlist_ID);
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                        startActivity(intent);
+            }
 
-                    }
-
-                    return true;
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length()==0){
+                    rename_playlist_button.setBackgroundResource(R.drawable.rounded_button_grey);
                 }
-                return false;
+                else{
+                    rename_playlist_button.setBackgroundResource(R.drawable.rounded_button);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        rename_playlist_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(playlist_new_name_edit_text.getText().toString().matches("")){
+                    Toast.makeText(getApplicationContext() , "Enter the playlist's new name" , Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    editPlaylistName(playlist_new_name_edit_text.getText().toString() , playlist_ID);
+
+                    Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                    startActivity(intent);
+
+                }
             }
         });
 
@@ -103,5 +125,6 @@ public class EditPlaylistName extends AppCompatActivity {
     void getViews(){
         playlist_new_name_edit_text = findViewById(R.id.playlist_new_name_edit_text);
         cancel_edit_playlist_name = findViewById(R.id.cancel_edit_playlist_name);
+        rename_playlist_button = findViewById(R.id.rename_playlist_button);
     }
 }

@@ -29,16 +29,30 @@
             android:hint="Playlist New Name"
             android:textColor="@color/cardview_light_background"
             android:inputType="text" />
-
-        <Button
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_marginTop="40dp"
-            android:id="@+id/cancel_edit_playlist_name"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:layout_gravity="center"
-            android:text="CANCEL"
-            android:textColor="@android:color/darker_gray"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="40dp"
+            android:layout_gravity="center_horizontal">
+            <Button
+                android:layout_width="wrap_content"
+                android:id="@+id/cancel_edit_playlist_name"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_gravity="center"
+                android:text="CANCEL"
+                android:textColor="@android:color/darker_gray"/>
+            <Button
+                android:id="@+id/rename_playlist_button"
+                android:layout_marginLeft="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/rounded_button_grey"
+                android:text="Edit"
+                android:textColor="@android:color/background_light" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
