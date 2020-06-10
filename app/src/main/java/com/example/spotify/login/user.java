@@ -167,7 +167,6 @@ public class user {
         sendFCMTokenToServer();
         if (token == null)
             return;
-
         userDataReadyFlag.postValue(false);
 
         EndPointAPI endPointAPI = com.example.spotify.Interfaces.Retrofit.getInstance().getEndPointAPI();
@@ -186,6 +185,8 @@ public class user {
                     user.setImages(response.body().get(0).getImages());
                     user.setId(response.body().get(0).getId());
                     user.userDataReadyFlag.postValue(true);
+                    Log.v("fetchUsrData",token.getValue());
+                    Log.v("fetchUsrData",user.id);
                 } else {
                     Log.v("usrftch", response.message());
                     int x = 4;

@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "1067598382118",
-    "firebase_url": "https://notif-android-f24bd.firebaseio.com",
-    "project_id": "notif-android-f24bd",
-    "storage_bucket": "notif-android-f24bd.appspot.com"
+    "project_number": "608718002046",
+    "firebase_url": "https://spotify-d5d11.firebaseio.com",
+    "project_id": "spotify-d5d11",
+    "storage_bucket": "spotify-d5d11.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1067598382118:android:1c28b14d114358c73412e7",
+        "mobilesdk_app_id": "1:608718002046:android:d3c170c20b9b5a4b17852f",
         "android_client_info": {
           "package_name": "com.example.spotify"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1067598382118-tgjkpttu3lif0u564kd79ju5bplc7ip5.apps.googleusercontent.com",
+          "client_id": "608718002046-m18i7a3pf4420k0jgpq7vch7mnubbd09.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDTpX3uVyyKYYn4P2bdIaz3W9SDX51009M"
+          "current_key": "AIzaSyBbxE-ELqVNC0_YXZL4s0FAR313DFxhWWo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1067598382118-tgjkpttu3lif0u564kd79ju5bplc7ip5.apps.googleusercontent.com",
+              "client_id": "608718002046-m18i7a3pf4420k0jgpq7vch7mnubbd09.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
