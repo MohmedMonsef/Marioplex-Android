@@ -39,7 +39,7 @@ public class premiumFragment extends Fragment implements LifecycleOwner {
         View view = inflater.inflate(R.layout.fragment_premium, container, false);
         final TextView textView = view.findViewById(R.id.text_premium);
         ////*******************************RecyclerView***********************////
-
+/*
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,7 +48,7 @@ public class premiumFragment extends Fragment implements LifecycleOwner {
                         .addToBackStack(null)
                         .commit();
             }
-        });
+        });*/
         return view;
 
     }
