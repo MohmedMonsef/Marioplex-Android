@@ -29,6 +29,8 @@ import retrofit2.Response;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
+    int notificationID = 0;
+
     @Override
     public void onNewToken(String token) {
         Log.d("myFCM", "Refreshed token: " + token);
@@ -54,7 +56,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
-        NotificationManagerCompat.from(this).notify(0, builder.build());
+        NotificationManagerCompat.from(this).notify(notificationID, builder.build());
+        notificationID++;
     }
 
 
