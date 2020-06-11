@@ -57,12 +57,14 @@
 
         >
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="200dp"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
                 android:layout_height="match_parent"
                 android:layout_toRightOf="@id/l1"
                 android:orientation="vertical">
@@ -79,7 +81,8 @@
 
             <LinearLayout
                 android:id="@+id/l1"
-                android:layout_width="200dp"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
@@ -91,7 +94,7 @@
 
                 </androidx.recyclerview.widget.RecyclerView>
             </LinearLayout>
-        </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
     </ScrollView>
 

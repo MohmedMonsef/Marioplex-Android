@@ -37,7 +37,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     private Map<String, String> headers = new HashMap<String, String>();
 
 
-    private boolean prepared;
+    private boolean prepared ;
     private Toast toast;
     private TrackInfo track = TrackInfo.getInstance();
     private CountDownTimer sleepTimer = null;
@@ -79,6 +79,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         //Reset so that the MediaPlayer is not pointing to another data source
         mediaPlayer.reset();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        prepared = false;
         ///////////////////request the current track//////////////////////////
         Call<currentTrack> call = Retrofit.getInstance().getEndPointAPI().getCurrentlyPlaying(user.getToken());
         getCurrentlyPlaying(call);
@@ -257,6 +258,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         }
     }
 
+    public Boolean getIsPrePared(){
+        return prepared;
+    }
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
