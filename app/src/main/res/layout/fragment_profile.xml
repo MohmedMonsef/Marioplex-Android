@@ -10,6 +10,7 @@
     tools:context=".Fragments.ProfileFragment">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/fragment_profile_image1"
         android:layout_width="130dp"
         android:layout_height="130dp"
         android:layout_centerHorizontal="true"
@@ -41,10 +42,12 @@
         android:textColor="@android:color/white" />
 
     <LinearLayout
+        android:id="@+id/fragment_profile_layout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/fragment_profile_layout2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
@@ -59,6 +62,7 @@
                 android:textColor="@android:color/white" />
 
             <TextView
+                android:id="@+id/fragment_profile_text1"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_margin="8dp"

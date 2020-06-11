@@ -61,6 +61,7 @@
                 android:layout_marginLeft="8dp"
                 android:src="@drawable/like"/>
             <TextView
+                android:id="@+id/song_settings_text1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="@android:color/background_light"
@@ -81,11 +82,13 @@
             android:padding="16dp"
             android:id="@+id/settings_add_to_playlist">
             <ImageView
+                android:id="@+id/song_settings_image1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:src="@drawable/add_music"/>
             <TextView
+                android:id="@+id/song_settings_text2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="@android:color/background_light"
@@ -104,11 +107,13 @@
             android:orientation="horizontal"
             android:id="@+id/view_artist">
             <ImageView
+                android:id="@+id/song_settings_image2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:src="@drawable/view_artist"/>
             <TextView
+                android:id="@+id/song_settings_text3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="@android:color/background_light"
@@ -135,6 +140,7 @@
                 android:layout_marginLeft="8dp"
                 android:src="@drawable/sleep_timer"/>
             <TextView
+                android:id="@+id/song_settings_text4"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
@@ -156,12 +162,14 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/song_settings_image3"
                 android:layout_width="24dp"
                 android:layout_height="25dp"
                 android:layout_marginLeft="8dp"
                 android:src="@drawable/share_icon" />
 
             <TextView
+                android:id="@+id/song_settings_text5"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"

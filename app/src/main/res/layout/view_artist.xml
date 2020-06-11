@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
+    android:id="@+id/view_artist_layout1"
     android:background="@drawable/playlist_background"
     android:layout_height="match_parent">
 

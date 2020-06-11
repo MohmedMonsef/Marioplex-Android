@@ -92,16 +92,22 @@ public class BottomSheetFragment extends Fragment {
         bottom_play_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (player.getIsPlaying()) {
-                    track.setIsPlaying(false);
-                    player.pauseMedia();
-                    bottom_play_pause.setImageResource(R.drawable.play_down);
-                } else {
-                    track.setIsPlaying(true);
-                    player.resumeMedia();
-                    bottom_play_pause.setImageResource(R.drawable.pause_down);
+                if (player.getIsPrePared()) {
+                    if (player.getIsPlaying()) {
+                        track.setIsPlaying(false);
+                        player.pauseMedia();
+                        bottom_play_pause.setImageResource(R.drawable.play_down);
+                    } else {
+                        track.setIsPlaying(true);
+                        player.resumeMedia();
+                        bottom_play_pause.setImageResource(R.drawable.pause_down);
+                    }
+                }
+                else{
+                    Toast.makeText(getContext() , "audio is loading" , Toast.LENGTH_SHORT).show();
                 }
             }
+
         });
         /**
          * listener for the click on the image to open the bottom sheet

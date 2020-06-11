@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/album_library_item_layout1"
     android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/album_saved_image"
@@ -16,6 +17,7 @@
         android:background="@android:color/background_light"
         android:layout_gravity="center_vertical" />
     <LinearLayout
+        android:id="@+id/album_library_item_layout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"

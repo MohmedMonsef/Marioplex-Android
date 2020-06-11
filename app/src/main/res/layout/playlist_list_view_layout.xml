@@ -20,11 +20,13 @@
         android:src="@drawable/default_image" />
 
     <LinearLayout
+        android:id="@+id/playlist_list_view_layout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/playlist_list_view_layout2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.8"

@@ -2,8 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/activity_playlist_preview_layout1"
     android:background="@drawable/playlist_background">
     <RelativeLayout
+        android:id="@+id/activity_playlist_preview_layout2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.1">
@@ -43,14 +45,17 @@
             android:layout_toLeftOf="@id/playlist_settings_button1"/>
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/activity_playlist_preview_layout3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.9">
         <LinearLayout
+            android:id="@+id/activity_playlist_preview_layout4"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
             <LinearLayout
+                android:id="@+id/activity_playlist_preview_layout5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -67,6 +72,7 @@
                     android:text="playList Name"
                     android:gravity="center"/>
                 <TextView
+                    android:id="@+id/activity_playlist_preview_text1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -79,10 +85,12 @@
 
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/activity_playlist_preview_layout6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/activity_playlist_preview_text2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"

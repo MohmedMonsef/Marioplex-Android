@@ -3,11 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/fragment_library_layout1"
     tools:context=".Fragments.LIBRARY_FRAGMENT.libraryFragment"
     >
 
 
     <LinearLayout
+        android:id="@+id/fragment_library_layout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -26,6 +28,7 @@
             />
 
         <LinearLayout
+            android:id="@+id/fragment_library_layout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"

@@ -8,6 +8,7 @@
     android:orientation="vertical"
     android:paddingHorizontal="30dp"
     android:paddingTop="30dp"
+    android:id="@+id/fragment_login_layout1"
     android:windowActionBar="true"
     tools:context=".login.IntroActivity">
 

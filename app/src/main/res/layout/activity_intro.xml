@@ -18,12 +18,14 @@
 
 
         <ImageView
+            android:id="@+id/activity_into_image1"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_marginBottom="20dp"
             android:src="@drawable/logoblack" />
 
         <ImageView
+            android:id="@+id/activity_into_image2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -33,6 +35,7 @@
             android:src="@drawable/millions_of_songs_free_on_spotify" />
 
         <LinearLayout
+            android:id="@+id/activity_into_layout1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">

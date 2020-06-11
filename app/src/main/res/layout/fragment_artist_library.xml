@@ -5,14 +5,17 @@
     android:layout_height="match_parent"
     android:background="@color/bgBottomNavigation"
     android:orientation="vertical"
+    android:id="@+id/fragment_artist_library_layout1"
     tools:context=".Fragments.LIBRARY_FRAGMENT.Artist_library_fragment.Artist_library">
 
     <ScrollView
+        android:id="@+id/fragment_artist_library_layout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
 
         <RelativeLayout
+            android:id="@+id/fragment_artist_library_layout3"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
