@@ -17,7 +17,7 @@ import com.example.spotify.login.apiClasses.LoginResponse;
 import com.example.spotify.login.apiClasses.Password;
 import com.example.spotify.login.apiClasses.SignUpData;
 import com.example.spotify.login.apiClasses.forgotPasswordEmail;
-import com.example.spotify.login.apiClasses.updateProfile;
+import com.example.spotify.login.apiClasses.nameUpdate;
 import com.example.spotify.login.apiClasses.userProfile;
 import com.example.spotify.pojo.BasicPlaylist;
 import com.example.spotify.pojo.ImageID;
@@ -67,7 +67,7 @@ public interface EndPointAPI {
     Call<ArrayList<userProfile>> profile(@Header("x-auth-token") String token);
 
     @PUT("api/me/update")
-    Call<ResponseBody> updateProfile(@Header("x-auth-token") String token, @Body updateProfile data);
+    Call<ResponseBody> updateProfile(@Header("x-auth-token") String token, @Body nameUpdate data);
 
     @GET("api/me/playlists")
     Call<playlist[]> myPlaylists(@Header("x-auth-token") String token);

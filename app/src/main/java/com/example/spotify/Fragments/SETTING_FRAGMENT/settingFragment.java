@@ -66,8 +66,18 @@ public class settingFragment extends Fragment implements LifecycleOwner {
         view.findViewById(R.id.view_profile).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment = new ProfileFragment();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment,fragment).commit();
+                user.getUserDataReadyFlag().setValue(false);
+                user.fetchUserData();
+                user.getUserDataReadyFlag().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(Boolean aBoolean) {
+                        if(aBoolean){
+                            Fragment fragment = new ProfileFragment();
+                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment,fragment).commit();
+                        }
+                    }
+                });
+
             }
         });
 

@@ -2,34 +2,27 @@ package com.example.spotify.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.example.spotify.Fragments.LIBRARY_FRAGMENT.Playlist_library_fragment.Upload_Image;
-import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
-import com.example.spotify.login.apiClasses.updateProfile;
+import com.example.spotify.login.apiClasses.nameUpdate;
 import com.example.spotify.login.user;
 import com.example.spotify.pojo.playlist;
 import com.squareup.picasso.Picasso;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class ProfileFragment extends Fragment {
@@ -54,7 +47,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        user.fetchUserData();
+        //user.fetchUserData();
         // Inflate the layout for this fragment
         final View rootView =  inflater.inflate(R.layout.fragment_profile, container, false);
 
@@ -84,9 +77,24 @@ public class ProfileFragment extends Fragment {
                 if(keyCode == 66) {
                     hideSoftKeyboard();
                     userName.clearFocus();
-                    updateProfile data = new updateProfile();
-                    data.setDisplay_Name(userName.getText().toString());
-                    updateProfile(data);
+                    if(!userName.getText().toString().matches(user.getName())) {
+                        updateProfile(userName.getText().toString());
+                    }
+                }
+                return false;
+            }
+        });
+
+        userName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // do your stuff here
+                    hideSoftKeyboard();
+                    userName.clearFocus();
+                    if(!userName.getText().toString().matches(user.getName())) {
+                        updateProfile(userName.getText().toString());
+                    }
                 }
                 return false;
             }
@@ -98,9 +106,9 @@ public class ProfileFragment extends Fragment {
                 if(userName.isFocused()) {
                     hideSoftKeyboard();
                     userName.clearFocus();
-                    updateProfile data = new updateProfile();
-                    data.setDisplay_Name(userName.getText().toString());
-                    updateProfile(data);
+                    if(!userName.getText().toString().matches(user.getName())) {
+                        updateProfile(userName.getText().toString());
+                    }
                 }
             }
         });
@@ -116,26 +124,15 @@ public class ProfileFragment extends Fragment {
     }
 
     /**
-     * updates user data with passed new data
-     * @param data user new data
+     * updates user data with passed new name
+     * @param name user new name
      */
-    private void updateProfile(updateProfile data){
-        EndPointAPI api = Retrofit.getInstance().getEndPointAPI();
-        api.updateProfile(user.getToken(),data).enqueue(new Callback<ResponseBody>() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Toast.makeText(getContext(),"Saved",Toast.LENGTH_SHORT).show();
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(getContext(),"Failure",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
+    private void updateProfile(String name){
+        DialogFragment newFragment = new ConfirmChangeNameDialog();
+        Bundle bundle = new Bundle();
+        bundle.putString("name",name);
+        newFragment.setArguments(bundle);
+        newFragment.show(getActivity().getSupportFragmentManager(), "enterPassword");
     }
 
     void hideSoftKeyboard(){
