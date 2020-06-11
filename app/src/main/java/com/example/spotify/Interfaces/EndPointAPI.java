@@ -57,6 +57,9 @@ public interface EndPointAPI {
     @POST("api/Login")
     Call<LoginResponse> login(@Body LoginCredentials loginCredentials);
 
+    @POST("api/user/logout")
+    Call<ResponseBody> logout(@Header("x-auth-token") String token);
+
     @POST("api/sign_up")
     Call<LoginResponse> signUp(@Body SignUpData signUpData);
 

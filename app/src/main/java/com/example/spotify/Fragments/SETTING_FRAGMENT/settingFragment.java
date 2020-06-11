@@ -10,9 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.spotify.Activities.MainActivity;
@@ -22,6 +24,11 @@ import com.example.spotify.R;
 import com.example.spotify.login.IntroActivity;
 import com.example.spotify.login.user;
 import com.squareup.picasso.Picasso;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 //import androidx.fragment.app.Fragment;
 
@@ -77,13 +84,22 @@ public class settingFragment extends Fragment implements LifecycleOwner {
     }
 
     void logout(){
-        deleteToken();
-        startActivity(new Intent(getActivity(),IntroActivity.class));
-        getActivity().finish();
-        return;
+        user.logout();
+        user.getUserDataReadyFlag().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean == false) {
+                    Toast.makeText(getContext(), "Logged out successfully", Toast.LENGTH_SHORT).show();
+                    deleteToken();
+                    startActivity(new Intent(getActivity(), IntroActivity.class));
+                    getActivity().finish();
+                }
+            }
+        });
     }
 
     void deleteToken(){
+        user.setToken(null);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("token", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove("token");

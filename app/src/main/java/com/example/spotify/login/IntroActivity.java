@@ -195,9 +195,15 @@ public class IntroActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     user.setToken(response.body().getToken());
                     Toast.makeText(IntroActivity.this, "Sucess " + response.code(), Toast.LENGTH_SHORT).show();
+                    saveToken();
                     user.fetchUserData();
-                    startActivity(new Intent(IntroActivity.this, MainActivity.class));
-                    finish();
+                    user.getUserDataReadyFlag().observe(IntroActivity.this, new Observer<Boolean>() {
+                        @Override
+                        public void onChanged(Boolean aBoolean) {
+                            startActivity(new Intent(IntroActivity.this, MainActivity.class));
+                            finish();
+                        }
+                    });
                 } else {
                     Toast.makeText(IntroActivity.this, "Failed to login " + response.message(), Toast.LENGTH_SHORT).show();
                 }

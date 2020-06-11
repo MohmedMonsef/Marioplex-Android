@@ -165,7 +165,7 @@ public class user {
      */
     public static void fetchUserData() {
         sendFCMTokenToServer();
-        if (token == null)
+        if (token.getValue() == null)
             return;
         userDataReadyFlag.postValue(false);
 
@@ -175,7 +175,7 @@ public class user {
             @Override
             public void onResponse(Call<ArrayList<userProfile>> call, Response<ArrayList<userProfile>> response) {
                 if (response.isSuccessful()) {
-                    user.setToken(token.getValue());
+                    //user.setToken(token.getValue());
                     user.setName(response.body().get(0).getDisplayName());
                     user.setEmail(response.body().get(0).getEmail());
                     user.setDateOfBirth(response.body().get(0).getBirthDate());
@@ -185,11 +185,11 @@ public class user {
                     user.setImages(response.body().get(0).getImages());
                     user.setId(response.body().get(0).getId());
                     user.userDataReadyFlag.postValue(true);
-                    Log.v("fetchUsrData",token.getValue());
-                    Log.v("fetchUsrData",user.id);
+                    //Log.v("fetchUsrData",token.getValue());
+                    //Log.v("fetchUsrData",user.id);
                 } else {
                     Log.v("usrftch", response.message());
-                    int x = 4;
+                    //int x = 4;
                 }
             }
 
@@ -237,5 +237,21 @@ public class user {
             }
         });
 
+    }
+
+    public static void logout(){
+        Retrofit.getInstance().getEndPointAPI().logout(user.getToken()).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()) {
+                    userDataReadyFlag.setValue(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 }

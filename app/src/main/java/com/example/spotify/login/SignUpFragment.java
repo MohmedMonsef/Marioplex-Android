@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -284,8 +285,13 @@ public class SignUpFragment extends Fragment {
                     user.setToken(response.body().getToken());
                     saveToken();
                     user.fetchUserData();
-                    startActivity(new Intent(getActivity(), MainActivity.class));
-                    getActivity().finish();
+                    user.getUserDataReadyFlag().observe(getActivity(), new Observer<Boolean>() {
+                        @Override
+                        public void onChanged(Boolean aBoolean) {
+                            startActivity(new Intent(getActivity(), MainActivity.class));
+                            getActivity().finish();
+                        }
+                    });
                 } else {
                     Log.i("Intro Activity", response.errorBody().toString());
                     Toast.makeText(getContext(), "Failed " + response.code() + " " + response.message(), Toast.LENGTH_SHORT).show();
