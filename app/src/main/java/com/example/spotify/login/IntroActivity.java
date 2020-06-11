@@ -67,8 +67,7 @@ public class IntroActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_intro);
+        setContentView(R.layout.loading_screen);
 
         createNotificationChannel();
 
@@ -78,15 +77,6 @@ public class IntroActivity extends AppCompatActivity {
 
         calculateDisplayWidth();
 
-
-        findViewById(R.id.intro_fragment).setTranslationX(displayWidth);
-
-        findViewById(R.id.login_facebook_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loginByFacebook();
-            }
-        });
 
         loadToken();
 
@@ -109,7 +99,7 @@ public class IntroActivity extends AppCompatActivity {
                 user.getUserDataReadyFlag().observe(this, new Observer<Boolean>() {
                     @Override
                     public void onChanged(Boolean aBoolean) {
-                        Intent mainActivityIntent = new Intent(IntroActivity.this,MainActivity.class);
+                        Intent mainActivityIntent = new Intent(IntroActivity.this, MainActivity.class);
                         mainActivityIntent.setData(data);
                         mainActivityIntent.setAction(ACTION_VIEW);
                         startActivity(mainActivityIntent);
@@ -126,6 +116,16 @@ public class IntroActivity extends AppCompatActivity {
                         startActivity(new Intent(IntroActivity.this, MainActivity.class));
                         finish();
                     }
+                }
+            });
+        } else {
+            setContentView(R.layout.activity_intro);
+            findViewById(R.id.intro_fragment).setTranslationX(displayWidth);
+
+            findViewById(R.id.login_facebook_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    loginByFacebook();
                 }
             });
         }
