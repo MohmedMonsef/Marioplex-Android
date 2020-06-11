@@ -85,6 +85,7 @@ public class IntroActivity extends AppCompatActivity {
         final Uri data = intent.getData();
         if (action == ACTION_VIEW) {
             if (data.toString().contains("/login/reset_password")) {
+                setContentView(R.layout.activity_intro);
                 String url = data.toString();
                 String token = url.split("token=")[1];
                 user.setToken(token);

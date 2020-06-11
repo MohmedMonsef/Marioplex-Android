@@ -169,6 +169,8 @@ public class user {
             return;
         userDataReadyFlag.postValue(false);
 
+
+
         EndPointAPI endPointAPI = com.example.spotify.Interfaces.Retrofit.getInstance().getEndPointAPI();
 
         endPointAPI.profile(token.getValue()).enqueue(new Callback<ArrayList<userProfile>>() {
@@ -185,8 +187,8 @@ public class user {
                     user.setImages(response.body().get(0).getImages());
                     user.setId(response.body().get(0).getId());
                     user.userDataReadyFlag.postValue(true);
-                    //Log.v("fetchUsrData",token.getValue());
-                    //Log.v("fetchUsrData",user.id);
+                    Log.v("fetchUserData", "token: " + user.getToken());
+                    Log.v("fetchUserData", "ID: " + user.getId());
                 } else {
                     Log.v("usrftch", response.message());
                     //int x = 4;
