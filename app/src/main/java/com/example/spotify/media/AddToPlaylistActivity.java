@@ -1,7 +1,10 @@
 package com.example.spotify.media;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -11,8 +14,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -252,8 +257,30 @@ public class AddToPlaylistActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = getLayoutInflater().inflate(R.layout.playlist_list_view_layout, parent, false);
             ImageView user_playlist_image = (ImageView) convertView.findViewById(R.id.user_playlist_image);
-            TextView user_playlist_name = (TextView) convertView.findViewById(R.id.user_playlist_name);
-            TextView playlist_user_name = (TextView) convertView.findViewById(R.id.playlist_user_name);
+            TextSwitcher user_playlist_name = (TextSwitcher) convertView.findViewById(R.id.user_playlist_name);
+            TextSwitcher playlist_user_name = (TextSwitcher) convertView.findViewById(R.id.playlist_user_name);
+
+            user_playlist_name.setFactory(new ViewSwitcher.ViewFactory() {
+                @Override
+                public View makeView() {
+                    TextView T = new TextView(getApplicationContext());
+                    T.setTextColor(Color.WHITE);
+                    T.setTextSize(TypedValue.COMPLEX_UNIT_SP , 18);
+                    T.setTypeface(T.getTypeface(), Typeface.BOLD);
+                    return T;
+                }
+            });
+
+            playlist_user_name.setFactory(new ViewSwitcher.ViewFactory() {
+                @Override
+                public View makeView() {
+                    TextView T1= new TextView(getApplicationContext());
+                    T1.setTextColor(Color.GRAY);
+                    T1.setTextSize(TypedValue.COMPLEX_UNIT_SP , 16);
+                    T1.setTypeface(T1.getTypeface() , Typeface.NORMAL);
+                    return T1;
+                }
+            });
 
 
             if (userPlaylists != null) {

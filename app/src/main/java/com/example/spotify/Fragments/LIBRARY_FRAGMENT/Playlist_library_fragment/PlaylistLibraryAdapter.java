@@ -153,7 +153,6 @@ public class PlaylistLibraryAdapter extends RecyclerView.Adapter<PlaylistLibrary
                 @Override
                 public View makeView() {
                     TextView T1= new TextView(context);
-                    //playlistnameTextView = new TextView(context);
                     T1.setTextColor(Color.GRAY);
                     T1.setTextSize(TypedValue.COMPLEX_UNIT_SP , 18);
                     return T1;
