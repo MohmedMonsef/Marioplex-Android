@@ -3,17 +3,74 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.LIBRARY_FRAGMENT.libraryFragment">
+    android:id="@+id/fragment_library_layout1"
+    tools:context=".Fragments.LIBRARY_FRAGMENT.libraryFragment"
+    >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <LinearLayout
+        android:id="@+id/fragment_library_layout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="hello_library_fragment"
-        android:id="@+id/text_library"
-        android:textColor="@color/TextColor"
-        android:textSize="24dp"
+        android:orientation="vertical"
+        android:background="@color/bgBottomNavigation"
+        >
 
-        />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Music"
+            android:textSize="50dp"
+            android:textColor="@color/TextColor"
+            android:padding="16dp"
+            android:layout_margin="16dp"
+            />
 
+        <LinearLayout
+            android:id="@+id/fragment_library_layout3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp"
+            android:paddingBottom="16dp"
+            >
+
+            <TextView
+                android:id="@+id/playlist_library"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Playlists"
+                android:textSize="20dp"
+                android:textColor="@color/TextColor"
+                />
+
+            <TextView
+                android:id="@+id/artist_library"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/TextColor"
+                android:text="Artists"
+                android:textSize="20dp"
+                android:layout_weight="1"
+                 />
+
+            <TextView
+                android:id="@+id/album_library"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="20dp"
+                android:textColor="@color/TextColor"
+                android:text="Albums" />
+
+        </LinearLayout>
+        <FrameLayout
+            android:id="@+id/library_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
 </FrameLayout>

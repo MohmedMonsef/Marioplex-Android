@@ -2,12 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/activity_add_to_playlist_layout1"
     android:background="@drawable/media_player_background_color">
     <RelativeLayout
+        android:id="@+id/activity_add_to_playlist_layout2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.1">
         <TextView
+            android:id="@+id/activity_add_to_playlist_text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
@@ -24,6 +27,7 @@
             android:layout_centerVertical="true"/>
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/activity_add_to_playlist_layout3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.2">
@@ -41,6 +45,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/activity_add_to_playlist_layout4"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.7">

@@ -1,75 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/searchlistlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/searchlistlayout"
+    android:background="@drawable/searchb4"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/searchbarlist"
+    <LinearLayout
+        android:id="@+id/fragment_search_listfragment_layout1"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:drawableLeft="@drawable/ic_back"
-        android:textColor="@color/TextColor"
-        />
+        android:orientation="horizontal"
+
+        >
+
+        <ImageView
+            android:id="@+id/back_button_to_searchlist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="1dp"
+            android:layout_toLeftOf="@+id/searchbarlist"
+            android:padding="1dp"
+            android:src="@drawable/back_button" />
+
+        <EditText
+            android:id="@+id/searchbarlist"
+            android:layout_width="375dp"
+            android:layout_height="64dp"
+            android:textColor="@color/TextColor" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/texta"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/TextColor"
         android:textSize="24dp"
+        android:visibility="gone"
         tools:ignore="MissingConstraints" />
+
     <ScrollView
+        android:id="@+id/fragment_search_listfragment_layout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:orientation="vertical">
 
-        >
         <LinearLayout
+            android:id="@+id/fragment_search_listfragment_layout3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycleSearch"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
+            android:orientation="vertical">
 
-    </androidx.recyclerview.widget.RecyclerView>
-    <TextView
-        android:id="@+id/textartist"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/TextColor"
-        android:text="See all artist"
-        android:textSize="24dp"
-        tools:ignore="MissingConstraints" />
-    <TextView
-        android:id="@+id/texttrack"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/TextColor"
-        android:text="See all song"
-        android:textSize="24dp"
-        tools:ignore="MissingConstraints" />
-    <TextView
-        android:id="@+id/textplaylist"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/TextColor"
-        android:text="See all playlist"
-        android:textSize="24dp"
-        tools:ignore="MissingConstraints" />
-    <TextView
-        android:id="@+id/textalbums"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/TextColor"
-        android:text="See all albums"
-        android:textSize="24dp"
-        tools:ignore="MissingConstraints" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycleSearch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <TextView
+                android:id="@+id/textartist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="See all artist"
+                android:textColor="@color/TextColor"
+                android:textSize="24dp"
+                tools:ignore="MissingConstraints" />
+
+            <TextView
+                android:id="@+id/texttrack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="See all song"
+                android:textColor="@color/TextColor"
+                android:textSize="24dp"
+                tools:ignore="MissingConstraints" />
+
+            <TextView
+                android:id="@+id/textplaylist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="See all playlist"
+                android:textColor="@color/TextColor"
+                android:textSize="24dp"
+                tools:ignore="MissingConstraints" />
+
+            <TextView
+                android:id="@+id/textalbums"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="See all albums"
+                android:textColor="@color/TextColor"
+                android:textSize="24dp"
+                tools:ignore="MissingConstraints" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

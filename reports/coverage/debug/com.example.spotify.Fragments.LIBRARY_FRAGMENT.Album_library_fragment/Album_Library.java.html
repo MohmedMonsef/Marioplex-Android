@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Album_Library.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.Fragments.LIBRARY_FRAGMENT.Album_library_fragment</a> &gt; <span class="el_source">Album_Library.java</span></div><h1>Album_Library.java</h1><pre class="source lang-java linenums">package com.example.spotify.Fragments.LIBRARY_FRAGMENT.Album_library_fragment;
+
+import android.content.Context;
+import android.net.Uri;
+import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.example.spotify.Adapters.adapterSavedAlbum;
+import com.example.spotify.BackClasses.Backclasses.SavedAlbums.SavedAlbums;
+import com.example.spotify.Interfaces.backinterfaces;
+import com.example.spotify.R;
+import com.example.spotify.login.user;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
+
+<span class="fc" id="L31">public class Album_Library extends Fragment implements LifecycleOwner {</span>
+
+    RecyclerView recyclerView;
+    com.example.spotify.Adapters.adapterSavedAlbum adapterSavedAlbum;
+   // LinearLayoutManager layoutManager;
+    SavedAlbums savedAlbums;
+    TextView textViewResult;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+
+        // Inflate the layout for this fragment
+<span class="fc" id="L45">        View view = inflater.inflate(R.layout.fragment_album__library, container, false);</span>
+<span class="fc" id="L46">        savedAlbums = new SavedAlbums();</span>
+<span class="fc" id="L47">        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerSavedAlbum);</span>
+<span class="fc" id="L48">        textViewResult=view.findViewById(R.id.textlibrary);</span>
+        LinearLayoutManager layoutManager;
+<span class="fc" id="L50">        layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);</span>
+<span class="fc" id="L51">        recyclerView.setLayoutManager(layoutManager);</span>
+        ////*******************************RecyclerView***********************////
+<span class="fc" id="L53">        SetRetrofit();</span>
+<span class="fc" id="L54">        return view;</span>
+
+    }
+    ////*******************************Retrofit****************************////
+    private void SetRetrofit()
+    {
+
+<span class="fc" id="L61">        Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();</span>
+<span class="fc" id="L62">        backinterfaces apiService = retrofit.create(backinterfaces.class);</span>
+<span class="fc" id="L63">        Call&lt;SavedAlbums&gt; call = apiService.getSavedAlbums(&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWIwOTAxZTMwYTlhMDFmMTQ0YjcyMzUiLCJwcm9kdWN0IjoicHJlbWl1bSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg5OTczOTMzLCJleHAiOjMxNDY0ODg4NzgwMjYwODk1MDB9.gpPtSyJDhiKYB8Lduhnet3upLiXW23HT7KU5Z7oXE8c&quot;);</span>
+<span class="fc" id="L64">        call.enqueue(new Callback&lt;SavedAlbums&gt;()</span>
+<span class="fc" id="L65">        {</span>
+            /**
+             *
+             * @param call --&gt; interface request
+             * @param response --&gt; interface response
+             * called when every changed requests and set the data
+             */
+            @Override
+            public void onResponse(Call&lt;SavedAlbums&gt; call, Response&lt;SavedAlbums&gt; response)
+            {
+                //error in the server
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">                if (response.code() == 401)</span>
+<span class="nc" id="L77">                    textViewResult.setText(response.errorBody().toString() + &quot;401&quot;);</span>
+                    //may internet disconnected
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">                else if (!response.isSuccessful())</span>
+                {
+<span class="nc" id="L81">                    textViewResult.setText(&quot;Code: &quot; + response.code());</span>
+<span class="nc" id="L82">                    return;</span>
+                }
+                //if responcse is successful and the server send response
+<span class="fc" id="L85">                savedAlbums = response.body();</span>
+                //error in GET request url
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">                if (response.body() == null)</span>
+<span class="nc" id="L88">                    textViewResult.setText(&quot;responce body = null&quot;);</span>
+                    //error in binding interface
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">                else if (savedAlbums == null)</span>
+<span class="nc" id="L91">                    textViewResult.setText(response.body().toString() + &quot; SavedAlbums = null&quot;);</span>
+                    //Successful
+                else
+                {
+<span class="fc" id="L95">                    Log.d(&quot;TAG&quot;, &quot;Response = &quot; + savedAlbums);</span>
+<span class="fc" id="L96">                    adapterSavedAlbum = new adapterSavedAlbum(getActivity(), savedAlbums.getSavedAlbums());</span>
+<span class="fc" id="L97">                    recyclerView.setAdapter(adapterSavedAlbum);</span>
+<span class="fc" id="L98">                    recyclerView.setHasFixedSize(true);</span>
+                }
+
+<span class="fc" id="L101">            }</span>
+
+            /**
+             *
+             * @param call --&gt;interface request
+             * @param t --&gt;type of error of the request
+             * called when every errored requests and set its type
+             */
+            @Override
+            public void onFailure(Call&lt;SavedAlbums&gt; call, Throwable t)
+            {
+<span class="nc" id="L112">                textViewResult.setText(t.getMessage() + &quot;failed&quot;);</span>
+<span class="nc" id="L113">            }</span>
+        });
+<span class="fc" id="L115">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

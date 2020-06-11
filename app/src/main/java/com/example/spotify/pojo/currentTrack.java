@@ -19,9 +19,6 @@ public class currentTrack {
     @SerializedName("playlistId")
     @Expose
     private String playlistId;
-    @SerializedName("isPlayable")
-    @Expose
-    private Boolean isplayable;
 
     public myTrack getTrack() {
         return track;
@@ -63,11 +60,4 @@ public class currentTrack {
         this.playlistId = playlistId;
     }
 
-    public Boolean getIsplayable() {
-        return isplayable;
-    }
-
-    public void setIsplayable(Boolean isplayable) {
-        this.isplayable = isplayable;
-    }
 }

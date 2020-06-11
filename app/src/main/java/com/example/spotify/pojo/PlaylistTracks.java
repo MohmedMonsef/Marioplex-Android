@@ -1,7 +1,5 @@
 package com.example.spotify.pojo;
 
-import com.example.spotify.SpotifyClasses.Image;
-import com.example.spotify.SpotifyClasses.Track;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -29,12 +27,12 @@ public class PlaylistTracks {
     @SerializedName("isPublic")
     @Expose
     private Boolean isPublic;
-    @SerializedName("isLiked")
+    @SerializedName("isfollowed")
     @Expose
     private Boolean isLiked;
     @SerializedName("images")
     @Expose
-    private List<Object> images = null;
+    private List<ImageInfo> images = null;
     @SerializedName("tracks")
     @Expose
     private List<BasicTrack> tracks = null;
@@ -54,6 +52,10 @@ public class PlaylistTracks {
     public void setType(String type) {
         this.type = type;
     }
+
+//    public void setIsfollowed(Boolean isfollowed) { this.isfollowed = isfollowed; }
+//
+//    public Boolean getIsfollowed() { return isfollowed; }
 
     public String getName() {
         return name;
@@ -103,11 +105,11 @@ public class PlaylistTracks {
         this.isLiked = isLiked;
     }
 
-    public List<Object> getImages() {
+    public List<ImageInfo> getImages() {
         return images;
     }
 
-    public void setImages(List<Object> images) {
+    public void setImages(List<ImageInfo> images) {
         this.images = images;
     }
 

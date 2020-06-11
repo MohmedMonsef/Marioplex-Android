@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SignUpFragment.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.login</a> &gt; <span class="el_source">SignUpFragment.java</span></div><h1>SignUpFragment.java</h1><pre class="source lang-java linenums">package com.example.spotify.login;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
+import android.os.Bundle;
+
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.util.Patterns;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.R;
+import com.example.spotify.login.apiClasses.LoginResponse;
+import com.example.spotify.login.apiClasses.SignUpData;
+
+import java.util.Calendar;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
+
+public class SignUpFragment extends Fragment {
+
+<span class="nc" id="L41">    final String FEMALE = &quot;female&quot;;</span>
+<span class="nc" id="L42">    final String MALE = &quot;male&quot;;</span>
+
+    private static Retrofit mRetrofit;
+    private static EndPointAPI mEndPointAPI;
+<span class="nc" id="L46">    private static float displayWidth = IntroActivity.getDisplayWidth();</span>
+<span class="nc" id="L47">    private int currentForm = 0;</span>
+
+    String email, password, username;
+<span class="nc" id="L50">    String country = &quot;Egypt&quot;;</span>
+    String gender;
+    String birthdate;
+
+    /*public SignUpFragment() {
+        // Required empty public constructor
+    }*/
+
+<span class="nc" id="L58">    SignUpFragment(Retrofit retrofit, EndPointAPI EndPointAPI) {</span>
+<span class="nc" id="L59">        mRetrofit = retrofit;</span>
+<span class="nc" id="L60">        mEndPointAPI = EndPointAPI;</span>
+<span class="nc" id="L61">    }</span>
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+<span class="nc" id="L66">        super.onCreate(savedInstanceState);</span>
+
+<span class="nc" id="L68">    }</span>
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+<span class="nc" id="L75">        final View rootView = inflater.inflate(R.layout.fragment_sign_up, container, false);</span>
+
+<span class="nc" id="L77">        rootView.findViewById(R.id.create_button).setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L80">                submit();</span>
+<span class="nc" id="L81">            }</span>
+        });
+
+
+<span class="nc" id="L85">        final View confirmEmailButton = rootView.findViewById(R.id.confirm_email_button);</span>
+<span class="nc" id="L86">        final View confirmPasswordButton = rootView.findViewById(R.id.confirm_password_button);</span>
+<span class="nc" id="L87">        final View confirmDateButton = rootView.findViewById(R.id.confirm_date_button);</span>
+<span class="nc" id="L88">        final View createButton = rootView.findViewById(R.id.create_button);</span>
+<span class="nc" id="L89">        confirmEmailButton.setEnabled(false);</span>
+<span class="nc" id="L90">        confirmPasswordButton.setEnabled(false);</span>
+<span class="nc" id="L91">        createButton.setEnabled(false);</span>
+
+<span class="nc" id="L93">        ((EditText)rootView.findViewById(R.id.sign_up_email)).addTextChangedListener(new TextWatcher() {</span>
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+<span class="nc" id="L97">            }</span>
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+<span class="nc bnc" id="L101" title="All 2 branches missed.">                if(validateEmail(s.toString())){</span>
+<span class="nc" id="L102">                    confirmEmailButton.setEnabled(true);</span>
+<span class="nc" id="L103">                    email = s.toString();</span>
+                }
+                else{
+<span class="nc" id="L106">                    confirmEmailButton.setEnabled(false);</span>
+                }
+<span class="nc" id="L108">            }</span>
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+<span class="nc" id="L113">            }</span>
+        });
+
+<span class="nc" id="L116">        ((EditText)rootView.findViewById(R.id.sign_up_password)).addTextChangedListener(new TextWatcher() {</span>
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+<span class="nc" id="L120">            }</span>
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+<span class="nc bnc" id="L124" title="All 2 branches missed.">                if(validatePassword(s.toString())){</span>
+<span class="nc" id="L125">                    confirmPasswordButton.setEnabled(true);</span>
+<span class="nc" id="L126">                    password = s.toString();</span>
+                }
+                else{
+<span class="nc" id="L129">                    confirmPasswordButton.setEnabled(false);</span>
+                }
+<span class="nc" id="L131">            }</span>
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+<span class="nc" id="L136">            }</span>
+        });
+
+
+
+<span class="nc" id="L141">        confirmEmailButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L144">                ((EditText)rootView.findViewById(R.id.sign_up_email)).clearFocus();</span>
+<span class="nc" id="L145">                ((EditText)rootView.findViewById(R.id.sign_up_password)).requestFocus();</span>
+<span class="nc" id="L146">                nextForm();</span>
+<span class="nc" id="L147">            }</span>
+        });
+
+<span class="nc" id="L150">        confirmPasswordButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L153">                ((EditText)rootView.findViewById(R.id.sign_up_password)).clearFocus();</span>
+<span class="nc" id="L154">                ((DatePicker)rootView.findViewById(R.id.datePicker)).requestFocus();</span>
+<span class="nc" id="L155">                hideSoftKeyboard();</span>
+<span class="nc" id="L156">                nextForm();</span>
+<span class="nc" id="L157">            }</span>
+        });
+
+        // Date form related
+<span class="nc" id="L161">        final DatePicker datePicker = rootView.findViewById(R.id.datePicker);</span>
+<span class="nc" id="L162">        Calendar calendar = Calendar.getInstance();</span>
+<span class="nc" id="L163">        calendar.add(Calendar.YEAR,-18);</span>
+<span class="nc" id="L164">        datePicker.setMaxDate(calendar.getTimeInMillis());</span>
+<span class="nc" id="L165">        calendar.add(Calendar.YEAR,-102);</span>
+<span class="nc" id="L166">        datePicker.setMinDate(calendar.getTimeInMillis());</span>
+
+<span class="nc" id="L168">        confirmDateButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L171">                birthdate = datePicker.getDayOfMonth() + &quot;/&quot; + datePicker.getMonth() + &quot;/&quot; + datePicker.getYear();</span>
+<span class="nc" id="L172">                nextForm();</span>
+<span class="nc" id="L173">            }</span>
+        });
+
+        // Gender form related
+<span class="nc" id="L177">        rootView.findViewById(R.id.female_button).setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L180">                gender = FEMALE;</span>
+<span class="nc" id="L181">                nextForm();</span>
+<span class="nc" id="L182">            }</span>
+        });
+
+<span class="nc" id="L185">        rootView.findViewById(R.id.male_button).setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L188">                gender = MALE;</span>
+<span class="nc" id="L189">                nextForm();</span>
+<span class="nc" id="L190">            }</span>
+        });
+
+        //name form related
+<span class="nc" id="L194">        ((EditText)rootView.findViewById(R.id.sign_up_name)).addTextChangedListener(new TextWatcher() {</span>
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+<span class="nc" id="L198">            }</span>
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+<span class="nc bnc" id="L202" title="All 2 branches missed.">                if(s.toString().length() &gt; 0){</span>
+<span class="nc" id="L203">                    username = s.toString();</span>
+<span class="nc" id="L204">                    createButton.setEnabled(true);</span>
+                }
+                else{
+<span class="nc" id="L207">                    createButton.setEnabled(false);</span>
+                }
+<span class="nc" id="L209">            }</span>
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+<span class="nc" id="L214">            }</span>
+        });
+
+<span class="nc" id="L217">        createButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L220">                submit();</span>
+<span class="nc" id="L221">            }</span>
+        });
+
+
+<span class="nc" id="L225">        positionViews(rootView);</span>
+<span class="nc" id="L226">        return rootView;</span>
+    }
+
+    @Override
+    public void onDestroy() {
+        //Toast.makeText(getContext(), &quot;fragment destroyed&quot;, Toast.LENGTH_SHORT).show();
+<span class="nc" id="L232">        super.onDestroy();</span>
+<span class="nc" id="L233">    }</span>
+
+    // display next form
+    private void nextForm() {
+<span class="nc bnc" id="L237" title="All 2 branches missed.">        if (currentForm == 4)</span>
+<span class="nc" id="L238">            return;</span>
+<span class="nc" id="L239">        currentForm++;</span>
+<span class="nc" id="L240">        slideForms();</span>
+<span class="nc" id="L241">    }</span>
+
+    // display previous form
+    private void previousForm() {
+<span class="nc bnc" id="L245" title="All 2 branches missed.">        if (currentForm == 0)</span>
+<span class="nc" id="L246">            return;</span>
+<span class="nc" id="L247">        currentForm--;</span>
+<span class="nc" id="L248">        slideForms();</span>
+<span class="nc" id="L249">    }</span>
+
+    private void slideForms(){
+<span class="nc" id="L252">        getView().findViewById(R.id.email_form).animate().translationX(0 - displayWidth * currentForm);</span>
+<span class="nc" id="L253">        getView().findViewById(R.id.password_form).animate().translationX(displayWidth * 1 - displayWidth * currentForm);</span>
+<span class="nc" id="L254">        getView().findViewById(R.id.birthday_form).animate().translationX(displayWidth * 2 - displayWidth * currentForm);</span>
+<span class="nc" id="L255">        getView().findViewById(R.id.gender_form).animate().translationX(displayWidth * 3 - displayWidth * currentForm);</span>
+<span class="nc" id="L256">        getView().findViewById(R.id.name_form).animate().translationX(displayWidth * 4 - displayWidth * currentForm);</span>
+<span class="nc" id="L257">    }</span>
+
+    private void positionViews(View rootView) {
+<span class="nc" id="L260">        rootView.findViewById(R.id.email_form).setTranslationX(0);</span>
+<span class="nc" id="L261">        rootView.findViewById(R.id.password_form).setTranslationX(displayWidth * 1);</span>
+<span class="nc" id="L262">        rootView.findViewById(R.id.birthday_form).setTranslationX(displayWidth * 2);</span>
+<span class="nc" id="L263">        rootView.findViewById(R.id.gender_form).setTranslationX(displayWidth * 3);</span>
+<span class="nc" id="L264">        rootView.findViewById(R.id.name_form).setTranslationX(displayWidth * 4);</span>
+<span class="nc" id="L265">    }</span>
+
+    /**
+     * Validate sign up form data and send it to backend server
+     * Displays a Toast message indicating sign up request result
+     */
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void submit() {
+
+
+
+<span class="nc" id="L276">        SignUpData signUpData = new SignUpData(username, password, country, email, gender, birthdate);</span>
+
+<span class="nc" id="L278">        mEndPointAPI.signUp(signUpData).enqueue(new Callback&lt;LoginResponse&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;com.example.spotify.login.apiClasses.LoginResponse&gt; call, Response&lt;LoginResponse&gt; response) {
+<span class="nc bnc" id="L281" title="All 2 branches missed.">                if (response.isSuccessful()) {</span>
+<span class="nc" id="L282">                    Log.v(&quot;Intro Activity&quot;, response.body().toString());</span>
+<span class="nc" id="L283">                    Toast.makeText(getContext(), &quot;Sucess &quot; + response.code(), Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L284">                    user.setToken(response.body().getToken());</span>
+<span class="nc" id="L285">                    saveToken();</span>
+<span class="nc" id="L286">                    user.fetchUserData();</span>
+<span class="nc" id="L287">                    startActivity(new Intent(getActivity(), MainActivity.class));</span>
+<span class="nc" id="L288">                    getActivity().finish();</span>
+                } else {
+<span class="nc" id="L290">                    Log.i(&quot;Intro Activity&quot;, response.errorBody().toString());</span>
+<span class="nc" id="L291">                    Toast.makeText(getContext(), &quot;Failed &quot; + response.code() + &quot; &quot; + response.message(), Toast.LENGTH_SHORT).show();</span>
+                }
+<span class="nc" id="L293">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;LoginResponse&gt; call, Throwable t) {
+<span class="nc" id="L297">                Log.e(&quot;Intro Activity&quot;, t.getMessage());</span>
+<span class="nc" id="L298">                Toast.makeText(getContext(), &quot;Failed to connect&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L299">            }</span>
+        });
+
+<span class="nc" id="L302">    }</span>
+
+    boolean validateEmail(String email){
+<span class="nc" id="L305">        return Patterns.EMAIL_ADDRESS.matcher(email).matches();</span>
+    }
+
+    boolean validatePassword(String password){
+<span class="nc bnc" id="L309" title="All 2 branches missed.">        return password.length() &gt;= 8;</span>
+    }
+
+    void saveToken(){
+<span class="nc" id="L313">        String token = user.getToken();</span>
+<span class="nc bnc" id="L314" title="All 2 branches missed.">        if(token!=null){</span>
+<span class="nc" id="L315">            SharedPreferences sharedPreferences = getContext().getSharedPreferences(&quot;token&quot;, Context.MODE_PRIVATE);</span>
+<span class="nc" id="L316">            SharedPreferences.Editor editor = sharedPreferences.edit();</span>
+<span class="nc" id="L317">            editor.putString(&quot;token&quot;,token);</span>
+<span class="nc" id="L318">            editor.apply();</span>
+        }
+<span class="nc" id="L320">    }</span>
+
+    boolean handleOnBackPressed() {
+<span class="nc bnc" id="L323" title="All 2 branches missed.">        if (currentForm == 0) {</span>
+<span class="nc" id="L324">            return false;</span>
+        } else {
+<span class="nc" id="L326">            previousForm();</span>
+<span class="nc" id="L327">            return true;</span>
+        }
+    }
+
+    void hideSoftKeyboard(){
+        // Check if no view has focus:
+<span class="nc" id="L333">        View view = getActivity().getCurrentFocus();</span>
+<span class="nc bnc" id="L334" title="All 2 branches missed.">        if (view != null) {</span>
+<span class="nc" id="L335">            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);</span>
+<span class="nc" id="L336">            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);</span>
+        }
+<span class="nc" id="L338">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

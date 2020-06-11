@@ -11,11 +11,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
@@ -24,9 +26,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.Adapters.adapterSearch;
+import com.example.spotify.Fragments.SEARCH_FRAGMENT.searchfragment;
+import com.example.spotify.Fragments.SEE_ALBUMS_FRAGMENT.see_all_albums_Fragment;
+import com.example.spotify.Fragments.SEE_ARTISTS_FRAGMENT.see_all_artist_Fragment;
+import com.example.spotify.Fragments.SEE_PLAYLIST_FRAGMENT.see_all_playlist_Fragment;
+import com.example.spotify.Fragments.SEE_SONG_FRAGMENT.see_all_song_Fragment;
 import com.example.spotify.Interfaces.backinterfaces;
 import com.example.spotify.BackClasses.Backclasses.backsearch.Search;
 import com.example.spotify.R;
+import com.example.spotify.login.user;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,119 +50,336 @@ import retrofit2.Retrofit;
  * create an instance of this fragment.
  */
 
-public class searchListfragment extends Fragment implements LifecycleOwner {
-
-
+public class searchListfragment extends Fragment implements LifecycleOwner
+{
     Search searchList;
     RecyclerView recyclerView;
     adapterSearch recyclerAdapter;
+    ImageView back_button_to_searchlist;
     private TextView textViewResult,talbum,tartist,tplaylist,tsong;
     LinearLayout l1;
-     int dochange;
+    int dochange;
+    String word;
     private Retrofit retrofit;
     private backinterfaces apiService;
-    private viewmodelSearchList searchViewModel;
     EditText editText;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)
+    {
         View view = inflater.inflate(R.layout.fragment_search_listfragment, container, false);
-        searchViewModel = ViewModelProviders.of((MainActivity) getActivity()).get(viewmodelSearchList.class);
         final TextView textView = view.findViewById(R.id.text_home);
         l1=(LinearLayout) view.findViewById(R.id.searchlistlayout);
         l1.setBackground(getResources().getDrawable(R.drawable.item));
         editText=(EditText) view.findViewById(R.id.searchbarlist);
         retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
         apiService = retrofit.create(backinterfaces.class);
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {
-                if(s.length()==0)
-                    searchList=null;
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-            dochange=s.length();
-                if(s.length()!=0) {
-                    Log.i("onQueryTextChange", s.toString());
-                    Call<Search> call = apiService.getSearch(s.toString(), "artist,album,playlist,track" , "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTgwYzZhZjE0Yzg1NjZkNmNkOWI0MDAiLCJwcm9kdWN0IjoiZnJlZSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg2MDI2NjAyLCJleHAiOjQ3MzI1MTMwMDJ9.ztEjNCgbkyJ2-9WB6ojwLgDfhWsZ-ZGJVFUB8dYMz8s");
-                    call.enqueue(new Callback<Search>() {
-                        @Override
-                        public void onResponse(Call<Search> call, Response<Search> response) {
-                            if (response.code() == 401)
-                                textViewResult.setText(response.errorBody().toString() + "401");
-                            else if (!response.isSuccessful()) {
-                                textViewResult.setText("Code: " + response.code());
-                                return;
-                            }
-                            searchList = response.body();
-                            //        Tracklist = response.body();
-                            if (response.body() == null)
-                                textViewResult.setText("responce body = null");
-                            else if (searchList == null)
-                                textViewResult.setText(response.body().toString() + " track = null");
-                            else {
-                                Log.d("TAG", "Response = " + searchList);
-                                recyclerAdapter = new adapterSearch(getActivity(), searchList);
-                                if(dochange==1)
-                                {l1.setBackground(getResources().getDrawable(R.drawable.searchb2));}
-                                if(dochange==2)
-                                {l1.setBackground(getResources().getDrawable(R.drawable.searchb3));}
-                                if(dochange==3)
-                                {l1.setBackground(getResources().getDrawable(R.drawable.searchb4));}
-                                if(dochange==4)
-                                {l1.setBackground(getResources().getDrawable(R.drawable.searchb1));}
-                                recyclerView.setAdapter(recyclerAdapter);
-                                recyclerView.setHasFixedSize(true);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Search> call, Throwable t) {
-                            textViewResult.setText(t.getMessage() + "hey there failed");
-                        }
-                    });
-                }
-                searchList=null;
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(s.length()==0)
-                    searchList=null;
-
-            }
-        });
-
-
-
         ////*******************************RecyclerView***********************////
         searchList = new Search();
         recyclerView = (RecyclerView) view.findViewById(R.id.recycleSearch);
         LinearLayoutManager layoutManager;
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        //SetRetrofit();
+        ////************************************************************************////
+        talbum=view.findViewById(R.id.textalbums);
+        talbum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                loadSearchFragment("album");
+            }
+        });
+        ////************************************************************************////
+        tartist=view.findViewById(R.id.textartist);
+        tartist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                loadSearchFragment("artist");
+            }
+        });
+        ////************************************************************************////
+        tsong=view.findViewById(R.id.texttrack);
+        tsong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                loadSearchFragment("song");
+            }
+        });
+        ////************************************************************************////
+        tplaylist=view.findViewById(R.id.textplaylist);
+        tplaylist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                loadSearchFragment("playlist");
+            }
+        });
+        //*************************************************************************///
+        back_button_to_searchlist=view.findViewById(R.id.back_button_to_searchlist);
+        back_button_to_searchlist.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Fragment newFragment = new searchfragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_fragment, newFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
         ////*******************************To check the state***********************////
         textViewResult = view.findViewById(R.id.texta);
+        /**
+         * a listener for change in search in edit text
+         */
+        editText.addTextChangedListener(new TextWatcher()
+        {
+            /**
+             *
+             * @param s --> the current CharSequence in the edit text
+             * @param start -->start position in the CharSequence
+             * @param count -->size of the CharSequence
+             * @param after -->after current  position in the CharSequenceg
+             *  a handeler before changing in the edit text
+             */
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+                if(s.length()==0)
+                    searchList=null;
 
-        return view;
+
+            }
+
+            /**
+             *
+             * @param s --> the current CharSequence in the edit text
+             * @param start -->start position in the CharSequence
+             * @param count -->size of the CharSequence
+             * @param before -->before current  position in the CharSequenceg
+             *  a handeler for changing in the edit text
+             */
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+                //flag to change the background color
+            dochange=s.length();
+            word=s.toString();
+                if (s.length() == 0)
+                {
+                    searchList = null;
+                    recyclerView.setAdapter(null);
+
+                }
+                else {
+
+                    Log.i("onQueryTextChange", s.toString());
+                    Call<Search> call = apiService.getSearch(s.toString(), "artist,album,playlist,track", user.getToken());
+                    call.enqueue(new Callback<Search>() {
+                        /**
+                         * @param call     --> interface request
+                         * @param response --> interface response
+                         *                 called when every changed requests and set the data
+                         */
+                        @Override
+                        public void onResponse(Call<Search> call, Response<Search> response) {
+                            //error in the server
+                            if (response.code() == 401)
+                                textViewResult.setText(response.errorBody().toString() + "401");
+                                //may internet disconnected
+                            else if (!response.isSuccessful())
+                            {
+                                textViewResult.setText("Code: " + response.code());
+                                recyclerView.setAdapter(null);
+                                return;
+                            }
+                            //if responcse is successful and the server send response
+                            searchList = response.body();
+                            //error in GET request url
+                            if (response.body() == null)
+                                textViewResult.setText("responce body = null");
+                                //error in binding interface
+                            else if (searchList == null)
+                                textViewResult.setText(response.body().toString() + " search = null");
+                                //Successful
+                            else {
+                                Log.d("TAG", "Response = " + searchList);
+                                //set the search recyclerview
+                                recyclerAdapter = new adapterSearch(getActivity(), searchList);
+                                //change the background
+                                if (dochange == 1) {
+                                    l1.setBackground(getResources().getDrawable(R.drawable.searchb2));
+                                }
+                                if (dochange == 2) {
+                                    l1.setBackground(getResources().getDrawable(R.drawable.searchb3));
+                                }
+                                if (dochange == 3) {
+                                    l1.setBackground(getResources().getDrawable(R.drawable.searchb4));
+                                }
+                                if (dochange == 4) {
+                                    l1.setBackground(getResources().getDrawable(R.drawable.searchb1));
+                                }
+                                recyclerView.setAdapter(recyclerAdapter);
+                                recyclerView.setHasFixedSize(true);
+                            }
+                        }
+
+                        /**
+                         * @param call -->interface request
+                         * @param t    -->type of error of the request
+                         *             called when every errored requests and set its type
+                         */
+                        @Override
+                        public void onFailure(Call<Search> call, Throwable t) {
+                            textViewResult.setText("Failed to connect to server");
+                        }
+                    });
+                    searchList = null;
+                }
+            }
+
+            /**
+             *
+             * @param s --> current Editable in edit text
+             */
+            @Override
+            public void afterTextChanged(Editable s) {
+                //auto complete with first album index
+                // s.append(searchList.getAlbum().get(0).getName());
+                String set = s.toString();
+                if (s.length() == 0)
+                {
+                    s.clear();
+                    searchList = null;
+                    recyclerView.setAdapter(null);
+                }
+              else
+              {
+                Log.i("onQueryTextChange", s.toString());
+                Call<Search> call = apiService.getSearch(s.toString(), "artist,album,playlist,track", user.getToken());
+                call.enqueue(new Callback<Search>() {
+                    /**
+                     * @param call     --> interface request
+                     * @param response --> interface response
+                     *                 called when every changed requests and set the data
+                     */
+                    @Override
+                    public void onResponse(Call<Search> call, Response<Search> response) {
+                        //error in the server
+                        if (response.code() == 401)
+                            textViewResult.setText(response.errorBody().toString() + "401");
+                            //may internet disconnected
+                        else if (!response.isSuccessful())
+                        {
+                            textViewResult.setText("Code: " + response.code());
+                            recyclerView.setAdapter(null);
+                            return;
+                        }
+                        //if responcse is successful and the server send response
+                        searchList = response.body();
+                        //error in GET request url
+                        if (response.body() == null)
+                            textViewResult.setText("responce body = null");
+                            //error in binding interface
+                        else if (searchList == null)
+                            textViewResult.setText(response.body().toString() + " search = null");
+                            //Successful
+                        else
+                            {
+                            Log.d("TAG", "Response = " + searchList);
+                            //set the search recyclerview
+                            recyclerAdapter = new adapterSearch(getActivity(), searchList);
+                            //change the background
+                            if (dochange == 1) {
+                                l1.setBackground(getResources().getDrawable(R.drawable.searchb2));
+                            }
+                            if (dochange == 2) {
+                                l1.setBackground(getResources().getDrawable(R.drawable.searchb3));
+                            }
+                            if (dochange == 3) {
+                                l1.setBackground(getResources().getDrawable(R.drawable.searchb4));
+                            }
+                            if (dochange == 4) {
+                                l1.setBackground(getResources().getDrawable(R.drawable.searchb1));
+                            }
+                            recyclerView.setAdapter(recyclerAdapter);
+                            recyclerView.setHasFixedSize(true);
+                        }
+                    }
+
+                    /**
+                     * @param call -->interface request
+                     * @param t    -->type of error of the request
+                     *             called when every errored requests and set its type
+                     */
+                    @Override
+                    public void onFailure(Call<Search> call, Throwable t) {
+                        textViewResult.setText("Failed to connect to server");
+                    }
+                });
+            }
+            }
+        });
+                return view;
 
     }
 
-    /*
-    @NonNull
-    @Override
-    public Lifecycle getLifecycle() {
-        return null;
-
-
-    }
-
+    /**
+     *
+     * @param type
+     * a function to go to search only by --> artist,album,song,playlist depend on type
      */
+    public void loadSearchFragment(String type)
+    {
+        Fragment newFragment;
+        FragmentTransaction transaction;
+        Bundle args=new Bundle();
+        if(type=="album")
+        {
+            newFragment = new see_all_albums_Fragment();
+            args.putString("DATA_RECIEVE_Album",word);
+            newFragment.setArguments(args);
+             transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_fragment, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+        else if(type=="artist")
+        {
+            newFragment = new see_all_artist_Fragment();
+            args.putString("DATA_RECIEVE_Artist",word);
+            newFragment.setArguments(args);
+            transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_fragment, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+        else if(type=="song")
+        {
+            newFragment = new see_all_song_Fragment();
+            args.putString("DATA_RECIEVE_Song",word);
+            newFragment.setArguments(args);
+            transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_fragment, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+        else if(type=="playlist")
+        {
+            newFragment = new see_all_playlist_Fragment();
+            args.putString("DATA_RECIEVE_Playlist",word);
+            newFragment.setArguments(args);
+            transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_fragment, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+
+
+    }
 
 }

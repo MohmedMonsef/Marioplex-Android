@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LoginFragment.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.login</a> &gt; <span class="el_source">LoginFragment.java</span></div><h1>LoginFragment.java</h1><pre class="source lang-java linenums">package com.example.spotify.login;
+
+import android.content.Intent;
+import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.R;
+import com.example.spotify.login.apiClasses.LoginCredentials;
+import com.example.spotify.login.apiClasses.LoginResponse;
+import com.example.spotify.login.apiClasses.userProfile;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
+
+
+public class LoginFragment extends Fragment {
+
+    private static Retrofit mRetrofit;
+    private static EndPointAPI mEndPointAPI;
+<span class="fc" id="L35">    private static String token = null;</span>
+
+
+    /*public LoginFragment() {
+        // Required empty public constructor
+    }*/
+
+<span class="fc" id="L42">    LoginFragment(Retrofit retrofit, EndPointAPI endPointAPI){</span>
+<span class="fc" id="L43">        mRetrofit = retrofit;</span>
+<span class="fc" id="L44">        mEndPointAPI = endPointAPI;</span>
+<span class="fc" id="L45">    }</span>
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L50">        super.onCreate(savedInstanceState);</span>
+
+
+<span class="fc" id="L53">    }</span>
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+<span class="fc" id="L59">        View rootView = inflater.inflate(R.layout.fragment_login, container, false);</span>
+
+<span class="fc" id="L61">        rootView.findViewById(R.id.loginButton).setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L64">                login();</span>
+<span class="fc" id="L65">            }</span>
+        });
+
+<span class="fc" id="L68">        return rootView;</span>
+    }
+
+    /**
+     * Login using provided email and password
+     * On login success launches main app activity
+     * On login failure displays a toast message
+     */
+    public void login(){
+<span class="fc" id="L77">        String email = ((EditText) getView().findViewById(R.id.email)).getText().toString();</span>
+<span class="fc" id="L78">        String password = ((EditText) getView().findViewById(R.id.password)).getText().toString();</span>
+
+<span class="fc" id="L80">        LoginCredentials loginCredentials = new LoginCredentials();</span>
+<span class="fc" id="L81">        loginCredentials.setEmail(email);</span>
+<span class="fc" id="L82">        loginCredentials.setPassword(password);</span>
+
+<span class="fc" id="L84">        Call&lt;LoginResponse&gt; call = mEndPointAPI.login(loginCredentials);</span>
+
+<span class="fc" id="L86">        call.enqueue(new Callback&lt;LoginResponse&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;LoginResponse&gt; call, Response&lt;LoginResponse&gt; response) {
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">                if(response.isSuccessful()){</span>
+<span class="fc" id="L90">                    token = response.body().getToken();</span>
+<span class="fc" id="L91">                    user.setToken(token);</span>
+<span class="fc" id="L92">                    Toast.makeText(getContext(),&quot;Sucess &quot; +response.code(),Toast.LENGTH_SHORT).show();</span>
+<span class="fc" id="L93">                    user.fetchUserData();</span>
+<span class="fc" id="L94">                    startActivity(new Intent(getActivity(), MainActivity.class));</span>
+<span class="fc" id="L95">                    getActivity().finish();</span>
+                }
+                else {
+<span class="nc" id="L98">                    Toast.makeText(getContext(),&quot;Failed to login &quot; + response.message(),Toast.LENGTH_SHORT).show();</span>
+                }
+<span class="fc" id="L100">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;LoginResponse&gt; call, Throwable t) {
+<span class="nc" id="L104">                Log.e(&quot;Intro Activity&quot;,t.getMessage());</span>
+<span class="nc" id="L105">                Toast.makeText(getContext(),&quot;Failed to connect &quot; + t.getMessage(),Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L106">            }</span>
+        });
+<span class="fc" id="L108">    }</span>
+
+    /*
+    public void fetchUserData(){
+        if(token == null)
+            return;
+
+        mApiSpotify.profile(token).enqueue(new Callback&lt;ArrayList&lt;userProfile&gt;&gt;() {
+            @Override
+            public void onResponse(Call&lt;ArrayList&lt;userProfile&gt;&gt; call, Response&lt;ArrayList&lt;userProfile&gt;&gt; response) {
+                if(response.isSuccessful()){
+                    user.setToken(token);
+                    user.setName(response.body().get(0).getDisplayName());
+                    user.setEmail(response.body().get(0).getEmail());
+                    user.setDateOfBirth(response.body().get(0).getBirthDate());
+                    user.setGender(response.body().get(0).getGender());
+                    user.setCountry(response.body().get(0).getCountry());
+                    user.setProduct(response.body().get(0).getProduct());
+                    user.setImages(response.body().get(0).getImages());
+                }
+                else {
+                    Toast.makeText(getContext(),&quot;Failed to get profile&quot;,Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call&lt;ArrayList&lt;userProfile&gt;&gt; call, Throwable t) {
+                Toast.makeText(getContext(),&quot;Failed to connect&quot;,Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+    }*/
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

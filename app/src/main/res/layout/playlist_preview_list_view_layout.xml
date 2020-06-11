@@ -14,10 +14,23 @@
         <ImageView
             android:id="@+id/preview_song_image"
             android:background="@drawable/curved_image_layout"
-            android:src="@drawable/not_found1"
+            android:src="@drawable/default_image"
+            android:scaleType="centerCrop"
+            android:layout_width="80dp"
+            android:layout_height="80dp"/>
+        <ImageView
+            android:id="@+id/tran_play"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:padding="25dp"
+            android:src="@drawable/trans_play"/>
+        <ProgressBar
+            android:id="@+id/loadingProgressbar"
+            android:visibility="gone"
             android:layout_width="80dp"
             android:layout_height="80dp"/>
         <LinearLayout
+            android:id="@+id/playlist_preview_list_view_layout4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

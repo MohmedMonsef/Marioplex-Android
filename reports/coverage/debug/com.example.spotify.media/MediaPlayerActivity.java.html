@@ -1,0 +1,791 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MediaPlayerActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.media</a> &gt; <span class="el_source">MediaPlayerActivity.java</span></div><h1>MediaPlayerActivity.java</h1><pre class="source lang-java linenums">package com.example.spotify.media;
+
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.Observer;
+import androidx.palette.graphics.Palette;
+
+import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.Interfaces.Retrofit;
+import com.example.spotify.R;
+import com.example.spotify.login.user;
+import com.example.spotify.pojo.ImageInfo;
+import com.example.spotify.pojo.currentTrack;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+<span class="fc" id="L45">public class MediaPlayerActivity extends AppCompatActivity {</span>
+
+    private RelativeLayout top_layout;
+    private TextView song_name;
+    private TextView song_artist;
+    private ImageView song_image;
+    private TextView playlist_name;
+    private TextView header;
+    private ImageView play_pause;
+    private SeekBar seek_bar;
+    private TextView start_time;
+    private TextView end_time;
+    private ImageView next;
+    private ImageView previous;
+    private ImageView arrow;
+    private ImageView song_settings_button;
+    private ConstraintLayout song_settings;
+    private LinearLayout sleep;
+    private LinearLayout settings_like;
+    private LinearLayout settings_add_to_playlist;
+    private LinearLayout view_artist;
+    private RelativeLayout sleep_sheet_hider;
+    private ConstraintLayout sleep_timer;
+    private Button five;
+    private LinearLayout ten;
+    private LinearLayout fifteen;
+    private LinearLayout thirty;
+    private LinearLayout fortyfive;
+    private LinearLayout hour;
+    private LinearLayout end_of_track;
+    private LinearLayout turn_of_timer;
+    private ImageView timer_image;
+    private ImageView setting_image;
+    private TextView setting_song_name;
+    private TextView setting_artist_id;
+    private ImageView favorite;
+    private ImageView favorite2;
+    private LinearLayout activity_views_container;
+    private RelativeLayout settings_upper_relative_layout;
+    private LinearLayout setting_container;
+    BottomSheetBehavior sleepTimer;
+    BottomSheetBehavior sheetBehavior;
+
+    private TrackInfo track;
+    private String nametest;
+    private MediaPlayerService player;
+<span class="fc" id="L91">    private Handler mHandler = new Handler();</span>
+<span class="fc" id="L92">    boolean serviceBound = false;</span>
+<span class="fc" id="L93">    private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();</span>
+    Toast toast;
+
+    private Palette.Swatch vibrantSwatch;
+    private Palette.Swatch lightVibrantSwatch;
+    private Palette.Swatch darkVibrantSwatch;
+    private Palette.Swatch mutedSwatch;
+    private Palette.Swatch lightMutedSwatch;
+    private Palette.Swatch darkMutedSwatch;
+
+    /**
+     * Binding this Client to the AudioPlayer Service
+     */
+<span class="fc" id="L106">    private ServiceConnection serviceConnection = new ServiceConnection() {</span>
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+<span class="fc" id="L110">            MediaPlayerService.LocalBinder binder = (MediaPlayerService.LocalBinder) service;</span>
+<span class="fc" id="L111">            player = binder.getservice();</span>
+<span class="fc" id="L112">            serviceBound = true;</span>
+<span class="fc" id="L113">        }</span>
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+<span class="nc" id="L117">            serviceBound = false;</span>
+<span class="nc" id="L118">        }</span>
+    };
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+<span class="fc" id="L123">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L124">        setContentView(R.layout.activity_media_player);</span>
+
+        //Bind the service
+<span class="fc" id="L127">        bindService();</span>
+
+        //get Views
+<span class="fc" id="L130">        getViews();</span>
+
+<span class="fc" id="L132">        sheetBehavior  = BottomSheetBehavior.from(song_settings);</span>
+<span class="fc" id="L133">        sleepTimer = BottomSheetBehavior.from(sleep_timer);</span>
+<span class="fc" id="L134">        setSheetBehavior();</span>
+<span class="fc" id="L135">        setSleepTimerBehaviour();</span>
+
+        //////////////////////////////////////////////////////////////////
+        ////////////////////settings listeners////////////////////////////
+        //////////////////////////////////////////////////////////////////
+        /**
+         * on press sets the duration of the sleep timer
+         */
+<span class="fc" id="L143">        five.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L146">                startTimer(300000);</span>
+<span class="fc" id="L147">            }</span>
+        });
+<span class="fc" id="L149">        ten.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L152">                startTimer(600000);</span>
+<span class="nc" id="L153">            }</span>
+        });
+<span class="fc" id="L155">        fifteen.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L158">                startTimer(900000);</span>
+<span class="nc" id="L159">            }</span>
+        });
+<span class="fc" id="L161">        thirty.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L164">                startTimer(1800000);</span>
+<span class="nc" id="L165">            }</span>
+        });
+<span class="fc" id="L167">        fortyfive.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L170">                startTimer(2700000);</span>
+<span class="nc" id="L171">            }</span>
+        });
+<span class="fc" id="L173">        hour.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L176">                startTimer(3600000);</span>
+<span class="nc" id="L177">            }</span>
+        });
+
+
+        /**
+         * on press the sleep timer bottom sheet expands
+         */
+<span class="fc" id="L184">        turn_of_timer.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L187">                player.cancelTimer();</span>
+<span class="fc" id="L188">                sleepTimer.setState(BottomSheetBehavior.STATE_HIDDEN);</span>
+<span class="fc" id="L189">                toast = Toast.makeText(getApplicationContext(),&quot;Sleep timer is turned off&quot;,Toast.LENGTH_SHORT);</span>
+<span class="fc" id="L190">                toast.show();</span>
+<span class="fc" id="L191">            }</span>
+        });
+
+        /**
+         * on press the add to playlist activity opens
+         */
+
+<span class="fc" id="L198">        settings_add_to_playlist.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L201">                Intent intent = new Intent(MediaPlayerActivity.this, AddToPlaylistActivity.class);</span>
+<span class="pc bpc" id="L202" title="3 of 6 branches missed.">                if(TrackInfo.getInstance().getTrack()!=null &amp;&amp; TrackInfo.getInstance().getTrack().getValue()!=null &amp;&amp;TrackInfo.getInstance().getTrack().getValue().getTrack()!=null){</span>
+<span class="fc" id="L203">                    intent.putExtra(&quot;track_id&quot;, TrackInfo.getInstance().getTrack().getValue().getTrack().getId());</span>
+                }
+                else{
+<span class="nc" id="L206">                    intent.putExtra(&quot;track_id&quot;, &quot;&quot;);</span>
+                }
+<span class="fc" id="L208">                intent.putExtra(&quot;from&quot; , &quot;MediaPlayerActivity&quot;);</span>
+<span class="fc" id="L209">                startActivity(intent);</span>
+<span class="fc" id="L210">            }</span>
+        });
+        //////////////////////////////////////////////////////////////////
+
+<span class="fc" id="L214">        track = TrackInfo.getInstance();</span>
+
+<span class="fc" id="L216">        header.setText(track.getName());</span>
+
+        /////////////////////////////////////Observers//////////////////////////////////
+        /**
+         * observes for any changes in the current track info to update the UI
+         */
+<span class="pc bpc" id="L222" title="1 of 2 branches missed.">        if(track.getTrack()!=null) {</span>
+<span class="fc" id="L223">            track.getTrack().observe(this, new Observer&lt;currentTrack&gt;() {</span>
+                @Override
+                public void onChanged(currentTrack track) {
+<span class="fc" id="L226">                    UpdateUI();</span>
+<span class="fc" id="L227">                }</span>
+            });
+        }
+        /**
+         * observes if there is a track playing to update the pause/play button image
+         */
+
+<span class="fc" id="L234">        track.getIsPlaying().observe(this, new Observer&lt;Boolean&gt;() {</span>
+            @Override
+            public void onChanged(Boolean aBoolean) {
+<span class="fc bfc" id="L237" title="All 2 branches covered.">                if(aBoolean){</span>
+<span class="fc" id="L238">                    play_pause.setImageResource(R.drawable.pause);</span>
+                }
+                else {
+<span class="fc" id="L241">                    play_pause.setImageResource(R.drawable.play);</span>
+                }
+<span class="fc" id="L243">            }</span>
+        });
+        /**
+         * sets the progress bar duration with the current track duration
+         */
+
+<span class="fc" id="L249">        track.getDuration().observe(this, new Observer&lt;Integer&gt;() {</span>
+            @Override
+            public void onChanged(Integer integer) {
+<span class="fc" id="L252">                seek_bar.setMax(integer/1000);</span>
+<span class="fc" id="L253">            }</span>
+        });
+
+        /**
+         * observes if there is a timer set to update the UI
+         */
+<span class="fc" id="L259">        track.getTimerSet().observe(this, new Observer&lt;Boolean&gt;() {</span>
+            @Override
+            public void onChanged(Boolean aBoolean) {
+<span class="fc bfc" id="L262" title="All 2 branches covered.">                if(aBoolean){</span>
+<span class="fc" id="L263">                    timer_image.setImageResource(R.drawable.sleep_timer_activiated);</span>
+<span class="fc" id="L264">                    turn_of_timer.setVisibility(View.VISIBLE);</span>
+                }
+                else{
+<span class="fc" id="L267">                    timer_image.setImageResource(R.drawable.sleep_timer);</span>
+<span class="fc" id="L268">                    turn_of_timer.setVisibility(View.GONE);</span>
+                }
+<span class="fc" id="L270">            }</span>
+        });
+
+        ////////////////////////////////Click Listeners/////////////////////////////////////
+        /**
+         * listener for the back arrow button to close the media player activity
+         */
+<span class="fc" id="L277">        arrow.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L280">                Intent intent = new Intent(getBaseContext(), MainActivity.class);</span>
+<span class="fc" id="L281">                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);</span>
+<span class="fc" id="L282">                startActivity(intent);</span>
+<span class="fc" id="L283">            }</span>
+        });
+        /**
+         * listener for the click on the play/pause button
+         */
+<span class="fc" id="L288">        play_pause.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="pc bpc" id="L291" title="1 of 2 branches missed.">                if(player.getIsPlaying()){</span>
+<span class="fc" id="L292">                    track.setIsPlaying(false);</span>
+<span class="fc" id="L293">                    player.pauseMedia();</span>
+<span class="fc" id="L294">                    play_pause.setImageResource(R.drawable.play);</span>
+                }
+                else{
+<span class="nc" id="L297">                    track.setIsPlaying(true);</span>
+<span class="nc" id="L298">                    player.resumeMedia();</span>
+<span class="nc" id="L299">                    play_pause.setImageResource(R.drawable.pause);</span>
+                }
+<span class="fc" id="L301">            }</span>
+        });
+
+        /**
+         * listener for the click on the next button
+         */
+<span class="fc" id="L307">        next.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L310">                track.setIsPlaying(false);</span>
+<span class="nc" id="L311">                player.next();</span>
+<span class="nc" id="L312">            }</span>
+        });
+        /**
+         * listener for the click on the previous button
+         */
+
+<span class="fc" id="L318">        previous.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L321">                track.setIsPlaying(false);</span>
+<span class="nc" id="L322">                player.previous();</span>
+<span class="nc" id="L323">            }</span>
+        });
+
+        /**
+         * listener for the click on the heart image to like/unlike the track
+         */
+<span class="fc" id="L329">        favorite.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc bfc" id="L332" title="All 2 branches covered.">                if(track.getTrack().getValue().getIsLiked()){</span>
+<span class="fc" id="L333">                    UnLikeTrack(track.getTrack().getValue().getTrack().getId());</span>
+                }
+                else {
+<span class="fc" id="L336">                    LikeTrack(track.getTrack().getValue().getTrack().getId());</span>
+                }
+<span class="fc" id="L338">            }</span>
+        });
+
+        /**
+         * listener for the click on the setting heart image to like/unlike the track
+         */
+<span class="fc" id="L344">        favorite2.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc bfc" id="L347" title="All 2 branches covered.">                if(track.getTrack().getValue().getIsLiked()){</span>
+<span class="fc" id="L348">                    UnLikeTrack(track.getTrack().getValue().getTrack().getId());</span>
+                }
+                else {
+<span class="fc" id="L351">                    LikeTrack(track.getTrack().getValue().getTrack().getId());</span>
+                }
+<span class="fc" id="L353">            }</span>
+        });
+
+
+        /**
+         * UPDATE THE SEEK BAR AND THE START AND END TIME EVERY 100 MILLISECOND
+         */
+<span class="fc" id="L360">        MediaPlayerActivity.this.runOnUiThread(new Runnable() {</span>
+            @Override
+            public void run() {
+<span class="fc bfc" id="L363" title="All 2 branches covered.">                if(player != null){</span>
+<span class="fc" id="L364">                    int mCurrentPosition = player.getCurrentPosition();</span>
+<span class="fc" id="L365">                    int duration = player.getDuration();</span>
+<span class="fc" id="L366">                    seek_bar.setProgress((mCurrentPosition/1000));</span>
+<span class="fc" id="L367">                    start_time.setText(getTimeString(mCurrentPosition));</span>
+<span class="fc" id="L368">                    end_time.setText(getTimeString(duration-mCurrentPosition));</span>
+                }
+<span class="fc" id="L370">                mHandler.postDelayed(this, 100);</span>
+                //mHandler.post(this);
+<span class="fc" id="L372">            }</span>
+        });
+
+
+        /**
+         * SEEK BAR LISTENER TO NAVIGATE THROW THE SONG
+         */
+<span class="fc" id="L379">        seek_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {</span>
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+<span class="pc bpc" id="L382" title="1 of 4 branches missed.">                if(player!=null &amp;&amp; fromUser) {</span>
+<span class="nc" id="L383">                    player.seekTo(progress);</span>
+                }
+<span class="fc" id="L385">            }</span>
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+<span class="nc" id="L388">            }</span>
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+<span class="nc" id="L391">            }</span>
+        });
+
+
+<span class="fc" id="L395">    }</span>
+    /**
+     * sends request to like the current track and on response it updates the heart image
+     * @param trackID
+     */
+
+    private void LikeTrack(String trackID){
+<span class="fc" id="L402">        favorite.setEnabled(false);</span>
+<span class="fc" id="L403">        favorite2.setEnabled(false);</span>
+<span class="fc" id="L404">        Call&lt;Void&gt; call = endPointAPI.LikeTrack(trackID , user.getToken());</span>
+<span class="fc" id="L405">        call.enqueue(new Callback&lt;Void&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;Void&gt; call, Response&lt;Void&gt; response) {
+<span class="fc" id="L408">                favorite.setEnabled(true);</span>
+<span class="fc" id="L409">                favorite2.setEnabled(true);</span>
+<span class="pc bpc" id="L410" title="1 of 2 branches missed.">                if(!response.isSuccessful()){</span>
+<span class="nc" id="L411">                    Toast.makeText(getApplicationContext(),&quot;something went wrong .try again&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L412">                    return;</span>
+                }
+                else {
+<span class="fc" id="L415">                    favorite.setImageResource(R.drawable.like);</span>
+<span class="fc" id="L416">                    favorite2.setImageResource(R.drawable.like);</span>
+<span class="fc" id="L417">                    TrackInfo.getInstance().setIsLiked(true);</span>
+<span class="fc" id="L418">                    track.getTrack().getValue().setIsLiked(true);</span>
+                }
+<span class="fc" id="L420">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;Void&gt; call, Throwable t) {
+<span class="nc" id="L424">                Toast.makeText(getApplicationContext(),&quot;something went wrong .check your internet connection&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L425">                favorite.setEnabled(true);</span>
+<span class="nc" id="L426">                favorite2.setEnabled(true);</span>
+<span class="nc" id="L427">            }</span>
+        });
+<span class="fc" id="L429">    }</span>
+
+    /**
+     * sends request to unlike the current track and on response it updates the heart image
+     * @param trackID
+     */
+
+    private void UnLikeTrack(String trackID){
+<span class="fc" id="L437">        favorite.setEnabled(false);</span>
+<span class="fc" id="L438">        favorite2.setEnabled(false);</span>
+<span class="fc" id="L439">        Call&lt;Void&gt; call = endPointAPI.UNLikeTrack(trackID , user.getToken());</span>
+<span class="fc" id="L440">        call.enqueue(new Callback&lt;Void&gt;() {</span>
+            @Override
+            public void onResponse(Call&lt;Void&gt; call, Response&lt;Void&gt; response) {
+<span class="fc" id="L443">                favorite.setEnabled(true);</span>
+<span class="fc" id="L444">                favorite2.setEnabled(true);</span>
+<span class="pc bpc" id="L445" title="1 of 2 branches missed.">                if(!response.isSuccessful()){</span>
+<span class="nc" id="L446">                    Toast.makeText(getApplicationContext(),&quot;something went wrong .try again&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L447">                    return;</span>
+                }
+                else {
+<span class="fc" id="L450">                    favorite.setImageResource(R.drawable.favorite_border);</span>
+<span class="fc" id="L451">                    favorite2.setImageResource(R.drawable.favorite_border);</span>
+<span class="fc" id="L452">                    TrackInfo.getInstance().setIsLiked(false);</span>
+<span class="fc" id="L453">                    track.getTrack().getValue().setIsLiked(false);</span>
+                }
+<span class="fc" id="L455">            }</span>
+
+            @Override
+            public void onFailure(Call&lt;Void&gt; call, Throwable t) {
+<span class="nc" id="L459">                Toast.makeText(getApplicationContext(),&quot;something went wrong .check your internet connection&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L460">                favorite.setEnabled(true);</span>
+<span class="nc" id="L461">                favorite2.setEnabled(true);</span>
+<span class="nc" id="L462">            }</span>
+        });
+<span class="fc" id="L464">    }</span>
+
+    /**
+     * CONVERTS THE TIME FORMAT FROM MILLISECONDS TO MM:SS
+     * @param millis
+     * @return
+     */
+    private String getTimeString(long millis) {
+<span class="fc" id="L472">        StringBuffer buf = new StringBuffer();</span>
+
+<span class="fc" id="L474">        int minutes = (int) ((millis % (1000 * 60 * 60)) / (1000 * 60));</span>
+<span class="fc" id="L475">        int seconds = (int) (((millis % (1000 * 60 * 60)) % (1000 * 60)) / 1000);</span>
+
+<span class="fc" id="L477">        buf.append(String.format(&quot;%02d&quot;, minutes))</span>
+<span class="fc" id="L478">                .append(&quot;:&quot;)</span>
+<span class="fc" id="L479">                .append(String.format(&quot;%02d&quot;, seconds));</span>
+
+<span class="fc" id="L481">        return buf.toString();</span>
+    }
+
+    /**
+     * bindes the media player service to the activity
+     */
+
+    private void bindService(){
+<span class="fc" id="L489">        Intent serviceIntent1 = new Intent(this , MediaPlayerService.class);</span>
+<span class="fc" id="L490">        bindService(serviceIntent1 , serviceConnection , Context.BIND_AUTO_CREATE);</span>
+
+<span class="fc" id="L492">    }</span>
+
+    /**
+     * get a color that from the image and set the background with that color
+     * @param v  the image view
+     * @param put  the background's layout
+     */
+    void getPaletteAndSetBackgroundColor(ImageView v , final LinearLayout put){
+<span class="fc" id="L500">        Bitmap bitmap = ((BitmapDrawable) v.getDrawable()).getBitmap();</span>
+
+<span class="fc" id="L502">        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {</span>
+            @Override
+            public void onGenerated(Palette palette) {
+<span class="pc bpc" id="L505" title="1 of 2 branches missed.">                if(palette.getMutedSwatch() != null){</span>
+<span class="fc" id="L506">                    GradientDrawable gd = new GradientDrawable(</span>
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+<span class="fc" id="L508">                            new int[] {palette.getMutedSwatch().getRgb(),0xFF000000});</span>
+<span class="fc" id="L509">                    gd.setCornerRadius(0f);</span>
+<span class="fc" id="L510">                    put.setBackgroundDrawable( gd);</span>
+<span class="fc" id="L511">                }</span>
+<span class="nc bnc" id="L512" title="All 2 branches missed.">                else if( palette.getDarkVibrantSwatch() != null){</span>
+<span class="nc" id="L513">                    GradientDrawable gd = new GradientDrawable(</span>
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+<span class="nc" id="L515">                            new int[] {palette.getDarkVibrantSwatch().getRgb(),0xFF000000});</span>
+<span class="nc" id="L516">                    gd.setCornerRadius(0f);</span>
+<span class="nc" id="L517">                    put.setBackgroundDrawable( gd);</span>
+<span class="nc" id="L518">                }</span>
+<span class="nc bnc" id="L519" title="All 2 branches missed.">                else if(palette.getLightMutedSwatch() != null) {</span>
+<span class="nc" id="L520">                    GradientDrawable gd = new GradientDrawable(</span>
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+<span class="nc" id="L522">                            new int[] {palette.getLightMutedSwatch().getRgb(),0xFF000000});</span>
+<span class="nc" id="L523">                    gd.setCornerRadius(0f);</span>
+<span class="nc" id="L524">                    put.setBackgroundDrawable( gd);</span>
+<span class="nc" id="L525">                }</span>
+<span class="nc bnc" id="L526" title="All 2 branches missed.">                else if(palette.getDarkMutedSwatch() != null){</span>
+<span class="nc" id="L527">                    GradientDrawable gd = new GradientDrawable(</span>
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+<span class="nc" id="L529">                            new int[] {palette.getDarkMutedSwatch().getRgb(),0xFF000000});</span>
+<span class="nc" id="L530">                    gd.setCornerRadius(0f);</span>
+<span class="nc" id="L531">                    put.setBackgroundDrawable( gd);</span>
+<span class="nc" id="L532">                }</span>
+<span class="nc bnc" id="L533" title="All 2 branches missed.">                else if(palette.getLightVibrantSwatch() != null){</span>
+<span class="nc" id="L534">                    GradientDrawable gd = new GradientDrawable(</span>
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+<span class="nc" id="L536">                            new int[] {palette.getLightVibrantSwatch().getRgb(),0xFF000000});</span>
+<span class="nc" id="L537">                    gd.setCornerRadius(0f);</span>
+<span class="nc" id="L538">                    put.setBackgroundDrawable( gd);</span>
+<span class="nc" id="L539">                }</span>
+<span class="nc bnc" id="L540" title="All 2 branches missed.">                else if(palette.getVibrantSwatch()!=null){</span>
+<span class="nc" id="L541">                    GradientDrawable gd = new GradientDrawable(</span>
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+<span class="nc" id="L543">                            new int[] {palette.getVibrantSwatch().getRgb(),0xFF000000});</span>
+<span class="nc" id="L544">                    gd.setCornerRadius(0f);</span>
+<span class="nc" id="L545">                    put.setBackgroundDrawable( gd);</span>
+                }
+<span class="fc" id="L547">            }</span>
+        });
+<span class="fc" id="L549">    }</span>
+
+    /**
+     * updates the media player activity's UI
+     */
+    void UpdateUI(){
+<span class="fc" id="L555">        String trackName = &quot;&quot;;</span>
+<span class="pc bpc" id="L556" title="1 of 2 branches missed.">        if(track.getTrack().getValue().getTrack()!=null) {</span>
+<span class="fc" id="L557">            trackName = track.getTrack().getValue().getTrack().getName();</span>
+        }
+<span class="fc" id="L559">        song_name.setText(trackName);</span>
+<span class="fc" id="L560">        setting_song_name.setText(trackName);</span>
+
+<span class="fc" id="L562">        String artistName = &quot;&quot;;</span>
+<span class="pc bpc" id="L563" title="3 of 6 branches missed.">        if(track.getTrack().getValue().getAlbum()!=null &amp;&amp; track.getTrack().getValue().getAlbum().getArtist()!=null &amp;&amp; track.getTrack().getValue().getTrack()!=null){</span>
+<span class="fc" id="L564">            artistName = track.getTrack().getValue().getAlbum().getArtist().getName();</span>
+        }
+<span class="fc" id="L566">        song_artist.setText(artistName);</span>
+<span class="fc" id="L567">        setting_artist_id.setText(artistName);</span>
+
+
+<span class="fc" id="L570">        playlist_name.setText(track.getTrack().getValue().getAlbum().getName());</span>
+<span class="fc" id="L571">        header.setText(&quot;PLAYING SONG&quot;);</span>
+
+
+<span class="fc" id="L574">        List&lt;ImageInfo&gt; images= track.getTrack().getValue().getTrack().getImages();</span>
+<span class="fc" id="L575">        String imageID = &quot;12d&quot;;</span>
+<span class="pc bpc" id="L576" title="2 of 4 branches missed.">        if(images !=null&amp;&amp; images.size() !=0){</span>
+<span class="fc" id="L577">             imageID = images.get(0).getID();</span>
+        }
+<span class="fc" id="L579">        final String Imageurl = Retrofit.getInstance().getBaseurl() + &quot;api/images/&quot; + imageID + &quot;?belongs_to=track&quot;;</span>
+<span class="fc" id="L580">        Picasso.get().load(Imageurl).into(song_image, new com.squareup.picasso.Callback() {</span>
+            @Override
+            public void onSuccess() {
+                //song_image.setImageResource(R.drawable.testimage2);
+<span class="fc" id="L584">                getPaletteAndSetBackgroundColor(song_image , activity_views_container);</span>
+<span class="fc" id="L585">            }</span>
+
+            @Override
+            public void onError(Exception e) {
+<span class="nc" id="L589">                Picasso.get().load(Imageurl).into(song_image, new com.squareup.picasso.Callback() {</span>
+                    @Override
+                    public void onSuccess() {
+<span class="nc" id="L592">                        getPaletteAndSetBackgroundColor(song_image , activity_views_container);</span>
+<span class="nc" id="L593">                    }</span>
+
+                    @Override
+                    public void onError(Exception e) {
+<span class="nc" id="L597">                        song_image.setImageResource(R.drawable.ic_smile1);</span>
+<span class="nc" id="L598">                    }</span>
+                });
+<span class="nc" id="L600">            }</span>
+        });
+
+
+<span class="fc" id="L604">        Picasso.get().load(Imageurl).into(setting_image, new com.squareup.picasso.Callback() {</span>
+            @Override
+            public void onSuccess() {
+<span class="fc" id="L607">                getPaletteAndSetBackgroundColor(setting_image , setting_container);</span>
+<span class="fc" id="L608">            }</span>
+
+            @Override
+            public void onError(Exception e) {
+<span class="nc" id="L612">                Picasso.get().load(Imageurl).into(setting_image, new com.squareup.picasso.Callback() {</span>
+                    @Override
+                    public void onSuccess() {
+<span class="nc" id="L615">                        getPaletteAndSetBackgroundColor(setting_image , setting_container);</span>
+<span class="nc" id="L616">                    }</span>
+
+                    @Override
+                    public void onError(Exception e) {
+<span class="nc" id="L620">                        setting_image.setImageResource(R.drawable.ic_smile1);</span>
+<span class="nc" id="L621">                    }</span>
+                });
+<span class="nc" id="L623">            }</span>
+        });
+
+<span class="fc bfc" id="L626" title="All 2 branches covered.">        if(track.getTrack().getValue().getIsLiked()){</span>
+<span class="fc" id="L627">            favorite.setImageResource(R.drawable.like);</span>
+<span class="fc" id="L628">            favorite2.setImageResource(R.drawable.like);</span>
+        }
+        else{
+<span class="fc" id="L631">            favorite.setImageResource(R.drawable.favorite_border);</span>
+<span class="fc" id="L632">            favorite2.setImageResource(R.drawable.favorite_border);</span>
+        }
+<span class="fc" id="L634">    }</span>
+
+    /**
+     * sets the expand and collapse behavior of the song settings fragment
+     */
+    void setSheetBehavior(){
+<span class="fc" id="L640">        sheetBehavior.setHideable(true);</span>
+<span class="fc" id="L641">        sheetBehavior.setPeekHeight(0);</span>
+<span class="fc" id="L642">        sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);</span>
+<span class="fc" id="L643">        song_settings_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="pc bpc" id="L646" title="1 of 2 branches missed.">                if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {</span>
+<span class="fc" id="L647">                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);</span>
+
+                } else {
+<span class="nc" id="L650">                    sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);</span>
+                }
+<span class="fc" id="L652">            }</span>
+        });
+<span class="fc" id="L654">        settings_upper_relative_layout.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc bnc" id="L657" title="All 2 branches missed.">                if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {</span>
+<span class="nc" id="L658">                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);</span>
+
+                } else {
+<span class="nc" id="L661">                    sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);</span>
+                }
+<span class="nc" id="L663">            }</span>
+        });
+
+<span class="fc" id="L666">        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {</span>
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+<span class="fc bfc" id="L669" title="All 2 branches covered.">                if (newState == BottomSheetBehavior.STATE_DRAGGING) {</span>
+<span class="fc" id="L670">                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);</span>
+                }
+<span class="fc" id="L672">            }</span>
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+<span class="fc" id="L676">            }</span>
+        });
+<span class="fc" id="L678">    }</span>
+
+    /**
+     * sets the expand and collapse behavior of the sleep timer fragment
+     */
+    void setSleepTimerBehaviour(){
+<span class="fc" id="L684">        sleepTimer.setHideable(true);</span>
+<span class="fc" id="L685">        sleepTimer.setPeekHeight(0);</span>
+<span class="fc" id="L686">        sleepTimer.setState(BottomSheetBehavior.STATE_HIDDEN);</span>
+<span class="fc" id="L687">        sleep.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="pc bpc" id="L690" title="1 of 2 branches missed.">                if (sleepTimer.getState() != BottomSheetBehavior.STATE_EXPANDED) {</span>
+<span class="fc" id="L691">                    sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);</span>
+<span class="fc" id="L692">                    sleepTimer.setState(BottomSheetBehavior.STATE_EXPANDED);</span>
+
+                } else {
+<span class="nc" id="L695">                    sleepTimer.setState(BottomSheetBehavior.STATE_HIDDEN);</span>
+                }
+<span class="fc" id="L697">            }</span>
+        });
+
+<span class="fc" id="L700">        sleep_sheet_hider.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L703">                sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);</span>
+<span class="nc" id="L704">                sleepTimer.setState(BottomSheetBehavior.STATE_HIDDEN);</span>
+<span class="nc" id="L705">            }</span>
+        });
+
+<span class="fc" id="L708">        sleepTimer.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {</span>
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+<span class="pc bpc" id="L711" title="1 of 2 branches missed.">                if (newState == BottomSheetBehavior.STATE_DRAGGING) {</span>
+<span class="nc" id="L712">                    sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);</span>
+                }
+<span class="fc" id="L714">            }</span>
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+<span class="fc" id="L718">            }</span>
+        });
+<span class="fc" id="L720">    }</span>
+
+    /**
+     * gets all the views i will use
+     */
+    private void getViews(){
+<span class="fc" id="L726">        top_layout = (RelativeLayout)findViewById(R.id.top_layout);</span>
+<span class="fc" id="L727">        song_name = (TextView)findViewById(R.id.song_name);</span>
+<span class="fc" id="L728">        song_artist = (TextView)findViewById(R.id.song_artist);</span>
+<span class="fc" id="L729">        song_image = (ImageView) findViewById(R.id.song_image);</span>
+<span class="fc" id="L730">        playlist_name = (TextView)findViewById(R.id.playlist_name);</span>
+<span class="fc" id="L731">        header = (TextView)findViewById(R.id.header);</span>
+<span class="fc" id="L732">        play_pause=(ImageView) findViewById(R.id.play);</span>
+<span class="fc" id="L733">        seek_bar = (SeekBar)findViewById(R.id.seek_bar);</span>
+<span class="fc" id="L734">        start_time = (TextView)findViewById(R.id.start_time);</span>
+<span class="fc" id="L735">        end_time = (TextView)findViewById(R.id.end_time);</span>
+<span class="fc" id="L736">        next = (ImageView)findViewById(R.id.next);</span>
+<span class="fc" id="L737">        previous = (ImageView)findViewById(R.id.previous);</span>
+<span class="fc" id="L738">        arrow = (ImageView) findViewById(R.id.arrow);</span>
+<span class="fc" id="L739">        song_settings = (ConstraintLayout)findViewById(R.id.song_settings);</span>
+<span class="fc" id="L740">        sleep_timer = (ConstraintLayout)findViewById(R.id.sleep_timer);</span>
+<span class="fc" id="L741">        song_settings_button = (ImageView)findViewById(R.id.song_settings_button);</span>
+<span class="fc" id="L742">        sleep = (LinearLayout)findViewById(R.id.sleep);</span>
+<span class="fc" id="L743">        settings_like = (LinearLayout)findViewById(R.id.settings_like);</span>
+<span class="fc" id="L744">        settings_add_to_playlist = (LinearLayout)findViewById(R.id.settings_add_to_playlist);</span>
+<span class="fc" id="L745">        view_artist = (LinearLayout)findViewById(R.id.view_artist);</span>
+<span class="fc" id="L746">        sleep_sheet_hider = (RelativeLayout)findViewById(R.id.sleep_sheet_hider);</span>
+<span class="fc" id="L747">        timer_image = (ImageView)findViewById(R.id.timer_image);</span>
+<span class="fc" id="L748">        five = (Button)findViewById(R.id.five);</span>
+<span class="fc" id="L749">        ten = (LinearLayout)findViewById(R.id.ten_minutes);</span>
+<span class="fc" id="L750">        fifteen = (LinearLayout)findViewById(R.id.fifteen_minutes);</span>
+<span class="fc" id="L751">        thirty = (LinearLayout)findViewById(R.id.thirty_minutes);</span>
+<span class="fc" id="L752">        fortyfive = (LinearLayout)findViewById(R.id.fortyfive_inutes);</span>
+<span class="fc" id="L753">        hour = (LinearLayout)findViewById(R.id.hour);</span>
+<span class="fc" id="L754">        end_of_track = (LinearLayout)findViewById(R.id.end_of_track);</span>
+<span class="fc" id="L755">        turn_of_timer = (LinearLayout)findViewById(R.id.turn_of_timer);</span>
+<span class="fc" id="L756">        setting_image = (ImageView)findViewById(R.id.setting_image);</span>
+<span class="fc" id="L757">        setting_song_name = (TextView)findViewById(R.id.setting_song_name);</span>
+<span class="fc" id="L758">        setting_artist_id = (TextView)findViewById(R.id.setting_artist_id);</span>
+<span class="fc" id="L759">        settings_upper_relative_layout = (RelativeLayout)findViewById(R.id.settings_upper_relative_layout);</span>
+<span class="fc" id="L760">        favorite = (ImageView)findViewById(R.id.favorite);</span>
+<span class="fc" id="L761">        favorite2 = (ImageView)findViewById(R.id.favorite2);</span>
+<span class="fc" id="L762">        activity_views_container = (LinearLayout)findViewById(R.id.activity_views_container);</span>
+<span class="fc" id="L763">        setting_container = (LinearLayout)findViewById(R.id.setting_container);</span>
+
+<span class="fc" id="L765">    }</span>
+
+    /**
+     * starts the sleep timer
+     * takes the time in milliseconds
+     * @param milliSeconds
+     */
+
+    void startTimer(long milliSeconds){
+<span class="fc" id="L774">        player.startTimer(milliSeconds);   //3 seconds</span>
+<span class="fc" id="L775">        sleepTimer.setState(BottomSheetBehavior.STATE_HIDDEN);</span>
+<span class="fc" id="L776">        toast = Toast.makeText(getApplicationContext(),&quot;Your sleep timer is set&quot;,Toast.LENGTH_SHORT);</span>
+<span class="fc" id="L777">        toast.show();</span>
+<span class="fc" id="L778">    }</span>
+
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+<span class="fc" id="L783">        super.onSaveInstanceState(outState);</span>
+<span class="fc" id="L784">    }</span>
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+<span class="nc" id="L788">        super.onRestoreInstanceState(savedInstanceState);</span>
+<span class="nc" id="L789">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

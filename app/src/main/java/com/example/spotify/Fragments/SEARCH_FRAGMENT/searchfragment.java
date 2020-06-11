@@ -24,6 +24,7 @@ import com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT.searchListfragment;
 import com.example.spotify.Interfaces.backinterfaces;
 import com.example.spotify.BackClasses.Backclasses.backcategory.Category;
 import com.example.spotify.R;
+import com.example.spotify.login.user;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,22 +39,29 @@ import retrofit2.Retrofit;
  * to handle interaction events.
  * create an instance of this fragment.
  */
-public class searchfragment extends Fragment implements LifecycleOwner {
+public class searchfragment extends Fragment implements LifecycleOwner
+{
     Category CategoriesList;
     RecyclerView recyclerView;
     adapterCategories recyclerAdapter;
     private TextView textViewResult;
     ImageView searchimg;
-    private viewmodelSearch searchViewmodel;
 
+    /**
+     *
+     * @param inflater -->layout for this fragment
+     * @param container -->ViewGroup that contain layout of the fragment(linear layout)
+     * @param savedInstanceState -->saved object needed before calling the fragment (type of storage)
+     *
+     * @return -->view of this fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+                             Bundle savedInstanceState)
+    {
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_searchfragment, container, false);
-        searchViewmodel = ViewModelProviders.of((MainActivity) getActivity()).get(viewmodelSearch.class);
         final TextView textView = view.findViewById(R.id.text_setting);
         searchimg = view.findViewById(R.id.searchImg);
         textViewResult = view.findViewById(R.id.textcategor);
@@ -63,79 +71,102 @@ public class searchfragment extends Fragment implements LifecycleOwner {
         LinearLayoutManager layoutManager;
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-
         SetRetrofit();
-
+        /**
+         * a listener for change in searchimage
+         */
         searchimg.setOnClickListener(new View.OnClickListener() {
+            /**
+             *
+             * @param view --> current layout
+             * go to next fragments
+             */
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 // Create new fragment and transaction
                 Fragment newFragment = new searchListfragment();
                 // consider using Java coding conventions (upper first char class names!!!)
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
                 // Replace whatever is in the fragment_container view with this fragment,
-                // and add the transaction to the back stack
                 transaction.replace(R.id.frame_fragment, newFragment);
+                // and add the transaction to the back stack
                 transaction.addToBackStack(null);
-
                 // Commit the transaction
                 transaction.commit();
             }
 
         });
 
-
         return view;
 
     }
-
-
     ////*******************************Retrofit****************************////
-    private void SetRetrofit() {
+    /**
+     * Set the retrofit function
+     */
+    private void SetRetrofit()
+    {
+
         Retrofit retrofit = com.example.spotify.Interfaces.Retrofit.getInstance().getRetrofit();
         backinterfaces apiService = retrofit.create(backinterfaces.class);
-        Call<Category> call = apiService.getCategories("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTgwYzZhZjE0Yzg1NjZkNmNkOWI0MDAiLCJwcm9kdWN0IjoiZnJlZSIsInVzZXJUeXBlIjoiQXJ0aXN0IiwiaWF0IjoxNTg2MDI2NjAyLCJleHAiOjQ3MzI1MTMwMDJ9.ztEjNCgbkyJ2-9WB6ojwLgDfhWsZ-ZGJVFUB8dYMz8s");
-        call.enqueue(new Callback<Category>() {
+        Call<Category> call = apiService.getCategories(user.getToken());
+        call.enqueue(new Callback<Category>()
+        {
+
+            /**
+             *
+             * @param call --> interface request
+             * @param response --> interface response
+             * called when every changed requests and set the data
+             */
             @Override
-            public void onResponse(Call<Category> call, Response<Category> response) {
+            public void onResponse(Call<Category> call, Response<Category> response)
+            {
+                //error in the server
                 if (response.code() == 401)
                     textViewResult.setText(response.errorBody().toString() + "401");
-                else if (!response.isSuccessful()) {
+                //may internet disconnected
+                else if (!response.isSuccessful())
+                {
                     textViewResult.setText("Code: " + response.code());
                     return;
                 }
+                //if responcse is successful and the server send response
                 CategoriesList = response.body();
+                //error in GET request url
                 if (response.body() == null)
                     textViewResult.setText("responce body = null");
+                //error in binding interface
                 else if (CategoriesList == null)
-                    textViewResult.setText(response.body().toString() + " track = null");
-                else {
+                    textViewResult.setText(response.body().toString() + " CategoriesList = null");
+                //Successful
+                else
+                    {
                     Log.d("TAG", "Response = " + CategoriesList);
                     recyclerAdapter = new adapterCategories(getActivity(), CategoriesList.getCategories());
                     recyclerView.setAdapter(recyclerAdapter);
                     recyclerView.setHasFixedSize(true);
-                }
+                    }
 
             }
-
+            /**
+             *
+             * @param call -->interface request
+             * @param t -->type of error of the request
+             * called when every errored requests and set its type
+             */
             @Override
-            public void onFailure(Call<Category> call, Throwable t) {
-                textViewResult.setText(t.getMessage() + "failed");
+            public void onFailure(Call<Category> call, Throwable t)
+            {
+                textViewResult.setText("Failed to connect to server");
             }
         });
 
 
     }
 
-    /*
-    @NonNull
-    @Override
-    public Lifecycle getLifecycle() {
-        return null;
-    }
 
-     */
 
 
 }

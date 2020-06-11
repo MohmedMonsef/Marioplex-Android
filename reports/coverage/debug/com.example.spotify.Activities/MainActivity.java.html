@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MainActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.Activities</a> &gt; <span class="el_source">MainActivity.java</span></div><h1>MainActivity.java</h1><pre class="source lang-java linenums">package com.example.spotify.Activities;
+
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
+
+import com.example.spotify.Fragments.HOME_FRAGMENT.backhome;
+import com.example.spotify.Fragments.LIBRARY_FRAGMENT.libraryFragment;
+import com.example.spotify.Fragments.PREMIUM_FRAGMENT.premiumFragment;
+import com.example.spotify.Fragments.SEARCH_FRAGMENT.searchfragment;
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.R;
+import com.example.spotify.login.user;
+import com.example.spotify.media.MediaPlayerService;
+import com.example.spotify.media.TrackInfo;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import retrofit2.Retrofit;
+
+<span class="fc" id="L32">public class MainActivity extends AppCompatActivity {</span>
+
+    private TrackInfo track;
+    private MediaPlayerService player;
+    private FrameLayout bottom_sheet_frame_layout;
+<span class="fc" id="L37">    boolean serviceBound = false;</span>
+    static Retrofit retrofit;
+    static EndPointAPI endPointAPI;
+
+    /**
+     * @param savedInstanceState --&gt; a bundle that load the needed object
+     *                           one of the life cycle step of the activity when it is ready
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L47">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L48">        setContentView(R.layout.activity_main);</span>
+        ////*******************************BottomNavigation***********************////
+<span class="fc" id="L50">        LoadToken();</span>
+
+<span class="fc" id="L52">        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);</span>
+<span class="fc" id="L53">        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);</span>
+<span class="fc" id="L54">        loadFragment(new backhome());// start the main activity with home fragment</span>
+        //get instance from the singleton class and start the service
+<span class="fc" id="L56">        track = TrackInfo.getInstance();</span>
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">        if (!serviceBound) {</span>
+<span class="fc" id="L58">            startService();</span>
+        }
+        //hides bottom sheet  if there is no queue created yet
+<span class="fc" id="L61">        HideBottomSheet();</span>
+
+<span class="fc" id="L63">        endPointAPI = com.example.spotify.Interfaces.Retrofit.getInstance().getEndPointAPI();</span>
+
+<span class="fc" id="L65">    }</span>
+
+    /**
+     * @param fragment --&gt;it is fragment that i go to
+     *                 transfer between the fragments
+     */
+    public void loadFragment(Fragment fragment) {
+        // create a FragmentManager
+<span class="fc" id="L73">        FragmentManager fm = getSupportFragmentManager();</span>
+        // create a FragmentTransaction to begin the transaction and replace the Fragment
+<span class="fc" id="L75">        FragmentTransaction fragmentTransaction = fm.beginTransaction();</span>
+        // replace the FrameLayout with new Fragment
+<span class="fc" id="L77">        fragmentTransaction.replace(R.id.frame_fragment, fragment);</span>
+        // save the changes
+<span class="fc" id="L79">        fragmentTransaction.commit();</span>
+<span class="fc" id="L80">    }</span>
+
+    /**
+     * a listener on the navigation bar
+     * when a button is pressed it call the selected fragment from
+     * {backhome,
+     * searchfragment
+     * libraryFragment
+     * premiumFragment
+     * }
+     */
+<span class="fc" id="L91">    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener</span>
+<span class="fc" id="L92">            = new BottomNavigationView.OnNavigationItemSelectedListener() {</span>
+        /**
+         *
+         * @param item --&gt; the pressed button
+         * when a button in the navigation bar is pressed it call the selected fragment from
+         * {
+         * backhome,
+         * searchfragment
+         * libraryFragment
+         * premiumFragment
+         *  }
+         * @return true if fragment calling succeeded and false if there is an error
+         */
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+<span class="pc bpc" id="L107" title="1 of 5 branches missed.">            switch (item.getItemId()) {</span>
+                case R.id.navigation_home:
+<span class="fc" id="L109">                    loadFragment(new backhome());</span>
+<span class="fc" id="L110">                    return true;</span>
+                case R.id.navigation_search:
+<span class="fc" id="L112">                    loadFragment(new searchfragment());</span>
+<span class="fc" id="L113">                    return true;</span>
+                case R.id.navigation_library:
+<span class="fc" id="L115">                    loadFragment(new libraryFragment());</span>
+<span class="fc" id="L116">                    return true;</span>
+                case R.id.navigation_premium:
+<span class="fc" id="L118">                    loadFragment(new premiumFragment());</span>
+<span class="fc" id="L119">                    return true;</span>
+            }
+<span class="nc" id="L121">            return false;</span>
+        }
+    };
+
+    void HideBottomSheet() {
+<span class="fc" id="L126">        bottom_sheet_frame_layout = findViewById(R.id.bottom_sheet_frame_layout);</span>
+<span class="fc" id="L127">        track.getIsQueue().observe(this, new Observer&lt;Boolean&gt;() {</span>
+            @Override
+            public void onChanged(Boolean aBoolean) {
+<span class="fc bfc" id="L130" title="All 2 branches covered.">                if (!aBoolean) {</span>
+<span class="fc" id="L131">                    bottom_sheet_frame_layout.setVisibility(View.GONE);</span>
+                } else {
+<span class="fc" id="L133">                    bottom_sheet_frame_layout.setVisibility(View.VISIBLE);</span>
+                }
+<span class="fc" id="L135">            }</span>
+        });
+<span class="fc" id="L137">    }</span>
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+<span class="fc" id="L141">        outState.putBoolean(&quot;ServiceState&quot;, serviceBound);</span>
+<span class="fc" id="L142">        super.onSaveInstanceState(outState);</span>
+<span class="fc" id="L143">    }</span>
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+<span class="nc" id="L147">        super.onRestoreInstanceState(savedInstanceState);</span>
+<span class="nc" id="L148">        serviceBound = savedInstanceState.getBoolean(&quot;ServiceState&quot;);</span>
+<span class="nc" id="L149">    }</span>
+
+    private void startService() {
+<span class="fc" id="L152">        Intent serviceIntent = new Intent(this, MediaPlayerService.class);</span>
+        // serviceIntent.putExtra(&quot;media&quot; , media);
+<span class="fc" id="L154">        startService(serviceIntent);</span>
+<span class="fc" id="L155">    }</span>
+    private void LoadToken(){
+<span class="fc" id="L157">        SharedPreferences sharedPreferences = getSharedPreferences(&quot;token&quot;, Context.MODE_PRIVATE);</span>
+<span class="fc" id="L158">        String token = sharedPreferences.getString(&quot;token&quot;, null);</span>
+<span class="fc" id="L159">        user.setToken(token);</span>
+<span class="fc" id="L160">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

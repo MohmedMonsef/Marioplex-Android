@@ -4,6 +4,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.LayoutInflater;
@@ -20,9 +23,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.palette.graphics.Palette;
 
 import com.example.spotify.Activities.PlaylistPreviewActivity;
+import com.example.spotify.Constants;
 import com.example.spotify.Fragments.HOME_FRAGMENT.backhome;
+import com.example.spotify.Fragments.LIBRARY_FRAGMENT.libraryFragment;
+import com.example.spotify.Fragments.SEARCH_FRAGMENT.searchfragment;
+import com.example.spotify.Fragments.SEARCH_LIST_FRAGMENT.searchListfragment;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
@@ -30,6 +38,7 @@ import com.example.spotify.login.user;
 import com.example.spotify.media.MediaPlayerService;
 import com.example.spotify.media.TrackInfo;
 import com.example.spotify.pojo.BasicTrack;
+import com.example.spotify.pojo.ImageInfo;
 import com.example.spotify.pojo.PlaylistTracks;
 import com.example.spotify.pojo.currentTrack;
 import com.squareup.picasso.Picasso;
@@ -65,6 +74,7 @@ public class PlaylistFragment extends Fragment {
     private String CurrentTrackID = "";
     private int CurrentTrackPosInPlaylist;
     private Boolean serviceBound = false;
+    String from = "";
 
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -74,8 +84,6 @@ public class PlaylistFragment extends Fragment {
             MediaPlayerService.LocalBinder binder = (MediaPlayerService.LocalBinder) service;
             player = binder.getservice();
             serviceBound = true;
-
-            //   Toast.makeText(getContext(), "Service Bound", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -88,27 +96,54 @@ public class PlaylistFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_playlist,container,false);
+        final View root = inflater.inflate(R.layout.fragment_playlist, container, false);
         ////////////////////get playlist id from the bundle\\\\\\\\\\\\\\\\\\\\\\\\
         playlistID = getArguments().getString("playlistID");
-
+        from = getArguments().getString("from");
+        if (from == null) {
+            from = "";
+        }
         /////////////////////get all the views i will use/////////////////////////
         getViews(root);
-
         //////////////////////Bind the service\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         bindService();
-
         /////////////////////some listeners\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        /**
+         * when pressed the activity closes
+         */
         back_arrow_playlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ////////////////return to my home fragment\\\\\\\\\\\\\\\\\\\\\
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_fragment,new backhome())
-                        .addToBackStack(null)
-                        .commit();
+                if (from.equals("Playlist_library")) {
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.frame_fragment, new libraryFragment())
+                            .addToBackStack(null)
+                            .commit();
+                } else if (from.equals("search")) {
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.frame_fragment, new searchListfragment())
+                            .addToBackStack(null)
+                            .commit();
+                } else if (from.equals("searchfrag1")) {
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.frame_fragment, new searchfragment())
+                            .addToBackStack(null)
+                            .commit();
+                } else {
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.frame_fragment, new backhome())
+                            .addToBackStack(null)
+                            .commit();
+                }
+
+
             }
         });
+        /**
+         * listener for the preview button
+         * on click the preview activity opens
+         */
 
         preview_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,6 +152,10 @@ public class PlaylistFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        /**
+         * listener for the track names text
+         * on press the preview activity opens
+         */
 
         artist_name_song_name_playlist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,47 +164,51 @@ public class PlaylistFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        /**
+         * listener for the shuffle play button and on press it sends a request to turn on the shuffle mode
+         */
 
         shuffle_play_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(CheckTrackInPlaylist()){
-                    if(player.getIsPlaying()){
+                if (CheckTrackInPlaylist()) {
+                    if (player.getIsPlaying()) {
                         TrackInfo.getInstance().setIsPlaying(false);
                         player.pauseMedia();
                         shuffle_play_button.setText("shuffle play");
-                    }
-                    else{
+                    } else {
                         TrackInfo.getInstance().setIsPlaying(true);
                         player.resumeMedia();
                         shuffle_play_button.setText("pause");
                     }
-                }
-                else if(playlistTracks !=null && playlistTracks.getTracks()!=null && playlistTracks.getTracks().size()!=0){
-                    if(TrackInfo.getInstance().getIsQueue()!=null&& TrackInfo.getInstance().getIsQueue().getValue()){
-                        shuffleTracks();
-                    }
-                    else{
+                } else if (playlistTracks != null && playlistTracks.getTracks() != null && playlistTracks.getTracks().size() != 0) {
+                    if (playlistTracks.getTracks().get(0).getPlayable()) {
                         CreateQueue(playlistTracks.getTracks().get(0).getTrackid());
+                    } else {
+                        Toast.makeText(getContext(), "migrate to premium to be able to listen to this track", Toast.LENGTH_SHORT).show();
                     }
+                }
+
+            }
+        });
+
+        /**
+         * listener for the like button to follow/unfollow the playlist
+         */
+        like_playlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (playlistTracks.getIsLiked()) {
+                    unLikePlaylist();
+                } else {
+                    LikePlaylist();
                 }
             }
         });
 
-        //TODO till the make makes it
-
-//        like_playlist.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(playlistTracks.getIsLiked()) {
-//                    unLikePlaylist();
-//                }
-//                else{
-//                    LikePlaylist();
-//                }
-//            }
-//        });
-
+        /**
+         * requests the get current playlist info requests if something goes wrong
+         */
         something_wrong_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,20 +222,21 @@ public class PlaylistFragment extends Fragment {
         });
 
         ///////////////////////////observers\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        /**
+         * updates the shuffle play button text with pause if the track is playing and with shuffle play if the track is paused
+         */
         TrackInfo.getInstance().getIsPlaying().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if(playlistTracks!=null && CheckTrackInPlaylist()){
-                    if(aBoolean){
+                if (playlistTracks != null && CheckTrackInPlaylist()) {
+                    if (aBoolean) {
                         shuffle_play_button.setText("pause");
-                    }
-                    else{
+                    } else {
                         shuffle_play_button.setText("shuffle play");
                     }
                 }
             }
         });
-
 
 
         //////////////////////////show progress bar\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -202,48 +246,61 @@ public class PlaylistFragment extends Fragment {
         /////////////////////////get Plsylist's tracks information\\\\\\\\\\\\\\\\\\\\\\\
         GetPlaylistTracksInfo(playlistID);
 
+        root.findViewById(R.id.share_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = Constants.FRONTEND_BASE_URL + "HomeWebPlayer/playlist/" + playlistID;
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, url);
+                sendIntent.setType("text/plain");
 
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(shareIntent);
+            }
+        });
 
         return root;
     }
 
-    void CreateQueue(String trackID){
-        Call<Void> call = endPointAPI.CreateQueue(playlistID , trackID , true , user.getToken());
+    /**
+     * send a request to create queue of the current playlist's tracks and takes a track id and sets it as the current track
+     *
+     * @param trackID
+     */
+    void CreateQueue(String trackID) {
+        Call<Void> call = endPointAPI.CreateQueue(playlistID, trackID, true, user.getToken());
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if(!response.isSuccessful()){
-                    Toast.makeText(getContext(),"Code: "+response.code(),Toast.LENGTH_SHORT).show();
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getContext(), "something went wrong while creating the queue. try again.", Toast.LENGTH_SHORT).show();
                     return;
-                }
-//                else if(response.body()==null){
-//                    Toast.makeText(getContext(),"response body = null",Toast.LENGTH_SHORT).show();
-//                }
-                else {
+                } else {
                     shuffleTracks();
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getContext(),t.getMessage()+" ' failed '",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "something went wrong while creating the queue.check your internet connection.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    void shuffleTracks(){
-        Call<Void> call = endPointAPI.toggleShuffle(true , user.getToken());
+    /**
+     * send a request to turn on the shuffle mode and to play a random track from the playlist
+     */
+
+    void shuffleTracks() {
+        Call<Void> call = endPointAPI.toggleShuffle(true, user.getToken());
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if(!response.isSuccessful()){
-                    Toast.makeText(getContext(),"Code: "+response.code(),Toast.LENGTH_SHORT).show();
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getContext(), "something went wrong . try again.", Toast.LENGTH_SHORT).show();
                     return;
-                }
-//                else if(response.body()==null){
-//                    Toast.makeText(getContext(),"response body = null",Toast.LENGTH_SHORT).show();
-//                }
-                else {
+                } else {
                     ///////call mediaplayer get current playing \\\\\\\\\\
                     Call<currentTrack> call1 = endPointAPI.getNext(user.getToken());
                     player.playCurrentTrack(call1);
@@ -252,41 +309,40 @@ public class PlaylistFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getContext(),t.getMessage()+" ' failed '",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "something went wrong.check your internet connection.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    void GetPlaylistTracksInfo(String playlistID){
-        Call<List<PlaylistTracks>> call = endPointAPI.getPlaylistTracks(playlistID , user.getToken());
+    /**
+     * sends a request to get the current playlist's tracks
+     *
+     * @param playlistID
+     */
+
+    void GetPlaylistTracksInfo(String playlistID) {
+        Call<List<PlaylistTracks>> call = endPointAPI.getPlaylistTracks(playlistID, user.getToken());
         call.enqueue(new Callback<List<PlaylistTracks>>() {
             @Override
             public void onResponse(Call<List<PlaylistTracks>> call, Response<List<PlaylistTracks>> response) {
-                if(!response.isSuccessful() ||response.body() == null){
-                    //Toast.makeText(getContext(),"Code: "+response.code(),Toast.LENGTH_SHORT).show();
+                if (!response.isSuccessful() || response.body() == null) {
                     progress_bar_playlist.setVisibility(View.GONE);
                     playlist_contents_layout.setVisibility(View.GONE);
                     something_wrong_text.setText("something went wrong .try again");
                     something_wrong_layout.setVisibility(View.VISIBLE);
                     return;
-                }
-//                else if(response.body()==null){
-//                    Toast.makeText(getContext(),"response body = null",Toast.LENGTH_SHORT).show();
-//                }
-                else {
+                } else {
                     playlistTracks = response.body().get(0);
                     PlaylistInfo.getinstance().setPlaylistTracks(playlistTracks);
                     playlist_contents_layout.setVisibility(View.VISIBLE);
                     something_wrong_layout.setVisibility(View.GONE);
                     progress_bar_playlist.setVisibility(View.GONE);
-                    playlistTracks.setIsLiked(true);
                     updateUI();
                 }
             }
 
             @Override
             public void onFailure(Call<List<PlaylistTracks>> call, Throwable t) {
-                //Toast.makeText(getContext(),t.getMessage()+" ' failed '",Toast.LENGTH_SHORT).show();
                 progress_bar_playlist.setVisibility(View.GONE);
                 playlist_contents_layout.setVisibility(View.GONE);
                 something_wrong_text.setText("something went wrong .check your internet connection");
@@ -296,17 +352,19 @@ public class PlaylistFragment extends Fragment {
         });
     }
 
-    void LikePlaylist(){
-        Call<Void> call = endPointAPI.LikePlaylist(playlistID , user.getToken());
+    /**
+     * send a request to like(follow) the playlist
+     */
+    void LikePlaylist() {
+        Call<Void> call = endPointAPI.LikePlaylist(playlistID, user.getToken());
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
 
-                if(!response.isSuccessful()){
-                    Toast.makeText(getContext(),"something went wrong .try again",Toast.LENGTH_SHORT).show();
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getContext(), "something went wrong .try again", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else {
+                } else {
                     like_playlist.setImageResource(R.drawable.like);
                     playlistTracks.setIsLiked(true);
                 }
@@ -314,22 +372,24 @@ public class PlaylistFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getContext(),"something went wrong .check your internet connection",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "something went wrong .check your internet connection", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    void unLikePlaylist(){
-        Call<Void> call = endPointAPI.UNLikePlaylist(playlistID , user.getToken());
+    /**
+     * send a request to unlike(unfollow) the playlist
+     */
+    void unLikePlaylist() {
+        Call<Void> call = endPointAPI.UNLikePlaylist(playlistID, user.getToken());
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
 
-                if(!response.isSuccessful()){
-                    Toast.makeText(getContext(),"something went wrong .try again",Toast.LENGTH_SHORT).show();
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getContext(), "something went wrong .try again", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else {
+                } else {
                     like_playlist.setImageResource(R.drawable.favorite_border);
                     playlistTracks.setIsLiked(false);
                 }
@@ -337,72 +397,137 @@ public class PlaylistFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getContext(),"something went wrong .check your internet connection",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "something went wrong .check your internet connection", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    void updateUI(){
-        List<Object> images= playlistTracks.getImages();
-        if(images != null && images.size()!=0) {
-            String Imageurl = images.get(0).toString();
-            Picasso.get().load(Imageurl).into(playlist_image_playlist_fragment);
+    /**
+     * get a color that from the image and set the background with that color
+     *
+     * @param v   the image view
+     * @param put the background's layout
+     */
+
+    void getPaletteAndSetBackgroundColor(ImageView v, final LinearLayout put) {
+        Bitmap bitmap = ((BitmapDrawable) v.getDrawable()).getBitmap();
+
+        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+            @Override
+            public void onGenerated(Palette palette) {
+                if (palette.getMutedSwatch() != null) {
+                    GradientDrawable gd = new GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+                            new int[]{palette.getMutedSwatch().getRgb(), 0xFF000000});
+                    gd.setCornerRadius(0f);
+                    put.setBackgroundDrawable(gd);
+                } else if (palette.getDarkVibrantSwatch() != null) {
+                    GradientDrawable gd = new GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+                            new int[]{palette.getDarkVibrantSwatch().getRgb(), 0xFF000000});
+                    gd.setCornerRadius(0f);
+                    put.setBackgroundDrawable(gd);
+                } else if (palette.getLightMutedSwatch() != null) {
+                    GradientDrawable gd = new GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+                            new int[]{palette.getLightMutedSwatch().getRgb(), 0xFF000000});
+                    gd.setCornerRadius(0f);
+                    put.setBackgroundDrawable(gd);
+                } else if (palette.getDarkMutedSwatch() != null) {
+                    GradientDrawable gd = new GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+                            new int[]{palette.getDarkMutedSwatch().getRgb(), 0xFF000000});
+                    gd.setCornerRadius(0f);
+                    put.setBackgroundDrawable(gd);
+                } else if (palette.getLightVibrantSwatch() != null) {
+                    GradientDrawable gd = new GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+                            new int[]{palette.getLightVibrantSwatch().getRgb(), 0xFF000000});
+                    gd.setCornerRadius(0f);
+                    put.setBackgroundDrawable(gd);
+                } else if (palette.getVibrantSwatch() != null) {
+                    GradientDrawable gd = new GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+                            new int[]{palette.getVibrantSwatch().getRgb(), 0xFF000000});
+                    gd.setCornerRadius(0f);
+                    put.setBackgroundDrawable(gd);
+                }
+            }
+        });
+    }
+
+    /**
+     * updates the UI with the playlist and tracks info
+     */
+
+    void updateUI() {
+        List<ImageInfo> images = playlistTracks.getImages();
+        String imageID = "12d";
+        if (images != null && images.size() != 0) {
+            imageID = images.get(0).getID();
         }
+        String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=playlist";
+        Picasso.get().load(Imageurl).into(playlist_image_playlist_fragment, new com.squareup.picasso.Callback() {
+            @Override
+            public void onSuccess() {
+                getPaletteAndSetBackgroundColor(playlist_image_playlist_fragment, playlist_contents_layout);
+            }
+
+            @Override
+            public void onError(Exception e) {
+            }
+        });
         playlist_name_middle.setText(playlistTracks.getName());
-
         playlist_owner.setText("BY " + playlistOwner);
-
         String songsNames = "";
         List<BasicTrack> tracks = playlistTracks.getTracks();
-        int n  = 7;
-
-        if(playlistTracks.getTracks().size() < 7){
+        int n = 7;
+        if (playlistTracks.getTracks().size() < 7) {
             n = playlistTracks.getTracks().size();
+        } else if (playlistTracks.getTracks().size() == 0) {
+            n = 0;
         }
-        else if(playlistTracks.getTracks().size() == 0){
-            n=0;
+        for (int i = 0; i < n; i++) {
+            songsNames += tracks.get(i).getArtistName() + " ";
+            songsNames += tracks.get(i).getName() + " . ";
         }
-        for(int i =0 ; i<n; i++){
-            songsNames+= tracks.get(i).getArtistName()+" ";
-            songsNames+= tracks.get(i).getName()+" . ";
-        }
-        if(playlistTracks.getTracks().size() !=0){
-            songsNames+="and more";
+        if (playlistTracks.getTracks().size() != 0) {
+            songsNames += "and more";
         }
         artist_name_song_name_playlist.setText(songsNames);
 
-        if(CheckTrackInPlaylist()){
-            if(player.getIsPlaying()){
+        if (CheckTrackInPlaylist()) {
+            if (player.getIsPlaying()) {
                 shuffle_play_button.setText("pause");
-            }
-            else{
+            } else {
                 shuffle_play_button.setText("shuffle play");
             }
         }
 
-//TODO till the back makes it
-
-//        if(playlistTracks.getIsLiked()){
-//            like_playlist.setImageResource(R.drawable.like);
-//        }
-//        else{
-//            like_playlist.setImageResource(R.drawable.favorite_border);
-//        }
+        if (playlistTracks.getIsLiked()) {
+            like_playlist.setImageResource(R.drawable.like);
+        } else {
+            like_playlist.setImageResource(R.drawable.favorite_border);
+        }
     }
 
 
-    ///////checks if the currently playing track is from the current playlist
-    Boolean CheckTrackInPlaylist(){
-        if(TrackInfo.getInstance().getIsQueue()!=null &&
-           TrackInfo.getInstance().getIsQueue().getValue() &&
-           TrackInfo.getInstance().getTrack()!=null &&
-           TrackInfo.getInstance().getTrack().getValue().getTrack()!=null){
+    /**
+     * checks if the currently playing track is from the current playlist
+     *
+     * @return
+     */
+    Boolean CheckTrackInPlaylist() {
+        if (TrackInfo.getInstance().getIsQueue() != null &&
+                TrackInfo.getInstance().getIsQueue().getValue() &&
+                TrackInfo.getInstance().getTrack() != null &&
+                TrackInfo.getInstance().getTrack().getValue().getTrack() != null) {
             CurrentTrackID = TrackInfo.getInstance().getTrack().getValue().getTrack().getId();
 
             List<BasicTrack> tracks = playlistTracks.getTracks();
 
-            for(int i =0 ; i<tracks.size(); i++){
-                if(tracks.get(i).getTrackid().equals(CurrentTrackID)){
+            for (int i = 0; i < tracks.size(); i++) {
+                if (tracks.get(i).getTrackid().equals(CurrentTrackID)) {
                     CurrentTrackPosInPlaylist = i;
                     return true;
                 }
@@ -412,7 +537,13 @@ public class PlaylistFragment extends Fragment {
         return false;
     }
 
-    void getViews(View root){
+    /**
+     * gets all the views i will use
+     *
+     * @param root
+     */
+
+    void getViews(View root) {
         back_arrow_playlist = root.findViewById(R.id.back_arrow_playlist);
         like_playlist = root.findViewById(R.id.like_playlist);
         playlist_settings_button = root.findViewById(R.id.playlist_settings_button);
@@ -428,9 +559,10 @@ public class PlaylistFragment extends Fragment {
         something_wrong_text = root.findViewById(R.id.something_wrong_text);
         something_wrong_button = root.findViewById(R.id.something_wrong_button);
     }
-    private void bindService(){
-        Intent serviceIntent1 = new Intent(getContext() , MediaPlayerService.class);
-        getActivity().bindService(serviceIntent1 , serviceConnection , Context.BIND_AUTO_CREATE);
+
+    private void bindService() {
+        Intent serviceIntent1 = new Intent(getContext(), MediaPlayerService.class);
+        getActivity().bindService(serviceIntent1, serviceConnection, Context.BIND_AUTO_CREATE);
 
     }
 
@@ -444,4 +576,5 @@ public class PlaylistFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
     }
+
 }

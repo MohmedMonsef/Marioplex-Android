@@ -1,6 +1,7 @@
 
 package com.example.spotify.BackClasses.Backclasses.backnewrelease;
 
+import com.example.spotify.pojo.ImageInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -19,7 +20,7 @@ public class Album {
     private List<String> availableMarkets = null;
     @SerializedName("images")
     @Expose
-    private List<Object> images = null;
+    private List<ImageInfo> images = null;
     @SerializedName("id")
     @Expose
     private String id;
@@ -54,11 +55,11 @@ public class Album {
         this.availableMarkets = availableMarkets;
     }
 
-    public List<Object> getImages() {
+    public List<ImageInfo> getImages() {
         return images;
     }
 
-    public void setImages(List<Object> images) {
+    public void setImages(List<ImageInfo> images) {
         this.images = images;
     }
 

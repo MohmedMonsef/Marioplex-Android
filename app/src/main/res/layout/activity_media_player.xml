@@ -2,10 +2,12 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:id="@+id/activity_media_player_layout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/activity_views_container"
         android:orientation="vertical"
         android:clickable="true"
         android:layout_width="match_parent"
@@ -34,14 +36,13 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"/>
 
-            <TextView
+            <TextSwitcher
                 android:id="@+id/playlist_name"
-                android:text="@string/playlist_name"
-                android:textColor="@android:color/background_light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:textStyle="bold"
+                android:inAnimation="@android:anim/fade_in"
+                android:outAnimation="@android:anim/fade_out"
                 android:layout_below="@id/header"/>
             <ImageView
                 android:layout_width="50dp"
@@ -59,41 +60,42 @@
             android:layout_weight="0.55"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:src="@drawable/not_found1"
+            android:src="@drawable/default_image"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             />
         <LinearLayout
+            android:id="@+id/activity_media_player_layout2"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="0.14"
             android:orientation="vertical"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp">
-            <TextView
+            <TextSwitcher
                 android:id="@+id/song_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginLeft="8dp"
-                android:textColor="@android:color/background_light"
-                android:text="@string/song_name"
-                android:textStyle="bold"/>
-            <TextView
+                android:inAnimation="@android:anim/fade_in"
+                android:outAnimation="@android:anim/fade_out"/>
+            <TextSwitcher
                 android:id="@+id/song_artist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="8dp"
-                android:textColor="@android:color/darker_gray"
-                android:text="@string/song_artist"/>
+                android:inAnimation="@android:anim/fade_in"
+                android:outAnimation="@android:anim/fade_out"/>
         </LinearLayout>
 
         <RelativeLayout
+            android:id="@+id/activity_media_player_layout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="24dp"
@@ -107,25 +109,28 @@
                 android:max="100"
                 android:thumb="@drawable/thumb"
                 />
-            <TextView
+            <TextSwitcher
                 android:id="@+id/start_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:layout_below="@id/seek_bar"
-                android:textColor="@android:color/darker_gray"/>
-            <TextView
+                android:inAnimation="@android:anim/fade_in"
+                android:outAnimation="@android:anim/fade_out"
+                android:layout_below="@id/seek_bar"/>
+            <TextSwitcher
                 android:id="@+id/end_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:inAnimation="@android:anim/fade_in"
+                android:outAnimation="@android:anim/fade_out"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="16dp"
-                android:layout_below="@id/seek_bar"
-                android:textColor="@android:color/darker_gray"/>
+                android:layout_below="@id/seek_bar"/>
 
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/activity_media_player_layout4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProfileFragment.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.Fragments</a> &gt; <span class="el_source">ProfileFragment.java</span></div><h1>ProfileFragment.java</h1><pre class="source lang-java linenums">package com.example.spotify.Fragments;
+
+import androidx.fragment.app.Fragment;
+import android.os.Build;
+import android.os.Bundle;
+
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+
+import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.Interfaces.Retrofit;
+import com.example.spotify.R;
+import com.example.spotify.login.apiClasses.nameUpdate;
+import com.example.spotify.login.user;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+
+public class ProfileFragment extends Fragment {
+
+
+    /*public ProfileFragment() {
+        // Required empty public constructor
+    }*/
+
+
+<span class="nc" id="L39">    public ProfileFragment(){</span>
+
+<span class="nc" id="L41">    }</span>
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+<span class="nc" id="L46">        super.onCreate(savedInstanceState);</span>
+
+<span class="nc" id="L48">    }</span>
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+<span class="nc" id="L53">        user.fetchUserData();</span>
+        // Inflate the layout for this fragment
+<span class="nc" id="L55">        final View rootView =  inflater.inflate(R.layout.fragment_profile, container, false);</span>
+
+<span class="nc" id="L57">        ((ImageView)rootView.findViewById(R.id.profile_picture)).setImageResource(R.drawable.logo);</span>
+
+<span class="nc" id="L59">        final EditText userName = (EditText)rootView.findViewById(R.id.user_name);</span>
+<span class="nc" id="L60">        userName.setText(user.getName());</span>
+<span class="nc" id="L61">        userName.setOnKeyListener(new View.OnKeyListener() {</span>
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+<span class="nc bnc" id="L64" title="All 2 branches missed.">                if(keyCode == 66) {</span>
+<span class="nc" id="L65">                    userName.clearFocus();</span>
+<span class="nc" id="L66">                    updateProfile data = new updateProfile();</span>
+<span class="nc" id="L67">                    data.setDisplay_Name(userName.getText().toString());</span>
+<span class="nc" id="L68">                    updateProfile(data);</span>
+                }
+<span class="nc" id="L70">                return false;</span>
+            }
+        });
+
+<span class="nc" id="L74">        rootView.findViewById(R.id.profile_layout).setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc bnc" id="L77" title="All 2 branches missed.">                if(userName.isFocused()) {</span>
+<span class="nc" id="L78">                    userName.clearFocus();</span>
+<span class="nc" id="L79">                    updateProfile data = new updateProfile();</span>
+<span class="nc" id="L80">                    data.setDisplay_Name(userName.getText().toString());</span>
+<span class="nc" id="L81">                    updateProfile(data);</span>
+                }
+<span class="nc" id="L83">            }</span>
+        });
+
+<span class="nc" id="L86">        ((TextView)rootView.findViewById(R.id.no_of_playlists)).setText(&quot;&quot;+user.getPlaylists().length);</span>
+
+<span class="nc" id="L88">        return rootView;</span>
+    }
+
+    /**
+     * updates user data with passed new data
+     * @param data user new data
+     */
+    private void updateProfile(updateProfile data){
+<span class="nc" id="L96">        EndPointAPI api = Retrofit.getInstance().getEndPointAPI();</span>
+<span class="nc" id="L97">        api.updateProfile(user.getToken(),data).enqueue(new Callback&lt;ResponseBody&gt;() {</span>
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onResponse(Call&lt;ResponseBody&gt; call, Response&lt;ResponseBody&gt; response) {
+<span class="nc" id="L101">                Toast.makeText(getContext(),&quot;Saved&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L102">            }</span>
+
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onFailure(Call&lt;ResponseBody&gt; call, Throwable t) {
+<span class="nc" id="L107">                Toast.makeText(getContext(),&quot;Failure&quot;,Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L108">            }</span>
+        });
+
+
+<span class="nc" id="L112">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

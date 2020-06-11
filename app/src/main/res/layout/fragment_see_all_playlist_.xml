@@ -3,12 +3,98 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/p1"
+    android:id="@+id/fragment_see_all_playlist_layout1"
     tools:context=".Fragments.SEE_PLAYLIST_FRAGMENT.see_all_playlist_Fragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/fragment_see_all_playlist_layout2"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:id="@+id/fragment_see_all_playlist_layout3"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="@color/bgBottomNavigation">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:background="@color/bgBottomNavigation"
+                android:textColor="@color/TextColor"
+                android:textSize="18dp"
+                android:id="@+id/textalbumsearch"
+                android:layout_centerInParent="true"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/back_button_to_seeAllPlaylist"
+                android:src="@drawable/back_button"
+                android:padding="8dp"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/texta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/TextColor"
+            android:textSize="24dp"
+            tools:ignore="MissingConstraints" />
+    <ScrollView
+        android:id="@+id/fragment_see_all_playlist_layout4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/fragment_see_all_playlist_layout5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <RelativeLayout
+            android:id="@+id/fragment_see_all_playlist_layout6"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/fragment_see_all_playlist_layout7"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@id/l1"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycleSearchSeeAllPlaylist1"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/l1"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycleSearchSeeAllPlaylist"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                </androidx.recyclerview.widget.RecyclerView>
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+    </ScrollView>
+
+    </LinearLayout>
 
 </FrameLayout>

@@ -1,6 +1,7 @@
 
 package com.example.spotify.BackClasses.Backclasses.backsearch;
 
+import com.example.spotify.pojo.ImageInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -16,7 +17,7 @@ public class Track {
     private String artistName;
     @SerializedName("artistimages")
     @Expose
-    private List<Object> artistimages = null;
+    private List<ImageInfo> artistimages = null;
     @SerializedName("artistType")
     @Expose
     private String artistType;
@@ -28,7 +29,7 @@ public class Track {
     private String albumName;
     @SerializedName("albumImages")
     @Expose
-    private List<Object> albumImages = null;
+    private List<ImageInfo> albumImages = null;
     @SerializedName("albumType")
     @Expose
     private String albumType;
@@ -43,7 +44,7 @@ public class Track {
     private String type;
     @SerializedName("images")
     @Expose
-    private List<Object> images = null;
+    private List<ImageInfo> images = null;
 
     public String getArtistId() {
         return artistId;
@@ -61,11 +62,11 @@ public class Track {
         this.artistName = artistName;
     }
 
-    public List<Object> getArtistimages() {
+    public List<ImageInfo> getArtistimages() {
         return artistimages;
     }
 
-    public void setArtistimages(List<Object> artistimages) {
+    public void setArtistimages(List<ImageInfo> artistimages) {
         this.artistimages = artistimages;
     }
 
@@ -93,11 +94,11 @@ public class Track {
         this.albumName = albumName;
     }
 
-    public List<Object> getAlbumImages() {
+    public List<ImageInfo> getAlbumImages() {
         return albumImages;
     }
 
-    public void setAlbumImages(List<Object> albumImages) {
+    public void setAlbumImages(List<ImageInfo> albumImages) {
         this.albumImages = albumImages;
     }
 
@@ -133,11 +134,11 @@ public class Track {
         this.type = type;
     }
 
-    public List<Object> getImages() {
+    public List<ImageInfo> getImages() {
         return images;
     }
 
-    public void setImages(List<Object> images) {
+    public void setImages(List<ImageInfo> images) {
         this.images = images;
     }
 

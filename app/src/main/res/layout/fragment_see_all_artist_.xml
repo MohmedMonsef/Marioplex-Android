@@ -1,14 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_see_all_artist_layout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/p6"
     tools:context=".Fragments.SEE_ARTISTS_FRAGMENT.see_all_artist_Fragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:id="@+id/fragment_see_all_artist_layout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/fragment_see_all_artist_layout3"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="@color/bgBottomNavigation">
+
+            <TextView
+                android:id="@+id/textalbumsearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@color/bgBottomNavigation"
+                android:textColor="@color/TextColor"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/back_button_to_seeAllArtist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="8dp"
+                android:src="@drawable/back_button" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/texta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/TextColor"
+            android:textSize="24dp"
+            tools:ignore="MissingConstraints" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleSearchSeeAllArtist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:numColumns="2">
+
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
 
 </FrameLayout>

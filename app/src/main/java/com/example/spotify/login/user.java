@@ -1,26 +1,33 @@
 package com.example.spotify.login;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
-import com.example.spotify.Activities.MainActivity;
 import com.example.spotify.Interfaces.EndPointAPI;
+import com.example.spotify.Interfaces.Retrofit;
+import com.example.spotify.login.apiClasses.FCMToken;
 import com.example.spotify.login.apiClasses.userProfile;
+import com.example.spotify.pojo.ImageInfo;
 import com.example.spotify.pojo.playlist;
-import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
+/**
+ * Holds current user data
+ */
 public class user {
     private static String name = null;
     private static String id = null;
@@ -30,10 +37,32 @@ public class user {
     private static String country = null;
     private static String product = null;
     private static String password = null;
-    private static String [] images = null;
+    private static List<ImageInfo> images = null;
     static playlist[] playlists = null;
 
-    static String token = null;
+    static MutableLiveData<String> token = new MutableLiveData<String>(null);
+
+
+    static MutableLiveData<String> FCMToken = new MutableLiveData<String>();
+
+    public static MutableLiveData<String> getFCMToken() {
+        return FCMToken;
+    }
+
+    public static void setFCMToken(String FCMToken) {
+        user.FCMToken.postValue(FCMToken);
+    }
+
+    public static MutableLiveData<Boolean> getUserDataReadyFlag() {
+        return userDataReadyFlag;
+    }
+
+    public static void setUserDataReadyFlag(MutableLiveData<Boolean> userDataReadyFlag) {
+        user.userDataReadyFlag = userDataReadyFlag;
+    }
+
+    static MutableLiveData<Boolean> userDataReadyFlag = new MutableLiveData<Boolean>();
+
 
     private user() {
 
@@ -80,11 +109,15 @@ public class user {
     }
 
     public static String getToken() {
+        return token.getValue();
+    }
+
+    public static MutableLiveData<String> getTokenAsLiveData() {
         return token;
     }
 
     public static void setToken(String token) {
-        user.token = token;
+        user.token.setValue(token);
     }
 
     public static String getCountry() {
@@ -103,11 +136,11 @@ public class user {
         user.product = product;
     }
 
-    public static String[] getImages() {
+    public static List<ImageInfo> getImages() {
         return images;
     }
 
-    public static void setImages(String[] images) {
+    public static void setImages(List<ImageInfo> images) {
         user.images = images;
     }
 
@@ -127,17 +160,22 @@ public class user {
         user.password = password;
     }
 
-    public static void fetchUserData(){
-        if(token == null)
+    /**
+     * fetch user data from backend server
+     */
+    public static void fetchUserData() {
+        sendFCMTokenToServer();
+        if (token.getValue() == null)
             return;
+        userDataReadyFlag.postValue(false);
 
         EndPointAPI endPointAPI = com.example.spotify.Interfaces.Retrofit.getInstance().getEndPointAPI();
 
-        endPointAPI.profile(token).enqueue(new Callback<ArrayList<userProfile>>() {
+        endPointAPI.profile(token.getValue()).enqueue(new Callback<ArrayList<userProfile>>() {
             @Override
             public void onResponse(Call<ArrayList<userProfile>> call, Response<ArrayList<userProfile>> response) {
-                if(response.isSuccessful()){
-                    user.setToken(token);
+                if (response.isSuccessful()) {
+                    //user.setToken(token.getValue());
                     user.setName(response.body().get(0).getDisplayName());
                     user.setEmail(response.body().get(0).getEmail());
                     user.setDateOfBirth(response.body().get(0).getBirthDate());
@@ -145,10 +183,13 @@ public class user {
                     user.setCountry(response.body().get(0).getCountry());
                     user.setProduct(response.body().get(0).getProduct());
                     user.setImages(response.body().get(0).getImages());
-                }
-                else {
-                    Log.v("usrftch",response.message());
-                    int x = 4;
+                    user.setId(response.body().get(0).getId());
+                    user.userDataReadyFlag.postValue(true);
+                    //Log.v("fetchUsrData",token.getValue());
+                    //Log.v("fetchUsrData",user.id);
+                } else {
+                    Log.v("usrftch", response.message());
+                    //int x = 4;
                 }
             }
 
@@ -158,7 +199,7 @@ public class user {
             }
         });
 
-        endPointAPI.myPlaylists(token).enqueue(new Callback<playlist[]>() {
+        endPointAPI.myPlaylists(token.getValue()).enqueue(new Callback<playlist[]>() {
             @Override
             public void onResponse(Call<playlist[]> call, Response<playlist[]> response) {
                 user.setPlaylists(response.body());
@@ -166,11 +207,51 @@ public class user {
 
             @Override
             public void onFailure(Call<playlist[]> call, Throwable t) {
-                int x=5;
+                int x = 5;
             }
         });
 
+    }
 
 
+    public static void sendFCMTokenToServer() {
+        FCMToken.observeForever(new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                Log.v("FCM",FCMToken.getValue());
+                Retrofit.getInstance().getEndPointAPI().sendFCMToken(user.getToken(), new FCMToken(FCMToken.getValue())).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
+                            Log.d("FCM", "FCM token sent to server successfully");
+                        } else {
+                            Log.d("FCM", "Error sending FCM token");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Log.d("FCM", "Error sending FCM token");
+                    }
+                });
+            }
+        });
+
+    }
+
+    public static void logout(){
+        Retrofit.getInstance().getEndPointAPI().logout(user.getToken()).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()) {
+                    userDataReadyFlag.setValue(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 }

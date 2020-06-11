@@ -22,8 +22,8 @@ import androidx.lifecycle.Observer;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.R;
-import com.example.spotify.SpotifyClasses.Image;
 import com.example.spotify.login.user;
+import com.example.spotify.pojo.ImageInfo;
 import com.example.spotify.pojo.currentTrack;
 import com.squareup.picasso.Picasso;
 
@@ -36,16 +36,18 @@ import retrofit2.Response;
 
 public class BottomSheetFragment extends Fragment {
 
-    ImageView bottom_image_id;
-    TextView song_artist_name;
-    ImageView bottom_play_pause;
-    ImageView bottom_favorite;
-    LinearLayout bottom_layout;
+    private ImageView bottom_image_id;
+    private TextView song_artist_name;
+    private ImageView bottom_play_pause;
+    private ImageView bottom_favorite;
+    private LinearLayout bottom_layout;
     private EndPointAPI endPointAPI = Retrofit.getInstance().getEndPointAPI();
     private TrackInfo track;
     private MediaPlayerService player;
     boolean serviceBound = false;
-    //Binding this Client to the AudioPlayer Service
+    /**
+     * Binding this Client to the AudioPlayer Service
+     */
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -53,8 +55,6 @@ public class BottomSheetFragment extends Fragment {
             MediaPlayerService.LocalBinder binder = (MediaPlayerService.LocalBinder) service;
             player = binder.getservice();
             serviceBound = true;
-
-            //   Toast.makeText(getContext(), "Service Bound", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -68,7 +68,7 @@ public class BottomSheetFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.bottom_sheet_fragment,container,false);
+        View root = inflater.inflate(R.layout.bottom_sheet_fragment, container, false);
 
         //Bind the service
         bindService();
@@ -85,33 +85,33 @@ public class BottomSheetFragment extends Fragment {
         song_artist_name.setText(track.getName());
 
 
-        //update UI first time
-//        if(track.getIsPlaying().getValue()){
-//            bottom_play_pause.setImageResource(R.drawable.pause_down);
-//        }
-//        else {
-//            bottom_play_pause.setImageResource(R.drawable.play_down);
-//        }
-
-
         //Click Listeners
+        /**
+         * listener for the click on the play and pause button
+         */
         bottom_play_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(player.getIsPlaying()){
-                    track.setIsPlaying(false);
-                    player.pauseMedia();
-                    bottom_play_pause.setImageResource(R.drawable.play_down);
-                    //player.cancelTimer();
+                if (player.getIsPrePared()) {
+                    if (player.getIsPlaying()) {
+                        track.setIsPlaying(false);
+                        player.pauseMedia();
+                        bottom_play_pause.setImageResource(R.drawable.play_down);
+                    } else {
+                        track.setIsPlaying(true);
+                        player.resumeMedia();
+                        bottom_play_pause.setImageResource(R.drawable.pause_down);
+                    }
                 }
                 else{
-                    track.setIsPlaying(true);
-                    player.resumeMedia();
-                    bottom_play_pause.setImageResource(R.drawable.pause_down);
-                    //player.cancelTimer();
+                    Toast.makeText(getContext() , "audio is loading" , Toast.LENGTH_SHORT).show();
                 }
             }
+
         });
+        /**
+         * listener for the click on the image to open the bottom sheet
+         */
 
         bottom_image_id.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,21 +120,25 @@ public class BottomSheetFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        /**
+         * listener for the like button to send the like/unlike request
+         */
 
         bottom_favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(track.getTrack().getValue().getIsLiked()){
+                if (track.getTrack().getValue().getIsLiked()) {
                     UnLikeTrack(track.getTrack().getValue().getTrack().getId());
-                }
-                else {
+                } else {
                     LikeTrack(track.getTrack().getValue().getTrack().getId());
                 }
             }
         });
 
         //Observers
-//TODO here
+        /**
+         * observer for any change in track information to update the UI
+         */
         track.getTrack().observe(this, new Observer<currentTrack>() {
             @Override
             public void onChanged(currentTrack track) {
@@ -145,56 +149,63 @@ public class BottomSheetFragment extends Fragment {
         track.getIsPlaying().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
+                if (aBoolean) {
                     bottom_play_pause.setImageResource(R.drawable.pause_down);
-                }
-                else {
+                } else {
                     bottom_play_pause.setImageResource(R.drawable.play_down);
                 }
             }
         });
 
+        /**
+         * if the track is liked update the UI
+         */
+
         track.getIsLiked().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
+                if (aBoolean) {
                     bottom_favorite.setImageResource(R.drawable.like);
-                }
-                else {
+                } else {
                     bottom_favorite.setImageResource(R.drawable.favorite_border);
                 }
             }
         });
+        /**
+         * if the get current track fails it repeats it
+         */
 
         track.gettryAgain().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
+                if (aBoolean) {
                     player.playCurrentTrack(endPointAPI.getCurrentlyPlaying(user.getToken()));
                 }
             }
         });
 
-
-
-
         return root;
     }
 
-    private void LikeTrack(String trackID){
+    /**
+     * sends like request for the current track and updates the UI on response
+     *
+     * @param trackID
+     */
+
+    private void LikeTrack(String trackID) {
         bottom_favorite.setEnabled(false);
-        Call<Void> call = endPointAPI.LikeTrack(trackID , user.getToken());
+        Call<Void> call = endPointAPI.LikeTrack(trackID, user.getToken());
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 bottom_favorite.setEnabled(true);
-                if(!response.isSuccessful()){
-                    Toast.makeText(getContext(),"something went wrong .try again",Toast.LENGTH_SHORT).show();
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getContext(), "something went wrong .try again", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else {
+                } else {
                     bottom_favorite.setImageResource(R.drawable.like);
-                    Toast.makeText(getContext(),"Added to Liked Songs",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Added to Liked Songs", Toast.LENGTH_SHORT).show();
                     track.getTrack().getValue().setIsLiked(true);
                     TrackInfo.getInstance().setIsLiked(true);
                 }
@@ -202,27 +213,31 @@ public class BottomSheetFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getContext(),"something went wrong .check your internet connection",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "something went wrong .check your internet connection", Toast.LENGTH_SHORT).show();
                 bottom_favorite.setEnabled(true);
             }
         });
     }
 
-    private void UnLikeTrack(String trackID){
+    /**
+     * sends unlike request for the current track and updates the UI on response
+     *
+     * @param trackID
+     */
+    private void UnLikeTrack(String trackID) {
         bottom_favorite.setEnabled(false);
-        Call<Void> call = endPointAPI.UNLikeTrack(trackID , user.getToken());
+        Call<Void> call = endPointAPI.UNLikeTrack(trackID, user.getToken());
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 bottom_favorite.setEnabled(true);
-                if(!response.isSuccessful()){
-                    Toast.makeText(getContext(),"something went wrong .try again",Toast.LENGTH_SHORT).show();
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getContext(), "something went wrong .try again", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else {
+                } else {
                     bottom_favorite.setImageResource(R.drawable.favorite_border);
 
-                    Toast.makeText(getContext(),"Removed from Liked Songs",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Removed from Liked Songs", Toast.LENGTH_SHORT).show();
                     track.getTrack().getValue().setIsLiked(false);
                     TrackInfo.getInstance().setIsLiked(false);
                 }
@@ -230,41 +245,44 @@ public class BottomSheetFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getContext(),"something went wrong .check your internet connection",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "something went wrong .check your internet connection", Toast.LENGTH_SHORT).show();
                 bottom_favorite.setEnabled(true);
             }
         });
     }
 
-    //TODO here
-    void UpdateUI(){
+    /**
+     * updates the ui when the track info changes
+     */
+    void UpdateUI() {
 
         String artistName = "";
         String songName = "";
-        if(track.getTrack().getValue().getAlbum()!=null && track.getTrack().getValue().getAlbum().getArtist()!=null && track.getTrack().getValue().getTrack()!=null){
+        if (track.getTrack().getValue().getAlbum() != null && track.getTrack().getValue().getAlbum().getArtist() != null && track.getTrack().getValue().getTrack() != null) {
             artistName = track.getTrack().getValue().getAlbum().getArtist().getName();
             songName = track.getTrack().getValue().getTrack().getName();
         }
-        song_artist_name.setText(songName+" . "+artistName);
+        song_artist_name.setText(songName + " . " + artistName);
 
 
-        List<Image> images= track.getTrack().getValue().getTrack().getImages();
-        if(images !=null&& images.size()!=0){
-            String Imageurl = images.get(0).getUrl();
-            Picasso.get().load(Imageurl).into(bottom_image_id);
+        List<ImageInfo> images = track.getTrack().getValue().getTrack().getImages();
+        String imageID = "12d";
+        if (images != null && images.size() != 0) {
+            imageID = images.get(0).getID();
         }
+        String Imageurl = Retrofit.getInstance().getBaseurl() + "api/images/" + imageID + "?belongs_to=track";
+        Picasso.get().load(Imageurl).into(bottom_image_id);
 
-        if(track.getTrack().getValue().getIsLiked()){
+        if (track.getTrack().getValue().getIsLiked()) {
             bottom_favorite.setImageResource(R.drawable.like);
-        }
-        else{
+        } else {
             bottom_favorite.setImageResource(R.drawable.favorite_border);
         }
-//here any chang
     }
-    private void bindService(){
-        Intent serviceIntent1 = new Intent(getContext() , MediaPlayerService.class);
-        getActivity().bindService(serviceIntent1 , serviceConnection ,Context.BIND_AUTO_CREATE);
+
+    private void bindService() {
+        Intent serviceIntent1 = new Intent(getContext(), MediaPlayerService.class);
+        getActivity().bindService(serviceIntent1, serviceConnection, Context.BIND_AUTO_CREATE);
 
     }
 

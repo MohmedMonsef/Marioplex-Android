@@ -9,6 +9,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/sleep_timer_layout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/media_player_background_color"
@@ -25,7 +26,8 @@
                 android:layout_width="125dp"
                 android:layout_height="125dp"
                 android:visibility="invisible"
-                android:background="@android:color/darker_gray"
+                android:scaleType="centerCrop"
+                android:src="@drawable/default_image"
                 android:layout_centerHorizontal="true"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -40,6 +42,7 @@
 
         </RelativeLayout>
         <LinearLayout
+            android:id="@+id/sleep_timer_layout2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.7"
@@ -57,7 +60,6 @@
                     android:gravity="center_vertical"
                     android:text="5 minutes"
                     android:textStyle="bold"
-
                     android:id="@+id/five"
                     android:background="@android:color/transparent"
                     android:textAllCaps="false"
@@ -72,6 +74,7 @@
                 android:orientation="horizontal"
                 android:id="@+id/ten_minutes">
                 <TextView
+                    android:id="@+id/sleep_timer_text1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textColor="@android:color/background_light"
@@ -88,6 +91,7 @@
                 android:orientation="horizontal"
                 android:id="@+id/fifteen_minutes">
                 <TextView
+                    android:id="@+id/sleep_timer_text2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textColor="@android:color/background_light"
@@ -104,6 +108,7 @@
                 android:orientation="horizontal"
                 android:id="@+id/thirty_minutes">
                 <TextView
+                    android:id="@+id/sleep_timer_text3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textColor="@android:color/background_light"
@@ -120,6 +125,7 @@
                 android:orientation="horizontal"
                 android:id="@+id/fortyfive_inutes">
                 <TextView
+                    android:id="@+id/sleep_timer_text4"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textColor="@android:color/background_light"
@@ -136,6 +142,7 @@
                 android:orientation="horizontal"
                 android:id="@+id/hour">
                 <TextView
+                    android:id="@+id/sleep_timer_text5"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textColor="@android:color/background_light"
@@ -153,6 +160,7 @@
                 android:orientation="horizontal"
                 android:id="@+id/turn_of_timer">
                 <TextView
+                    android:id="@+id/sleep_timer_text6"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textColor="@android:color/background_light"
@@ -169,6 +177,7 @@
                 android:orientation="horizontal"
                 android:id="@+id/end_of_track">
                 <TextView
+                    android:id="@+id/sleep_timer_text7"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textColor="@android:color/background_light"

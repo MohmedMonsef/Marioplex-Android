@@ -5,10 +5,14 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class BasicTrack {
+public class BasicTrack
+{
     @SerializedName("trackid")
     @Expose
     private String trackid;
+    @SerializedName("playable")
+    @Expose
+    private Boolean Playable;
     @SerializedName("name")
     @Expose
     private String name;
@@ -29,7 +33,15 @@ public class BasicTrack {
     private Boolean isLiked;
     @SerializedName("images")
     @Expose
-    private List<Object> images = null;
+    private List<ImageInfo> images = null;
+
+    public Boolean getPlayable() {
+        return Playable;
+    }
+
+    public void setPlayable(Boolean playable) {
+        Playable = playable;
+    }
 
     public String getTrackid() {
         return trackid;
@@ -79,7 +91,8 @@ public class BasicTrack {
         this.albumName = albumName;
     }
 
-    public Boolean getIsLiked() {
+    public Boolean getIsLiked()
+    {
         return isLiked;
     }
 
@@ -87,11 +100,11 @@ public class BasicTrack {
         this.isLiked = isLiked;
     }
 
-    public List<Object> getImages() {
+    public List<ImageInfo> getImages() {
         return images;
     }
 
-    public void setImages(List<Object> images) {
+    public void setImages(List<ImageInfo> images) {
         this.images = images;
     }
 }

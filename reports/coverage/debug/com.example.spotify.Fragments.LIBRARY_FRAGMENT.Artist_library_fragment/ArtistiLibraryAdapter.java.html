@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ArtistiLibraryAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">com.example.spotify.Fragments.LIBRARY_FRAGMENT.Artist_library_fragment</a> &gt; <span class="el_source">ArtistiLibraryAdapter.java</span></div><h1>ArtistiLibraryAdapter.java</h1><pre class="source lang-java linenums">package com.example.spotify.Fragments.LIBRARY_FRAGMENT.Artist_library_fragment;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.spotify.Interfaces.Retrofit;
+import com.example.spotify.R;
+import com.example.spotify.pojo.BasicArtist;
+import com.example.spotify.pojo.ImageInfo;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+public class ArtistiLibraryAdapter extends RecyclerView.Adapter&lt;ArtistiLibraryAdapter.MyviewHolder&gt;{
+
+    private Context context;
+    private List&lt;BasicArtist&gt; Artists;
+
+<span class="fc" id="L27">    public ArtistiLibraryAdapter(Context context, List&lt;BasicArtist&gt; A){</span>
+<span class="fc" id="L28">        this.context = context;</span>
+<span class="fc" id="L29">        Artists = A;</span>
+
+<span class="fc" id="L31">    }</span>
+
+    @NonNull
+    @Override
+    public MyviewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+<span class="nc" id="L36">        View view = LayoutInflater.from(context).inflate(R.layout.artist_recycle_view_layout, parent, false);</span>
+<span class="nc" id="L37">        return new ArtistiLibraryAdapter.MyviewHolder(view);</span>
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ArtistiLibraryAdapter.MyviewHolder holder, final int position) {
+<span class="nc" id="L42">        holder.artist_library_name.setText(Artists.get(position).getName());</span>
+
+<span class="nc" id="L44">        List&lt;ImageInfo&gt; images= Artists.get(position).getImages();</span>
+<span class="nc" id="L45">        String imageID =&quot;12d&quot;;</span>
+<span class="nc bnc" id="L46" title="All 4 branches missed.">        if(images != null &amp;&amp; images.size()!=0) {</span>
+<span class="nc" id="L47">            imageID = images.get(0).getID();</span>
+        }
+<span class="nc" id="L49">        String Imageurl = Retrofit.getInstance().getBaseurl() + &quot;api/images/&quot; + imageID + &quot;?belongs_to=artist&quot;;</span>
+<span class="nc" id="L50">        Picasso.get().load(Imageurl).into(holder.artist_library_image);</span>
+<span class="nc" id="L51">        holder.artist_recycle_view_layout.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+//                Bundle bundle = new Bundle();
+//                bundle.putString(&quot;artistID&quot; , playlists.get(position).getId());
+//                bundle.putString(&quot;from&quot; , &quot;artist_library&quot;);
+//                androidx.fragment.app.Fragment f = new artistfragment;
+//                f.setArguments(bundle);
+//                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+//                activity.getSupportFragmentManager()
+//                        .beginTransaction()
+//                        .replace(R.id.frame_fragment, f)
+//                        .addToBackStack(null).commit();
+<span class="nc" id="L64">            }</span>
+        });
+<span class="nc" id="L66">    }</span>
+
+    @Override
+    public int getItemCount() {
+<span class="fc" id="L70">        return Artists.size();</span>
+    }
+
+    public class MyviewHolder extends RecyclerView.ViewHolder {
+        TextView artist_library_name;
+        ImageView artist_library_image;
+        LinearLayout artist_recycle_view_layout;
+
+<span class="nc" id="L78">        public MyviewHolder(View itemView) {</span>
+<span class="nc" id="L79">            super(itemView);</span>
+<span class="nc" id="L80">            artist_library_name = (TextView) itemView.findViewById(R.id.artist_library_name);</span>
+<span class="nc" id="L81">            artist_library_image = (ImageView)itemView.findViewById(R.id.artist_library_image);</span>
+<span class="nc" id="L82">            artist_recycle_view_layout = (LinearLayout)itemView.findViewById(R.id.artist_recycle_view_layout);</span>
+
+<span class="nc" id="L84">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.5.0</div></body></html>

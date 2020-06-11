@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@drawable/media_player_background_color"
+    android:id="@+id/activity_edit_playlist_layout1"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/activity_edit_playlist_layout2"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_margin="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/activity_edit_playlist_text1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:gravity="center_horizontal"
+            android:text="Enter the playlist's new name"
+            android:textColor="@android:color/background_light"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:layout_marginTop="80dp"
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:id="@+id/playlist_new_name_edit_text"
+            android:gravity="center"
+            android:hint="Playlist New Name"
+            android:textColor="@color/cardview_light_background"
+            android:inputType="text" />
+        <LinearLayout
+            android:id="@+id/activity_edit_playlist_layout3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="40dp"
+            android:layout_gravity="center_horizontal">
+            <Button
+                android:layout_width="wrap_content"
+                android:id="@+id/cancel_edit_playlist_name"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_gravity="center"
+                android:text="CANCEL"
+                android:textColor="@android:color/darker_gray"/>
+            <Button
+                android:id="@+id/rename_playlist_button"
+                android:layout_marginLeft="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/rounded_button_grey"
+                android:text="Edit"
+                android:textColor="@android:color/background_light" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

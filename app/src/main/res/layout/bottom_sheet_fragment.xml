@@ -10,10 +10,11 @@
         android:scaleType="centerCrop"
         android:layout_width="0dp"
         android:layout_weight="0.3"
-        android:src="@drawable/not_found_2"
+        android:src="@drawable/default_image"
         android:layout_height="match_parent"
-        android:background="@android:color/background_light"/>
+        android:background="@android:color/background_dark"/>
     <LinearLayout
+        android:id="@+id/bottom_sheet_fragment_layout1"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
@@ -37,6 +38,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/bottom_sheet_fragment_layout2"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="match_parent">

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/artist_recycle_view_layout"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/artist_library_image"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/default_image"
+        android:background="@android:color/darker_gray"
+        android:layout_gravity="center_vertical" />
+    <LinearLayout
+        android:id="@+id/artist_recycle_view_layout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="32dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/artist_library_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text="user playlist name"
+            android:textColor="@android:color/background_light"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

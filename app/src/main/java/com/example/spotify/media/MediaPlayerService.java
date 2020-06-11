@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.IBinder;
@@ -12,43 +13,31 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.Interfaces.Retrofit;
 import com.example.spotify.login.user;
 import com.example.spotify.pojo.currentTrack;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MediaPlayerService extends Service implements MediaPlayer.OnCompletionListener , MediaPlayer.OnPreparedListener ,
-        MediaPlayer.OnBufferingUpdateListener ,MediaPlayer.OnErrorListener , MediaPlayer.OnSeekCompleteListener  {
-
-    //AudioManager.OnAudioFocusChangeListener
+public class MediaPlayerService extends Service implements MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener,
+        MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener {
 
     private final IBinder iBinder = new LocalBinder();
-    private MediaPlayer mediaPlayer ;
-    private String audioFile ="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+    private MediaPlayer mediaPlayer;
     private Boolean isPlaying = false;
     private int playFlag;
     private int resumePosition;
-    //    private String TrackID1 ="7ouMYWpwJ422jRcDASZB7P";
-//    private String TrackID2 ="4VqPOruhp5EdPBeR92t6lQ";
-//    private String TrackID3 ="2takcwOaAZWiXQijPHIx7B";
-//    private Tracks tracks;
     private boolean stopInTrackEnd;
+    private Map<String, String> headers = new HashMap<String, String>();
 
-    private boolean prepared;
-//TODO change the base url here
 
-    //    private Retrofit retrofit = new Retrofit.Builder()
-//            .baseUrl("http://192.168.1.7:3000/")
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build();
-//    private EndPointAPI endPointAPI = retrofit.create(EndPointAPI.class);
+    private boolean prepared ;
     private Toast toast;
     private TrackInfo track = TrackInfo.getInstance();
     private CountDownTimer sleepTimer = null;
@@ -56,21 +45,15 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-//        try {
-//            //An audio file is passed to the service through putExtra();
-//            audioFile = intent.getExtras().getString("media");
-//        } catch (NullPointerException e) {
-//            stopSelf();
-//        }
-
-//        if (audioFile != null && audioFile != "")
-//            initMediaPlayer();
-//
         return super.onStartCommand(intent, flags, startId);
     }
 
+    /**
+     * initializes some variables when the service is created
+     */
     @Override
     public void onCreate() {
+        headers.put("x-auth-token", user.getToken());
         super.onCreate();
         initMediaPlayer();
         playFlag = 0;
@@ -80,6 +63,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         stopInTrackEnd = false;
 
     }
+
+    /**
+     * initializes the media player and sends request to get the current track then plays it
+     */
 
     private void initMediaPlayer() {
         mediaPlayer = new MediaPlayer();
@@ -91,92 +78,60 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         mediaPlayer.setOnSeekCompleteListener(this);
         //Reset so that the MediaPlayer is not pointing to another data source
         mediaPlayer.reset();
-
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        prepared = false;
         ///////////////////request the current track//////////////////////////
-        //Call<currentTrack> call = endPointAPI.getCurrentlyPlaying(user.getToken());
         Call<currentTrack> call = Retrofit.getInstance().getEndPointAPI().getCurrentlyPlaying(user.getToken());
         getCurrentlyPlaying(call);
-        //////////////////////////////////////////////////////////////////////
-        //TODO must be in on response when the back finishes the url
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//        try {
-//            // Set the data source to the mediaFile location
-//            audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
-//            mediaPlayer.setDataSource(audioFile);
-//            prepared = false;
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            stopSelf();
-//        }
-//        mediaPlayer.prepareAsync();
+
     }
 
-    public void playCurrentTrack(Call<currentTrack> call){
+    public void playCurrentTrack(Call<currentTrack> call) {
         getCurrentlyPlaying(call);
-//        mediaPlayer.reset();
-//        try {
-//            // Set the data source to the mediaFile location
-//            audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
-//            mediaPlayer.setDataSource(audioFile);
-//            prepared = false;
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            stopSelf();
-//        }
-//        mediaPlayer.prepareAsync();
-
     }
 
-    void getCurrentlyPlaying(Call<currentTrack> call){
+    /**
+     * sends request to get the current track
+     *
+     * @param call
+     */
+
+    void getCurrentlyPlaying(Call<currentTrack> call) {
         call.enqueue(new Callback<currentTrack>() {
             @Override
             public void onResponse(Call<currentTrack> call, Response<currentTrack> response) {
-                if (!response.isSuccessful()) {
-                    //toast = Toast.makeText(getApplicationContext(),"Code: "+response.code(),Toast.LENGTH_SHORT);
-                    //toast.show();
-                    if(response.code() == 404){
-                        track.setIsQueue(false);
-                    }
-                    //TODO that means queue wasn't created so you need to hide the bottom sheet
-                    return;
-                }
-                else if(response.body()==null){
-                    //toast = Toast.makeText(getApplicationContext(),"response body = null",Toast.LENGTH_SHORT);
-                    //toast.show();
+                if(response.code()==429){
+                    Toast.makeText(getApplicationContext() , "you exceeded the skip limit" , Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    track.setTrack(response.body());
-                    track.setIsQueue(true);
-                    track.setIsLiked(response.body().getIsLiked());
-
-                    mediaPlayer.reset();
-                    try {
-                        // Set the data source to the mediaFile location
-                        audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
-                        mediaPlayer.setDataSource(audioFile);
-                        prepared = false;
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        stopSelf();
+                    if (!response.isSuccessful()) {
+                        if (response.code() == 404) {
+                            track.setIsQueue(false);
+                        }
+                        return;
+                    } else {
+                        track.setTrack(response.body());
+                        track.setIsQueue(true);
+                        track.setIsLiked(response.body().getIsLiked());
+                        mediaPlayer.reset();
+                        try {
+                            // Set the data source to the mediaFile location
+                            String TID = response.body().getTrack().getId();
+                            String s = Retrofit.getInstance().getBaseurl() + "api/tracks/android/" + TID + "?type=medium";
+                            mediaPlayer.setDataSource(MediaPlayerService.this, Uri.parse(s), headers);
+                            prepared = false;
+                            mediaPlayer.prepareAsync();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            stopSelf();
+                        }
                     }
-                    mediaPlayer.prepareAsync();
-                    //audioFile = track.getTrack().getValue().getUri();
-//                    try {
-//                        mediaPlayer.setDataSource(audioFile);
-//                         prepared = false
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                        stopSelf();
-//                    }
-                    // mediaPlayer.prepareAsync();
                 }
             }
+
             @Override
             public void onFailure(Call<currentTrack> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"something went wrong .check your internet connection",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "something went wrong .check your internet connection", Toast.LENGTH_SHORT).show();
                 track.setTryAgain(true);
 
             }
@@ -184,82 +139,43 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     }
 
 
-    //    void getTracks(String trackID){
-//        Call<Tracks> call = endPointAPI.getTracks(trackID);
-//
-//        call.enqueue(new Callback<Tracks>() {
-//            @Override
-//            public void onResponse(Call<Tracks> call, Response<Tracks> response) {
-//                if(!response.isSuccessful()){
-//                    toast = Toast.makeText(getApplicationContext(),"Code: "+response.code(),Toast.LENGTH_SHORT);
-//                    toast.show();
-//                    return;
-//                }
-//                else if(response.body()==null){
-//                    toast = Toast.makeText(getApplicationContext(),"response body = null",Toast.LENGTH_SHORT);
-//                    toast.show();
-//                }
-//                else {
-//                    tracks = response.body();
-//                    track.setTrack(tracks.getTracks().get(0));
-//                }
-//            }
-//            @Override
-//            public void onFailure(Call<Tracks> call, Throwable t) {
-//                toast = Toast.makeText(getApplicationContext(),t.getMessage()+" 'failed '",Toast.LENGTH_SHORT);
-//                toast.show();
-//            }
-//        });
-//    }
-    public void next(){
+    /**
+     * sends request to get the next track
+     */
+    public void next() {
         ///////////////////request the current track//////////////////////////
-        //Call<currentTrack> call = endPointAPI.getNext(user.getToken());
         Call<currentTrack> call = Retrofit.getInstance().getEndPointAPI().getNext(user.getToken());
-
         getCurrentlyPlaying(call);
-        //////////////////////////////////////////////////////////////////////
         pauseMedia();
-//        mediaPlayer.reset();
-//
-//        try {
-//            // Set the data source to the mediaFile location
-//            audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3";
-//            mediaPlayer.setDataSource(audioFile);
-//            prepared = false;
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            stopSelf();
-//        }
-//        mediaPlayer.prepareAsync();
 
     }
 
-    public void previous(){
+    /**
+     * sends request to get the previous track
+     */
+
+    public void previous() {
         ///////////////////request the current track//////////////////////////
-        //Call<currentTrack> call = endPointAPI.getPrevious(user.getToken());
         Call<currentTrack> call = Retrofit.getInstance().getEndPointAPI().getPrevious(user.getToken());
         getCurrentlyPlaying(call);
-        //////////////////////////////////////////////////////////////////////
         pauseMedia();
-//        mediaPlayer.reset();
-//        try {
-//            // Set the data source to the mediaFile location
-//            audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3";
-//            mediaPlayer.setDataSource(audioFile);
-//            prepared = false;
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            stopSelf();
-//        }
-//        mediaPlayer.prepareAsync();
     }
-    public Boolean getIsPlaying(){
+
+    public Boolean getIsPlaying() {
         return isPlaying;
     }
-    public Boolean getStopInTrackEnd(){return stopInTrackEnd;}
-    public void setStopInTrackEnd(boolean b){stopInTrackEnd = b;}
 
+    public Boolean getStopInTrackEnd() {
+        return stopInTrackEnd;
+    }
+
+    public void setStopInTrackEnd(boolean b) {
+        stopInTrackEnd = b;
+    }
+
+    /**
+     * plays the song
+     */
     public void playMedia() {
         if (!mediaPlayer.isPlaying()) {
             mediaPlayer.start();
@@ -268,6 +184,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         }
     }
 
+    /**
+     * stops the media player
+     */
     public void stopMedia() {
         if (mediaPlayer == null) return;
         if (mediaPlayer.isPlaying()) {
@@ -275,8 +194,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             isPlaying = false;
             TrackInfo.getInstance().setIsPlaying(false);
         }
-        //cancelTimer();
     }
+
+    /**
+     * pauses the media player
+     */
 
     public void pauseMedia() {
         if (mediaPlayer.isPlaying()) {
@@ -285,29 +207,37 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             TrackInfo.getInstance().setIsPlaying(false);
             resumePosition = mediaPlayer.getCurrentPosition();
         }
-        //cancelTimer();
     }
 
-    public int getCurrentPosition(){
-        if(mediaPlayer!=null&&prepared) {
+    /**
+     * @return the current position of the song to update the progress bar
+     */
+    public int getCurrentPosition() {
+        if (mediaPlayer != null && prepared) {
             return mediaPlayer.getCurrentPosition();
-        }
-        else{
+        } else {
             return 0;
         }
     }
 
-    public int getDuration(){
-        if(mediaPlayer !=null&&prepared) {
+    /**
+     * @return the duration of the song
+     */
+    public int getDuration() {
+        if (mediaPlayer != null && prepared) {
             return mediaPlayer.getDuration();
-        }
-        else {
+        } else {
             return 1;
         }
     }
 
-    public void seekTo(int s){
-        if(mediaPlayer != null) {
+    /**
+     * navigates the media player to the given position and starts playing the song
+     *
+     * @param s
+     */
+    public void seekTo(int s) {
+        if (mediaPlayer != null) {
             mediaPlayer.seekTo(s * 1000);
             mediaPlayer.start();
             isPlaying = true;
@@ -315,33 +245,36 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         }
     }
 
+    /**
+     * resume the song
+     */
+
     public void resumeMedia() {
         if (!mediaPlayer.isPlaying()) {
-            mediaPlayer.seekTo(resumePosition);
+            //mediaPlayer.seekTo(resumePosition);
             mediaPlayer.start();
             isPlaying = true;
             TrackInfo.getInstance().setIsPlaying(true);
         }
     }
 
+    public Boolean getIsPrePared(){
+        return prepared;
+    }
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return iBinder;
     }
 
+    /**
+     * when the song is completed it stops
+     *
+     * @param mp
+     */
     @Override
     public void onCompletion(MediaPlayer mp) {
         stopMedia();
-//        if(stopInTrackEnd) {
-//            setStopInTrackEnd(false);
-//            track.setTimerSet(false);
-//            stopMedia();
-//        }
-//        else {
-//            track.setIsPlaying(false);
-//            next();
-//        }
     }
 
     @Override
@@ -349,18 +282,20 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     }
 
+    /**
+     * when the media player is prepared it starts the song
+     * @param mp
+     */
     @Override
     public void onPrepared(MediaPlayer mp) {
 
         playMedia();
         prepared = true;
         TrackInfo.getInstance().setDuration(mediaPlayer.getDuration());
-        if(playFlag == 0) {
+        if (playFlag == 0) {
             pauseMedia();
         }
         playFlag = 1;
-//        toast = Toast.makeText(getApplicationContext() , "audio is prepared " , Toast.LENGTH_SHORT);
-//        toast.show();
     }
 
     @Override
@@ -385,14 +320,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         return false;
     }
 
-//    @Override
-//    public void onAudioFocusChange(int focusChange) {
-//
-//    }
-
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        //when the app is removed from the recently used apps stop the service
         super.onTaskRemoved(rootIntent);
         stopSelf();
     }
@@ -400,7 +329,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(mediaPlayer !=null){
+        if (mediaPlayer != null) {
             stopMedia();
             mediaPlayer.release();
         }
@@ -408,18 +337,23 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     }
 
     public class LocalBinder extends Binder {
-        public MediaPlayerService getservice(){
+        public MediaPlayerService getservice() {
             return MediaPlayerService.this;
         }
     }
 
-    public void startTimer(long milliSeconds){
-        if(mediaPlayer != null) {
+    /**
+     * starts the sleep timer and on finish pauses the media player
+     * takes time in millisecond
+     *
+     * @param milliSeconds
+     */
+
+    public void startTimer(long milliSeconds) {
+        if (mediaPlayer != null) {
             sleepTimer = new CountDownTimer(milliSeconds, 60000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
-//                    toast = Toast.makeText(getApplicationContext(),"one minute passed",Toast.LENGTH_SHORT);
-//                    toast.show();
                 }
 
                 @Override
@@ -427,7 +361,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                     if (mediaPlayer != null) {
                         pauseMedia();
                         track.setTimerSet(false);
-                        toast = Toast.makeText(getApplicationContext(),"sleep timer ended",Toast.LENGTH_SHORT);
+                        toast = Toast.makeText(getApplicationContext(), "sleep timer ended", Toast.LENGTH_SHORT);
                         toast.show();
                     }
                 }
@@ -436,16 +370,17 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         track.setTimerSet(true);
     }
 
-    public void cancelTimer(){
-        if(sleepTimer!=null){
+    /**
+     * cancels the sleep timer
+     */
+    public void cancelTimer() {
+        if (sleepTimer != null) {
             sleepTimer.cancel();
             track.setTimerSet(false);
         }
-        if(stopInTrackEnd){
+        if (stopInTrackEnd) {
             setStopInTrackEnd(false);
         }
-//        toast = Toast.makeText(getApplicationContext() , "cancel timer called" , Toast.LENGTH_SHORT);
-//        toast.show();
     }
 
 }
