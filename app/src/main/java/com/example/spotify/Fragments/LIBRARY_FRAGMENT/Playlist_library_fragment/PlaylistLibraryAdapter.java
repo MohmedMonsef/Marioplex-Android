@@ -2,13 +2,18 @@ package com.example.spotify.Fragments.LIBRARY_FRAGMENT.Playlist_library_fragment
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -121,18 +126,39 @@ public class PlaylistLibraryAdapter extends RecyclerView.Adapter<PlaylistLibrary
     }
 
     public class MyviewHolder extends RecyclerView.ViewHolder {
-        TextView user_playlist_name, playlist_user_name;
+        TextSwitcher user_playlist_name,playlist_user_name;
+        TextView usernameTextView , playlistnameTextView;
         ImageView user_playlist_image;
         LinearLayout playlist_list_view_layout;
         ImageView settings_library;
 
         public MyviewHolder(View itemView) {
             super(itemView);
-            user_playlist_name = (TextView) itemView.findViewById(R.id.user_playlist_name);
-            playlist_user_name = (TextView) itemView.findViewById(R.id.playlist_user_name);
+            user_playlist_name = (TextSwitcher) itemView.findViewById(R.id.user_playlist_name);
+            playlist_user_name = (TextSwitcher) itemView.findViewById(R.id.playlist_user_name);
             user_playlist_image = (ImageView)itemView.findViewById(R.id.user_playlist_image);
             playlist_list_view_layout = (LinearLayout)itemView.findViewById(R.id.playlist_list_view_layout);
             settings_library = itemView.findViewById(R.id.settings_library);
+            user_playlist_name.setFactory(new ViewSwitcher.ViewFactory() {
+                @Override
+                public View makeView() {
+                    usernameTextView = new TextView(context);
+                    usernameTextView.setTextColor(Color.WHITE);
+                    usernameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP , 18);
+                    usernameTextView.setTypeface(usernameTextView.getTypeface(), Typeface.BOLD);
+                    return usernameTextView;
+                }
+            });
+            playlist_user_name.setFactory(new ViewSwitcher.ViewFactory() {
+                @Override
+                public View makeView() {
+                    TextView T1= new TextView(context);
+                    //playlistnameTextView = new TextView(context);
+                    T1.setTextColor(Color.GRAY);
+                    T1.setTextSize(TypedValue.COMPLEX_UNIT_SP , 18);
+                    return T1;
+                }
+            });
 
         }
     }

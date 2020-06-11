@@ -32,20 +32,18 @@
             android:layout_marginRight="32dp"
             android:orientation="vertical">
 
-            <TextView
+            <TextSwitcher
                 android:id="@+id/user_playlist_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="user playlist name"
-                android:textColor="@android:color/background_light"
-                android:textSize="18dp"
+                android:inAnimation="@android:anim/fade_in"
+                android:outAnimation="@android:anim/fade_out"
                 android:textStyle="bold" />
 
-            <TextView
+            <TextSwitcher
                 android:id="@+id/playlist_user_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="user_name"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="18dp" />
         </LinearLayout>

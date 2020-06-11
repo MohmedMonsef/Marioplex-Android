@@ -5,19 +5,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,15 +51,15 @@ import retrofit2.Response;
 public class MediaPlayerActivity extends AppCompatActivity {
 
     private RelativeLayout top_layout;
-    private TextView song_name;
-    private TextView song_artist;
+    private TextSwitcher song_name;
+    private TextSwitcher song_artist;
     private ImageView song_image;
-    private TextView playlist_name;
+    private TextSwitcher playlist_name;
     private TextView header;
     private ImageView play_pause;
     private SeekBar seek_bar;
-    private TextView start_time;
-    private TextView end_time;
+    private TextSwitcher start_time;
+    private TextSwitcher end_time;
     private ImageView next;
     private ImageView previous;
     private ImageView arrow;
@@ -731,15 +736,15 @@ public class MediaPlayerActivity extends AppCompatActivity {
      */
     private void getViews() {
         top_layout = (RelativeLayout) findViewById(R.id.top_layout);
-        song_name = (TextView) findViewById(R.id.song_name);
-        song_artist = (TextView) findViewById(R.id.song_artist);
+        song_name = (TextSwitcher) findViewById(R.id.song_name);
+        song_artist = (TextSwitcher) findViewById(R.id.song_artist);
         song_image = (ImageView) findViewById(R.id.song_image);
-        playlist_name = (TextView) findViewById(R.id.playlist_name);
+        playlist_name = (TextSwitcher) findViewById(R.id.playlist_name);
         header = (TextView) findViewById(R.id.header);
         play_pause = (ImageView) findViewById(R.id.play);
         seek_bar = (SeekBar) findViewById(R.id.seek_bar);
-        start_time = (TextView) findViewById(R.id.start_time);
-        end_time = (TextView) findViewById(R.id.end_time);
+        start_time = (TextSwitcher) findViewById(R.id.start_time);
+        end_time = (TextSwitcher) findViewById(R.id.end_time);
         next = (ImageView) findViewById(R.id.next);
         previous = (ImageView) findViewById(R.id.previous);
         arrow = (ImageView) findViewById(R.id.arrow);
@@ -769,6 +774,58 @@ public class MediaPlayerActivity extends AppCompatActivity {
         activity_views_container = (LinearLayout) findViewById(R.id.activity_views_container);
         setting_container = (LinearLayout) findViewById(R.id.setting_container);
 
+        song_name.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                TextView T = new TextView(MediaPlayerActivity.this);
+                T.setTextSize(R.string.song_name);
+                T.setTextColor(Color.WHITE);
+                T.setTextSize(TypedValue.COMPLEX_UNIT_SP , 16);
+                T.setTypeface(T.getTypeface(), Typeface.BOLD);
+                return T;
+            }
+        });
+
+        song_artist.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                TextView T = new TextView(MediaPlayerActivity.this);
+                T.setTextColor(Color.GRAY);
+                T.setTextSize(TypedValue.COMPLEX_UNIT_SP , 16);
+                return T;
+            }
+        });
+
+        playlist_name.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                TextView T = new TextView(MediaPlayerActivity.this);
+                T.setTextColor(Color.WHITE);
+                T.setTextSize(TypedValue.COMPLEX_UNIT_SP , 14);
+                T.setTypeface(T.getTypeface(), Typeface.BOLD);
+                return T;
+            }
+        });
+
+        start_time.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                TextView T = new TextView(MediaPlayerActivity.this);
+                T.setTextColor(Color.GRAY);
+                T.setTextSize(TypedValue.COMPLEX_UNIT_SP , 14);
+                return T;
+            }
+        });
+
+        end_time.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                TextView T = new TextView(MediaPlayerActivity.this);
+                T.setTextColor(Color.GRAY);
+                T.setTextSize(TypedValue.COMPLEX_UNIT_SP , 14);
+                return T;
+            }
+        });
     }
 
     /**
