@@ -35,14 +35,13 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"/>
 
-            <TextView
+            <TextSwitcher
                 android:id="@+id/playlist_name"
-                android:text="@string/playlist_name"
-                android:textColor="@android:color/background_light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:textStyle="bold"
+                android:inAnimation="@android:anim/fade_in"
+                android:outAnimation="@android:anim/fade_out"
                 android:layout_below="@id/header"/>
             <ImageView
                 android:layout_width="50dp"
@@ -73,25 +72,24 @@
             android:orientation="vertical"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp">
-            <TextView
+            <TextSwitcher
                 android:id="@+id/song_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginLeft="8dp"
-                android:textColor="@android:color/background_light"
-                android:text="@string/song_name"
-                android:textStyle="bold"/>
-            <TextView
+                android:inAnimation="@android:anim/fade_in"
+                android:outAnimation="@android:anim/fade_out"/>
+            <TextSwitcher
                 android:id="@+id/song_artist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="8dp"
-                android:textColor="@android:color/darker_gray"
-                android:text="@string/song_artist"/>
+                android:inAnimation="@android:anim/fade_in"
+                android:outAnimation="@android:anim/fade_out"/>
         </LinearLayout>
 
         <RelativeLayout
@@ -108,21 +106,23 @@
                 android:max="100"
                 android:thumb="@drawable/thumb"
                 />
-            <TextView
+            <TextSwitcher
                 android:id="@+id/start_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:layout_below="@id/seek_bar"
-                android:textColor="@android:color/darker_gray"/>
-            <TextView
+                android:inAnimation="@android:anim/fade_in"
+                android:outAnimation="@android:anim/fade_out"
+                android:layout_below="@id/seek_bar"/>
+            <TextSwitcher
                 android:id="@+id/end_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:inAnimation="@android:anim/fade_in"
+                android:outAnimation="@android:anim/fade_out"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="16dp"
-                android:layout_below="@id/seek_bar"
-                android:textColor="@android:color/darker_gray"/>
+                android:layout_below="@id/seek_bar"/>
 
         </RelativeLayout>
 
