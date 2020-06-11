@@ -53,7 +53,7 @@ public class forgotPasswordFragment extends Fragment {
         if(getArguments() != null) {
             if (getArguments().getInt("currentView") == 3) {
                 rootView.findViewById(R.id.get_link_layout).setVisibility(View.GONE);
-                rootView.findViewById(R.id.open_email_app).setVisibility(View.GONE);
+                rootView.findViewById(R.id.check_your_email_layout).setVisibility(View.GONE);
                 rootView.findViewById(R.id.enter_new_password_layout).setVisibility(View.VISIBLE);
                 password = new Password();
             }

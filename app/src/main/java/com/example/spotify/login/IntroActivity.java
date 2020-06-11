@@ -22,6 +22,8 @@ import android.view.ViewDebug;
 import android.widget.Toast;
 
 import com.example.spotify.Activities.MainActivity;
+import com.example.spotify.Fragments.ALBUM_FRAGMENT.album;
+import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.R;
 import com.example.spotify.login.apiClasses.FacebookLoginData;
@@ -86,21 +88,36 @@ public class IntroActivity extends AppCompatActivity {
             }
         });
 
+        loadToken();
+
         Intent intent = getIntent();
         String action = intent.getAction();
-        Uri data = intent.getData();
-        if (action == ACTION_VIEW && data.toString().contains("/login/reset_password")) {
-            String url = data.toString();
-            String token = url.split("token=")[1];
-            user.setToken(token);
-            saveToken();
-            forgotPasswordFragment fragment = new forgotPasswordFragment();
-            Bundle bundle = new Bundle();
-            bundle.putInt("currentView", 3);
-            fragment.setArguments(bundle);
-            showFragment(fragment);
-
-        } else if (loadToken()) {
+        final Uri data = intent.getData();
+        if (action == ACTION_VIEW) {
+            if (data.toString().contains("/login/reset_password")) {
+                String url = data.toString();
+                String token = url.split("token=")[1];
+                user.setToken(token);
+                saveToken();
+                forgotPasswordFragment fragment = new forgotPasswordFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt("currentView", 3);
+                fragment.setArguments(bundle);
+                showFragment(fragment);
+            } else if ((user.getToken() != null) && (data.toString().contains("playlist") || data.toString().contains("album"))) {
+                user.fetchUserData();
+                user.getUserDataReadyFlag().observe(this, new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(Boolean aBoolean) {
+                        Intent mainActivityIntent = new Intent(IntroActivity.this,MainActivity.class);
+                        mainActivityIntent.setData(data);
+                        mainActivityIntent.setAction(ACTION_VIEW);
+                        startActivity(mainActivityIntent);
+                        finish();
+                    }
+                });
+            }
+        } else if (user.getToken() != null) {
             user.fetchUserData();
             user.getUserDataReadyFlag().observe(this, new Observer<Boolean>() {
                 @Override
@@ -112,6 +129,7 @@ public class IntroActivity extends AppCompatActivity {
                 }
             });
         }
+
     }
 
     /**
@@ -269,8 +287,7 @@ public class IntroActivity extends AppCompatActivity {
         String token = user.getToken();
         if (token != null) {
             getSharedPreferences("token", Context.MODE_PRIVATE).edit().putString("token", token).apply();
-        }
-        else{
+        } else {
             //user.getTokenAsLiveData().observe(this,);
         }
     }

@@ -4,6 +4,7 @@ package com.example.spotify.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,12 +17,15 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 
+import com.example.spotify.Fragments.ALBUM_FRAGMENT.album;
 import com.example.spotify.Fragments.HOME_FRAGMENT.backhome;
 import com.example.spotify.Fragments.LIBRARY_FRAGMENT.libraryFragment;
+import com.example.spotify.Fragments.PLAYLIST_FRAGMENT.PlaylistFragment;
 import com.example.spotify.Fragments.PREMIUM_FRAGMENT.premiumFragment;
 import com.example.spotify.Fragments.SEARCH_FRAGMENT.searchfragment;
 import com.example.spotify.Interfaces.EndPointAPI;
 import com.example.spotify.R;
+import com.example.spotify.login.IntroActivity;
 import com.example.spotify.login.user;
 import com.example.spotify.media.MediaPlayerService;
 import com.example.spotify.media.TrackInfo;
@@ -46,9 +50,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ////*******************************BottomNavigation***********************////
+
         LoadToken();
         loadFCMToken();
+
+        ////*******************************BottomNavigation***********************////
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         loadFragment(new backhome());// start the main activity with home fragment
@@ -61,6 +67,38 @@ public class MainActivity extends AppCompatActivity {
         HideBottomSheet();
 
         endPointAPI = com.example.spotify.Interfaces.Retrofit.getInstance().getEndPointAPI();
+
+        //*****************check intent**************//
+        Intent intent = getIntent();
+        Uri data = intent.getData();
+        if (intent.getAction() == Intent.ACTION_VIEW) {
+            if (data.toString().contains("playlist")) {
+                String playlistID = data.toString().split("playlist/")[1];
+                Bundle bundle = new Bundle();
+                bundle.putString("playlistID", playlistID);
+
+                androidx.fragment.app.Fragment f = new PlaylistFragment();
+                f.setArguments(bundle);
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frame_fragment, f)
+                        .addToBackStack(null).commit();
+            } else if (data.toString().contains("album")) {
+                String albumID = data.toString().split("album/")[1];
+                Bundle bundle = new Bundle();
+                bundle.putString("playlistID", albumID);
+
+                Bundle bundle2 = new Bundle();
+                bundle2.putString("albumID", albumID);
+                bundle2.putInt("backID", 3);
+                androidx.fragment.app.Fragment f = new album();
+                f.setArguments(bundle2);
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frame_fragment, f)
+                        .addToBackStack(null).commit();
+            }
+        }
 
     }
 
@@ -153,7 +191,8 @@ public class MainActivity extends AppCompatActivity {
         // serviceIntent.putExtra("media" , media);
         startService(serviceIntent);
     }
-    private void LoadToken(){
+
+    private void LoadToken() {
         SharedPreferences sharedPreferences = getSharedPreferences("token", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("token", null);
         user.setToken(token);
