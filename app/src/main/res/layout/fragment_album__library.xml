@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/fragment_album_library_layout1"
     android:background="@color/bgBottomNavigation"
     tools:context=".Fragments.LIBRARY_FRAGMENT.Album_library_fragment.Album_Library">
     <TextView
@@ -11,12 +12,14 @@
         android:id="@+id/textlibrary"
         />
     <ScrollView
+        android:id="@+id/fragment_album_library_layout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
 
         >
         <LinearLayout
+            android:id="@+id/fragment_album_library_layout3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="20dp"

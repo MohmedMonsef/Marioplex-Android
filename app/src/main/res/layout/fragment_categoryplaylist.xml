@@ -4,9 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/p0"
+    android:id="@+id/fragment_categoryplaylist_layout1"
     tools:context=".Fragments.CATEGORY_PLAYLISTS.categoryplaylist">
 
     <RelativeLayout
+        android:id="@+id/fragment_categoryplaylist_layout2"
         android:layout_width="match_parent"
         android:layout_height="60dp">
 
@@ -21,6 +23,7 @@
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
+        android:id="@+id/fragment_categoryplaylist_layout3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -38,6 +41,7 @@
             android:textSize="50dp" />
 
         <ScrollView
+            android:id="@+id/fragment_categoryplaylist_layout4"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -45,20 +49,23 @@
             >
 
             <LinearLayout
+                android:id="@+id/fragment_categoryplaylist_layout5"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/fragment_categoryplaylist_layout6"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/fragment_categoryplaylist_layout7"
                         android:layout_width="0dp"
-                        android:layout_weight="0.5"
                         android:layout_height="match_parent"
                         android:layout_toRightOf="@id/lcp1"
+                        android:layout_weight="0.5"
                         android:orientation="vertical">
 
                         <androidx.recyclerview.widget.RecyclerView
@@ -74,8 +81,8 @@
                     <LinearLayout
                         android:id="@+id/lcp1"
                         android:layout_width="0dp"
-                        android:layout_weight="0.5"
                         android:layout_height="match_parent"
+                        android:layout_weight="0.5"
                         android:orientation="vertical">
 
                         <androidx.recyclerview.widget.RecyclerView

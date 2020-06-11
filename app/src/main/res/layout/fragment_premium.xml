@@ -1,88 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_premium_layout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bgBottomNavigation"
     tools:context=".Fragments.PREMIUM_FRAGMENT.premiumFragment">
+
     <ScrollView
+        android:id="@+id/fragment_premium_layout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:orientation="vertical">
 
-        >
         <LinearLayout
+            android:id="@+id/fragment_premium_layout3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
             <!-- TODO: Update blank fragment layout -->
             <TextView
+                android:id="@+id/text_premium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Premium"
-                android:id="@+id/text_premium"
                 android:layout_gravity="center_horizontal"
-                android:textStyle="bold"
+                android:text="Premium"
                 android:textColor="@color/TextColor"
                 android:textSize="70dp"
-                />
+                android:textStyle="bold" />
 
             <HorizontalScrollView
+                android:id="@+id/fragment_premium_layout4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="horizontal">
 
-                >
                 <LinearLayout
+                    android:id="@+id/fragment_premium_layout5"
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
                     android:layout_margin="10dp"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
+
                     <ImageView
+                        android:id="@+id/fragment_premium_image1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="20dp"
-                        android:src="@drawable/a1"
-                        />
+                        android:src="@drawable/a1" />
+
                     <ImageView
+                        android:id="@+id/fragment_premium_image2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="20dp"
-                        android:src="@drawable/a2"
-                        />
+                        android:src="@drawable/a2" />
+
                     <ImageView
+                        android:id="@+id/fragment_premium_image3"
                         android:layout_width="wrap_content"
-                        android:layout_marginRight="20dp"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/a3"
-                        />
+                        android:layout_marginRight="20dp"
+                        android:src="@drawable/a3" />
+
                     <ImageView
+                        android:id="@+id/fragment_premium_image4"
                         android:layout_width="wrap_content"
-                        android:layout_marginRight="20dp"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/a4"
-                        />
+                        android:layout_marginRight="20dp"
+                        android:src="@drawable/a4" />
+
                     <ImageView
+                        android:id="@+id/fragment_premium_image5"
                         android:layout_width="wrap_content"
-                        android:layout_marginRight="20dp"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/a5"
-                        />
+                        android:layout_marginRight="20dp"
+                        android:src="@drawable/a5" />
                 </LinearLayout>
             </HorizontalScrollView>
+
             <ImageView
+                android:id="@+id/fragment_premium_image6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/b1"
-                />
+                android:src="@drawable/b1" />
+
             <ImageView
+                android:id="@+id/fragment_premium_image7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/b2"
-                />
+                android:src="@drawable/b2" />
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

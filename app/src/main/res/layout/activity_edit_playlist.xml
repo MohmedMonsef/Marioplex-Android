@@ -2,15 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:background="@drawable/media_player_background_color"
+    android:id="@+id/activity_edit_playlist_layout1"
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/activity_edit_playlist_layout2"
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:layout_margin="16dp"
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/activity_edit_playlist_text1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
@@ -30,6 +33,7 @@
             android:textColor="@color/cardview_light_background"
             android:inputType="text" />
         <LinearLayout
+            android:id="@+id/activity_edit_playlist_layout3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"

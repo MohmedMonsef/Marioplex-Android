@@ -1,35 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_see_all_song_layout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/searchb1"
     tools:context=".Fragments.SEE_SONG_FRAGMENT.see_all_song_Fragment">
+
     <LinearLayout
+        android:id="@+id/fragment_see_all_song_layout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <RelativeLayout
+            android:id="@+id/fragment_see_all_song_layout3"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:background="@color/bgBottomNavigation"
-            >
+            android:background="@color/bgBottomNavigation">
+
             <TextView
+                android:id="@+id/textalbumsearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
+                android:layout_centerInParent="true"
                 android:background="@color/bgBottomNavigation"
                 android:textColor="@color/TextColor"
                 android:textSize="18dp"
-                android:id="@+id/textalbumsearch"
-                android:layout_centerInParent="true"/>
+                android:textStyle="bold" />
+
             <ImageView
+                android:id="@+id/back_button_to_seeAllSong"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/back_button_to_seeAllSong"
-                android:src="@drawable/back_button"
+                android:layout_centerVertical="true"
                 android:padding="8dp"
-                android:layout_centerVertical="true"/>
+                android:src="@drawable/back_button" />
         </RelativeLayout>
 
 
@@ -40,6 +46,7 @@
             android:textColor="@color/TextColor"
             android:textSize="24dp"
             tools:ignore="MissingConstraints" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycleSearchSeeAllSong"
             android:layout_width="match_parent"

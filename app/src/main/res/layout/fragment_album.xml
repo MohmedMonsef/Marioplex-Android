@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/fragment_album_layout1"
     tools:context=".Fragments.ALBUM_FRAGMENT.album">
 
     <RelativeLayout
+        android:id="@+id/fragment_album_layout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/playlist_background" >
@@ -64,21 +66,25 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/fragment_album_layout3"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.9">
 
             <LinearLayout
+                android:id="@+id/fragment_album_layout4"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <ScrollView
+                    android:id="@+id/fragment_album_layout5"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:fillViewport="true">
 
                     <LinearLayout
+                        android:id="@+id/fragment_album_layout6"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
@@ -146,6 +152,7 @@
                             android:textSize="14dp" />
 
                         <LinearLayout
+                            android:id="@+id/fragment_album_layout7"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical">
@@ -156,7 +163,7 @@
                                 android:layout_height="wrap_content"
                                 android:padding="16dp"
                                 android:text="Date "
-                                android:textColor="@android:color/background_light"></TextView>
+                                android:textColor="@android:color/background_light"/>
 
                             <RelativeLayout
                                 android:id="@+id/dowen_layout"
@@ -186,7 +193,7 @@
                                         android:layout_alignParentTop="true"
                                         android:layout_centerVertical="true"
                                         android:scaleType="centerCrop"
-                                        android:src="@drawable/default_image"></ImageView>
+                                        android:src="@drawable/default_image"/>
                                 </androidx.cardview.widget.CardView>
 
                                 <TextView

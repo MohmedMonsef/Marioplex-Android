@@ -5,12 +5,15 @@
     android:layout_height="match_parent"
     android:background="@color/bgBottomNavigation"
     android:orientation="horizontal"
+    android:id="@+id/fragment_playlist_library_layout1"
     tools:context=".Fragments.LIBRARY_FRAGMENT.Playlist_library_fragment.Playlist_library">
     <ScrollView
+        android:id="@+id/fragment_playlist_library_layout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
     <LinearLayout
+        android:id="@+id/fragment_playlist_library_layout3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -32,6 +35,7 @@
                 android:background="@color/color1"
                 android:layout_gravity="center_vertical" />
             <LinearLayout
+                android:id="@+id/fragment_playlist_library_layout4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -48,6 +52,7 @@
             </LinearLayout>
         </LinearLayout>
         <RelativeLayout
+            android:id="@+id/fragment_playlist_library_layout5"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <androidx.recyclerview.widget.RecyclerView

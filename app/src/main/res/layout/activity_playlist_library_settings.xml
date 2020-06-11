@@ -14,6 +14,7 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/activity_playlist_library_settings_layout1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
@@ -36,6 +37,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/activity_playlist_library_settings_layout2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.35">
@@ -52,6 +54,7 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/activity_playlist_library_settings_layout3"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.65"
@@ -72,6 +75,7 @@
                     android:src="@drawable/delete_playlist" />
 
                 <TextView
+                    android:id="@+id/activity_playlist_library_settings_text1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
@@ -90,12 +94,14 @@
                 android:padding="16dp">
 
                 <ImageView
+                    android:id="@+id/upload"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:src="@drawable/add_photo" />
 
                 <TextView
+                    android:id="@+id/activity_playlist_library_settings_text2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
@@ -113,12 +119,14 @@
                 android:padding="16dp">
 
                 <ImageView
+                    android:id="@+id/rename"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:src="@drawable/ic_edit_black_24dp" />
 
                 <TextView
+                    android:id="@+id/activity_playlist_library_settings_text3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
